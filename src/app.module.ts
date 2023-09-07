@@ -29,16 +29,6 @@ import { PaymentsController } from './wallets/payments.controller';
     JackpotsController,
     PaymentsController,
   ],
-  providers: [
-    {
-      provide: 'BETS_SERVICE',
-      useFactory: (configService: ConfigService) => {
-        const userServiceOptions = configService.get('userService');
-        return ClientProxyFactory.create(userServiceOptions);
-      },
-      inject: [ConfigService],
-    },
-    AppService,
-  ],
+  providers: [AppService],
 })
 export class AppModule {}
