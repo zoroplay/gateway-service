@@ -40,8 +40,6 @@ async function bootstrap() {
   });
 
   // await app.startAllMicroservicesAsync();
-
-
   await app.listen(process.env.PORT || 8010, () => {
     logger.log(
       'Sportsbook API Gateway Instance is running on ' + process.env.PORT,
