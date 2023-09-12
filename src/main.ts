@@ -12,7 +12,7 @@ async function bootstrap() {
   app.setGlobalPrefix('/api/v2');
 
   const options = new DocumentBuilder()
-    .setTitle('Sportsbook Enging')
+    .setTitle('Sportsbook Engine')
     .setDescription('Sportsbook API description')
     .setVersion('2.0')
     .addBearerAuth()
