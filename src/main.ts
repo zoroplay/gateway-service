@@ -12,16 +12,10 @@ async function bootstrap() {
   app.setGlobalPrefix('/api/v2');
 
   const options = new DocumentBuilder()
-    .setTitle('Clearing Hub')
-    .setDescription('Sportsbook API Gateway description')
-    .addTag('Users')
-    .addTag('Bets')
-    .addTag('Settings')
-    .addTag('Agency')
-    .addTag('CMS')
-    .addTag('Sports')
-    .addTag('Communications')
-    .setVersion('1.0')
+    .setTitle('Sportsbook Enging')
+    .setDescription('Sportsbook API description')
+    .setVersion('2.0')
+    .addBearerAuth()
     .build();
 
   app.enableCors();
@@ -30,17 +24,17 @@ async function bootstrap() {
 
   SwaggerModule.setup('swagger', app, document);
 
-  app.connectMicroservice<MicroserviceOptions>({
-    transport: Transport.GRPC,
-    options: {
-      url: process.env.GRPC_SERVER_URL,
-      package: 'sports',
-      protoPath: process.cwd() + '/src/core/shared/proto/sports.proto',
-    },
-  });
+  // app.connectMicroservice<MicroserviceOptions>({
+  //   transport: Transport.GRPC,
+  //   options: {
+  //     url: process.env.GRPC_SERVER_URL,
+  //     package: 'sports',
+  //     protoPath: process.cwd() + '/src/core/shared/proto/sports.proto',
+  //   },
+  // });
 
   // await app.startAllMicroservicesAsync();
-  await app.listen(process.env.PORT || 8010, () => {
+  await app.listen(process.env.PORT || 5001, () => {
     logger.log(
       'Sportsbook API Gateway Instance is running on ' + process.env.PORT,
     );

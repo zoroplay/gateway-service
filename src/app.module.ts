@@ -13,9 +13,11 @@ import { TipstersController } from './tipsters/tipsters.controller';
 import { PoolsController } from './pools/pools.controller';
 import { JackpotsController } from './jackpots/jackpots.controller';
 import { PaymentsController } from './wallets/payments.controller';
+import { AuthModule } from './auth/auth.module';
+import { GamingModule } from './gaming/gaming.module';
 
 @Module({
-  imports: [ConfigModule.forRoot()],
+  imports: [ConfigModule.forRoot(), AuthModule, GamingModule],
   controllers: [
     AppController,
     AgencyController,
