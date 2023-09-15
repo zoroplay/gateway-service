@@ -4,6 +4,7 @@ import {
   CreateGameDto,
   GamingServiceClient,
   protobufPackage,
+  SyncGameDto,
 } from './gaming.pb';
 import { ClientGrpc } from '@nestjs/microservices';
 
@@ -17,6 +18,7 @@ export class GamingService implements OnModuleInit {
     this.service =
       this.client.getService<GamingServiceClient>(GAMING_SERVICE_NAME);
   }
+
   create(createGameDto: CreateGameDto) {
     console.log(createGameDto);
     return this.service.createGame(createGameDto);
@@ -25,5 +27,10 @@ export class GamingService implements OnModuleInit {
   findAll() {
     console.log('finding all games');
     return this.service.findAllGames({});
+  }
+
+  async sync(syncGameDto: SyncGameDto) {
+    console.log('syncing games');
+    return await this.service.syncGames(syncGameDto);
   }
 }
