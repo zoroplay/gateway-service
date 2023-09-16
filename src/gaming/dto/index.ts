@@ -100,3 +100,42 @@ export class SwaggerOKGameArrayResponse {
   })
   games: SwaggerOKGameResponse[];
 }
+
+export class SwaggerCreateGameDto {
+  @ApiProperty({
+    description: 'game id e.g penaldo',
+  })
+  gameId: string;
+  @ApiProperty({
+    description: 'game title e.g penaldo',
+  })
+  title: string;
+  @ApiProperty({
+    description: 'game description e.g casino game by shacks evolution',
+  })
+  description: string;
+  @ApiProperty({
+    description: 'game url',
+  })
+  url: string;
+  @ApiProperty({
+    description: 'game image url',
+  })
+  imagePath: string;
+  @ApiProperty({
+    description: 'game banner url',
+  })
+  bannerPath: string;
+  @ApiProperty({
+    description: 'game status',
+  })
+  status: boolean;
+  @ApiProperty({
+    description: 'game type e.g casino, slot',
+  })
+  type: string;
+  @ApiProperty({
+    description: 'game provider id',
+  })
+  providerId: number;
+}

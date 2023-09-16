@@ -6,6 +6,7 @@ import {
   SwaggerOKGameArrayResponse,
   SwaggerOKGameResponse,
   SwaggerSyncGameDto,
+  SwaggerCreateGameDto,
 } from './dto';
 
 @ApiTags('Gaming APIs')
@@ -25,6 +26,7 @@ export class GamingController {
   }
 
   @Post('')
+  @ApiBody({ type: SwaggerCreateGameDto })
   @ApiOkResponse({ type: SwaggerOKGameResponse })
   create(@Body() createGameDto: CreateGameDto) {
     return this.gamingService.create(createGameDto);
