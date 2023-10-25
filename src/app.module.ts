@@ -1,8 +1,7 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { ClientProxyFactory } from '@nestjs/microservices';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
 import { AgencyController } from './agency/agency.controller';
 import { CmsController } from './cms/cms.controller';
 import { SportsController } from './sports/sports.controller';
@@ -14,12 +13,16 @@ import { PoolsController } from './pools/pools.controller';
 import { JackpotsController } from './jackpots/jackpots.controller';
 import { PaymentsController } from './wallets/payments.controller';
 import { AuthModule } from './auth/auth.module';
-import {BettingModule} from "./betting/betting.module";
 import {GamingModule} from "./gaming/gaming.module";
+import {FixtureModule} from "./fixture/fixture.module";
+import {FixtureController} from "./fixture/fixture.controller";
+import {BettingModule} from "./betting/betting.module";
 import {BettingController} from "./betting/betting.controller";
+import {BonusModule} from "./bonus/bonus.module";
+import {BonusController} from "./bonus/bonus.controller";
 
 @Module({
-  imports: [ConfigModule.forRoot(), AuthModule, GamingModule, BettingModule],
+  imports: [ConfigModule.forRoot(), AuthModule, GamingModule, BettingModule, FixtureModule,BonusModule],
   controllers: [
     AppController,
     AgencyController,
@@ -32,7 +35,9 @@ import {BettingController} from "./betting/betting.controller";
     PoolsController,
     JackpotsController,
     PaymentsController,
-    BettingController
+    BettingController,
+    FixtureController,
+    BonusController
   ],
   providers: [AppService],
 })
