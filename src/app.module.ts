@@ -14,10 +14,12 @@ import { PoolsController } from './pools/pools.controller';
 import { JackpotsController } from './jackpots/jackpots.controller';
 import { PaymentsController } from './wallets/payments.controller';
 import { AuthModule } from './auth/auth.module';
-import { GamingModule } from './gaming/gaming.module';
+import {BettingModule} from "./betting/betting.module";
+import {GamingModule} from "./gaming/gaming.module";
+import {BettingController} from "./betting/betting.controller";
 
 @Module({
-  imports: [ConfigModule.forRoot(), AuthModule, GamingModule],
+  imports: [ConfigModule.forRoot(), AuthModule, GamingModule, BettingModule],
   controllers: [
     AppController,
     AgencyController,
@@ -30,6 +32,7 @@ import { GamingModule } from './gaming/gaming.module';
     PoolsController,
     JackpotsController,
     PaymentsController,
+    BettingController
   ],
   providers: [AppService],
 })

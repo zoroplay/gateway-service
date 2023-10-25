@@ -107,6 +107,7 @@ export interface GamingServiceClient {
 }
 
 export interface GamingServiceController {
+
   createGame(request: CreateGameDto): Promise<Game> | Observable<Game> | Game;
 
   findAllGames(request: Empty): Promise<Games> | Observable<Games> | Games;
