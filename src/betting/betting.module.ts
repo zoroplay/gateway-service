@@ -13,7 +13,7 @@ import { BETTING_PACKAGE_NAME, protobufPackage } from './betting.pb';
         options: {
           url: process.env.BETTING_SERVICE_URL,
           package: BETTING_PACKAGE_NAME,
-          protoPath: 'node_modules/sbe-service-proto/proto/betting.proto',
+          protoPath: 'proto/betting.proto',
         },
       },
     ]),

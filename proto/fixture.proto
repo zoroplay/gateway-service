@@ -1,0 +1,204 @@
+syntax = "proto3";
+
+package fixture;
+
+service FixtureService {
+
+  /*
+  Gets a list of available markets, markets are pulled peridocally from betradr API
+   */
+  rpc GetMarkets (FilterBySportID) returns (AllMarketResponse){}
+
+  //GetTournaments - Gets a list of available tournaments, the tournaments are filterred by the supplied sportID
+  rpc GetTournaments (FilterBySportID) returns (AllTournamentResponse){}
+
+  //GetSports - Gets a list of all sports
+  rpc GetSports (Empty) returns (AllSportResponse){}
+
+  //GetLiveGamesCount - Get a count of all the live games
+  rpc GetLiveGamesCount (FilterBySportID) returns (CountResponse){}
+
+  //GetHighlights - This GRPC method retrieves the odds for a particular market (e.g 1x2, total, Double chance etc) for games, the method provides a way to pass pagination parameters, this method will be used to load games in the front page of the site
+  rpc GetHighlights (GetHighlightsRequest) returns (GetHighlightsResponse){}
+
+  //GetLiveHighlights - This GRPC method retrieves the odds for a particular market (e.g 1x2, total, Double chance etc) for live games, the method provides a way to pass pagination parameters, this method will be used to load games in the front page of the site
+  rpc GetLiveHighlights (GetHighlightsRequest) returns (GetHighlightsResponse){}
+
+  //GetFixtureWithOdds - Loads odds for all the markets of the supplied matchID
+  rpc GetFixtureWithOdds (FilterByMatchID) returns (FixtureOdds){}
+
+  //UpdateMarketPriority - Update market priority, this will affect the order of markets in GetFixtureWithOdds method
+  rpc UpdateMarketPriority (UpdateMarketRequest) returns (ResponseString){}
+
+}
+
+message CountResponse {
+  int32 count = 1; // number of live games
+
+}
+
+message FilterBySportID {
+  int32 sportID = 1; // SportID of a particular sport
+
+}
+
+message FilterByMarketID {
+  int32 marketID = 1; // marketID of a particular market
+
+}
+
+message FilterByMatchID {
+  int32 matchID = 1; // matchID of a particular match
+
+}
+
+message SportFilters {
+  int32 sportID = 1; // SportID of a particular sport
+  int32 marketID = 2; // marketID of a particular market
+  int32 tournamentID = 3; // pass tournamentID to filter by tournament
+  string countyCode = 4; // pass countryCode (2 Letter ISO Code) to filter by country
+}
+
+//Used where the method does not require any input
+message Empty {}
+
+
+message MarketResponse {
+  int32 marketID = 1; // marketID of a particular market
+  string marketName = 2; // name of the market
+}
+
+// Object used to hold array of markets
+message AllMarketResponse {
+  repeated MarketResponse markets = 1;
+}
+
+message TournamentResponse {
+  int32 tournamentID = 1; // Unique ID of the tournament
+  string tournamentName = 2; // Name of the tournament
+  int32 liveGames = 3; // current number of live games under this tournament
+  int32 allGames = 4; // current number of total games under this tournament
+}
+
+// Object used to hold array of tournament
+message AllTournamentResponse {
+  repeated TournamentResponse tournaments = 1;
+}
+
+message SportResponse {
+  int32 sportID = 1; // unique ID of a sport
+  string sportName = 2; // Sport name
+}
+
+// Object used to hold array of sports
+message AllSportResponse {
+  repeated SportResponse sports = 1;
+}
+
+message GetHighlightsRequest {
+  int32 sportID = 1; // Filter fixtures by this sportID
+  int32 marketID = 2; // load odds for this particular marketID
+  int32 page = 3; // current pagination page
+  int32 hours = 4; // If value is greater than 0, we will only display fixtures whoose start date is in the next x hours
+  int32 perPage = 5; // records to load per page (pagination)
+  int32 tournamentID = 6; // If value > 0 only fixtures of this tournamentID will be loaded
+  string countryCode = 7; // If length > 0 only fixtures of this countryCode will be loaded
+}
+
+message HighlightOutcomes {
+  string alias = 1; // outcome name alias
+  string marketName = 2; // market name
+  string outcomeName = 3; // outcome name
+  string specifier = 4; // specifier if any is available
+  string outcomeID = 5; // outcomeID
+  float odds = 6; // current odds
+  float previousOdds = 7; // previous odds, odds values before we received current odds
+  int32 oddID = 8; // Odd ID
+  int32 status = 9; // Outcome status, 0 - Active, 1 - Suspended, 2 - Deactivated, 5 - Handed Over
+  int32 active = 10; // wether odd is active or deactivated, 1 - ACtive, 0 - Deactivated
+  int32 producerID = 11; // ID of the producer that send the odds
+  int32 marketID = 12; // Unique ID of this market
+}
+
+message FixturesWithOdds {
+  string tournament = 1; // tournament name
+  string sportID = 2; // Unique ID of the sport
+  string gameID = 3; //Unique ID of the fixture (will always be between 1000 and 99999)
+  string name = 4; // fixture name e.g ABC FC vs Yanga FC
+  string matchID = 5; // Unique ID of the match (Betradar ID)
+  string date = 6; // Match date
+  int32 activeMarkets = 7; // Number of active markets
+  int32 tournamentID = 8; // Unique ID of the tournament
+  int32 statusCode = 9; // match Status code
+  int32 status = 10; // Match status
+  string country = 11; // Fixture country
+  string countryCode = 12; // Fixture country code
+  string eventTime = 13; //Current event time e.g 00:10
+  string homeScore = 14; // Current Home Score
+  string matchStatus = 15; // Match status description, available values NotStarted,Live,Ended,Suspended
+  string eventStatus = 16; // event status of a live game available values Live,1st Half,2nd Half,Break,Overtime
+  string awayScore = 17; // Current score of the away team
+  string homeTeam = 18; // Home team name
+  string awayTeam = 19; // Away team name
+  repeated HighlightOutcomes outcomes = 20; // Market Outcomes
+}
+
+message GetHighlightsResponse {
+
+  repeated FixturesWithOdds fixtures = 1; // Array of fixtures
+  int32 lastPage = 2; // Last pagination page
+  int32 from = 3; // From data index
+  int32 to = 4; // to data index
+  int32 remainingRecords = 5; // how many records are remaining
+
+}
+
+message Outcome {
+  string alias = 1; // Outcome alias
+  string outcomeName = 2; // Outcome name
+  string outcomeID = 3; // Unique ID of the outcome
+  float odds = 4; // Current odds of the outcome
+  float previousOdds = 5; // Previous odds of the outcome
+  int32 oddID = 6; // Odd ID
+  int32 active = 7; // wether odd is active (1) or not (0), only display active odds on the site
+}
+
+message Market {
+  string marketName = 1; // Name of the market
+  int32 marketID = 2; // Unique ID of this market
+  string statusName = 3; // Market status name
+  int32 status = 4; // Market status, 0 - active, 1 - suspended, 2 - deactivated, 5 - handedover, only displaye markets with status 0 on the site
+  string specifier = 5; // Market line
+  repeated Outcome outcome = 6; // Array of outcomes
+}
+
+message FixtureOdds {
+
+  string tournament = 1; // Tournament name
+  int32 sportID = 2; // Unique ID of the sport
+  int32 gameID = 3; // Unique ID of the match (internal ID)
+  string name = 4; // Fixture name
+  int32 matchID = 5; // Unique ID of the match (betradr ID)
+  string date = 6; // Fixture date
+  int32 producerID = 7; // Unique ID of the producer that sent the odd
+  repeated Market markets = 8; // array of markets
+  string country = 9; // Fixture country
+  int32 statusCode = 10; // match status code
+  int32 producerStatus = 11; // producer status
+
+  string matchStatus = 12; // Match status description, available values NotStarted,Live,Ended,Suspended
+  string homeScore = 13; // Current score of the home team
+  string awayScore = 14; // Current score of the away team
+  string competitor1 = 15; // Home team name
+  string competitor2 = 16; // Away team name
+  string eventTime = 17; //Current event time e.g 00:10
+}
+
+message ResponseString {
+  string status = 1;
+}
+
+message UpdateMarketRequest {
+  int32 marketID = 1; // Unique Market ID
+  int32 priority = 2; // Market priority, the higher the value, the more the market priority
+}

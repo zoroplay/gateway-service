@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+package notification;
+
+service NotificationService {
+  rpc SendOTP (SendOtpRequest) returns (SendOtpResponse) {}
+}
+
+
+//send otp
+message SendOtpRequest {
+  string username = 1;
+}
+
+message SendOtpResponse {
+  int32 status = 1;
+  bool success = 2;
+  string message = 3;
+  repeated string error = 4;
+}
+
+// confirm otp
+message ConfirmOtpRequest {
+  string otp = 1;
+  string username = 2;
+}
+
+message ConfirmOtpResponse {
+  int32 status = 1;
+  bool success = 2;
+  string message = 3;
+  repeated string error = 4;
+}

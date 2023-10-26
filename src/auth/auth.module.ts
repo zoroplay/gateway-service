@@ -13,7 +13,7 @@ import { AUTH_PACKAGE_NAME, AUTH_SERVICE_NAME } from './auth.pb';
         options: {
           url: process.env.AUTH_SERVICE_URL,
           package: AUTH_PACKAGE_NAME,
-          protoPath: 'node_modules/sbe-service-proto/proto/auth.proto',
+          protoPath: 'proto/auth.proto',
         },
       },
     ]),
