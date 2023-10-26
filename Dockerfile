@@ -2,7 +2,8 @@ FROM node:18
 RUN mkdir -p /app
 WORKDIR /app
 COPY . .
-RUN apk add --update python3 make g++ && rm -rf /var/cache/apk/*
+#RUN apk add --update python3 make g++ && rm -rf /var/cache/apk/*
+RUN apt-get install -y python3
 
 RUN apt-get update \
  && DEBIAN_FRONTEND=noninteractive \
