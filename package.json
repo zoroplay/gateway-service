@@ -22,7 +22,10 @@
     "proto:install": "npm i git+https://github.com/zoroplay/sbe-service-proto.git",
     "proto:auth": "protoc --plugin=node_modules/.bin/protoc-gen-ts_proto -I=./node_modules/sbe-service-proto/proto --ts_proto_out=src/auth/ node_modules/sbe-service-proto/proto/auth.proto --ts_proto_opt=nestJs=true --ts_proto_opt=fileSuffix=.pb",
     "proto:gaming": "protoc --plugin=node_modules/.bin/protoc-gen-ts_proto -I=./node_modules/sbe-service-proto/proto --ts_proto_out=src/gaming/ node_modules/sbe-service-proto/proto/gaming.proto --ts_proto_opt=nestJs=true --ts_proto_opt=fileSuffix=.pb",
-    "proto:all": "yarn proto:auth && yarn proto:gaming"
+    "proto:betting": "protoc --plugin=node_modules/.bin/protoc-gen-ts_proto -I=./node_modules/sbe-service-proto/proto --ts_proto_out=src/betting/ node_modules/sbe-service-proto/proto/betting.proto --ts_proto_opt=nestJs=true --ts_proto_opt=fileSuffix=.pb",
+    "proto:fixture": "protoc --plugin=node_modules/.bin/protoc-gen-ts_proto -I=./node_modules/sbe-service-proto/proto --ts_proto_out=src/fixture/ node_modules/sbe-service-proto/proto/fixture.proto --ts_proto_opt=nestJs=true --ts_proto_opt=fileSuffix=.pb",
+    "proto:bonus": "protoc --plugin=node_modules/.bin/protoc-gen-ts_proto -I=./node_modules/sbe-service-proto/proto --ts_proto_out=src/bonus/ node_modules/sbe-service-proto/proto/bonus.proto --ts_proto_opt=nestJs=true --ts_proto_opt=fileSuffix=.pb",
+    "proto:all": "yarn proto:auth && yarn proto:gaming && yarn proto:betting && yarn proto:fixture && yarn proto:bonus"
   },
   "dependencies": {
     "@grpc/grpc-js": "^1.9.2",
