@@ -1,15 +1,10 @@
 /* eslint-disable */
-import { GrpcMethod } from "@nestjs/microservices";
+import { GrpcMethod, GrpcStreamMethod } from "@nestjs/microservices";
 import { Observable } from "rxjs";
 
 export const protobufPackage = "betting";
 
-export interface Empty {
-}
-
-export const BETTING_PACKAGE_NAME = "betting";
-
-export interface Settings{
+export interface Settings {
   clientID: number;
   taxOnStake: number;
   taxOnWinning: number;
@@ -21,11 +16,40 @@ export interface Settings{
   currency: string;
 }
 
+export interface SettingsResponse {
+  clientID: number;
+  taxOnStake: number;
+  taxOnWinning: number;
+  minimumStake: number;
+  maximumStake: number;
+  maximumWinning: number;
+  maximumSelections: number;
+  mtsLimitID: number;
+  currency: string;
+  created: string;
+  updated: string;
+}
+
 export interface SettingsById {
   clientID: number;
 }
 
-export interface PlaceBetDto {
+export interface GetAll {
+}
+
+export interface AllSettingsResponse {
+  settings: SettingsResponse[];
+}
+
+export interface BetID {
+  betID: number;
+}
+
+export interface StatusResponse {
+  response: string;
+}
+
+export interface PlaceBetRequest {
   betslip: BetSlip[];
   clientId: number;
   userId: number;
@@ -48,101 +72,103 @@ export interface BetSlip {
   sportId: number;
 }
 
-export interface BetHistoryDto {
-  userId: number;
-  status: number;
-  date: string;
-  clientId: number,
-}
-
-export interface SettingsResponse {
-  clientID: number;
-  taxOnStake: number;
-  taxOnWinning: number;
-  minimumStake: number;
-  maximumStake: number;
-  maximumWinning: number;
-  maximumSelections: number;
-  mtsLimitID: number;
-  currency: string;
-  created: string;
-  updated: string;
-}
-
-export interface AllSettingsResponse {
-  settings: SettingsResponse[];
-}
-
 export interface PlaceBetResponse {
   betId: number;
+  status: number;
+  statusDescription: number;
+}
+
+export interface BetHistoryRequest {
+  userId: number;
+  clientId: number;
+  date: string;
+}
+
+export interface BetSlipHistory {
+  eventName: string;
+  eventType: string;
+  eventId: number;
+  producerId: number;
+  marketId: number;
+  marketName: string;
+  specifier: string;
+  outcomeId: string;
+  outcomeName: string;
+  odds: number;
+  sportId: number;
   status: number;
   statusDescription: string;
 }
 
 export interface BetHistory {
-  betslip: BetSlip[];
+  betslip: BetSlipHistory[];
   stake: number;
+  date: string;
+  status: number;
+  statusDescription: string;
   source: string;
-  date: string,
-  status: number,
-  statusDescription: string,
 }
 
 export interface BetHistoryResponse {
-  data: BetHistory[];
+  data: BetHistoryResponse[];
 }
 
+export const BETTING_PACKAGE_NAME = "betting";
+
 export interface BettingServiceClient {
-  
-  CreateSetting(request: Settings): Observable<SettingsResponse>;
+  createSetting(request: Settings): Observable<SettingsResponse>;
 
-  UpdateSetting(request: Settings): Observable<SettingsResponse>;
+  updateSetting(request: Settings): Observable<SettingsResponse>;
 
-  GetSettingsByID(request: SettingsById): Observable<SettingsResponse>;
+  getSettingsById(request: SettingsById): Observable<SettingsResponse>;
 
-  GetAllSettings(request: Empty): Observable<AllSettingsResponse>;
+  getAllSettings(request: GetAll): Observable<AllSettingsResponse>;
 
-  PlaceBet(request: PlaceBetDto): Observable<PlaceBetResponse>;
+  cancelBet(request: BetID): Observable<StatusResponse>;
 
-  BetHistory(request: BetHistoryDto): Observable<BetHistoryResponse>;
+  placeBet(request: PlaceBetRequest): Observable<PlaceBetResponse>;
 
+  betHistory(request: BetHistoryRequest): Observable<BetHistoryResponse>;
 }
 
 export interface BettingServiceController {
+  createSetting(request: Settings): Promise<SettingsResponse> | Observable<SettingsResponse> | SettingsResponse;
 
-  CreateSetting(request: Settings): Promise<SettingsResponse> | Observable<SettingsResponse> | SettingsResponse;
+  updateSetting(request: Settings): Promise<SettingsResponse> | Observable<SettingsResponse> | SettingsResponse;
 
-  UpdateSetting(request: Settings): Promise<SettingsResponse> | Observable<SettingsResponse> | SettingsResponse;
+  getSettingsById(request: SettingsById): Promise<SettingsResponse> | Observable<SettingsResponse> | SettingsResponse;
 
-  GetSettingsByID(request: SettingsById): Promise<SettingsResponse> | Observable<SettingsResponse> | SettingsResponse;
+  getAllSettings(request: GetAll): Promise<AllSettingsResponse> | Observable<AllSettingsResponse> | AllSettingsResponse;
 
-  GetAllSettings(request: Empty): Promise<AllSettingsResponse> | Observable<AllSettingsResponse> | AllSettingsResponse;
+  cancelBet(request: BetID): Promise<StatusResponse> | Observable<StatusResponse> | StatusResponse;
 
-  PlaceBet(request: PlaceBetDto): Promise<PlaceBetResponse> | Observable<PlaceBetResponse> | PlaceBetResponse;
+  placeBet(request: PlaceBetRequest): Promise<PlaceBetResponse> | Observable<PlaceBetResponse> | PlaceBetResponse;
 
-  BetHistory(request: BetHistoryDto): Promise<BetHistoryResponse> | Observable<BetHistoryResponse> | BetHistoryResponse;
-
+  betHistory(
+    request: BetHistoryRequest,
+  ): Promise<BetHistoryResponse> | Observable<BetHistoryResponse> | BetHistoryResponse;
 }
 
 export function BettingServiceControllerMethods() {
-
   return function (constructor: Function) {
-
     const grpcMethods: string[] = [
-      "CreateSetting",
-      "UpdateSetting",
-      "GetSettingsByID",
-      "GetAllSettings",
-      "PlaceBet",
-      "BetHistory",
+      "createSetting",
+      "updateSetting",
+      "getSettingsById",
+      "getAllSettings",
+      "cancelBet",
+      "placeBet",
+      "betHistory",
     ];
-
     for (const method of grpcMethods) {
-
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
       GrpcMethod("BettingService", method)(constructor.prototype[method], method, descriptor);
     }
-
+    const grpcStreamMethods: string[] = [];
+    for (const method of grpcStreamMethods) {
+      const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
+      GrpcStreamMethod("BettingService", method)(constructor.prototype[method], method, descriptor);
+    }
   };
 }
 

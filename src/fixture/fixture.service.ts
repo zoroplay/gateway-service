@@ -21,47 +21,47 @@ export class FixtureService implements OnModuleInit {
   GetMarkets(sportID: number) {
 
     console.log("get markets for "+sportID);
-    return this.service.GetMarkets({sportID: sportID});
+    return this.service.getMarkets({sportID: sportID});
 
   }
 
   GetTournaments(sportID: number) {
 
     console.log('GetTournaments '+sportID);
-    return this.service.GetTournaments({sportID: sportID});
+    return this.service.getTournaments({sportID: sportID});
   }
 
   GetSports() {
     console.log('GetSports');
-    return this.service.GetSports({});
+    return this.service.getSports({});
   }
 
   GetLiveGamesCount(sportID: number) {
 
     console.log('GetLiveGamesCount ');
-    return this.service.GetLiveGamesCount({sportID: sportID});
+    return this.service.getLiveGamesCount({sportID: sportID});
   }
 
   GetHighlights(data: GetHighlightsRequest) {
 
     console.log('GetHighlights ');
-    return this.service.GetHighlights(data);
+    return this.service.getHighlights(data);
   }
 
   GetLiveHighlights(data: GetHighlightsRequest) {
 
     console.log('GetLiveHighlights ');
-    return this.service.GetLiveHighlights(data);
+    return this.service.getLiveHighlights(data);
   }
 
   GetFixtureWithOdds(matchID: number) {
     console.log('GetFixtureWithOdds ');
-    return this.service.GetFixtureWithOdds({matchID: matchID});
+    return this.service.getFixtureWithOdds({matchID: matchID});
   }
 
   UpdateMarketPriority(data: UpdateMarketRequest) {
     console.log('UpdateMarketPriority ');
-    return this.service.UpdateMarketPriority(data);
+    return this.service.updateMarketPriority(data);
   }
 
 }

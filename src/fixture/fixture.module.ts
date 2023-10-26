@@ -3,6 +3,7 @@ import { FixtureController } from './fixture.controller';
 import { FixtureService } from './fixture.service';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { FIXTURE_PACKAGE_NAME, protobufPackage } from './fixture.pb';
+import {BonusService} from "../bonus/bonus.service";
 
 @Module({
   imports: [
@@ -20,5 +21,6 @@ import { FIXTURE_PACKAGE_NAME, protobufPackage } from './fixture.pb';
   ],
   controllers: [FixtureController],
   providers: [FixtureService],
+  exports: [FixtureService],
 })
 export class FixtureModule {}

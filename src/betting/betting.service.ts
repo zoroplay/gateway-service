@@ -1,7 +1,7 @@
 import { Injectable, Inject, OnModuleInit } from '@nestjs/common';
 import {
   protobufPackage,
-  BettingServiceClient, BETTING_SERVICE_NAME, Settings, SettingsById, PlaceBetDto, BetHistoryDto,
+  BettingServiceClient, BETTING_SERVICE_NAME, Settings, SettingsById, BetHistoryRequest, PlaceBetRequest,
 } from './betting.pb';
 import { ClientGrpc } from '@nestjs/microservices';
 
@@ -18,32 +18,32 @@ export class BettingService implements OnModuleInit {
 
   CreateSetting(data: Settings) {
     console.log(data);
-    return this.service.CreateSetting(data);
+    return this.service.createSetting(data);
   }
 
   UpdateSetting(data: Settings) {
     console.log('updatesettings');
-    return this.service.UpdateSetting(data);
+    return this.service.updateSetting(data);
   }
 
   GetSettingsByID(data: SettingsById) {
     console.log('get settings by ID');
-    return this.service.GetSettingsByID(data);
+    return this.service.getSettingsById(data);
   }
 
   GetAllSettings() {
     console.log('get all settings ');
-    return this.service.GetAllSettings({});
+    return this.service.getAllSettings({});
   }
 
-  PlaceBet(data: PlaceBetDto) {
+  PlaceBet(data: PlaceBetRequest) {
     console.log('place bet ');
-    return this.service.PlaceBet(data);
+    return this.service.placeBet(data);
   }
 
-  BetHistory(data: BetHistoryDto) {
+  BetHistory(data: BetHistoryRequest) {
     console.log('bet history ');
-    return this.service.BetHistory(data);
+    return this.service.betHistory(data);
   }
 
 }

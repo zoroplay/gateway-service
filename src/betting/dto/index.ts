@@ -1,5 +1,4 @@
 import { ApiProperty } from '@nestjs/swagger';
-import {BetHistory, BetHistoryDto, BetSlip} from "../betting.pb";
 
 export class SwaggerSyncGameDto {
   @ApiProperty({ description: 'Provider name, e.g., shack-evolution' })

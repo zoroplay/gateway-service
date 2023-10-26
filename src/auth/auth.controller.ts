@@ -10,11 +10,9 @@ import { ClientGrpc } from '@nestjs/microservices';
 import { Observable } from 'rxjs';
 import {
   AuthServiceClient,
-  RegisterResponse,
-  RegisterRequest,
   AUTH_SERVICE_NAME,
   LoginRequest,
-  LoginResponse,
+  LoginResponse, SportBookRegisterRequest, SportBookRegisterResponse,
 } from './auth.pb';
 import { ApiTags } from '@nestjs/swagger';
 
@@ -32,9 +30,9 @@ export class AuthController implements OnModuleInit {
 
   @Post('register')
   private async register(
-    @Body() body: RegisterRequest,
-  ): Promise<Observable<RegisterResponse>> {
-    return this.svc.register(body);
+    @Body() body: SportBookRegisterRequest,
+  ): Promise<Observable<SportBookRegisterResponse>> {
+    return this.svc.sportRegister(body);
   }
 
   @Put('login')

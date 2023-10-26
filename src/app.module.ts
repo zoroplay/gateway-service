@@ -20,6 +20,7 @@ import {BettingModule} from "./betting/betting.module";
 import {BettingController} from "./betting/betting.controller";
 import {BonusModule} from "./bonus/bonus.module";
 import {BonusController} from "./bonus/bonus.controller";
+import {BettingService} from "./betting/betting.service";
 
 @Module({
   imports: [ConfigModule.forRoot(), AuthModule, GamingModule, BettingModule, FixtureModule,BonusModule],

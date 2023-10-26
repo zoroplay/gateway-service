@@ -81,13 +81,20 @@ export class FixtureController {
   }
 
   @Get('/highlight/prematch/:sport_id')
+  @ApiQuery({ name: 'sportID', description: 'ID of the sport' })
+  @ApiQuery({ name: 'marketID', description: 'filter by marketID' })
+  @ApiQuery({ name: 'page', description: 'Pagination page number' })
+  @ApiQuery({ name: 'hours', description: 'show only fixture starting in the next x hours' })
+  @ApiQuery({ name: 'perPage', description: 'record per page' })
+  @ApiQuery({ name: 'tournamentID', description: 'filter by tournamentID' })
+  @ApiQuery({ name: 'countryCode', description: 'ID of the countryCode' })
   @ApiOkResponse({ type: SwaggerHighlightsResponse })
   GetHighlights(@Param() params: any,@Query() query: any) {
 
     try {
 
       let rq = {
-        competitionID : query.competitionID ? query.competitionID : -1,
+        tournamentID : query.tournamentID ? parseInt(query.tournamentID) : -1,
         countryCode : query.countryCode ? query.countryCode : "",
         hours : query.hours ? query.hours : -1,
         marketID : query.marketID ? query.marketID : 1,
@@ -112,14 +119,14 @@ export class FixtureController {
   @ApiQuery({ name: 'page', description: 'Pagination page number' })
   @ApiQuery({ name: 'hours', description: 'show only fixture starting in the next x hours' })
   @ApiQuery({ name: 'perPage', description: 'record per page' })
-  @ApiQuery({ name: 'competitionID', description: 'filter by competitionID' })
+  @ApiQuery({ name: 'tournamentID', description: 'filter by tournamentID' })
   @ApiQuery({ name: 'countryCode', description: 'ID of the countryCode' })
   GetLiveHighlights(@Param() params: any,@Query() query: any) {
 
     try {
 
       let rq = {
-        competitionID : query.competitionID ? query.competitionID : -1,
+        tournamentID : query.tournamentID ? parseInt(query.tournamentID) : -1,
         countryCode : query.countryCode ? query.countryCode : "",
         hours : query.hours ? query.hours : -1,
         marketID : query.marketID ? query.marketID : 1,

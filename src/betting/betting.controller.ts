@@ -10,7 +10,7 @@ import {
   SwaggerSettings,
   SwaggerSettingsResponse,
 } from './dto';
-import {BetHistoryDto, PlaceBetDto, Settings} from "./betting.pb";
+import {BetHistoryRequest, BetHistoryResponse, PlaceBetRequest, Settings} from "./betting.pb";
 
 @ApiTags('Betting APIs')
 @Controller('betting-service')
@@ -83,7 +83,7 @@ export class BettingController {
   @Post('/bet/create')
   @ApiBody({ type: SwaggerPlaceBet })
   @ApiOkResponse({ type: SwaggerPlaceBetResponse })
-  PlaceBet(@Body() data: PlaceBetDto) {
+  PlaceBet(@Body() data: PlaceBetRequest) {
 
     try {
 
@@ -99,7 +99,7 @@ export class BettingController {
   @Post('/bet/history')
   @ApiBody({ type: SwaggerBetHistoryRequest })
   @ApiOkResponse({ type: SwaggerBetHistoryResponse })
-  BetHistory(@Body() data: BetHistoryDto) {
+  BetHistory(@Body() data: BetHistoryRequest) {
 
     try {
 
