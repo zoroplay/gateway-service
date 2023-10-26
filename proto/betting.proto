@@ -1,0 +1,128 @@
+syntax = "proto3";
+
+package betting;
+
+service BettingService {
+  rpc CreateSetting (Settings) returns (SettingsResponse) {}
+  rpc UpdateSetting (Settings) returns (SettingsResponse) {}
+  rpc GetSettingsByID (SettingsById) returns (SettingsResponse) {}
+  rpc GetAllSettings (GetAll) returns (AllSettingsResponse) {}
+  rpc CancelBet (BetID) returns (StatusResponse) {}
+  rpc PlaceBet (PlaceBetRequest) returns (PlaceBetResponse) {}
+  rpc BetHistory (BetHistoryRequest) returns (BetHistoryResponse) {}
+
+}
+
+message Settings {
+  int32 clientID = 1;
+  int32 taxOnStake = 2;
+  int32 taxOnWinning = 3;
+  int32 minimumStake = 4;
+  int32 maximumStake = 5;
+  int32 maximumWinning = 6;
+  int32 maximumSelections = 7;
+  int32 mtsLimitID = 8;
+  string currency = 9;
+}
+
+message SettingsResponse {
+  int32 clientID = 1;
+  float taxOnStake = 2;
+  float taxOnWinning = 3;
+  float minimumStake = 4;
+  float maximumStake = 5;
+  float maximumWinning = 6;
+  int32 maximumSelections = 7;
+  int32 mtsLimitID = 8;
+  string currency = 9;
+  string created = 10;
+  string updated = 11;
+}
+
+message SettingsById {
+  int32 clientID = 1;
+}
+
+message GetAll{
+
+}
+
+message AllSettingsResponse {
+  repeated SettingsResponse settings = 1;
+}
+
+message BetID {
+  int32 betID = 1;
+}
+
+message StatusResponse {
+  string response = 1;
+}
+
+message PlaceBetRequest {
+  repeated BetSlip betslip = 1;
+  int32 clientId = 2;
+  int32 userId = 3;
+  float stake = 4;
+  string source = 5;
+  string ipAddress = 6;
+}
+
+message BetSlip {
+  string eventName = 1;
+  string eventType = 2;
+  int64 eventId = 3;
+  int32 producerId = 4;
+  int32 marketId = 5;
+  string marketName = 6;
+  string specifier = 7;
+  string outcomeId = 8;
+  string outcomeName = 9;
+  float odds = 10;
+  int64 sportId = 11;
+
+}
+
+message PlaceBetResponse {
+  int32 betId = 1;
+  int32 status = 2;
+  float statusDescription = 3;
+}
+
+message BetHistoryRequest {
+  int32 userId = 1;
+  int32 clientId = 2;
+  string date = 3;
+}
+
+message BetSlipHistory {
+  string eventName = 1;
+  string eventType = 2;
+  int64 eventId = 3;
+  int32 producerId = 4;
+  int32 marketId = 5;
+  string marketName = 6;
+  string specifier = 7;
+  string outcomeId = 8;
+  string outcomeName = 9;
+  float odds = 10;
+  int64 sportId = 11;
+  int32 status = 12;
+  string statusDescription = 13;
+}
+
+message BetHistory {
+  repeated BetSlipHistory betslip = 1;
+  float stake = 2;
+  string date = 3;
+  int32 status = 4;
+  string statusDescription = 5;
+  string source = 6;
+
+}
+
+message BetHistoryResponse {
+
+  repeated BetHistoryResponse data = 1;
+
+}
