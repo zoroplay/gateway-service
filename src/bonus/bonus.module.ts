@@ -11,6 +11,7 @@ import { BONUS_PACKAGE_NAME, protobufPackage } from './bonus.pb';
         name: protobufPackage,
         transport: Transport.GRPC,
         options: {
+          url: process.env.BONUS_SERVICE_URL,
           package: BONUS_PACKAGE_NAME,
           protoPath: 'node_modules/sbe-service-proto/proto/bonus.proto',
         },

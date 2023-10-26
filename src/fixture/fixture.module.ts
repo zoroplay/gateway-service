@@ -11,6 +11,7 @@ import { FIXTURE_PACKAGE_NAME, protobufPackage } from './fixture.pb';
         name: protobufPackage,
         transport: Transport.GRPC,
         options: {
+          url: process.env.FIXTURE_SERVICE_URL,
           package: FIXTURE_PACKAGE_NAME,
           protoPath: 'node_modules/sbe-service-proto/proto/fixture.proto',
         },
