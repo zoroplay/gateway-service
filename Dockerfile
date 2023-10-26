@@ -9,7 +9,7 @@ RUN apk add --update python3 make g++ && rm -rf /var/cache/apk/*
 #COPY ./github_ssh_key /opt/my-app
 
 RUN npm install
-RUN npm proto:all
+RUN npm run proto:all
 RUN npm run build
 EXPOSE 80
 CMD ["npm", "start"]
