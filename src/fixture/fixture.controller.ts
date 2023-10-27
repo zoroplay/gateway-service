@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Post,Param,Query } from '@nestjs/common';
-import { ApiBody, ApiOkResponse, ApiTags,ApiQuery } from '@nestjs/swagger';
+import {ApiBody, ApiOkResponse, ApiTags, ApiQuery, ApiOperation, ApiParam} from '@nestjs/swagger';
 import { FixtureService } from './fixture.service';
 import {
   SwaggerAllMarketsResponse,
@@ -21,6 +21,8 @@ export class FixtureController {
   constructor(private readonly fixtureService: FixtureService) {}
 
   @Get('/markets/:sport_id')
+  @ApiOperation({ summary: 'Get markets for a specific sport', description: 'This endpoint retrieves market for a the supplied sport' })
+  @ApiParam({ name: 'sport_id', type: 'number', description:' Unique ID of the sport'})
   @ApiOkResponse({ type: [SwaggerAllMarketsResponse] })
   GetMarkets(@Param() params: any) {
 
@@ -36,6 +38,8 @@ export class FixtureController {
   }
 
   @Get('/tournaments/:sport_id')
+  @ApiOperation({ summary: 'Get tournaments for a specific sport', description: 'This endpoint retrieves tournaments for a the supplied sport' })
+  @ApiParam({ name: 'sport_id', type: 'number', description:' Unique ID of the sport'})
   @ApiOkResponse({ type: [SwaggerAllTournamentResponse] })
   GetTournaments(@Param() params: any) {
 
@@ -52,6 +56,7 @@ export class FixtureController {
   }
 
   @Get('/sports')
+  @ApiOperation({ summary: 'Get all sports', description: 'This endpoint retrieves all the enabled sports' })
   @ApiOkResponse({ type: [SwaggerAllSportResponse] })
   GetSports() {
 
@@ -67,6 +72,8 @@ export class FixtureController {
   }
 
   @Get('/live/games/count/:sport_id')
+  @ApiOperation({ summary: 'Gets how many fixtures are live filtered by supplied sportID', description: 'This endpoint Gets how many fixtures are live filtered by supplied sportID' })
+  @ApiParam({ name: 'sport_id', type: 'number', description:' Unique ID of the sport'})
   @ApiOkResponse({ type: [SwaggerCountResponse] })
   GetLiveGamesCount(@Param() params: any) {
 
@@ -81,7 +88,8 @@ export class FixtureController {
   }
 
   @Get('/highlight/prematch/:sport_id')
-  @ApiQuery({ name: 'sportID', description: 'ID of the sport' })
+  @ApiOperation({ summary: 'Get prematch odds ', description: 'This endpoint gets prematch odds for the seleced sportID, the returned odds are for only the marketID passed in as query parameter, if market ID is not passed, default marketID is 1' })
+  @ApiParam({ name: 'sport_id', type: 'number', description:' Unique ID of the sport'})
   @ApiQuery({ name: 'marketID', description: 'filter by marketID' })
   @ApiQuery({ name: 'page', description: 'Pagination page number' })
   @ApiQuery({ name: 'hours', description: 'show only fixture starting in the next x hours' })
@@ -113,6 +121,8 @@ export class FixtureController {
   }
 
   @Get('/highlight/live/:sport_id')
+  @ApiOperation({ summary: 'Get live odds ', description: 'This endpoint gets prematch odds for the seleced sportID, the returned odds are for only the marketID passed in as query parameter, if market ID is not passed, default marketID is 1' })
+  @ApiParam({ name: 'sport_id', type: 'number', description:' Unique ID of the sport'})
   @ApiOkResponse({ type: SwaggerHighlightsResponse })
   @ApiQuery({ name: 'sportID', description: 'ID of the sport' })
   @ApiQuery({ name: 'marketID', description: 'filter by marketID' })
@@ -144,7 +154,9 @@ export class FixtureController {
 
   }
 
-  @Post('/match/:match_id')
+  @Get('/match/:match_id')
+  @ApiOperation({ summary: 'Get all match odds ', description: 'This endpoint gets odds for all the markets for the supplied matchID' })
+  @ApiParam({ name: 'match_id', type: 'number', description:' Unique ID of the match'})
   @ApiOkResponse({ type: SwaggerFixtureOdds })
   GetFixtureWithOdds(@Param() params: any) {
 
@@ -160,6 +172,7 @@ export class FixtureController {
   }
 
   @Post('/admin/setting/market')
+  @ApiOperation({ summary: 'Update Market Order ', description: 'This endpoint updates the market order, this is the arrangement of markets when data is return by *Get all match odds* API' })
   @ApiBody({ type: SwaggerUpdateMarketRequest })
   @ApiOkResponse({ type: SwaggerResponseString })
   UpdateMarketPriority(@Body() data: UpdateMarketRequest) {
