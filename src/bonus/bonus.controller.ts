@@ -1,5 +1,5 @@
-import {Body, Controller, Patch, Post} from '@nestjs/common';
-import {ApiBody, ApiOkResponse, ApiOperation, ApiTags} from '@nestjs/swagger';
+import {Body, Controller, Get, Patch, Post, Put, Query} from '@nestjs/common';
+import {ApiBody, ApiOkResponse, ApiOperation, ApiQuery, ApiTags} from '@nestjs/swagger';
 import {BonusService} from './bonus.service';
 
 import {
@@ -55,7 +55,7 @@ export class BonusController {
 
   }
 
-  @Patch('/cashback/update')
+  @Put('/cashback/update')
   @ApiOperation({ summary: 'Update Cashback Bonus ', description: 'This endpoint updates an existing cashback bonus for a particular client, it enables you to update cashback bonus with different settings/terms' })
   @ApiBody({ type: SwaggerCreateCashbackBonusRequest })
   @ApiOkResponse({ type: SwaggerCreateBonusResponse })
@@ -92,7 +92,7 @@ export class BonusController {
 
   }
 
-  @Patch('/first-deposit/update')
+  @Put('/first-deposit/update')
   @ApiOperation({ summary: 'Update First Deposit Bonus ', description: 'This endpoint updates an existing First Deposit bonus for a particular client, it enables you to update First Deposit bonus with different settings/terms' })
   @ApiBody({ type: SwaggerCreateCashbackBonusRequest })
   @ApiOkResponse({ type: SwaggerCreateBonusResponse })
@@ -130,7 +130,7 @@ export class BonusController {
   }
 
 
-  @Post('/freebet/update')
+  @Put('/freebet/update')
   @ApiOperation({ summary: 'Update Freebet Bonus ', description: 'This endpoint updates an existing Freebet bonus for a particular client, it enables you to update Freebet bonus with different settings/terms' })
   @ApiBody({ type: SwaggerCreateFreebetBonusRequest })
   @ApiOkResponse({ type: SwaggerCreateBonusResponse })
@@ -167,7 +167,7 @@ export class BonusController {
   }
 
 
-  @Post('/referral/update')
+  @Put('/referral/update')
   @ApiOperation({ summary: 'Update Referral Bonus ', description: 'This endpoint updates an existing Referral bonus for a particular client, it enables you to update Referral bonus with different settings/terms' })
   @ApiBody({ type: SwaggerCreateReferralBonusRequest })
   @ApiOkResponse({ type: SwaggerCreateBonusResponse })
@@ -205,7 +205,7 @@ export class BonusController {
   }
 
 
-  @Post('/sharebet/update')
+  @Put('/sharebet/update')
   @ApiOperation({ summary: 'Update ShareBet Bonus ', description: 'This endpoint updates an existing ShareBet bonus for a particular client, it enables you to update ShareBet bonus with different settings/terms' })
   @ApiBody({ type: SwaggerCreateShareBetBonusRequest })
   @ApiOkResponse({ type: SwaggerCreateBonusResponse })
@@ -224,13 +224,16 @@ export class BonusController {
   }
 
 
-  @Post('/client/bonus/view')
+  @Get('/client/bonus/view')
   @ApiOperation({ summary: 'Get all bonus types for a client ', description: 'This endpoint retrieves all the bonus types for a particular client' })
-  @ApiBody({ type: SwaggerGetBonusRequest })
+  @ApiQuery({ name: 'clientId', description: 'ID of the client' })
   @ApiOkResponse({ type: SwaggerBonusResponse })
-  GetBonus(@Body() data: GetBonusRequest) {
+  GetBonus(@Query() query: any) {
 
     try {
+
+      let data = {} as GetBonusRequest
+      data.clientId =  query.clientId ? parseInt(query.clientId) : -1
 
       return this.bonusService.GetBonus(data);
 
@@ -242,13 +245,18 @@ export class BonusController {
 
   }
 
-  @Post('/user/bonus/view')
+  @Get('/user/bonus/view')
   @ApiOperation({ summary: 'Get all bonus balance for a user ', description: 'This endpoint retrieves all the bonus balance for a particular user' })
-  @ApiBody({ type: SwaggerGetUserBonusRequest })
+  @ApiQuery({ name: 'clientId', description: 'ID of the client' })
+  @ApiQuery({ name: 'userId', description: 'ID of the user' })
   @ApiOkResponse({ type: SwaggerGetUserBonusResponse })
-  GetUserBonus(@Body() data: GetUserBonusRequest) {
+  GetUserBonus(@Query() query: any) {
 
     try {
+
+      let data = {} as GetUserBonusRequest
+      data.clientId =  query.clientId ? parseInt(query.clientId) : -1
+      data.userId =  query.userId ? parseInt(query.userId) : -1
 
       return this.bonusService.GetUserBonus(data);
 
@@ -296,7 +304,6 @@ export class BonusController {
 
   }
 
-
   @Post('/user/bonus/redeem')
   @ApiOperation({ summary: 'Place Bonus Bet', description: 'This endpoint allows placing a bonus bet. This endpoint is meant to be used by Betting Service during place bet operation' })
   @ApiBody({ type: SwaggerUserBet })
@@ -315,7 +322,7 @@ export class BonusController {
 
   }
 
-  @Post('/bonus/status/update')
+  @Patch('/bonus/status/update')
   @ApiOperation({ summary: 'Activate or Deactivate client bonus type ', description: 'Use this endpoint to activate or deactivate a client bonus' })
   @ApiBody({ type: SwaggerBonusStatusRequest })
   @ApiOkResponse({ type: SwaggerCreateBonusResponse })
