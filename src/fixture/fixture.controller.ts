@@ -96,6 +96,8 @@ export class FixtureController {
   @ApiQuery({ name: 'perPage', description: 'record per page' })
   @ApiQuery({ name: 'tournamentID', description: 'filter by tournamentID' })
   @ApiQuery({ name: 'countryCode', description: 'ID of the countryCode' })
+  @ApiQuery({ name: 'upcoming', description: 'Default is 0, If value is 1 then get Upcoming matches (start date is >= tomorrow )' })
+  @ApiQuery({ name: 'today', description: 'Default is 0, If value is 1 then get todays matches (start date is todat )' })
   @ApiOkResponse({ type: SwaggerHighlightsResponse })
   GetHighlights(@Param() params: any,@Query() query: any) {
 
@@ -109,6 +111,8 @@ export class FixtureController {
         page : query.page ? query.page : 1,
         perPage : query.perPage ? query.perPage : 10,
         sportID : params.sport_id ? params.sport_id : 1,
+        upcoming : query.upcoming ? query.upcoming : 0,
+        today : query.today ? query.today : 0,
       }
 
       return this.fixtureService.GetHighlights(rq);
@@ -127,7 +131,6 @@ export class FixtureController {
   @ApiQuery({ name: 'sportID', description: 'ID of the sport' })
   @ApiQuery({ name: 'marketID', description: 'filter by marketID' })
   @ApiQuery({ name: 'page', description: 'Pagination page number' })
-  @ApiQuery({ name: 'hours', description: 'show only fixture starting in the next x hours' })
   @ApiQuery({ name: 'perPage', description: 'record per page' })
   @ApiQuery({ name: 'tournamentID', description: 'filter by tournamentID' })
   @ApiQuery({ name: 'countryCode', description: 'ID of the countryCode' })
@@ -138,11 +141,13 @@ export class FixtureController {
       let rq = {
         tournamentID : query.tournamentID ? parseInt(query.tournamentID) : -1,
         countryCode : query.countryCode ? query.countryCode : "",
-        hours : query.hours ? query.hours : -1,
+        hours : -1,
         marketID : query.marketID ? query.marketID : 1,
         page : query.page ? query.page : 1,
         perPage : query.perPage ? query.perPage : 10,
         sportID : params.sport_id ? params.sport_id : 1,
+        upcoming :  0,
+        today :  0,
       }
 
       return this.fixtureService.GetLiveHighlights(rq);

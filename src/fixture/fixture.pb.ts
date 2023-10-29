@@ -94,6 +94,10 @@ export interface GetHighlightsRequest {
   tournamentID: number;
   /** If length > 0 only fixtures of this countryCode will be loaded */
   countryCode: string;
+  /** If value > 0 only fixtures whoose start date is tomorrow going forwad */
+  upcoming: number;
+  /** If value > 0 only fixtures whoose start date is today */
+  today: number;
 }
 
 export interface HighlightOutcomes {

@@ -103,6 +103,8 @@ message GetHighlightsRequest {
   int32 perPage = 5; // records to load per page (pagination)
   int32 tournamentID = 6; // If value > 0 only fixtures of this tournamentID will be loaded
   string countryCode = 7; // If length > 0 only fixtures of this countryCode will be loaded
+  int32 upcoming = 8;
+  int32 today = 9;
 }
 
 message HighlightOutcomes {
