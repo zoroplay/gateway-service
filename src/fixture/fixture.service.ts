@@ -3,7 +3,7 @@ import {
   protobufPackage,
   FixtureServiceClient,
   FIXTURE_SERVICE_NAME,
-  GetHighlightsRequest, UpdateMarketRequest, CreateOutcomeAlias,
+  GetHighlightsRequest, UpdateMarketRequest, CreateOutcomeAliasRequest,
 } from './fixture.pb';
 import { ClientGrpc } from '@nestjs/microservices';
 
@@ -64,7 +64,7 @@ export class FixtureService implements OnModuleInit {
     return this.service.updateMarketPriority(data);
   }
 
-  createOutcomeAlias(data: CreateOutcomeAlias) {
+  createOutcomeAlias(data: CreateOutcomeAliasRequest) {
 
     console.log('CreateOutcomeAlias ');
     return this.service.createOutcomeAlias(data);
@@ -72,14 +72,14 @@ export class FixtureService implements OnModuleInit {
   }
 
 
-  updateOutcomeAlias(data: CreateOutcomeAlias) {
+  updateOutcomeAlias(data: CreateOutcomeAliasRequest) {
 
     console.log('updateOutcomeAlias ');
     return this.service.updateOutcomeAlias(data);
 
   }
 
-  deleteOutcomeAlias(data: CreateOutcomeAlias) {
+  deleteOutcomeAlias(data: CreateOutcomeAliasRequest) {
 
     console.log('deleteOutcomeAlias ');
     return this.service.deleteOutcomeAlias(data);

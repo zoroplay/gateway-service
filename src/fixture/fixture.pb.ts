@@ -283,7 +283,7 @@ export interface Outcome {
   marketID: number;
 }
 
-export interface CreateOutcomeAlias {
+export interface CreateOutcomeAliasRequest {
   clientID: number;
   /** outcome name alias */
   alias: string;
@@ -344,10 +344,10 @@ export interface FixtureServiceClient {
   updateMarketPriority(request: UpdateMarketRequest): Observable<ResponseString>;
 
 
-  createOutcomeAlias (request: CreateOutcomeAlias): Observable<CreateOutcomeAliasResponse>;
-  updateOutcomeAlias (request: CreateOutcomeAlias) : Observable<CreateOutcomeAliasResponse>;
+  createOutcomeAlias (request: CreateOutcomeAliasRequest): Observable<CreateOutcomeAliasResponse>;
+  updateOutcomeAlias (request: CreateOutcomeAliasRequest) : Observable<CreateOutcomeAliasResponse>;
   getAllOutcomeAlias (request: GetAllOutcomeAliasRequest) : Observable<GetAllOutcomeAliasResponse>;
-  deleteOutcomeAlias (request: CreateOutcomeAlias) : Observable<CreateOutcomeAliasResponse>;
+  deleteOutcomeAlias (request: CreateOutcomeAliasRequest) : Observable<CreateOutcomeAliasResponse>;
 
 }
 
@@ -394,11 +394,11 @@ export interface FixtureServiceController {
 
 
   createOutcomeAlias(
-      request: CreateOutcomeAlias,
+      request: CreateOutcomeAliasRequest,
   ): Promise<CreateOutcomeAliasResponse> | Observable<CreateOutcomeAliasResponse> | CreateOutcomeAliasResponse;
 
   UpdateOutcomeAlias(
-      request: CreateOutcomeAlias,
+      request: CreateOutcomeAliasRequest,
   ): Promise<CreateOutcomeAliasResponse> | Observable<CreateOutcomeAliasResponse> | CreateOutcomeAliasResponse;
 
   GetAllOutcomeAlias(
@@ -406,7 +406,7 @@ export interface FixtureServiceController {
   ): Promise<GetAllOutcomeAliasResponse> | Observable<GetAllOutcomeAliasResponse> | GetAllOutcomeAliasResponse;
 
   DeleteOutcomeAlias(
-      request: CreateOutcomeAlias,
+      request: CreateOutcomeAliasRequest,
   ): Promise<CreateOutcomeAliasResponse> | Observable<CreateOutcomeAliasResponse> | CreateOutcomeAliasResponse;
 
 }

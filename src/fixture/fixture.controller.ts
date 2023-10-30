@@ -12,7 +12,7 @@ import {
   SwaggerTournament,
   SwaggerUpdateMarketRequest
 } from "./dto";
-import {CreateOutcomeAlias, CreateOutcomeAliasResponse, UpdateMarketRequest} from "./fixture.pb";
+import {CreateOutcomeAliasRequest, UpdateMarketRequest} from "./fixture.pb";
 
 @ApiTags('Fixture APIs')
 @Controller('fixture-service')
@@ -197,7 +197,7 @@ export class FixtureController {
   @ApiOperation({ summary: 'Create outcome alias ', description: 'This endpoint creates a new outcome alias' })
   @ApiBody({ type: SwaggerCreateOutcomeAlias })
   @ApiOkResponse({ type: SwaggerCreateOutcomeAliasResponse })
-  createOutcomeAlias(@Body() data: CreateOutcomeAlias) {
+  createOutcomeAlias(@Body() data: CreateOutcomeAliasRequest) {
 
     try {
 
@@ -215,7 +215,7 @@ export class FixtureController {
   @ApiOperation({ summary: 'Update outcome alias ', description: 'This endpoint updates an existing outcome alias' })
   @ApiBody({ type: SwaggerCreateOutcomeAlias })
   @ApiOkResponse({ type: SwaggerCreateOutcomeAliasResponse })
-  updateOutcomeAlias(@Body() data: CreateOutcomeAlias) {
+  updateOutcomeAlias(@Body() data: CreateOutcomeAliasRequest) {
 
     try {
 
@@ -233,7 +233,7 @@ export class FixtureController {
   @ApiOperation({ summary: 'Delete outcome alias ', description: 'This endpoint deletes an existing outcome alias' })
   @ApiBody({ type: SwaggerCreateOutcomeAlias })
   @ApiOkResponse({ type: SwaggerCreateOutcomeAliasResponse })
-  deleteOutcomeAlias(@Body() data: CreateOutcomeAlias) {
+  deleteOutcomeAlias(@Body() data: CreateOutcomeAliasRequest) {
 
     try {
 
