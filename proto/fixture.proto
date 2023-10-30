@@ -30,10 +30,10 @@ service FixtureService {
   //UpdateMarketPriority - Update market priority, this will affect the order of markets in GetFixtureWithOdds method
   rpc UpdateMarketPriority (UpdateMarketRequest) returns (ResponseString){}
 
-  rpc CreateOutcomeAlias (CreateOutcomeAlias) returns (CreateOutcomeAliasResponse){}
-  rpc UpdateOutcomeAlias (CreateOutcomeAlias) returns (CreateOutcomeAliasResponse){}
+  rpc CreateOutcomeAlias (CreateOutcomeAliasRequest) returns (CreateOutcomeAliasResponse){}
+  rpc UpdateOutcomeAlias (CreateOutcomeAliasRequest) returns (CreateOutcomeAliasResponse){}
   rpc GetAllOutcomeAlias (GetAllOutcomeAliasRequest) returns (GetAllOutcomeAliasResponse){}
-  rpc DeleteOutcomeAlias (CreateOutcomeAlias) returns (CreateOutcomeAliasResponse){}
+  rpc DeleteOutcomeAlias (CreateOutcomeAliasRequest) returns (CreateOutcomeAliasResponse){}
 
 
 }
@@ -213,7 +213,7 @@ message UpdateMarketRequest {
   int32 priority = 2; // Market priority, the higher the value, the more the market priority
 }
 
-message CreateOutcomeAlias {
+message CreateOutcomeAliasRequest {
   int32 clientID = 1;
   string alias = 2;
   /** market name */
