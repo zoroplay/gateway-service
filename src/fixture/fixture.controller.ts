@@ -1,18 +1,18 @@
-import { Body, Controller, Get, Post,Param,Query } from '@nestjs/common';
+import {Body, Controller, Get, Post, Param, Query, Put, Delete} from '@nestjs/common';
 import {ApiBody, ApiOkResponse, ApiTags, ApiQuery, ApiOperation, ApiParam} from '@nestjs/swagger';
 import { FixtureService } from './fixture.service';
 import {
   SwaggerAllMarketsResponse,
   SwaggerAllSportResponse,
   SwaggerAllTournamentResponse,
-  SwaggerCountResponse,
+  SwaggerCountResponse, SwaggerCreateOutcomeAlias, SwaggerCreateOutcomeAliasResponse,
   SwaggerFixtureOdds,
   SwaggerHighlightsResponse,
   SwaggerResponseString,
   SwaggerTournament,
   SwaggerUpdateMarketRequest
 } from "./dto";
-import {UpdateMarketRequest} from "./fixture.pb";
+import {CreateOutcomeAlias, CreateOutcomeAliasResponse, UpdateMarketRequest} from "./fixture.pb";
 
 @ApiTags('Fixture APIs')
 @Controller('fixture-service')
@@ -189,6 +189,78 @@ export class FixtureController {
 
       console.error(error);
 
+    }
+
+  }
+
+  @Post('/admin/setting/outcome/alias/create')
+  @ApiOperation({ summary: 'Create outcome alias ', description: 'This endpoint creates a new outcome alias' })
+  @ApiBody({ type: SwaggerCreateOutcomeAlias })
+  @ApiOkResponse({ type: SwaggerCreateOutcomeAliasResponse })
+  createOutcomeAlias(@Body() data: CreateOutcomeAlias) {
+
+    try {
+
+      return this.fixtureService.createOutcomeAlias(data);
+
+    } catch (error) {
+
+      console.error(error);
+
+    }
+
+  }
+
+  @Put('/admin/setting/outcome/alias/update')
+  @ApiOperation({ summary: 'Update outcome alias ', description: 'This endpoint updates an existing outcome alias' })
+  @ApiBody({ type: SwaggerCreateOutcomeAlias })
+  @ApiOkResponse({ type: SwaggerCreateOutcomeAliasResponse })
+  updateOutcomeAlias(@Body() data: CreateOutcomeAlias) {
+
+    try {
+
+      return this.fixtureService.updateOutcomeAlias(data);
+
+    } catch (error) {
+
+      console.error(error);
+
+    }
+
+  }
+
+  @Delete('/admin/setting/outcome/alias/update')
+  @ApiOperation({ summary: 'Delete outcome alias ', description: 'This endpoint deletes an existing outcome alias' })
+  @ApiBody({ type: SwaggerCreateOutcomeAlias })
+  @ApiOkResponse({ type: SwaggerCreateOutcomeAliasResponse })
+  deleteOutcomeAlias(@Body() data: CreateOutcomeAlias) {
+
+    try {
+
+      return this.fixtureService.deleteOutcomeAlias(data);
+
+    } catch (error) {
+
+      console.error(error);
+
+    }
+
+  }
+
+  @Get('/admin/setting/outcome/alias/:client_id/all')
+  @ApiOperation({ summary: 'Get outcome alias ', description: 'This endpoint retrieves all outcome alias for a particular client' })
+  @ApiParam({ name: 'client_id', type: 'number', description:' Unique ID of the client'})
+  findAllOutcomeAlias(@Param() params: any) {
+
+    try {
+
+      let clientID = parseInt(params.client_id)
+
+      return this.fixtureService.findAllOutcomeAlias(clientID);
+
+    } catch (error) {
+
+      console.error(error);
     }
 
   }

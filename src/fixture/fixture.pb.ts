@@ -263,6 +263,51 @@ export interface UpdateMarketRequest {
   priority: number;
 }
 
+
+export interface GetAllOutcomeAliasRequest {
+  clientID: number;
+}
+
+export interface Outcome {
+  /** outcome name alias */
+  alias: string;
+  /** market name */
+  marketName: string;
+  /** outcome name */
+  outcomeName: string;
+  /** specifier if any is available */
+  specifier: string;
+  /** outcomeID */
+  outcomeID: string;
+  /** Unique ID of this market */
+  marketID: number;
+}
+
+export interface CreateOutcomeAlias {
+  clientID: number;
+  /** outcome name alias */
+  alias: string;
+  /** market name */
+  marketName: string;
+  /** outcome name */
+  outcomeName: string;
+  /** specifier if any is available */
+  specifier: string;
+  /** outcomeID */
+  outcomeID: string;
+  /** Unique ID of this market */
+  marketID: number;
+}
+
+export interface GetAllOutcomeAliasResponse {
+  outcomes: Outcome[];
+}
+
+export interface CreateOutcomeAliasResponse {
+  status: number;
+  statusDescription: string
+}
+
 export const FIXTURE_PACKAGE_NAME = "fixture";
 
 export interface FixtureServiceClient {
@@ -297,6 +342,13 @@ export interface FixtureServiceClient {
   /** UpdateMarketPriority - Update market priority, this will affect the order of markets in GetFixtureWithOdds method */
 
   updateMarketPriority(request: UpdateMarketRequest): Observable<ResponseString>;
+
+
+  createOutcomeAlias (request: CreateOutcomeAlias): Observable<CreateOutcomeAliasResponse>;
+  updateOutcomeAlias (request: CreateOutcomeAlias) : Observable<CreateOutcomeAliasResponse>;
+  getAllOutcomeAlias (request: GetAllOutcomeAliasRequest) : Observable<GetAllOutcomeAliasResponse>;
+  deleteOutcomeAlias (request: CreateOutcomeAlias) : Observable<CreateOutcomeAliasResponse>;
+
 }
 
 export interface FixtureServiceController {
@@ -339,6 +391,24 @@ export interface FixtureServiceController {
   updateMarketPriority(
     request: UpdateMarketRequest,
   ): Promise<ResponseString> | Observable<ResponseString> | ResponseString;
+
+
+  createOutcomeAlias(
+      request: CreateOutcomeAlias,
+  ): Promise<CreateOutcomeAliasResponse> | Observable<CreateOutcomeAliasResponse> | CreateOutcomeAliasResponse;
+
+  UpdateOutcomeAlias(
+      request: CreateOutcomeAlias,
+  ): Promise<CreateOutcomeAliasResponse> | Observable<CreateOutcomeAliasResponse> | CreateOutcomeAliasResponse;
+
+  GetAllOutcomeAlias(
+      request: GetAllOutcomeAliasRequest,
+  ): Promise<GetAllOutcomeAliasResponse> | Observable<GetAllOutcomeAliasResponse> | GetAllOutcomeAliasResponse;
+
+  DeleteOutcomeAlias(
+      request: CreateOutcomeAlias,
+  ): Promise<CreateOutcomeAliasResponse> | Observable<CreateOutcomeAliasResponse> | CreateOutcomeAliasResponse;
+
 }
 
 export function FixtureServiceControllerMethods() {
@@ -352,6 +422,10 @@ export function FixtureServiceControllerMethods() {
       "getLiveHighlights",
       "getFixtureWithOdds",
       "updateMarketPriority",
+      "CreateOutcomeAlias",
+      "UpdateOutcomeAlias",
+      "GetAllOutcomeAlias",
+      "DeleteOutcomeAlias"
     ];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);

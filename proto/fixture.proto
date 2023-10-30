@@ -30,6 +30,12 @@ service FixtureService {
   //UpdateMarketPriority - Update market priority, this will affect the order of markets in GetFixtureWithOdds method
   rpc UpdateMarketPriority (UpdateMarketRequest) returns (ResponseString){}
 
+  rpc CreateOutcomeAlias (CreateOutcomeAlias) returns (CreateOutcomeAliasResponse){}
+  rpc UpdateOutcomeAlias (CreateOutcomeAlias) returns (CreateOutcomeAliasResponse){}
+  rpc GetAllOutcomeAlias (GetAllOutcomeAliasRequest) returns (GetAllOutcomeAliasResponse){}
+  rpc DeleteOutcomeAlias (CreateOutcomeAlias) returns (CreateOutcomeAliasResponse){}
+
+
 }
 
 message CountResponse {
@@ -205,4 +211,48 @@ message ResponseString {
 message UpdateMarketRequest {
   int32 marketID = 1; // Unique Market ID
   int32 priority = 2; // Market priority, the higher the value, the more the market priority
+}
+
+message CreateOutcomeAlias {
+  int32 clientID = 1;
+  string alias = 2;
+  /** market name */
+  string marketName = 3;
+  /** outcome name */
+  string outcomeName = 4;
+  /** specifier if any is available */
+  string specifier = 5;
+  /** outcomeID */
+  string  outcomeID = 6;
+  /** Unique ID of this market */
+  int32  marketID = 7;
+}
+
+message CreateOutcomeAliasResponse {
+
+  int32 status = 1;
+  string statusDescription = 2;
+}
+
+message OutcomeAlias {
+  /** outcome name alias */
+  string alias = 1 ;
+  /** market name */
+  string marketName = 2;
+  /** outcome name */
+  string outcomeName = 3;
+  /** specifier if any is available */
+  string specifier = 4;
+  /** outcomeID */
+  string outcomeID = 5;
+  /** Unique ID of this market */
+  int32  marketID = 6;
+}
+
+message GetAllOutcomeAliasResponse {
+  repeated OutcomeAlias outcomes = 1;
+}
+
+message GetAllOutcomeAliasRequest {
+  int32 clientID = 1;
 }

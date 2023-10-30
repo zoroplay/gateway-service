@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import {Outcome} from "../fixture.pb";
 
 export class SwaggerFilterBySportID {
   @ApiProperty({ description: 'ID of the Sport' })
@@ -60,12 +61,6 @@ export class SwaggerCountResponse {
   @ApiProperty({ description: 'Count' })
   count: number;
 }
-
-
-
-
-
-
 
 export class SwaggerHighlightsRequest {
   @ApiProperty({ description: 'ID of the sport' })
@@ -226,4 +221,78 @@ export class SwaggerResponseString {
 
   @ApiProperty({ description: 'Action status' })
   status: string;
+}
+
+export class SwaggerCreateOutcomeAlias {
+
+  @ApiProperty({ description: 'client id' })
+  clientID: number;
+
+  /** outcome name alias */
+  @ApiProperty({ description: 'outcome name alias' })
+  alias: string;
+
+  /** market name */
+  @ApiProperty({ description: 'market name alias' })
+  marketName: string;
+
+  /** outcome name */
+  @ApiProperty({ description: 'outcome name' })
+  outcomeName: string;
+
+  /** specifier if any is available */
+  @ApiProperty({ description: 'market specifier' })
+  specifier: string;
+
+  /** outcomeID */
+  @ApiProperty({ description: 'outcomeID' })
+  outcomeID: string;
+
+  /** Unique ID of this market */
+  @ApiProperty({ description: 'market ID' })
+  marketID: number;
+}
+
+export class SwaggerCreateOutcomeAliasResponse {
+  @ApiProperty({ description: 'Action status' })
+  status: string;
+
+  @ApiProperty({ description: 'Action status description' })
+  statusDescription: string
+}
+
+export class SwaggerOutcomeAlias {
+
+  /** outcome name alias */
+  @ApiProperty({ description: 'outcome name alias' })
+  alias: string;
+
+  /** market name */
+  @ApiProperty({ description: 'market name alias' })
+  marketName: string;
+
+  /** outcome name */
+  @ApiProperty({ description: 'outcome name' })
+  outcomeName: string;
+
+  /** specifier if any is available */
+  @ApiProperty({ description: 'market specifier' })
+  specifier: string;
+
+  /** outcomeID */
+  @ApiProperty({ description: 'outcomeID' })
+  outcomeID: string;
+
+  /** Unique ID of this market */
+  @ApiProperty({ description: 'market ID' })
+  marketID: number;
+}
+
+export class GetAllOutcomeAliasResponse {
+
+  @ApiProperty({
+    type: [SwaggerOutcomeAlias],
+    description: 'Outcomes of this particular market',
+  })
+  outcomes: SwaggerOutcomeAlias[]
 }
