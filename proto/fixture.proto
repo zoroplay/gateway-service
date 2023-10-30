@@ -120,6 +120,8 @@ message HighlightOutcomes {
   int32 active = 10; // wether odd is active or deactivated, 1 - ACtive, 0 - Deactivated
   int32 producerID = 11; // ID of the producer that send the odds
   int32 marketID = 12; // Unique ID of this market
+  int32 producerStatus = 13; // ID of the producer that send the odds
+
 }
 
 message FixturesWithOdds {
