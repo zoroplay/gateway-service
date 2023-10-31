@@ -39,7 +39,9 @@ export class FixtureService implements OnModuleInit {
 
   GetSportsMenu(data: GetSportMenuRequest) {
     console.log('GetSportsMenu');
-    return this.service.getSportsMenu(data);
+    const res = this.service.getSportsMenu(data);
+    console.log(res);
+    return res;
   }
 
   GetLiveGamesCount(sportID: number) {
