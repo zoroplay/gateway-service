@@ -117,18 +117,8 @@ export class SwaggerSportMenuResponse {
   @ApiProperty({
     type: [SwaggerSportMenu],
     description: 'Array of sports',
-    nullable: true
   })
-  data: SwaggerSportMenu[];
-
-  @ApiProperty({ description: 'server response message' })
-  message: string;
-
-  @ApiProperty({ description: 'server response status (true or false)' })
-  success: boolean;
-
-  @ApiProperty({ description: 'error message from server if any', nullable: true })
-  error: string;
+  sports: SwaggerSportMenu[];
 }
 
 export class SwaggerCountResponse {
