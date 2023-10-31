@@ -123,7 +123,7 @@ export class FixtureController {
   @ApiQuery({ name: 'countryCode', description: 'ID of the countryCode' })
   @ApiQuery({ name: 'upcoming', description: 'Default is 0, If value is 1 then get Upcoming matches (start date is >= tomorrow )' })
   @ApiQuery({ name: 'today', description: 'Default is 0, If value is 1 then get todays matches (start date is todat )' })
-  // @ApiOkResponse({ type: SwaggerHighlightsResponse })
+  @ApiOkResponse({ type: SwaggerHighlightsResponse })
   GetHighlights(
     @Param() params: any,
     @Query() query: any
@@ -144,14 +144,12 @@ export class FixtureController {
         today : query.today ? query.today : 0,
       }
 
-      // return this.fixtureService.GetHighlights(rq);
-      return rq;
+      return this.fixtureService.GetHighlights(rq);
 
     } catch (error) {
       logger.error('error fetching highlights ' + error);
 
       console.error(error);
-      return error;
     }
 
   }
