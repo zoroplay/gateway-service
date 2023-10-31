@@ -77,7 +77,7 @@ export class FixtureController {
     summary: 'Get all upcoming sports', 
     description: 'This endpoint retrieves all upcoming sports, categories and tournaments based on a specified period of time' 
   })
-  @ApiQuery({ type: SwaggerSportMenuRequest})
+  // @ApiQuery({ type: SwaggerSportMenuRequest})
   @ApiOkResponse({ type: [SwaggerSportMenuResponse] })
   GetSportsMenu(
     @Query() query: SwaggerSportMenuRequest
