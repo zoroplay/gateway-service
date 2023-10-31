@@ -3,7 +3,7 @@ import {
   protobufPackage,
   FixtureServiceClient,
   FIXTURE_SERVICE_NAME,
-  GetHighlightsRequest, UpdateMarketRequest, CreateOutcomeAliasRequest,
+  GetHighlightsRequest, UpdateMarketRequest, CreateOutcomeAliasRequest, GetSportMenuRequest,
 } from './fixture.pb';
 import { ClientGrpc } from '@nestjs/microservices';
 
@@ -34,6 +34,12 @@ export class FixtureService implements OnModuleInit {
   GetSports() {
     console.log('GetSports');
     return this.service.getSports({});
+  }
+
+
+  GetSportsMenu(data: GetSportMenuRequest) {
+    console.log('GetSports');
+    return this.service.getSportsMenu(data);
   }
 
   GetLiveGamesCount(sportID: number) {

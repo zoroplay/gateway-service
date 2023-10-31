@@ -9,7 +9,8 @@ import {
   SwaggerFixtureOdds,
   SwaggerHighlightsResponse,
   SwaggerResponseString,
-  SwaggerTournament,
+  SwaggerSportMenuRequest,
+  SwaggerSportMenuResponse,
   SwaggerUpdateMarketRequest
 } from "./dto";
 import {CreateOutcomeAliasRequest, UpdateMarketRequest} from "./fixture.pb";
@@ -63,6 +64,28 @@ export class FixtureController {
     try {
 
       return  this.fixtureService.GetSports();
+
+    } catch (error) {
+
+      console.error(error);
+    }
+
+  }
+
+  @Get('/sports-menu')
+  @ApiOperation({ 
+    summary: 'Get all upcoming sports', 
+    description: 'This endpoint retrieves all upcoming sports, categories and tournaments based on a specified period of time' 
+  })
+  @ApiQuery({ type: SwaggerSportMenuRequest})
+  @ApiOkResponse({ type: [SwaggerSportMenuResponse] })
+  GetSportsMenu(
+    @Query() query: SwaggerSportMenuRequest
+  ) {
+
+    try {
+
+      return  this.fixtureService.GetSportsMenu(query);
 
     } catch (error) {
 
