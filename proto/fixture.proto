@@ -37,7 +37,7 @@ service FixtureService {
 
   rpc CreateOutcomeAlias (CreateOutcomeAliasRequest) returns (CreateOutcomeAliasResponse){}
   rpc UpdateOutcomeAlias (CreateOutcomeAliasRequest) returns (CreateOutcomeAliasResponse){}
-  rpc GetAllOutcomeAlias (CreateOutcomeAliasRequest) returns (GetAllOutcomeAliasResponse){}
+  rpc GetAllOutcomeAlias (GetAllOutcomeAliasRequest) returns (GetAllOutcomeAliasResponse){}
   rpc DeleteOutcomeAlias (CreateOutcomeAliasRequest) returns (CreateOutcomeAliasResponse){}
 
 
