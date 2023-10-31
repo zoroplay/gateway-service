@@ -75,21 +75,21 @@ export interface SportResponse {
 }
 
 export interface Category {
-  categoryId: number;
+  categoryID: number;
   categoryName: string;
   total: number;
   tournaments: Tournament[];
 }
 
 export interface Tournament {
-  tournamentId: number;
+  tournamentID: number;
   tournamentName: string;
   total: number;
 }
 
 export interface SportMenuResponse {
   /** unique ID of a sport */
-  sportId: number;
+  sportID: number;
   /** Sport name */
   sportName: string;
   /** total fixtures count for a sport */
