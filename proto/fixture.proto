@@ -102,25 +102,24 @@ message SportResponse {
 }
 
 message Category {
-  int32 category_id = 1;
-  string category_name = 2;
+  int32 categoryID = 1;
+  string categoryName = 2;
   int32 total = 3;
   repeated Tournament tournaments = 4;
 }
 
 message Tournament {
-  int32 tournament_id = 1;
-  string tournament_name = 2;
+  int32 tournamentID = 1;
+  string tournamentName = 2;
   int32 total = 3;
 }
 
 message SportMenuResponse {
-  int32 sport_id = 1; // unique ID of a sport
-  string sport_name = 2; // Sport name
+  int32 sportID = 1; // unique ID of a sport
+  string sportName = 2; // Sport name
   string total = 3; //total fixtures count for a sport
   repeated Category categories = 4;
 }
-
 // Object used to hold array of sports
 message AllSportResponse {
   repeated SportResponse sports = 1;
