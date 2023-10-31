@@ -1,4 +1,4 @@
-import {Body, Controller, Get, Post, Param, Query, Put, Delete} from '@nestjs/common';
+import { Body, Controller, Get, Post, Param, Query, Put, Delete, Logger } from '@nestjs/common';
 import {ApiBody, ApiOkResponse, ApiTags, ApiQuery, ApiOperation, ApiParam} from '@nestjs/swagger';
 import { FixtureService } from './fixture.service';
 import {
@@ -14,6 +14,8 @@ import {
   SwaggerUpdateMarketRequest
 } from "./dto";
 import {CreateOutcomeAliasRequest, UpdateMarketRequest} from "./fixture.pb";
+
+const logger = new Logger();
 
 @ApiTags('Fixture APIs')
 @Controller('fixture-service')
@@ -122,7 +124,11 @@ export class FixtureController {
   @ApiQuery({ name: 'upcoming', description: 'Default is 0, If value is 1 then get Upcoming matches (start date is >= tomorrow )' })
   @ApiQuery({ name: 'today', description: 'Default is 0, If value is 1 then get todays matches (start date is todat )' })
   @ApiOkResponse({ type: SwaggerHighlightsResponse })
-  GetHighlights(@Param() params: any,@Query() query: any) {
+  GetHighlights(
+    @Param() params: any,
+    @Query() query: any
+  ) {
+    logger.log('fetching highlights ');
 
     try {
 
@@ -141,6 +147,7 @@ export class FixtureController {
       return this.fixtureService.GetHighlights(rq);
 
     } catch (error) {
+      logger.error('error fetching highlights ' + error);
 
       console.error(error);
     }
@@ -159,6 +166,8 @@ export class FixtureController {
   GetLiveHighlights(@Param() params: any,@Query() query: any) {
 
     try {
+      logger.log('fetching live highlights ');
+
 
       let rq = {
         tournamentID : query.tournamentID ? parseInt(query.tournamentID) : -1,
@@ -175,6 +184,8 @@ export class FixtureController {
       return this.fixtureService.GetLiveHighlights(rq);
 
     } catch (error) {
+
+      logger.error('error fetching live highlights ' + error);
 
       console.error(error);
     }
