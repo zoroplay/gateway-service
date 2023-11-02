@@ -3,7 +3,11 @@ import {
   protobufPackage,
   FixtureServiceClient,
   FIXTURE_SERVICE_NAME,
-  GetHighlightsRequest, UpdateMarketRequest, CreateOutcomeAliasRequest,
+  GetHighlightsRequest,
+  UpdateMarketRequest,
+  CreateOutcomeAliasRequest,
+  CreateMarketGroupRequest,
+  DeleteMarketGroupRequest, AddSpecifierRequest, DeleteSpecifierRequest,
 } from './fixture.pb';
 import { ClientGrpc } from '@nestjs/microservices';
 
@@ -90,6 +94,60 @@ export class FixtureService implements OnModuleInit {
 
     console.log('findAllOutcomeAlias ');
     return this.service.getAllOutcomeAlias({clientID: clientID});
+
+  }
+
+
+
+
+
+
+  createMarketGroup(data: CreateMarketGroupRequest) {
+
+    console.log('createMarketGroup ');
+    return this.service.createMarketGroup(data);
+
+  }
+
+  updateMarketGroup(data: CreateMarketGroupRequest) {
+
+    console.log('updateMarketGroup ');
+    return this.service.updateMarketGroup(data);
+
+  }
+
+  deleteMarketGroup(data: DeleteMarketGroupRequest) {
+
+    console.log('createMarketGroup ');
+    return this.service.deleteMarketGroup(data);
+
+  }
+
+  getAllMarketGroup(clientID: number) {
+
+    console.log('getAllMarketGroup ');
+    return this.service.getAllMarketGroup({clientID: clientID});
+
+  }
+
+  addMarketGroupSpecifier(data: AddSpecifierRequest) {
+
+    console.log('addMarketGroupSpecifier ');
+    return this.service.addMarketGroupSpecifier(data);
+
+  }
+
+  updateMarketGroupSpecifier(data: AddSpecifierRequest) {
+
+    console.log('updateMarketGroupSpecifier ');
+    return this.service.updateMarketGroupSpecifier(data);
+
+  }
+
+  deleteMarketGroupSpecifier(data: DeleteSpecifierRequest) {
+
+    console.log('deleteMarketGroupSpecifier ');
+    return this.service.deleteMarketGroupSpecifier(data);
 
   }
 

@@ -36,6 +36,57 @@ service FixtureService {
   rpc DeleteOutcomeAlias (CreateOutcomeAliasRequest) returns (CreateOutcomeAliasResponse){}
 
 
+  rpc CreateMarketGroup (CreateMarketGroupRequest) returns (CreateOutcomeAliasResponse){}
+  rpc UpdateMarketGroup (CreateMarketGroupRequest) returns (CreateOutcomeAliasResponse){}
+  rpc DeleteMarketGroup (DeleteMarketGroupRequest) returns (CreateOutcomeAliasResponse){}
+  rpc GetAllMarketGroup (FilterByClientIDRequest) returns (MarketGroupResponse){}
+  rpc AddMarketGroupSpecifier (AddSpecifierRequest) returns (CreateOutcomeAliasResponse){}
+  rpc UpdateMarketGroupSpecifier (AddSpecifierRequest) returns (CreateOutcomeAliasResponse){}
+  rpc DeleteMarketGroupSpecifier (DeleteSpecifierRequest) returns (CreateOutcomeAliasResponse){}
+
+}
+
+message CreateMarketGroupRequest {
+  int32 clientID = 1;
+  int32 marketID = 2;
+  string groupName = 3;
+  int32 priority = 4;
+}
+
+message DeleteMarketGroupRequest {
+  int32 id = 1;
+}
+
+message FilterByClientIDRequest {
+  int32 clientID = 1;
+}
+
+message AddSpecifierRequest {
+  int32 marketGroupID = 1;
+  string name = 2;
+  string specifier = 3;
+}
+
+message MarketGroupSpecifier {
+  int32 id = 1;
+  string name = 2;
+  string specifier = 3;
+}
+
+message MarketGroupData {
+  int32 marketGroupID = 1;
+  int32 marketID = 2;
+  string groupName = 3;
+  int32 priority = 4;
+  repeated MarketGroupSpecifier specifiers = 5;
+}
+
+message MarketGroupResponse {
+  repeated MarketGroupData markets = 1;
+}
+
+message DeleteSpecifierRequest {
+  int32 id = 1;
 }
 
 message CountResponse {

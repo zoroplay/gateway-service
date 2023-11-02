@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {Outcome} from "../fixture.pb";
+import exp from "constants";
 
 export class SwaggerFilterBySportID {
   @ApiProperty({ description: 'ID of the Sport' })
@@ -295,4 +296,75 @@ export class GetAllOutcomeAliasResponse {
     description: 'Outcomes of this particular market',
   })
   outcomes: SwaggerOutcomeAlias[]
+}
+
+export class SwaggerMarketGroupSpecifierData {
+  @ApiProperty({ description: 'ID' })
+  id: number;
+
+  @ApiProperty({ description: 'Specifer name' })
+  name: string;
+
+  @ApiProperty({ description: 'specifier value' })
+  specifier: string;
+}
+
+export class SwaggerMarketGroupData {
+  @ApiProperty({ description: 'group ID' })
+  marketGroupID: number;
+
+  @ApiProperty({ description: 'market ID' })
+  marketID: number;
+
+  @ApiProperty({ description: 'group name' })
+  groupName: string;
+
+  @ApiProperty({ description: 'priority number, the higher the value the higher the priority' })
+  priority: number;
+
+  @ApiProperty({
+    type: [SwaggerMarketGroupSpecifierData],
+    description: 'specifies attached to this group',
+  })
+  specifiers: SwaggerMarketGroupSpecifierData[]
+}
+
+export class SwaggerMarketGroupResponse {
+  @ApiProperty({
+    type: [SwaggerMarketGroupData],
+    description: 'Markets array',
+  })
+  markets: SwaggerMarketGroupData[];
+}
+
+
+export class SwaggerCreateMarketGroupRequest {
+  @ApiProperty({ description: 'ID of the client' })
+  clientID: number;
+
+  @ApiProperty({ description: 'ID of the market' })
+  marketID: number;
+
+  @ApiProperty({ description: 'name of group' })
+  groupName: string;
+
+  @ApiProperty({ description: 'Priority' })
+  priority: number;
+}
+
+export class SwaggerDeleteMarketGroupRequest {
+
+  @ApiProperty({ description: 'ID of the market group' })
+  id: number;
+}
+
+export class SwaggerAddSpecifierRequest {
+  @ApiProperty({ description: 'ID of the market group' })
+  marketGroupID: number;
+
+  @ApiProperty({ description: 'Human readable name' })
+  name: string;
+
+  @ApiProperty({ description: 'specifier value' })
+  specifier: string;
 }

@@ -2,17 +2,24 @@ import {Body, Controller, Get, Post, Param, Query, Put, Delete} from '@nestjs/co
 import {ApiBody, ApiOkResponse, ApiTags, ApiQuery, ApiOperation, ApiParam} from '@nestjs/swagger';
 import { FixtureService } from './fixture.service';
 import {
+  SwaggerAddSpecifierRequest,
   SwaggerAllMarketsResponse,
   SwaggerAllSportResponse,
   SwaggerAllTournamentResponse,
-  SwaggerCountResponse, SwaggerCreateOutcomeAlias, SwaggerCreateOutcomeAliasResponse,
+  SwaggerCountResponse, SwaggerCreateMarketGroupRequest, SwaggerCreateOutcomeAlias, SwaggerCreateOutcomeAliasResponse,
   SwaggerFixtureOdds,
-  SwaggerHighlightsResponse,
+  SwaggerHighlightsResponse, SwaggerMarketGroupResponse,
   SwaggerResponseString,
   SwaggerTournament,
   SwaggerUpdateMarketRequest
 } from "./dto";
-import {CreateOutcomeAliasRequest, UpdateMarketRequest} from "./fixture.pb";
+import {
+  AddSpecifierRequest,
+  CreateMarketGroupRequest,
+  CreateOutcomeAliasRequest, MarketGroupResponse,
+  UpdateMarketGroupRequest,
+  UpdateMarketRequest
+} from "./fixture.pb";
 
 @ApiTags('Fixture APIs')
 @Controller('fixture-service')
@@ -261,6 +268,138 @@ export class FixtureController {
     } catch (error) {
 
       console.error(error);
+    }
+
+  }
+
+  @Get('/market/group/:client_id/all')
+  @ApiOperation({ summary: 'Get all market groups ', description: 'This endpoint retrieves all marketgroups for a particular client' })
+  @ApiParam({ name: 'client_id', type: 'number', description:' Unique ID of the client'})
+  @ApiOkResponse({ type: SwaggerMarketGroupResponse })
+  getAllMarketGroup(@Param() params: any) {
+
+    try {
+
+      let clientID = parseInt(params.client_id)
+
+      return this.fixtureService.getAllMarketGroup(clientID);
+
+    } catch (error) {
+
+      console.error(error);
+    }
+
+  }
+
+  @Post('/market/group/create')
+  @ApiOperation({ summary: 'Create market group ', description: 'This endpoint creates a new market group, if the group exist it will be updated' })
+  @ApiBody({ type: SwaggerCreateMarketGroupRequest })
+  @ApiOkResponse({ type: SwaggerCreateOutcomeAliasResponse })
+  createMarketGroup(@Body() data: CreateMarketGroupRequest) {
+
+    try {
+
+      return this.fixtureService.createMarketGroup(data);
+
+    } catch (error) {
+
+      console.error(error);
+
+    }
+
+  }
+
+  @Put('/market/group/update')
+  @ApiOperation({ summary: 'Update market group ', description: 'This endpoint updates an existing market group' })
+  @ApiBody({ type: SwaggerCreateMarketGroupRequest })
+  @ApiOkResponse({ type: SwaggerCreateOutcomeAliasResponse })
+  updateMarketGroup(@Body() data: CreateMarketGroupRequest) {
+
+    try {
+
+      return this.fixtureService.updateMarketGroup(data);
+
+    } catch (error) {
+
+      console.error(error);
+
+    }
+
+  }
+
+  @Delete('/market/group/:id/delete')
+  @ApiOperation({ summary: 'Delete market group ', description: 'This endpoint deletes an existing market group' })
+  @ApiParam({ name: 'id', type: 'number', description:' ID of the group t delete'})
+  @ApiOkResponse({ type: SwaggerCreateOutcomeAliasResponse })
+  deleteMarketGroup(@Param() params: any) {
+
+    try {
+
+      let id = parseInt(params.id)
+
+      return this.fixtureService.deleteMarketGroup({id: id});
+
+    } catch (error) {
+
+      console.error(error);
+
+    }
+
+  }
+
+
+  @Post('/market/group/specifier/create')
+  @ApiOperation({ summary: 'Create market group specifier', description: 'This endpoint creates a new market group specifier, if the group exist it will be updated' })
+  @ApiBody({ type: SwaggerAddSpecifierRequest })
+  @ApiOkResponse({ type: SwaggerCreateOutcomeAliasResponse })
+  addMarketGroupSpecifier(@Body() data: AddSpecifierRequest) {
+
+    try {
+
+      return this.fixtureService.addMarketGroupSpecifier(data);
+
+    } catch (error) {
+
+      console.error(error);
+
+    }
+
+  }
+
+  @Put('/market/group/specifier/update')
+  @ApiOperation({ summary: 'update market group specifier', description: 'This endpoint updates an existing market group specifier, if the group exist it will be updated' })
+  @ApiBody({ type: SwaggerAddSpecifierRequest })
+  @ApiOkResponse({ type: SwaggerCreateOutcomeAliasResponse })
+  updateMarketGroupSpecifier(@Body() data: AddSpecifierRequest) {
+
+    try {
+
+      return this.fixtureService.updateMarketGroupSpecifier(data);
+
+    } catch (error) {
+
+      console.error(error);
+
+    }
+
+  }
+
+  @Delete('/market/group/specifier/:id/delete')
+  @ApiOperation({ summary: 'Delete market group specifier', description: 'This endpoint deletes an existing market group specifier' })
+  @ApiParam({ name: 'id', type: 'number', description:' ID of the specifier to delete'})
+  @ApiOkResponse({ type: SwaggerCreateOutcomeAliasResponse })
+  deleteMarketGroupSpecifier(@Param() params: any) {
+
+    try {
+
+      let id = parseInt(params.id)
+
+      return this.fixtureService.deleteMarketGroupSpecifier({id: id});
+
+    } catch (error) {
+
+      console.error(error);
+
     }
 
   }
