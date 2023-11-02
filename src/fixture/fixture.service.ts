@@ -3,6 +3,7 @@ import {
   protobufPackage,
   FixtureServiceClient,
   FIXTURE_SERVICE_NAME,
+  GetHighlightsRequest, UpdateMarketRequest, CreateOutcomeAliasRequest, GetSportMenuRequest,
   GetHighlightsRequest,
   UpdateMarketRequest,
   CreateOutcomeAliasRequest,
@@ -38,6 +39,12 @@ export class FixtureService implements OnModuleInit {
   GetSports() {
     console.log('GetSports');
     return this.service.getSports({});
+  }
+
+
+  GetSportsMenu(data: GetSportMenuRequest) {
+    console.log('GetSportsMenu');
+    return this.service.getSportsMenu(data);
   }
 
   GetLiveGamesCount(sportID: number) {

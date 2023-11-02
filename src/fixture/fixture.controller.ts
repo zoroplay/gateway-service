@@ -1,4 +1,4 @@
-import {Body, Controller, Get, Post, Param, Query, Put, Delete} from '@nestjs/common';
+import { Body, Controller, Get, Post, Param, Query, Put, Delete, Logger } from '@nestjs/common';
 import {ApiBody, ApiOkResponse, ApiTags, ApiQuery, ApiOperation, ApiParam} from '@nestjs/swagger';
 import { FixtureService } from './fixture.service';
 import {
@@ -10,7 +10,8 @@ import {
   SwaggerFixtureOdds,
   SwaggerHighlightsResponse, SwaggerMarketGroupResponse,
   SwaggerResponseString,
-  SwaggerTournament,
+  SwaggerSportMenuRequest,
+  SwaggerSportMenuResponse,
   SwaggerUpdateMarketRequest
 } from "./dto";
 import {
@@ -20,6 +21,8 @@ import {
   UpdateMarketGroupRequest,
   UpdateMarketRequest
 } from "./fixture.pb";
+
+const logger = new Logger();
 
 @ApiTags('Fixture APIs')
 @Controller('fixture-service')
@@ -78,6 +81,28 @@ export class FixtureController {
 
   }
 
+  @Get('/sports-menu')
+  @ApiOperation({ 
+    summary: 'Get all upcoming sports', 
+    description: 'This endpoint retrieves all upcoming sports, categories and tournaments based on a specified period of time' 
+  })
+  // @ApiQuery({ type: SwaggerSportMenuRequest})
+  @ApiOkResponse({ type: SwaggerSportMenuResponse })
+  GetSportsMenu(
+    @Query() query: SwaggerSportMenuRequest
+  ) {
+
+    try {
+
+      return  this.fixtureService.GetSportsMenu(query);
+
+    } catch (error) {
+
+      console.error(error);
+    }
+
+  }
+
   @Get('/live/games/count/:sport_id')
   @ApiOperation({ summary: 'Gets how many fixtures are live filtered by supplied sportID', description: 'This endpoint Gets how many fixtures are live filtered by supplied sportID' })
   @ApiParam({ name: 'sport_id', type: 'number', description:' Unique ID of the sport'})
@@ -106,7 +131,11 @@ export class FixtureController {
   @ApiQuery({ name: 'upcoming', description: 'Default is 0, If value is 1 then get Upcoming matches (start date is >= tomorrow )' })
   @ApiQuery({ name: 'today', description: 'Default is 0, If value is 1 then get todays matches (start date is todat )' })
   @ApiOkResponse({ type: SwaggerHighlightsResponse })
-  GetHighlights(@Param() params: any,@Query() query: any) {
+  GetHighlights(
+    @Param() params: any,
+    @Query() query: any
+  ) {
+    logger.log('fetching highlights ');
 
     try {
 
@@ -125,6 +154,7 @@ export class FixtureController {
       return this.fixtureService.GetHighlights(rq);
 
     } catch (error) {
+      logger.error('error fetching highlights ' + error);
 
       console.error(error);
     }
@@ -143,6 +173,8 @@ export class FixtureController {
   GetLiveHighlights(@Param() params: any,@Query() query: any) {
 
     try {
+      logger.log('fetching live highlights ');
+
 
       let rq = {
         tournamentID : query.tournamentID ? parseInt(query.tournamentID) : -1,
@@ -159,6 +191,8 @@ export class FixtureController {
       return this.fixtureService.GetLiveHighlights(rq);
 
     } catch (error) {
+
+      logger.error('error fetching live highlights ' + error);
 
       console.error(error);
     }

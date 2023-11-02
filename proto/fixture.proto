@@ -5,6 +5,11 @@ package fixture;
 service FixtureService {
 
   /*
+  Gets a list of sports, categories, tournaments based on upcoming fixtures for a period
+   */
+  rpc GetSportsMenu (GetSportMenuRequest) returns (AvailableSportMenuResponse){}
+
+  /*
   Gets a list of available markets, markets are pulled peridocally from betradr API
    */
   rpc GetMarkets (FilterBySportID) returns (AllMarketResponse){}
@@ -147,9 +152,40 @@ message SportResponse {
   string sportName = 2; // Sport name
 }
 
+message Category {
+  int32 categoryID = 1;
+  string categoryName = 2;
+  int32 total = 3;
+  repeated Tournament tournaments = 4;
+}
+
+message Tournament {
+  int32 tournamentID = 1;
+  string tournamentName = 2;
+  int32 total = 3;
+}
+
+message SportMenuResponse {
+  int32 sportID = 1; // unique ID of a sport
+  string sportName = 2; // Sport name
+  string total = 3; //total fixtures count for a sport
+  repeated Category categories = 4;
+}
 // Object used to hold array of sports
 message AllSportResponse {
   repeated SportResponse sports = 1;
+}
+
+// Object used to hold array of sports
+message AvailableSportMenuResponse {
+  repeated SportMenuResponse sports = 1;
+}
+
+message GetSportMenuRequest { 
+  string period = 1; // period to display
+  string start = 2; // start date
+  string end = 3; //end date
+
 }
 
 message GetHighlightsRequest {

@@ -74,9 +74,46 @@ export interface SportResponse {
   sportName: string;
 }
 
+export interface Category {
+  categoryID: number;
+  categoryName: string;
+  total: number;
+  tournaments: Tournament[];
+}
+
+export interface Tournament {
+  tournamentID: number;
+  tournamentName: string;
+  total: number;
+}
+
+export interface SportMenuResponse {
+  /** unique ID of a sport */
+  sportID: number;
+  /** Sport name */
+  sportName: string;
+  /** total fixtures count for a sport */
+  total: string;
+  categories: Category[];
+}
+
 /** Object used to hold array of sports */
 export interface AllSportResponse {
   sports: SportResponse[];
+}
+
+/** Object used to hold array of sports */
+export interface AvailableSportMenuResponse {
+  sports: SportMenuResponse[];
+}
+
+export interface GetSportMenuRequest {
+  /** period to display */
+  period: string;
+  /** start date */
+  start: string;
+  /** end date */
+  end: string;
 }
 
 export interface GetHighlightsRequest {
@@ -94,9 +131,7 @@ export interface GetHighlightsRequest {
   tournamentID: number;
   /** If length > 0 only fixtures of this countryCode will be loaded */
   countryCode: string;
-  /** If value > 0 only fixtures whoose start date is tomorrow going forwad */
   upcoming: number;
-  /** If value > 0 only fixtures whoose start date is today */
   today: number;
 }
 
@@ -125,6 +160,8 @@ export interface HighlightOutcomes {
   producerID: number;
   /** Unique ID of this market */
   marketID: number;
+  /** ID of the producer that send the odds */
+  producerStatus: number;
 }
 
 export interface FixturesWithOdds {
@@ -263,13 +300,8 @@ export interface UpdateMarketRequest {
   priority: number;
 }
 
-
-export interface GetAllOutcomeAliasRequest {
+export interface CreateOutcomeAliasRequest {
   clientID: number;
-}
-
-export interface Outcome {
-  /** outcome name alias */
   alias: string;
   /** market name */
   marketName: string;
@@ -283,8 +315,12 @@ export interface Outcome {
   marketID: number;
 }
 
-export interface CreateOutcomeAliasRequest {
-  clientID: number;
+export interface CreateOutcomeAliasResponse {
+  status: number;
+  statusDescription: string;
+}
+
+export interface OutcomeAlias {
   /** outcome name alias */
   alias: string;
   /** market name */
@@ -300,12 +336,11 @@ export interface CreateOutcomeAliasRequest {
 }
 
 export interface GetAllOutcomeAliasResponse {
-  outcomes: Outcome[];
+  outcomes: OutcomeAlias[];
 }
 
-export interface CreateOutcomeAliasResponse {
-  status: number;
-  statusDescription: string
+export interface GetAllOutcomeAliasRequest {
+  clientID: number;
 }
 
 export interface CreateMarketGroupRequest {
@@ -360,6 +395,10 @@ export interface FilterByClientIDRequest {
 export const FIXTURE_PACKAGE_NAME = "fixture";
 
 export interface FixtureServiceClient {
+  /** Gets a list of sports, categories, tournaments based on upcoming fixtures for a period */
+
+  getSportsMenu(request: GetSportMenuRequest): Observable<AvailableSportMenuResponse>;
+
   /** Gets a list of available markets, markets are pulled peridocally from betradr API */
 
   getMarkets(request: FilterBySportID): Observable<AllMarketResponse>;
@@ -406,9 +445,22 @@ export interface FixtureServiceClient {
   updateMarketGroupSpecifier (request: AddSpecifierRequest): Observable<CreateOutcomeAliasResponse>;
   deleteMarketGroupSpecifier (request: DeleteSpecifierRequest): Observable<CreateOutcomeAliasResponse>;
 
+  createOutcomeAlias(request: CreateOutcomeAliasRequest): Observable<CreateOutcomeAliasResponse>;
+
+  updateOutcomeAlias(request: CreateOutcomeAliasRequest): Observable<CreateOutcomeAliasResponse>;
+
+  getAllOutcomeAlias(request: GetAllOutcomeAliasRequest): Observable<GetAllOutcomeAliasResponse>;
+
+  deleteOutcomeAlias(request: CreateOutcomeAliasRequest): Observable<CreateOutcomeAliasResponse>;
 }
 
 export interface FixtureServiceController {
+  /** Gets a list of sports, categories, tournaments based on upcoming fixtures for a period */
+
+  getSportsMenu(
+    request: GetSportMenuRequest,
+  ): Promise<AvailableSportMenuResponse> | Observable<AvailableSportMenuResponse> | AvailableSportMenuResponse;
+
   /** Gets a list of available markets, markets are pulled peridocally from betradr API */
 
   getMarkets(request: FilterBySportID): Promise<AllMarketResponse> | Observable<AllMarketResponse> | AllMarketResponse;
@@ -449,19 +501,24 @@ export interface FixtureServiceController {
     request: UpdateMarketRequest,
   ): Promise<ResponseString> | Observable<ResponseString> | ResponseString;
 
-
   createOutcomeAlias(
-      request: CreateOutcomeAliasRequest,
+    request: CreateOutcomeAliasRequest,
   ): Promise<CreateOutcomeAliasResponse> | Observable<CreateOutcomeAliasResponse> | CreateOutcomeAliasResponse;
 
+  updateOutcomeAlias(
+    request: CreateOutcomeAliasRequest,
   updateOutcomeAlias(
       request: CreateOutcomeAliasRequest,
   ): Promise<CreateOutcomeAliasResponse> | Observable<CreateOutcomeAliasResponse> | CreateOutcomeAliasResponse;
 
   getAllOutcomeAlias(
+    request: GetAllOutcomeAliasRequest,
+  getAllOutcomeAlias(
       request: GetAllOutcomeAliasRequest,
   ): Promise<GetAllOutcomeAliasResponse> | Observable<GetAllOutcomeAliasResponse> | GetAllOutcomeAliasResponse;
 
+  deleteOutcomeAlias(
+    request: CreateOutcomeAliasRequest,
   deleteOutcomeAlias(
       request: CreateOutcomeAliasRequest,
   ): Promise<CreateOutcomeAliasResponse> | Observable<CreateOutcomeAliasResponse> | CreateOutcomeAliasResponse;
@@ -504,6 +561,7 @@ export interface FixtureServiceController {
 export function FixtureServiceControllerMethods() {
   return function (constructor: Function) {
     const grpcMethods: string[] = [
+      "getSportsMenu",
       "getMarkets",
       "getTournaments",
       "getSports",
@@ -512,6 +570,10 @@ export function FixtureServiceControllerMethods() {
       "getLiveHighlights",
       "getFixtureWithOdds",
       "updateMarketPriority",
+      "createOutcomeAlias",
+      "updateOutcomeAlias",
+      "getAllOutcomeAlias",
+      "deleteOutcomeAlias",
       "CreateOutcomeAlias",
       "UpdateOutcomeAlias",
       "GetAllOutcomeAlias",

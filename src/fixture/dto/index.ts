@@ -49,12 +49,77 @@ export class SwaggerSport {
   sportName: string;
 }
 
+export class SwaggerSportMenu {
+
+  @ApiProperty({ description: 'ID of the sport' })
+  sportID: number;
+
+  @ApiProperty({ description: 'Name of the sport' })
+  sportName: string;
+
+  @ApiProperty({ description: 'Total upcoming fixtures'})
+  total: number;
+
+  @ApiProperty({ description: 'Sport Categories'})
+  categories: SwaggerCategory[]
+}
+
+export class SwaggerCategory {
+
+  @ApiProperty({ description: 'ID of the sport category' })
+  categoryID: number;
+
+  @ApiProperty({ description: 'Name of the sport category' })
+  categoryName: string;
+
+  @ApiProperty({ description: 'Total upcoming fixtures for sport category'})
+  total: number;
+
+  @ApiProperty({ description: 'array of tournaments'})
+  tournaments: SwaggerUpcomingTournament[]
+}
+
+export class SwaggerUpcomingTournament {
+
+  @ApiProperty({ description: 'ID of the tournament' })
+  tournamentID: number;
+
+  @ApiProperty({ description: 'Name of the tournament' })
+  tournamentName: string;
+
+  @ApiProperty({ description: 'Total upcoming fixtures'})
+  total: number;
+
+}
+
 export class SwaggerAllSportResponse {
   @ApiProperty({
     type: [SwaggerSport],
     description: 'Array of sports',
   })
   sports: SwaggerSport[];
+}
+
+export class SwaggerSportMenuRequest {
+  @ApiProperty({ 
+    description: 'date range in specified string',
+    example: '1hour | 24hour | 72hour'
+  })
+  period: string;
+
+  @ApiProperty({ description: "Start date", nullable: true, example: '2023-10-01'})
+  start: string;
+
+  @ApiProperty({ description: "End date", nullable: true, example: '2023-10-10'})
+  end: string;
+}
+
+export class SwaggerSportMenuResponse {
+  @ApiProperty({
+    type: [SwaggerSportMenu],
+    description: 'Array of sports',
+  })
+  sports: SwaggerSportMenu[];
 }
 
 export class SwaggerCountResponse {
