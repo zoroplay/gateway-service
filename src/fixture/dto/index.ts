@@ -368,6 +368,9 @@ export class SwaggerMarketGroupSpecifierData {
   @ApiProperty({ description: 'Specifer name' })
   name: string;
 
+  @ApiProperty({ description: 'market ID' })
+  marketID: number;
+
   @ApiProperty({ description: 'specifier value' })
   specifier: string;
 }
@@ -375,9 +378,6 @@ export class SwaggerMarketGroupSpecifierData {
 export class SwaggerMarketGroupData {
   @ApiProperty({ description: 'group ID' })
   marketGroupID: number;
-
-  @ApiProperty({ description: 'market ID' })
-  marketID: number;
 
   @ApiProperty({ description: 'group name' })
   groupName: string;
@@ -405,9 +405,6 @@ export class SwaggerCreateMarketGroupRequest {
   @ApiProperty({ description: 'ID of the client' })
   clientID: number;
 
-  @ApiProperty({ description: 'ID of the market' })
-  marketID: number;
-
   @ApiProperty({ description: 'name of group' })
   groupName: string;
 
@@ -427,6 +424,9 @@ export class SwaggerAddSpecifierRequest {
 
   @ApiProperty({ description: 'Human readable name' })
   name: string;
+
+  @ApiProperty({ description: 'ID of the market' })
+  marketID: number;
 
   @ApiProperty({ description: 'specifier value' })
   specifier: string;

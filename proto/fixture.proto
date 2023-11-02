@@ -53,9 +53,8 @@ service FixtureService {
 
 message CreateMarketGroupRequest {
   int32 clientID = 1;
-  int32 marketID = 2;
-  string groupName = 3;
-  int32 priority = 4;
+  string groupName = 2;
+  int32 priority = 3;
 }
 
 message DeleteMarketGroupRequest {
@@ -69,21 +68,22 @@ message FilterByClientIDRequest {
 message AddSpecifierRequest {
   int32 marketGroupID = 1;
   string name = 2;
-  string specifier = 3;
+  int32 marketID = 3;
+  string specifier = 4;
 }
 
 message MarketGroupSpecifier {
   int32 id = 1;
   string name = 2;
-  string specifier = 3;
+  int32 marketID = 3;
+  string specifier = 4;
 }
 
 message MarketGroupData {
   int32 marketGroupID = 1;
-  int32 marketID = 2;
-  string groupName = 3;
-  int32 priority = 4;
-  repeated MarketGroupSpecifier specifiers = 5;
+  string groupName = 2;
+  int32 priority = 3;
+  repeated MarketGroupSpecifier specifiers = 4;
 }
 
 message MarketGroupResponse {

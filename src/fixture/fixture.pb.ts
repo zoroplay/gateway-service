@@ -348,7 +348,6 @@ export interface GetAllOutcomeAliasRequest {
 
 export interface CreateMarketGroupRequest {
   clientID: number;
-  marketID: number;
   groupName: string;
   priority: number;
 }
@@ -366,18 +365,19 @@ export interface DeleteMarketGroupRequest {
 export interface AddSpecifierRequest {
   marketGroupID: number;
   name: string;
+  marketID: number;
   specifier: string;
 }
 
 export interface MarketGroupSpecifierData {
   id: number;
   name: string;
+  marketID: number;
   specifier: string;
 }
 
 export interface MarketGroupData {
   marketGroupID: number;
-  marketID: number;
   groupName: string;
   priority: number;
   specifiers: MarketGroupSpecifierData[]
