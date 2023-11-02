@@ -198,6 +198,7 @@ message GetHighlightsRequest {
   string countryCode = 7; // If length > 0 only fixtures of this countryCode will be loaded
   int32 upcoming = 8;
   int32 today = 9;
+  string specifier = 10;
 }
 
 message HighlightOutcomes {

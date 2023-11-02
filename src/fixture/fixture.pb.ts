@@ -121,6 +121,9 @@ export interface GetHighlightsRequest {
   sportID: number;
   /** load odds for this particular marketID */
   marketID: number;
+
+  specifier: string;
+
   /** current pagination page */
   page: number;
   /** If value is greater than 0, we will only display fixtures whoose start date is in the next x hours */

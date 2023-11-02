@@ -123,6 +123,7 @@ export class FixtureController {
   @ApiOperation({ summary: 'Get prematch odds ', description: 'This endpoint gets prematch odds for the seleced sportID, the returned odds are for only the marketID passed in as query parameter, if market ID is not passed, default marketID is 1' })
   @ApiParam({ name: 'sportID', type: 'number', description:' Unique ID of the sport'})
   @ApiQuery({ name: 'marketID', description: 'filter by marketID' })
+  @ApiQuery({ name: 'specifier', description: 'filter by market specifier' })
   @ApiQuery({ name: 'page', description: 'Pagination page number' })
   @ApiQuery({ name: 'hours', description: 'show only fixture starting in the next x hours' })
   @ApiQuery({ name: 'perPage', description: 'record per page' })
@@ -149,6 +150,7 @@ export class FixtureController {
         sportID : params.sportID ? params.sportID : 1,
         upcoming : query.upcoming ? query.upcoming : 0,
         today : query.today ? query.today : 0,
+        specifier: query.specifier ? query.specifier : "",
       }
 
       return this.fixtureService.GetHighlights(rq);
@@ -166,6 +168,7 @@ export class FixtureController {
   @ApiParam({ name: 'sportID', type: 'number', description:' Unique ID of the sport'})
   @ApiOkResponse({ type: SwaggerHighlightsResponse })
   @ApiQuery({ name: 'marketID', description: 'filter by marketID' })
+  @ApiQuery({ name: 'specifier', description: 'filter by market specifier' })
   @ApiQuery({ name: 'page', description: 'Pagination page number' })
   @ApiQuery({ name: 'perPage', description: 'record per page' })
   @ApiQuery({ name: 'tournamentID', description: 'filter by tournamentID' })
@@ -186,6 +189,7 @@ export class FixtureController {
         sportID : params.sportID ? params.sportID : 1,
         upcoming :  0,
         today :  0,
+        specifier: query.specifier ? query.specifier : "",
       }
 
       return this.fixtureService.GetLiveHighlights(rq);
