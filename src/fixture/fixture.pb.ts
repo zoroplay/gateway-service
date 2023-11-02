@@ -506,19 +506,13 @@ export interface FixtureServiceController {
   ): Promise<CreateOutcomeAliasResponse> | Observable<CreateOutcomeAliasResponse> | CreateOutcomeAliasResponse;
 
   updateOutcomeAlias(
-    request: CreateOutcomeAliasRequest,
-  updateOutcomeAlias(
       request: CreateOutcomeAliasRequest,
   ): Promise<CreateOutcomeAliasResponse> | Observable<CreateOutcomeAliasResponse> | CreateOutcomeAliasResponse;
 
   getAllOutcomeAlias(
-    request: GetAllOutcomeAliasRequest,
-  getAllOutcomeAlias(
       request: GetAllOutcomeAliasRequest,
   ): Promise<GetAllOutcomeAliasResponse> | Observable<GetAllOutcomeAliasResponse> | GetAllOutcomeAliasResponse;
 
-  deleteOutcomeAlias(
-    request: CreateOutcomeAliasRequest,
   deleteOutcomeAlias(
       request: CreateOutcomeAliasRequest,
   ): Promise<CreateOutcomeAliasResponse> | Observable<CreateOutcomeAliasResponse> | CreateOutcomeAliasResponse;

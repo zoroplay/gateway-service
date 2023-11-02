@@ -1,6 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
-import {Outcome} from "../fixture.pb";
-import exp from "constants";
+import {ApiProperty} from '@nestjs/swagger';
 
 export class SwaggerFilterBySportID {
   @ApiProperty({ description: 'ID of the Sport' })

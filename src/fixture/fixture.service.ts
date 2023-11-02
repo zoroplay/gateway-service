@@ -1,16 +1,18 @@
-import { Injectable, Inject, OnModuleInit } from '@nestjs/common';
+import {Inject, Injectable, OnModuleInit} from '@nestjs/common';
 import {
-  protobufPackage,
-  FixtureServiceClient,
-  FIXTURE_SERVICE_NAME,
-  GetHighlightsRequest, UpdateMarketRequest, CreateOutcomeAliasRequest, GetSportMenuRequest,
-  GetHighlightsRequest,
-  UpdateMarketRequest,
-  CreateOutcomeAliasRequest,
+  AddSpecifierRequest,
   CreateMarketGroupRequest,
-  DeleteMarketGroupRequest, AddSpecifierRequest, DeleteSpecifierRequest,
+  CreateOutcomeAliasRequest,
+  DeleteMarketGroupRequest,
+  DeleteSpecifierRequest,
+  FIXTURE_SERVICE_NAME,
+  FixtureServiceClient,
+  GetHighlightsRequest,
+  GetSportMenuRequest,
+  protobufPackage,
+  UpdateMarketRequest,
 } from './fixture.pb';
-import { ClientGrpc } from '@nestjs/microservices';
+import {ClientGrpc} from '@nestjs/microservices';
 
 @Injectable()
 export class FixtureService implements OnModuleInit {
