@@ -1,14 +1,18 @@
-import { Body, Controller, Get, Post, Param, Query, Put, Delete, Logger } from '@nestjs/common';
-import {ApiBody, ApiOkResponse, ApiTags, ApiQuery, ApiOperation, ApiParam} from '@nestjs/swagger';
-import { FixtureService } from './fixture.service';
+import {Body, Controller, Delete, Get, Logger, Param, Post, Put, Query} from '@nestjs/common';
+import {ApiBody, ApiOkResponse, ApiOperation, ApiParam, ApiQuery, ApiTags} from '@nestjs/swagger';
+import {FixtureService} from './fixture.service';
 import {
   SwaggerAddSpecifierRequest,
   SwaggerAllMarketsResponse,
   SwaggerAllSportResponse,
   SwaggerAllTournamentResponse,
-  SwaggerCountResponse, SwaggerCreateMarketGroupRequest, SwaggerCreateOutcomeAlias, SwaggerCreateOutcomeAliasResponse,
+  SwaggerCountResponse,
+  SwaggerCreateMarketGroupRequest,
+  SwaggerCreateOutcomeAlias,
+  SwaggerCreateOutcomeAliasResponse,
   SwaggerFixtureOdds,
-  SwaggerHighlightsResponse, SwaggerMarketGroupResponse,
+  SwaggerHighlightsResponse,
+  SwaggerMarketGroupResponse,
   SwaggerResponseString,
   SwaggerSportMenuRequest,
   SwaggerSportMenuResponse,
@@ -17,8 +21,7 @@ import {
 import {
   AddSpecifierRequest,
   CreateMarketGroupRequest,
-  CreateOutcomeAliasRequest, MarketGroupResponse,
-  UpdateMarketGroupRequest,
+  CreateOutcomeAliasRequest,
   UpdateMarketRequest
 } from "./fixture.pb";
 
