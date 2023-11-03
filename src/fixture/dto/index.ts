@@ -151,6 +151,8 @@ export class SwaggerHighlightsRequest {
 
 export class SwaggerHighlightsResponse {
   fixtures: any;
+  
+  markets: any;
 
   @ApiProperty({ description: 'Last page number' })
   last_page: number;
