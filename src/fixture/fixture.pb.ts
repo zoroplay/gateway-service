@@ -4,6 +4,49 @@ import { Observable } from "rxjs";
 
 export const protobufPackage = "fixture";
 
+export interface CreateMarketGroupRequest {
+  clientID: number;
+  groupName: string;
+  priority: number;
+}
+
+export interface DeleteMarketGroupRequest {
+  id: number;
+}
+
+export interface FilterByClientIDRequest {
+  clientID: number;
+}
+
+export interface AddSpecifierRequest {
+  marketGroupID: number;
+  name: string;
+  marketID: number;
+  specifier: string;
+}
+
+export interface MarketGroupSpecifier {
+  id: number;
+  name: string;
+  marketID: number;
+  specifier: string;
+}
+
+export interface MarketGroupData {
+  marketGroupID: number;
+  groupName: string;
+  priority: number;
+  specifiers: MarketGroupSpecifier[];
+}
+
+export interface MarketGroupResponse {
+  markets: MarketGroupData[];
+}
+
+export interface DeleteSpecifierRequest {
+  id: number;
+}
+
 export interface CountResponse {
   /** number of live games */
   count: number;
@@ -121,9 +164,6 @@ export interface GetHighlightsRequest {
   sportID: number;
   /** load odds for this particular marketID */
   marketID: number;
-
-  specifier: string;
-
   /** current pagination page */
   page: number;
   /** If value is greater than 0, we will only display fixtures whoose start date is in the next x hours */
@@ -136,6 +176,7 @@ export interface GetHighlightsRequest {
   countryCode: string;
   upcoming: number;
   today: number;
+  specifier: string;
 }
 
 export interface HighlightOutcomes {
@@ -221,6 +262,8 @@ export interface GetHighlightsResponse {
   to: number;
   /** how many records are remaining */
   remainingRecords: number;
+  /** Array of markets */
+  markets: AvailableMarket[];
 }
 
 export interface Outcome {
@@ -238,6 +281,11 @@ export interface Outcome {
   oddID: number;
   /** wether odd is active (1) or not (0), only display active odds on the site */
   active: number;
+}
+
+export interface AvailableMarket {
+  marketName: string;
+  marketId: string;
 }
 
 export interface Market {
@@ -346,55 +394,6 @@ export interface GetAllOutcomeAliasRequest {
   clientID: number;
 }
 
-export interface CreateMarketGroupRequest {
-  clientID: number;
-  groupName: string;
-  priority: number;
-}
-
-export interface UpdateMarketGroupRequest {
-  marketID: number;
-  groupName: string;
-  priority: number;
-}
-
-export interface DeleteMarketGroupRequest {
-  id: number;
-}
-
-export interface AddSpecifierRequest {
-  marketGroupID: number;
-  name: string;
-  marketID: number;
-  specifier: string;
-}
-
-export interface MarketGroupSpecifierData {
-  id: number;
-  name: string;
-  marketID: number;
-  specifier: string;
-}
-
-export interface MarketGroupData {
-  marketGroupID: number;
-  groupName: string;
-  priority: number;
-  specifiers: MarketGroupSpecifierData[]
-}
-
-export interface MarketGroupResponse {
-  markets: MarketGroupData[];
-}
-
-export interface DeleteSpecifierRequest {
-  id: number;
-}
-
-export interface FilterByClientIDRequest {
-  clientID: number;
-}
-
 export const FIXTURE_PACKAGE_NAME = "fixture";
 
 export interface FixtureServiceClient {
@@ -434,20 +433,6 @@ export interface FixtureServiceClient {
 
   updateMarketPriority(request: UpdateMarketRequest): Observable<ResponseString>;
 
-
-  createOutcomeAlias (request: CreateOutcomeAliasRequest): Observable<CreateOutcomeAliasResponse>;
-  updateOutcomeAlias (request: CreateOutcomeAliasRequest) : Observable<CreateOutcomeAliasResponse>;
-  getAllOutcomeAlias (request: GetAllOutcomeAliasRequest) : Observable<GetAllOutcomeAliasResponse>;
-  deleteOutcomeAlias (request: CreateOutcomeAliasRequest) : Observable<CreateOutcomeAliasResponse>;
-
-  createMarketGroup (request: CreateMarketGroupRequest): Observable<CreateOutcomeAliasResponse>;
-  updateMarketGroup (request: CreateMarketGroupRequest): Observable<CreateOutcomeAliasResponse>;
-  deleteMarketGroup (request: DeleteMarketGroupRequest): Observable<CreateOutcomeAliasResponse>;
-  getAllMarketGroup (request: FilterByClientIDRequest): Observable<MarketGroupResponse>;
-  addMarketGroupSpecifier (request: AddSpecifierRequest): Observable<CreateOutcomeAliasResponse>;
-  updateMarketGroupSpecifier (request: AddSpecifierRequest): Observable<CreateOutcomeAliasResponse>;
-  deleteMarketGroupSpecifier (request: DeleteSpecifierRequest): Observable<CreateOutcomeAliasResponse>;
-
   createOutcomeAlias(request: CreateOutcomeAliasRequest): Observable<CreateOutcomeAliasResponse>;
 
   updateOutcomeAlias(request: CreateOutcomeAliasRequest): Observable<CreateOutcomeAliasResponse>;
@@ -455,6 +440,20 @@ export interface FixtureServiceClient {
   getAllOutcomeAlias(request: GetAllOutcomeAliasRequest): Observable<GetAllOutcomeAliasResponse>;
 
   deleteOutcomeAlias(request: CreateOutcomeAliasRequest): Observable<CreateOutcomeAliasResponse>;
+
+  createMarketGroup(request: CreateMarketGroupRequest): Observable<CreateOutcomeAliasResponse>;
+
+  updateMarketGroup(request: CreateMarketGroupRequest): Observable<CreateOutcomeAliasResponse>;
+
+  deleteMarketGroup(request: DeleteMarketGroupRequest): Observable<CreateOutcomeAliasResponse>;
+
+  getAllMarketGroup(request: FilterByClientIDRequest): Observable<MarketGroupResponse>;
+
+  addMarketGroupSpecifier(request: AddSpecifierRequest): Observable<CreateOutcomeAliasResponse>;
+
+  updateMarketGroupSpecifier(request: AddSpecifierRequest): Observable<CreateOutcomeAliasResponse>;
+
+  deleteMarketGroupSpecifier(request: DeleteSpecifierRequest): Observable<CreateOutcomeAliasResponse>;
 }
 
 export interface FixtureServiceController {
@@ -509,50 +508,44 @@ export interface FixtureServiceController {
   ): Promise<CreateOutcomeAliasResponse> | Observable<CreateOutcomeAliasResponse> | CreateOutcomeAliasResponse;
 
   updateOutcomeAlias(
-      request: CreateOutcomeAliasRequest,
+    request: CreateOutcomeAliasRequest,
   ): Promise<CreateOutcomeAliasResponse> | Observable<CreateOutcomeAliasResponse> | CreateOutcomeAliasResponse;
 
   getAllOutcomeAlias(
-      request: GetAllOutcomeAliasRequest,
+    request: GetAllOutcomeAliasRequest,
   ): Promise<GetAllOutcomeAliasResponse> | Observable<GetAllOutcomeAliasResponse> | GetAllOutcomeAliasResponse;
 
   deleteOutcomeAlias(
-      request: CreateOutcomeAliasRequest,
+    request: CreateOutcomeAliasRequest,
   ): Promise<CreateOutcomeAliasResponse> | Observable<CreateOutcomeAliasResponse> | CreateOutcomeAliasResponse;
-
-
 
   createMarketGroup(
-      request: CreateMarketGroupRequest,
+    request: CreateMarketGroupRequest,
   ): Promise<CreateOutcomeAliasResponse> | Observable<CreateOutcomeAliasResponse> | CreateOutcomeAliasResponse;
 
-
   updateMarketGroup(
-      request: CreateMarketGroupRequest,
+    request: CreateMarketGroupRequest,
   ): Promise<CreateOutcomeAliasResponse> | Observable<CreateOutcomeAliasResponse> | CreateOutcomeAliasResponse;
 
   deleteMarketGroup(
-      request: DeleteMarketGroupRequest,
+    request: DeleteMarketGroupRequest,
   ): Promise<CreateOutcomeAliasResponse> | Observable<CreateOutcomeAliasResponse> | CreateOutcomeAliasResponse;
 
   getAllMarketGroup(
-      request: FilterByClientIDRequest,
+    request: FilterByClientIDRequest,
   ): Promise<MarketGroupResponse> | Observable<MarketGroupResponse> | MarketGroupResponse;
 
-
   addMarketGroupSpecifier(
-      request: AddSpecifierRequest,
+    request: AddSpecifierRequest,
   ): Promise<CreateOutcomeAliasResponse> | Observable<CreateOutcomeAliasResponse> | CreateOutcomeAliasResponse;
 
   updateMarketGroupSpecifier(
-      request: AddSpecifierRequest,
+    request: AddSpecifierRequest,
   ): Promise<CreateOutcomeAliasResponse> | Observable<CreateOutcomeAliasResponse> | CreateOutcomeAliasResponse;
-
 
   deleteMarketGroupSpecifier(
-      request: DeleteSpecifierRequest,
+    request: DeleteSpecifierRequest,
   ): Promise<CreateOutcomeAliasResponse> | Observable<CreateOutcomeAliasResponse> | CreateOutcomeAliasResponse;
-
 }
 
 export function FixtureServiceControllerMethods() {
@@ -571,17 +564,13 @@ export function FixtureServiceControllerMethods() {
       "updateOutcomeAlias",
       "getAllOutcomeAlias",
       "deleteOutcomeAlias",
-      "CreateOutcomeAlias",
-      "UpdateOutcomeAlias",
-      "GetAllOutcomeAlias",
-      "DeleteOutcomeAlias",
-      "CreateMarketGroup",
-      "UpdateMarketGroup",
-      "DeleteMarketGroup",
-      "GetAllMarketGroup",
-      "AddMarketGroupSpecifier",
-      "UpdateMarketGroupSpecifier",
-      "DeleteMarketGroupSpecifier"
+      "createMarketGroup",
+      "updateMarketGroup",
+      "deleteMarketGroup",
+      "getAllMarketGroup",
+      "addMarketGroupSpecifier",
+      "updateMarketGroupSpecifier",
+      "deleteMarketGroupSpecifier",
     ];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
