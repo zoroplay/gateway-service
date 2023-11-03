@@ -248,6 +248,7 @@ message GetHighlightsResponse {
   int32 from = 3; // From data index
   int32 to = 4; // to data index
   int32 remainingRecords = 5; // how many records are remaining
+  repeated AvailableMarket markets = 6; // Array of markets
 
 }
 
@@ -259,6 +260,11 @@ message Outcome {
   float previousOdds = 5; // Previous odds of the outcome
   int32 oddID = 6; // Odd ID
   int32 active = 7; // wether odd is active (1) or not (0), only display active odds on the site
+}
+
+message AvailableMarket {
+  string market_name = 1;
+  string market_id = 2;
 }
 
 message Market {
