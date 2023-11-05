@@ -244,9 +244,9 @@ export interface FixturesWithOdds {
   /** Match status */
   status: number;
   /** Fixture country */
-  country: string;
+  categoryID: string;
   /** Fixture country code */
-  countryCode: string;
+  categoryName: string;
   /** Current event time e.g 00:10 */
   eventTime: string;
   /** Current Home Score */
@@ -261,6 +261,8 @@ export interface FixturesWithOdds {
   homeTeam: string;
   /** Away team name */
   awayTeam: string;
+  /** Away team name */
+  sportName: string;
   /** Market Outcomes */
   outcomes: HighlightOutcomes[];
 }

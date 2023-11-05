@@ -241,8 +241,8 @@ message FixturesWithOdds {
   int32 tournamentID = 8; // Unique ID of the tournament
   int32 statusCode = 9; // match Status code
   int32 status = 10; // Match status
-  string country = 11; // Fixture country
-  string countryCode = 12; // Fixture country code
+  string categoryID = 11; // Fixture country
+  string categoryName = 12; // Fixture country code
   string eventTime = 13; //Current event time e.g 00:10
   string homeScore = 14; // Current Home Score
   string matchStatus = 15; // Match status description, available values NotStarted,Live,Ended,Suspended
@@ -250,7 +250,8 @@ message FixturesWithOdds {
   string awayScore = 17; // Current score of the away team
   string homeTeam = 18; // Home team name
   string awayTeam = 19; // Away team name
-  repeated HighlightOutcomes outcomes = 20; // Market Outcomes
+  string sportName = 20; // Away team name
+  repeated HighlightOutcomes outcomes = 21; // Market Outcomes
 }
 
 message GetHighlightsResponse {
