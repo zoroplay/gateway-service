@@ -286,6 +286,7 @@ message AvailableMarket {
   string marketID = 1;
   string marketName = 2;
   string marketGroupID = 3;
+  repeated MarketOutcome outcomes = 4;
 }
 
 message MarketGroup {

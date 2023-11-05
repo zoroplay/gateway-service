@@ -314,6 +314,7 @@ export interface AvailableMarket {
   marketID: string;
   marketName: string;
   marketGroupID: string;
+  outcomes: MarketOutcome[];
 }
 
 export interface MarketGroup {
