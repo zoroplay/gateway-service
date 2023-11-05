@@ -121,6 +121,7 @@ export interface Category {
   categoryID: number;
   categoryName: string;
   total: number;
+  code: string;
   tournaments: Tournament[];
 }
 
@@ -177,6 +178,19 @@ export interface GetHighlightsRequest {
   upcoming: number;
   today: number;
   specifier: string;
+}
+
+export interface GetFixturesRequest {
+  /** Filter fixtures by this sportID */
+  sportID: number;
+  /** comma separated string of market ids to be loaded */
+  markets: number;
+  /** mobile or web client making the request */
+  source: number;
+  /** no of records to be loaded (optional) */
+  limit: number;
+  /** fetch fixtures of this tournamentID will */
+  tournamentID: number;
 }
 
 export interface HighlightOutcomes {
@@ -262,8 +276,19 @@ export interface GetHighlightsResponse {
   to: number;
   /** how many records are remaining */
   remainingRecords: number;
-  /** Array of markets */
+}
+
+export interface GetFixturesResponse {
+  /** Array of fixtures */
+  fixtures: FixturesWithOdds[];
+  /** Array of selected markets */
+  selectedMarket: AvailableMarket[];
+  /** Array of available markets */
   markets: AvailableMarket[];
+  /** Array of available markets */
+  groups: MarketGroup[];
+  /** Array of selected markets outcomes */
+  outcomeTypes: MarketOutcome[];
 }
 
 export interface Outcome {
@@ -284,8 +309,14 @@ export interface Outcome {
 }
 
 export interface AvailableMarket {
+  marketID: string;
   marketName: string;
-  marketId: string;
+  marketGroupID: string;
+}
+
+export interface MarketGroup {
+  groupID: string;
+  groupName: string;
 }
 
 export interface Market {
@@ -301,6 +332,16 @@ export interface Market {
   specifier: string;
   /** Array of outcomes */
   outcome: Outcome[];
+}
+
+export interface MarketOutcome {
+  outcomeID: number;
+  /** market outcome name */
+  outcomeName: string;
+  /** market name */
+  marketName: string;
+  /** market id */
+  marketID: string;
 }
 
 export interface FixtureOdds {
@@ -421,6 +462,10 @@ export interface FixtureServiceClient {
 
   getHighlights(request: GetHighlightsRequest): Observable<GetHighlightsResponse>;
 
+  /** GetHighlights - This GRPC method retrieves the odds for a particular market (e.g 1x2, total, Double chance etc) for games, the method provides a way to pass pagination parameters, this method will be used to load games in the front page of the site */
+
+  getFixtures(request: GetFixturesRequest): Observable<GetFixturesResponse>;
+
   /** GetLiveHighlights - This GRPC method retrieves the odds for a particular market (e.g 1x2, total, Double chance etc) for live games, the method provides a way to pass pagination parameters, this method will be used to load games in the front page of the site */
 
   getLiveHighlights(request: GetHighlightsRequest): Observable<GetHighlightsResponse>;
@@ -486,6 +531,12 @@ export interface FixtureServiceController {
   getHighlights(
     request: GetHighlightsRequest,
   ): Promise<GetHighlightsResponse> | Observable<GetHighlightsResponse> | GetHighlightsResponse;
+
+  /** GetHighlights - This GRPC method retrieves the odds for a particular market (e.g 1x2, total, Double chance etc) for games, the method provides a way to pass pagination parameters, this method will be used to load games in the front page of the site */
+
+  getFixtures(
+    request: GetFixturesRequest,
+  ): Promise<GetFixturesResponse> | Observable<GetFixturesResponse> | GetFixturesResponse;
 
   /** GetLiveHighlights - This GRPC method retrieves the odds for a particular market (e.g 1x2, total, Double chance etc) for live games, the method provides a way to pass pagination parameters, this method will be used to load games in the front page of the site */
 
@@ -557,6 +608,7 @@ export function FixtureServiceControllerMethods() {
       "getSports",
       "getLiveGamesCount",
       "getHighlights",
+      "getFixtures",
       "getLiveHighlights",
       "getFixtureWithOdds",
       "updateMarketPriority",

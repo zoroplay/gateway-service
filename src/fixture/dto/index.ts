@@ -167,6 +167,33 @@ export class SwaggerHighlightsResponse {
   remaining_records: number;
 }
 
+export class SwaggerFixturesRequest {
+
+  @ApiProperty({ description: 'ID of the market' })
+  marketID: number;
+
+  @ApiProperty({ description: 'Date range to fetch' })
+  period: string;
+
+  @ApiProperty({ description: 'No of Fixtures to fetch' })
+  limit: number;
+
+  @ApiProperty({ description: 'Filter by country code' })
+  source?: string;
+}
+
+export class SwaggerFixturesResponse {
+  fixtures: any;
+  
+  markets: any;
+
+  groups: any;
+
+  selectedMarket: any;
+
+  outcomes: any;
+}
+
 export class SwaggerFilterByMarketID {
 
   @ApiProperty({ description: 'ID of the market' })

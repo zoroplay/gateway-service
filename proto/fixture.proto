@@ -26,6 +26,9 @@ service FixtureService {
   //GetHighlights - This GRPC method retrieves the odds for a particular market (e.g 1x2, total, Double chance etc) for games, the method provides a way to pass pagination parameters, this method will be used to load games in the front page of the site
   rpc GetHighlights (GetHighlightsRequest) returns (GetHighlightsResponse){}
 
+  //GetHighlights - This GRPC method retrieves the odds for a particular market (e.g 1x2, total, Double chance etc) for games, the method provides a way to pass pagination parameters, this method will be used to load games in the front page of the site
+  rpc GetFixtures (GetFixturesRequest) returns (GetFixturesResponse){}
+
   //GetLiveHighlights - This GRPC method retrieves the odds for a particular market (e.g 1x2, total, Double chance etc) for live games, the method provides a way to pass pagination parameters, this method will be used to load games in the front page of the site
   rpc GetLiveHighlights (GetHighlightsRequest) returns (GetHighlightsResponse){}
 
@@ -39,7 +42,6 @@ service FixtureService {
   rpc UpdateOutcomeAlias (CreateOutcomeAliasRequest) returns (CreateOutcomeAliasResponse){}
   rpc GetAllOutcomeAlias (GetAllOutcomeAliasRequest) returns (GetAllOutcomeAliasResponse){}
   rpc DeleteOutcomeAlias (CreateOutcomeAliasRequest) returns (CreateOutcomeAliasResponse){}
-
 
   rpc CreateMarketGroup (CreateMarketGroupRequest) returns (CreateOutcomeAliasResponse){}
   rpc UpdateMarketGroup (CreateMarketGroupRequest) returns (CreateOutcomeAliasResponse){}
@@ -156,7 +158,8 @@ message Category {
   int32 categoryID = 1;
   string categoryName = 2;
   int32 total = 3;
-  repeated Tournament tournaments = 4;
+  string code = 4;
+  repeated Tournament tournaments = 5;
 }
 
 message Tournament {
@@ -171,6 +174,7 @@ message SportMenuResponse {
   string total = 3; //total fixtures count for a sport
   repeated Category categories = 4;
 }
+
 // Object used to hold array of sports
 message AllSportResponse {
   repeated SportResponse sports = 1;
@@ -199,6 +203,14 @@ message GetHighlightsRequest {
   int32 upcoming = 8;
   int32 today = 9;
   string specifier = 10;
+}
+
+message GetFixturesRequest {
+  int32 sportID = 1; // Filter fixtures by this sportID
+  int32 markets = 2; // comma separated string of market ids to be loaded
+  int32 source = 3; // mobile or web client making the request
+  int32 limit = 4; // no of records to be loaded (optional)
+  int32 tournamentID = 5; // fetch fixtures of this tournamentID will
 }
 
 message HighlightOutcomes {
@@ -248,8 +260,15 @@ message GetHighlightsResponse {
   int32 from = 3; // From data index
   int32 to = 4; // to data index
   int32 remainingRecords = 5; // how many records are remaining
-  repeated AvailableMarket markets = 6; // Array of markets
+}
 
+message GetFixturesResponse {
+
+  repeated FixturesWithOdds fixtures = 1; // Array of fixtures
+  repeated AvailableMarket selectedMarket = 2; // Array of selected markets
+  repeated AvailableMarket markets = 3; // Array of available markets
+  repeated MarketGroup groups = 4; // Array of available markets
+  repeated MarketOutcome outcomeTypes = 5; // Array of selected markets outcomes
 }
 
 message Outcome {
@@ -263,8 +282,14 @@ message Outcome {
 }
 
 message AvailableMarket {
-  string market_name = 1;
-  string market_id = 2;
+  string marketID = 1;
+  string marketName = 2;
+  string marketGroupID = 3;
+}
+
+message MarketGroup {
+  string groupID = 1;
+  string groupName = 2;
 }
 
 message Market {
@@ -274,6 +299,16 @@ message Market {
   int32 status = 4; // Market status, 0 - active, 1 - suspended, 2 - deactivated, 5 - handedover, only displaye markets with status 0 on the site
   string specifier = 5; // Market line
   repeated Outcome outcome = 6; // Array of outcomes
+}
+
+message MarketOutcome {
+  int32 outcomeID = 1;
+  // market outcome name
+  string outcomeName = 2;
+  //market name
+  string marketName = 3;
+  // market id
+  string marketID = 4;
 }
 
 message FixtureOdds {

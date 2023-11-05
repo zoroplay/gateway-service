@@ -11,6 +11,8 @@ import {
   SwaggerCreateOutcomeAlias,
   SwaggerCreateOutcomeAliasResponse,
   SwaggerFixtureOdds,
+  SwaggerFixturesRequest,
+  SwaggerFixturesResponse,
   SwaggerHighlightsResponse,
   SwaggerMarketGroupResponse,
   SwaggerResponseString,
@@ -27,8 +29,8 @@ import {
 
 const logger = new Logger();
 
-@ApiTags('Fixture APIs')
-@Controller('fixture-service')
+@ApiTags('Sports APIs')
+@Controller('sports')
 export class FixtureController {
 
   constructor(private readonly fixtureService: FixtureService) {}
@@ -68,7 +70,7 @@ export class FixtureController {
 
   }
 
-  @Get('/sports')
+  @Get('/')
   @ApiOperation({ summary: 'Get all sports', description: 'This endpoint retrieves all the enabled sports' })
   @ApiOkResponse({ type: [SwaggerAllSportResponse] })
   GetSports() {
@@ -84,7 +86,7 @@ export class FixtureController {
 
   }
 
-  @Get('/sports-menu')
+  @Get('/upcoming-sports')
   @ApiOperation({ 
     summary: 'Get all upcoming sports', 
     description: 'This endpoint retrieves all upcoming sports, categories and tournaments based on a specified period of time' 
@@ -215,6 +217,33 @@ export class FixtureController {
     try {
 
       return this.fixtureService.GetFixtureWithOdds(params.match_id);
+
+    } catch (error) {
+
+      console.error(error);
+    }
+  }
+
+  @Get('/get-fixtures/:tournament_id')
+  @ApiOperation({ 
+    summary: 'Get all upcoming fixtures by tournament ', 
+    description: 'This endpoint gets matches with odds for the supplied tournamentID' })
+  @ApiParam({ name: 'tournament_id', type: 'number', description:' Unique ID of the tournament'})
+  @ApiQuery({ type: SwaggerFixturesRequest })
+  @ApiOkResponse({ type: SwaggerFixturesResponse })
+  GetFixturesByTournament(@Param() params: any, @Query() query: any) {
+
+    try {
+
+      let rq = {
+        tournamentID : params.tournament_id ? params.tournament_id : 1,
+        source : query.source ? query.source : 'web',
+        markets : query.markets ? query.markets : '',
+        limit : query.limit ? query.limit : 100,
+        sportID : query.sportID ? query.sportID : 1,
+      }
+
+      return this.fixtureService.GetFixtures(rq);
 
     } catch (error) {
 

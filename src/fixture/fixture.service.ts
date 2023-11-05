@@ -7,6 +7,7 @@ import {
   DeleteSpecifierRequest,
   FIXTURE_SERVICE_NAME,
   FixtureServiceClient,
+  GetFixturesRequest,
   GetHighlightsRequest,
   GetSportMenuRequest,
   protobufPackage,
@@ -65,6 +66,11 @@ export class FixtureService implements OnModuleInit {
 
     console.log('GetLiveHighlights ');
     return this.service.getLiveHighlights(data);
+  }
+
+  GetFixtures(data: GetFixturesRequest) {
+    console.log('GetFixturesByTournament');
+    return this.service.getFixtures(data);
   }
 
   GetFixtureWithOdds(matchID: number) {
