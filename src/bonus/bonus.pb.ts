@@ -169,6 +169,7 @@ export interface UserBetWithBonus {
   bonusId : number;
 }
 
+
 export interface BetSlip {
   eventName: string;
   eventType: string;
