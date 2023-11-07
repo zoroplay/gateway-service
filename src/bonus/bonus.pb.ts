@@ -1,6 +1,7 @@
 /* eslint-disable */
 import { GrpcMethod, GrpcStreamMethod } from "@nestjs/microservices";
 import { Observable } from "rxjs";
+import {UserBetWithBonus} from "./bet.interface";
 
 
 export const protobufPackage = "bonus";
@@ -158,31 +159,6 @@ export interface AwardBonusRequest {
   userId: string;
   amount: number;
   baseValue: number;
-}
-
-export interface UserBetWithBonus {
-  betslip: BetSlip[];
-  clientId: number;
-  userId: number;
-  stake: number;
-  bonusType: string;
-  totalOdds: number;
-  bonusId : number;
-}
-
-
-export interface BetSlip {
-  eventName: string;
-  eventType: string;
-  eventId: number;
-  producerId: number;
-  marketId: number;
-  marketName: string;
-  specifier: string;
-  outcomeId: string;
-  outcomeName: string;
-  odds: number;
-  sportId: number;
 }
 
 export interface DebitBonusRequest {

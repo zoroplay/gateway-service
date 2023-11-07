@@ -14,9 +14,10 @@ import {
   BonusStatusRequest,
   CreateCampaignBonusDto,
   GetBonusByClientID,
-  RedeemCampaignBonusDto, DeleteCampaignBonusDto, UpdateCampaignBonusDto, UserBetWithBonus,
+  RedeemCampaignBonusDto, DeleteCampaignBonusDto, UpdateCampaignBonusDto,
 } from './bonus.pb';
 import { ClientGrpc } from '@nestjs/microservices';
+import {UserBetWithBonus} from "./bet.interface";
 
 @Injectable()
 export class BonusService implements OnModuleInit {

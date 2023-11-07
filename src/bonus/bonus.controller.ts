@@ -11,7 +11,7 @@ import {
   CreateReferralBonusRequest,
   CreateShareBetBonusRequest, DeleteCampaignBonusDto,
   GetBonusRequest,
-  GetUserBonusRequest, RedeemCampaignBonusDto, UpdateCampaignBonusDto, UserBetWithBonus,
+  GetUserBonusRequest, RedeemCampaignBonusDto, UpdateCampaignBonusDto,
 } from "./bonus.pb";
 import {
   SwaggerAllCampaignBonus,
@@ -31,6 +31,7 @@ import {
   SwaggerUserBetWithBonus
 } from "./dto";
 import {SwaggerPlaceBetResponse} from "../betting/dto";
+import {UserBetWithBonus} from "./bet.interface";
 
 @ApiTags('Bonus APIs')
 @Controller('bonus-service')
