@@ -2,6 +2,7 @@
 import { GrpcMethod, GrpcStreamMethod } from "@nestjs/microservices";
 import { Observable } from "rxjs";
 
+
 export const protobufPackage = "bonus";
 
 export interface CreateFirstDepositBonusRequest {
