@@ -11,7 +11,7 @@ import {
   GetBonusRequest,
   GetUserBonusRequest,
   AwardBonusRequest,
-  UserBet,
+  UserBetWithBonus,
   BonusStatusRequest,
   CreateCampaignBonusDto,
   GetBonusByClientID,
@@ -121,7 +121,7 @@ export class BonusService implements OnModuleInit {
 
   }
 
-  PlaceBonusBet(data: UserBet) {
+  PlaceBonusBet(data: UserBetWithBonus) {
 
     console.log("PlaceBonusBet ");
     return this.service.placeBonusBet(data);

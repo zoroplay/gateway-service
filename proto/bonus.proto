@@ -32,7 +32,7 @@ service BonusService {
 
   rpc AwardBonus (AwardBonusRequest) returns (UserBonusResponse){}
 
-  rpc PlaceBonusBet(UserBet) returns (BonusResponse){}
+  rpc PlaceBonusBet(UserBet) returns (PlaceBetResponse){}
 
   rpc UpdateBonusStatus (BonusStatusRequest) returns (CreateBonusResponse){}
 
@@ -317,4 +317,10 @@ message AllCampaignBonus {
 
 message GetBonusByClientID {
   int32 clientId = 1;
+}
+
+message PlaceBetResponse {
+  int32 betId = 1;
+  int32 status = 2;
+  string statusDescription = 3;
 }

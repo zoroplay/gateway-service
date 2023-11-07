@@ -312,7 +312,7 @@ export class SwaggerBetslip {
   odds: number;
 }
 
-export class SwaggerUserBet {
+export class SwaggerUserBetWithBonus {
   @ApiProperty({
     type: [SwaggerBetslip],
     description: 'Array of selections',
@@ -333,6 +333,65 @@ export class SwaggerUserBet {
 
   @ApiProperty({ description: 'Total odds' })
   totalOdds: number;
+}
+
+export class SwaggerUserBetDTO {
+  @ApiProperty({ description: 'Bet ID'})
+  betId : number;
+
+  @ApiProperty({ description: 'Stake' })
+  stake : number;
+
+  @ApiProperty({ description: 'This bet was which rollover count' })
+  rolloverCount : number;
+
+  @ApiProperty({ description: 'Bet status' })
+  status : number;
+
+  @ApiProperty({ description: 'Total rolled amount when this bet was placed' })
+  rolledAmount : number;
+
+  @ApiProperty({ description: 'Total amount pending rollover after this bet was placed' })
+  pendingAmount : number;
+
+  @ApiProperty({ description: 'Created date' })
+  created : string;
+}
+
+export class SwaggerUserBonus {
+  @ApiProperty({ description: 'Bonus type', enum: bonusTypes })
+  bonusType: string;
+
+  @ApiProperty({ description: 'bonus amount' })
+  amount: number;
+
+  @ApiProperty({ description: 'created' })
+  created: string;
+
+  @ApiProperty({ description: 'unix timestamp in seconds this bonus expires' })
+  expiryDateInTimestamp: number
+
+
+  @ApiProperty({ description: 'Name of bonus' })
+  name : string;
+
+  @ApiProperty({ description: 'Amount already rolled' })
+  rolledAmount : number;
+
+  @ApiProperty({ description: 'Amount pending to be rolled' })
+  pendingAmount : number;
+
+  @ApiProperty({ description: 'Total number of roles to be made' })
+  totalRolloverCount : number;
+
+  @ApiProperty({ description: 'Total number of roles made' })
+  completedRolloverCount : number;
+
+  @ApiProperty({
+    type: [SwaggerUserBetDTO],
+    description: 'Array of Bets placed with bonus',
+  })
+  bets: SwaggerUserBetDTO[]
 }
 
 export class SwaggerHasBonusBetResponse {
@@ -460,65 +519,6 @@ export class SwaggerAllCampaignBonus {
 export class SwaggerGetBonusByClientID {
   @ApiProperty({ description: 'ID of the client' })
   clientId: number;
-}
-
-export class SwaggerUserBetDTO {
-  @ApiProperty({ description: 'Bet ID'})
-  betId : number;
-
-  @ApiProperty({ description: 'Stake' })
-  stake : number;
-
-  @ApiProperty({ description: 'This bet was which rollover count' })
-  rolloverCount : number;
-
-  @ApiProperty({ description: 'Bet status' })
-  status : number;
-
-  @ApiProperty({ description: 'Total rolled amount when this bet was placed' })
-  rolledAmount : number;
-
-  @ApiProperty({ description: 'Total amount pending rollover after this bet was placed' })
-  pendingAmount : number;
-
-  @ApiProperty({ description: 'Created date' })
-  created : string;
-}
-
-export class SwaggerUserBonus {
-  @ApiProperty({ description: 'Bonus type', enum: bonusTypes })
-  bonusType: string;
-
-  @ApiProperty({ description: 'bonus amount' })
-  amount: number;
-
-  @ApiProperty({ description: 'created' })
-  created: string;
-
-  @ApiProperty({ description: 'unix timestamp in seconds this bonus expires' })
-  expiryDateInTimestamp: number
-
-
-  @ApiProperty({ description: 'Name of bonus' })
-  name : string;
-
-  @ApiProperty({ description: 'Amount already rolled' })
-  rolledAmount : number;
-
-  @ApiProperty({ description: 'Amount pending to be rolled' })
-  pendingAmount : number;
-
-  @ApiProperty({ description: 'Total number of roles to be made' })
-  totalRolloverCount : number;
-
-  @ApiProperty({ description: 'Total number of roles made' })
-  completedRolloverCount : number;
-
-  @ApiProperty({
-    type: [SwaggerUserBetDTO],
-    description: 'Array of Bets placed with bonus',
-  })
-  bets: SwaggerUserBetDTO[]
 }
 
 export class SwaggerGetUserBonusResponse {

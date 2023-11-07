@@ -12,7 +12,7 @@ import {
   CreateShareBetBonusRequest, DeleteCampaignBonusDto,
   GetBonusRequest,
   GetUserBonusRequest, RedeemCampaignBonusDto, UpdateCampaignBonusDto,
-  UserBet
+  UserBetWithBonus
 } from "./bonus.pb";
 import {
   SwaggerAllCampaignBonus,
@@ -28,9 +28,10 @@ import {
   SwaggerGetBonusRequest,
   SwaggerGetUserBonusRequest,
   SwaggerGetUserBonusResponse,
-  SwaggerHasBonusBetResponse, SwaggerRedeemCampaignBonusDto, SwaggerUpdateCampaignBonus,
-  SwaggerUserBet
+   SwaggerRedeemCampaignBonusDto, SwaggerUpdateCampaignBonus,
+  SwaggerUserBetWithBonus
 } from "./dto";
+import {SwaggerPlaceBetResponse} from "../betting/dto";
 
 @ApiTags('Bonus APIs')
 @Controller('bonus-service')
@@ -296,9 +297,9 @@ export class BonusController {
 
   @Post('/bonus/bet/create')
   @ApiOperation({ summary: 'Place a new bet bet using bonus ', description: 'This endpoint will place a new bonus bet' })
-  @ApiBody({ type: SwaggerUserBet })
-  @ApiOkResponse({ type: SwaggerHasBonusBetResponse })
-  PlaceBonusBet(@Body() data: UserBet) {
+  @ApiBody({ type: SwaggerUserBetWithBonus })
+  @ApiOkResponse({ type: SwaggerPlaceBetResponse })
+  PlaceBonusBet(@Body() data: UserBetWithBonus) {
 
     try {
 

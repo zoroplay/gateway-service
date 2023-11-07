@@ -159,7 +159,7 @@ export interface AwardBonusRequest {
   baseValue: number;
 }
 
-export interface UserBet {
+export interface UserBetWithBonus {
   betslip: BetSlip[];
   clientId: number;
   userId: number;
@@ -188,12 +188,6 @@ export interface DebitBonusRequest {
   userId: number;
   amount: number;
   bonusType: string;
-}
-
-export interface HasBonusBetResponse {
-  status: number;
-  description: string;
-  bonus: UserBonus | undefined;
 }
 
 export interface BonusStatusRequest {
@@ -250,7 +244,11 @@ export interface GetBonusByClientID {
   clientId: number;
 }
 
-
+export interface PlaceBetResponse {
+  betId: number;
+  status: number;
+  statusDescription: string;
+}
 
 export const BONUS_PACKAGE_NAME = "bonus";
 
@@ -283,7 +281,7 @@ export interface BonusServiceClient {
 
   awardBonus(request: AwardBonusRequest): Observable<UserBonusResponse>;
 
-  placeBonusBet(request: UserBet): Observable<HasBonusBetResponse>;
+  placeBonusBet(request: UserBetWithBonus): Observable<PlaceBetResponse>;
 
   updateBonusStatus(request: BonusStatusRequest): Observable<CreateBonusResponse>;
 
@@ -352,7 +350,7 @@ export interface BonusServiceController {
     request: AwardBonusRequest,
   ): Promise<UserBonusResponse> | Observable<UserBonusResponse> | UserBonusResponse;
 
-  hasBonusBet(request: UserBet): Promise<HasBonusBetResponse> | Observable<HasBonusBetResponse> | HasBonusBetResponse;
+  placeBonusBet(request: UserBetWithBonus): Promise<PlaceBetResponse> | Observable<PlaceBetResponse> | PlaceBetResponse;
 
   updateBonusStatus(
     request: BonusStatusRequest,
