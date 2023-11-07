@@ -428,7 +428,6 @@ export class SwaggerCreateBonusResponse {
   description: string;
 }
 
-
 export class SwaggerCreateCampaignBonus {
   @ApiProperty({ description: 'ID of the client' })
   clientId: number;
