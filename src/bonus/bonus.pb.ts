@@ -109,17 +109,40 @@ export interface BonusResponse {
 export interface GetUserBonusRequest {
   clientId: number;
   userId: number;
+  bonusType : string;
+  id : number ;
+  status : number;
 }
 
 export interface GetUserBonusResponse {
   bonus: UserBonus[];
 }
 
+export interface UserBetDTO {
+  betId : number;
+  stake : number;
+  rolloverCount : number;
+  status : number;
+  rolledAmount : number;
+  pendingAmount : number;
+  created : string;
+}
+
 export interface UserBonus {
-  bonusType: string;
-  amount: number;
-  expiryDateInTimestamp: number;
-  created: string;
+  bonusType : string;
+  amount : number;
+  expiryDateInTimestamp : number;
+  created : string;
+  name : string;
+  rolledAmount : number;
+  pendingAmount : number;
+  totalRolloverCount : number;
+  completedRolloverCount : number;
+  bets: UserBetDTO[]
+}
+
+export interface GetUserBonusResponse {
+  bonus: UserBonus[];
 }
 
 export interface UserBonusResponse {
@@ -131,8 +154,9 @@ export interface UserBonusResponse {
 export interface AwardBonusRequest {
   clientId: number;
   bonusType: string;
-  userId: number;
+  userId: string;
   amount: number;
+  baseValue: number;
 }
 
 export interface UserBet {
@@ -142,6 +166,7 @@ export interface UserBet {
   stake: number;
   bonusType: string;
   totalOdds: number;
+  bonusId : number;
 }
 
 export interface BetSlip {
@@ -177,6 +202,56 @@ export interface BonusStatusRequest {
   status: number;
 }
 
+
+
+
+export interface CreateCampaignBonusDto {
+  clientId: number;
+  name: string;
+  bonusCode: string;
+  bonusId: number;
+  expiryDate: string;
+}
+
+export interface UpdateCampaignBonusDto {
+  id: number;
+  clientId: number;
+  name: string;
+  bonusCode: string;
+  bonusId: number;
+  expiryDate: string;
+}
+
+export interface RedeemCampaignBonusDto {
+  clientId: number;
+  bonusCode: string;
+  userId: number;
+}
+
+export interface DeleteCampaignBonusDto {
+  clientId: number;
+  id: number;
+}
+
+export interface CampaignBonusData {
+  id: number;
+  clientId: number;
+  name: string;
+  bonusCode: string;
+  bonus: CreateBonusRequest;
+  expiryDate: string;
+}
+
+export interface AllCampaignBonus {
+  bonus: CampaignBonusData[];
+}
+
+export interface GetBonusByClientID {
+  clientId: number;
+}
+
+
+
 export const BONUS_PACKAGE_NAME = "bonus";
 
 export interface BonusServiceClient {
@@ -208,11 +283,22 @@ export interface BonusServiceClient {
 
   awardBonus(request: AwardBonusRequest): Observable<UserBonusResponse>;
 
-  hasBonusBet(request: UserBet): Observable<HasBonusBetResponse>;
+  placeBonusBet(request: UserBet): Observable<HasBonusBetResponse>;
 
   debitBonusBet(request: UserBet): Observable<HasBonusBetResponse>;
 
   updateBonusStatus(request: BonusStatusRequest): Observable<CreateBonusResponse>;
+
+  createCampaignBonus(request: CreateCampaignBonusDto): Observable<CreateBonusResponse>;
+
+  updateCampaignBonus(request: UpdateCampaignBonusDto): Observable<CreateBonusResponse>;
+
+  deleteCampaignBonus(request: DeleteCampaignBonusDto): Observable<CreateBonusResponse>;
+
+  redeemCampaignBonus(request: RedeemCampaignBonusDto): Observable<CreateBonusResponse>;
+
+  getCampaignBonus(request: GetBonusByClientID): Observable<AllCampaignBonus>;
+
 }
 
 export interface BonusServiceController {
@@ -275,6 +361,28 @@ export interface BonusServiceController {
   updateBonusStatus(
     request: BonusStatusRequest,
   ): Promise<CreateBonusResponse> | Observable<CreateBonusResponse> | CreateBonusResponse;
+
+
+  redeemCampaignBonus(
+      request: RedeemCampaignBonusDto,
+  ): Promise<CreateBonusResponse> | Observable<CreateBonusResponse> | CreateBonusResponse;
+
+  createCampaignBonus(
+      request: CreateCampaignBonusDto,
+  ): Promise<CreateBonusResponse> | Observable<CreateBonusResponse> | CreateBonusResponse;
+
+  updateCampaignBonus(
+      request: UpdateCampaignBonusDto,
+  ): Promise<CreateBonusResponse> | Observable<CreateBonusResponse> | CreateBonusResponse;
+
+  deleteCampaignBonus(
+      request: DeleteCampaignBonusDto,
+  ): Promise<CreateBonusResponse> | Observable<CreateBonusResponse> | CreateBonusResponse;
+
+  getCampaignBonus(
+      request: GetBonusByClientID,
+  ): Promise<AllCampaignBonus> | Observable<AllCampaignBonus> | AllCampaignBonus;
+
 }
 
 export function BonusServiceControllerMethods() {
@@ -294,9 +402,14 @@ export function BonusServiceControllerMethods() {
       "deleteBonus",
       "getUserBonus",
       "awardBonus",
-      "hasBonusBet",
+      "placeBonusBet",
       "debitBonusBet",
       "updateBonusStatus",
+      "createCampaignBonus",
+      "updateCampaignBonus",
+      "deleteCampaignBonus",
+      "redeemCampaignBonus",
+      "getCampaignBonus"
     ];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);

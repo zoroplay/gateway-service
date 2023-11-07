@@ -32,11 +32,19 @@ service BonusService {
 
   rpc AwardBonus (AwardBonusRequest) returns (UserBonusResponse){}
 
-  rpc HasBonusBet(UserBet) returns (HasBonusBetResponse){}
+  rpc PlaceBonusBet(UserBet) returns (BonusResponse){}
 
-  rpc DebitBonusBet(UserBet) returns (HasBonusBetResponse){}
-  
   rpc UpdateBonusStatus (BonusStatusRequest) returns (CreateBonusResponse){}
+
+  rpc CreateCampaignBonus(CreateCampaignBonusDto) returns (CreateBonusResponse){}
+
+  rpc UpdateCampaignBonus(UpdateCampaignBonusDto) returns (CreateBonusResponse){}
+
+  rpc DeleteCampaignBonus(DeleteCampaignBonusDto) returns (CreateBonusResponse){}
+
+  rpc RedeemCampaignBonus(RedeemCampaignBonusDto) returns (CreateBonusResponse){}
+
+  rpc GetCampaignBonus(GetBonusByClientID) returns (AllCampaignBonus){}
 
 }
 
@@ -50,6 +58,7 @@ message CreateFirstDepositBonusRequest {
   int32 maximumWinning = 7;
   int32 minimumEntryAmount = 8;
   int32 bonusAmount = 9;
+  float minimumBettingStake = 10;
 }
 
 message CreateCashbackBonusRequest {
@@ -64,6 +73,10 @@ message CreateCashbackBonusRequest {
   int32 minimumSelection = 9;
   int32 minimumLostGames = 10;
   int32 bonusAmount = 11;
+  int32 bonusAmountMultiplier = 12;
+  int32 rolloverCount = 13;
+  string name = 14;
+  float minimumBettingStake = 15;
 
 }
 
@@ -76,6 +89,7 @@ message CreateFreebetBonusRequest {
   string applicableBetType = 6;
   int32 maximumWinning = 7;
   int32 bonusAmount = 8;
+  float minimumBettingStake = 9;
 }
 
 message CreateReferralBonusRequest {
@@ -88,6 +102,10 @@ message CreateReferralBonusRequest {
   int32 maximumWinning = 7;
   int32 minimumEntryAmount = 8;
   int32 bonusAmount = 9;
+  int32 bonusAmountMultiplier = 10;
+  int32 rolloverCount = 11;
+  string name = 12;
+  float minimumBettingStake = 13;
 
 }
 
@@ -101,6 +119,10 @@ message CreateShareBetBonusRequest {
   int32 maximumWinning = 7;
   int32 minimumEntryAmount = 8;
   int32 bonusAmount = 9;
+  int32 bonusAmountMultiplier = 10;
+  int32 rolloverCount = 11;
+  string name = 12;
+  float minimumBettingStake = 13;
 
 }
 
@@ -119,6 +141,10 @@ message CreateBonusRequest {
   string created = 12;
   string updated = 13;
   int32 id = 14;
+  int32 bonusAmountMultiplier = 15;
+  int32 rolloverCount = 16;
+  string name = 17;
+  float minimumBettingStake = 18;
 }
 
 message CreateBonusResponse {
@@ -150,7 +176,21 @@ message BonusResponse {
 message GetUserBonusRequest {
   int32 clientId = 1;
   int64 userId = 2;
+  string bonusType = 3;
+  int32 id = 4;
+  int32 status = 5;
 }
+
+message UserBetData {
+  int32 betId = 1;
+  float stake = 2;
+  int32 rolloverCount = 3;
+  int32 status = 4;
+  int32 rolledAmount = 5;
+  int32 pendingAmount = 6;
+  string created = 7;
+}
+
 
 message GetUserBonusResponse {
 
@@ -163,6 +203,14 @@ message UserBonus {
   float amount = 2;
   int32 expiryDateInTimestamp = 3;
   string created = 4;
+  int32 id = 5;
+  string name = 6;
+  float rolledAmount = 7;
+  float pendingAmount = 8;
+  int32 totalRolloverCount = 9;
+  int32 completedRolloverCount = 10;
+  repeated UserBetData bets = 11;
+
 }
 
 message UserBonusResponse {
@@ -175,9 +223,10 @@ message UserBonusResponse {
 
 message AwardBonusRequest {
   int32 clientId = 1;
-  string bonusType = 2;
-  int32 userId = 3;
+  int32 bonusId = 2;
+  string userId = 3;
   float amount = 4;
+  float baseValue = 5;
 }
 
 message UserBet {
@@ -185,8 +234,8 @@ message UserBet {
   int32 clientId = 2;
   int32 userId = 3;
   float stake = 4;
-  string bonusType = 5;
-  float totalOdds = 6;
+  float totalOdds = 5;
+  int32 bonusId = 6;
 }
 
 message BetSlip {
@@ -222,4 +271,50 @@ message BonusStatusRequest {
   int32 clientId = 1;
   string bonusType = 2;
   int32 status = 3;
+}
+
+message CreateCampaignBonusDto {
+  int32 clientId = 1;
+  string name = 2;
+  string bonusCode = 3;
+  int32 bonusId = 4;
+  string expiryDate = 5;
+}
+
+message UpdateCampaignBonusDto {
+  int32 clientId = 1;
+  string name = 2;
+  string bonusCode = 3;
+  int32 bonusId = 4;
+  string expiryDate = 5;
+  int32 id = 6;
+}
+
+message RedeemCampaignBonusDto {
+  int32 clientId = 1;
+  string    bonusCode = 2;
+  int32   userId = 3;
+}
+
+
+message DeleteCampaignBonusDto {
+  int32 clientId = 1;
+  int32 id = 2;
+}
+
+message CampaignBonusData {
+  int32 id = 1;
+  int32 clientId = 2;
+  string name = 3;
+  string bonusCode = 4;
+  CreateBonusRequest bonus = 5 ;
+  string expiryDate = 6;
+}
+
+message AllCampaignBonus {
+  repeated CampaignBonusData bonus = 1;
+}
+
+message GetBonusByClientID {
+  int32 clientId = 1;
 }
