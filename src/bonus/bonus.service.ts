@@ -11,11 +11,10 @@ import {
   GetBonusRequest,
   GetUserBonusRequest,
   AwardBonusRequest,
-  UserBetWithBonus,
   BonusStatusRequest,
   CreateCampaignBonusDto,
   GetBonusByClientID,
-  RedeemCampaignBonusDto, DeleteCampaignBonusDto, UpdateCampaignBonusDto,
+  RedeemCampaignBonusDto, DeleteCampaignBonusDto, UpdateCampaignBonusDto, UserBetWithBonus,
 } from './bonus.pb';
 import { ClientGrpc } from '@nestjs/microservices';
 

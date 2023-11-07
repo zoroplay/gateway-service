@@ -11,8 +11,7 @@ import {
   CreateReferralBonusRequest,
   CreateShareBetBonusRequest, DeleteCampaignBonusDto,
   GetBonusRequest,
-  GetUserBonusRequest, RedeemCampaignBonusDto, UpdateCampaignBonusDto,
-  UserBetWithBonus
+  GetUserBonusRequest, RedeemCampaignBonusDto, UpdateCampaignBonusDto, UserBetWithBonus,
 } from "./bonus.pb";
 import {
   SwaggerAllCampaignBonus,
