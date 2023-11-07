@@ -285,8 +285,6 @@ export interface BonusServiceClient {
 
   placeBonusBet(request: UserBet): Observable<HasBonusBetResponse>;
 
-  debitBonusBet(request: UserBet): Observable<HasBonusBetResponse>;
-
   updateBonusStatus(request: BonusStatusRequest): Observable<CreateBonusResponse>;
 
   createCampaignBonus(request: CreateCampaignBonusDto): Observable<CreateBonusResponse>;
@@ -356,8 +354,6 @@ export interface BonusServiceController {
 
   hasBonusBet(request: UserBet): Promise<HasBonusBetResponse> | Observable<HasBonusBetResponse> | HasBonusBetResponse;
 
-  debitBonusBet(request: UserBet): Promise<HasBonusBetResponse> | Observable<HasBonusBetResponse> | HasBonusBetResponse;
-
   updateBonusStatus(
     request: BonusStatusRequest,
   ): Promise<CreateBonusResponse> | Observable<CreateBonusResponse> | CreateBonusResponse;
@@ -403,7 +399,6 @@ export function BonusServiceControllerMethods() {
       "getUserBonus",
       "awardBonus",
       "placeBonusBet",
-      "debitBonusBet",
       "updateBonusStatus",
       "createCampaignBonus",
       "updateCampaignBonus",

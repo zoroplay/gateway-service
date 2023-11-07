@@ -128,13 +128,6 @@ export class BonusService implements OnModuleInit {
 
   }
 
-  DebitBonusBet(data: UserBet) {
-
-    console.log("DebitBonusBet ");
-    return this.service.debitBonusBet(data);
-
-  }
-
   UpdateBonusStatus(data: BonusStatusRequest) {
 
     console.log("UpdateBonusStatus ");

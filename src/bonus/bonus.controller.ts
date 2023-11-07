@@ -312,24 +312,6 @@ export class BonusController {
 
   }
 
-  @Post('/user/bonus/redeem')
-  @ApiOperation({ summary: 'Place Bonus Bet', description: 'This endpoint allows placing a bonus bet. This endpoint is meant to be used by Betting Service during place bet operation' })
-  @ApiBody({ type: SwaggerUserBet })
-  @ApiOkResponse({ type: SwaggerHasBonusBetResponse })
-  DebitBonusBet(@Body() data: UserBet) {
-
-    try {
-
-      return this.bonusService.DebitBonusBet(data);
-
-    } catch (error) {
-
-      console.error(error);
-
-    }
-
-  }
-
   @Patch('/bonus/status/update')
   @ApiOperation({ summary: 'Activate or Deactivate client bonus type ', description: 'Use this endpoint to activate or deactivate a client bonus' })
   @ApiBody({ type: SwaggerBonusStatusRequest })
