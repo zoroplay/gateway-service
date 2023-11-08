@@ -9,7 +9,7 @@ import {
   SwaggerCountResponse,
   SwaggerCreateMarketGroupRequest,
   SwaggerCreateOutcomeAlias,
-  SwaggerCreateOutcomeAliasResponse,
+  SwaggerCreateOutcomeAliasResponse, SwaggerDefaultSportMarketDTO, SwaggerDefaultSportMarketsDTO,
   SwaggerFixtureOdds,
   SwaggerFixturesRequest,
   SwaggerFixturesResponse,
@@ -23,7 +23,7 @@ import {
 import {
   AddSpecifierRequest,
   CreateMarketGroupRequest,
-  CreateOutcomeAliasRequest,
+  CreateOutcomeAliasRequest, DefaultSportMarketDTO,
   UpdateMarketRequest
 } from "./fixture.pb";
 
@@ -465,6 +465,80 @@ export class FixtureController {
       let id = parseInt(params.id)
 
       return this.fixtureService.deleteMarketGroupSpecifier({id: id});
+
+    } catch (error) {
+
+      console.error(error);
+
+    }
+
+  }
+
+
+  @Post('/sports/default-market')
+  @ApiOperation({ summary: 'Create default sport market', description: 'This endpoint creates Create default sport market' })
+  @ApiBody({ type: SwaggerDefaultSportMarketDTO })
+  @ApiOkResponse({ type: SwaggerResponseString })
+  createDefaultSportMarket(@Body() data: DefaultSportMarketDTO) {
+
+    try {
+
+      return this.fixtureService.createDefaultSportMarket(data);
+
+    } catch (error) {
+
+      console.error(error);
+
+    }
+
+  }
+
+  @Put('/sports/default-market')
+  @ApiOperation({ summary: 'Update default sport market', description: 'This endpoint updates default sport market' })
+  @ApiBody({ type: SwaggerDefaultSportMarketDTO })
+  @ApiOkResponse({ type: SwaggerResponseString })
+  updateDefaultSportMarket(@Body() data: DefaultSportMarketDTO) {
+
+    try {
+
+      return this.fixtureService.updateDefaultSportMarket(data);
+
+    } catch (error) {
+
+      console.error(error);
+
+    }
+
+  }
+
+  @Get('/sports/default-market')
+  @ApiOperation({ summary: 'Get default sport markets', description: 'This endpoint gets default sport market' })
+  @ApiOkResponse({ type: SwaggerDefaultSportMarketsDTO })
+  getDefaultSportMarket() {
+
+    try {
+
+      return this.fixtureService.getDefaultSportMarket();
+
+    } catch (error) {
+
+      console.error(error);
+
+    }
+
+  }
+
+  @Delete('/sports/default-market/:sport_id')
+  @ApiOperation({ summary: 'Delete default sport market', description: 'This endpoint deletes an existing default sport market' })
+  @ApiParam({ name: 'sport_id', type: 'number', description:' ID of the the sport'})
+  @ApiOkResponse({ type: SwaggerResponseString })
+  deleteDefaultSportMarket(@Param() params: any) {
+
+    try {
+
+      let id = parseInt(params.sport_id)
+
+      return this.fixtureService.deleteDefaultSportMarket(id);
 
     } catch (error) {
 

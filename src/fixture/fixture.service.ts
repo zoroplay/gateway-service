@@ -2,7 +2,7 @@ import {Inject, Injectable, OnModuleInit} from '@nestjs/common';
 import {
   AddSpecifierRequest,
   CreateMarketGroupRequest,
-  CreateOutcomeAliasRequest,
+  CreateOutcomeAliasRequest, DefaultSportMarketDTO,
   DeleteMarketGroupRequest,
   DeleteSpecifierRequest,
   FIXTURE_SERVICE_NAME,
@@ -163,6 +163,34 @@ export class FixtureService implements OnModuleInit {
 
     console.log('deleteMarketGroupSpecifier ');
     return this.service.deleteMarketGroupSpecifier(data);
+
+  }
+
+  createDefaultSportMarket(data: DefaultSportMarketDTO) {
+
+    console.log('createDefaultSportMarket ');
+    return this.service.createDefaultSportMarket(data);
+
+  }
+
+  updateDefaultSportMarket(data: DefaultSportMarketDTO) {
+
+    console.log('updateDefaultSportMarket ');
+    return this.service.updateDefaultSportMarket(data);
+
+  }
+
+  getDefaultSportMarket() {
+
+    console.log('getDefaultSportMarket ');
+    return this.service.getDefaultSportMarket({});
+
+  }
+
+  deleteDefaultSportMarket(sportID: number) {
+
+    console.log('deleteDefaultSportMarket ');
+    return this.service.deleteDefaultSportMarket({id: sportID});
 
   }
 

@@ -51,6 +51,11 @@ service FixtureService {
   rpc UpdateMarketGroupSpecifier (AddSpecifierRequest) returns (CreateOutcomeAliasResponse){}
   rpc DeleteMarketGroupSpecifier (DeleteSpecifierRequest) returns (CreateOutcomeAliasResponse){}
 
+  rpc CreateDefaultSportMarket(DefaultSportMarketDTO) returns (ResponseString){}
+  rpc UpdateDefaultSportMarket(DefaultSportMarketDTO) returns (ResponseString){}
+  rpc DeleteDefaultSportMarket(ID) returns (ResponseString){}
+  rpc GetDefaultSportMarket(Empty) returns (DefaultSportMarketsDTO){}
+
 }
 
 message CreateMarketGroupRequest {
@@ -185,7 +190,7 @@ message AvailableSportMenuResponse {
   repeated SportMenuResponse sports = 1;
 }
 
-message GetSportMenuRequest { 
+message GetSportMenuRequest {
   string period = 1; // period to display
   string start = 2; // start date
   string end = 3; //end date
@@ -386,4 +391,17 @@ message GetAllOutcomeAliasResponse {
 
 message GetAllOutcomeAliasRequest {
   int32 clientID = 1;
+}
+
+message ID {
+  int32 id = 1;
+}
+
+message DefaultSportMarketDTO {
+  int32 sportID = 1;
+  int32 marketID = 2;
+}
+
+message DefaultSportMarketsDTO {
+  repeated DefaultSportMarketDTO sports = 1;
 }

@@ -438,6 +438,19 @@ export interface GetAllOutcomeAliasRequest {
   clientID: number;
 }
 
+export interface DefaultSportMarketDTO {
+  sportID: number;
+  marketID: number;
+}
+
+export interface DefaultSportMarketsDTO {
+  sports: DefaultSportMarketDTO[];
+}
+
+export interface ID {
+  id: number;
+}
+
 export const FIXTURE_PACKAGE_NAME = "fixture";
 
 export interface FixtureServiceClient {
@@ -502,6 +515,15 @@ export interface FixtureServiceClient {
   updateMarketGroupSpecifier(request: AddSpecifierRequest): Observable<CreateOutcomeAliasResponse>;
 
   deleteMarketGroupSpecifier(request: DeleteSpecifierRequest): Observable<CreateOutcomeAliasResponse>;
+
+  createDefaultSportMarket(request: DefaultSportMarketDTO): Observable<ResponseString>;
+
+  updateDefaultSportMarket(request: DefaultSportMarketDTO): Observable<ResponseString>;
+
+  deleteDefaultSportMarket(request: ID): Observable<ResponseString>;
+
+  getDefaultSportMarket(request: Empty): Observable<DefaultSportMarketsDTO>;
+
 }
 
 export interface FixtureServiceController {
@@ -600,6 +622,24 @@ export interface FixtureServiceController {
   deleteMarketGroupSpecifier(
     request: DeleteSpecifierRequest,
   ): Promise<CreateOutcomeAliasResponse> | Observable<CreateOutcomeAliasResponse> | CreateOutcomeAliasResponse;
+
+  createDefaultSportMarket(
+      request: DefaultSportMarketDTO,
+  ): Promise<ResponseString> | Observable<ResponseString> | ResponseString;
+
+  updateDefaultSportMarket(
+      request: DefaultSportMarketDTO,
+  ): Promise<ResponseString> | Observable<ResponseString> | ResponseString;
+
+  deleteDefaultSportMarket(
+      request: ID,
+  ): Promise<ResponseString> | Observable<ResponseString> | ResponseString;
+
+  getDefaultSportMarket(
+      request: Empty,
+  ): Promise<DefaultSportMarketsDTO> | Observable<DefaultSportMarketsDTO> | DefaultSportMarketsDTO;
+
+
 }
 
 export function FixtureServiceControllerMethods() {
@@ -626,6 +666,10 @@ export function FixtureServiceControllerMethods() {
       "addMarketGroupSpecifier",
       "updateMarketGroupSpecifier",
       "deleteMarketGroupSpecifier",
+      "createDefaultSportMarket",
+      "updateDefaultSportMarket",
+      "deleteDefaultSportMarket",
+      "getDefaultSportMarket"
     ];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
