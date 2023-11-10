@@ -1,35 +1,38 @@
-import {Body, Controller, Get, Patch, Post, Put, Query} from '@nestjs/common';
-import {ApiBody, ApiOkResponse, ApiOperation, ApiQuery, ApiTags} from '@nestjs/swagger';
+import {Body, Controller, Delete, Get, Param, Patch, Post, Put, Query} from '@nestjs/common';
+import {ApiBody, ApiOkResponse, ApiOperation, ApiParam, ApiQuery, ApiTags} from '@nestjs/swagger';
 import {BonusService} from './bonus.service';
 
 import {
   AwardBonusRequest,
-  BonusStatusRequest,
+  BonusStatusRequest, CreateCampaignBonusDto,
   CreateCashbackBonusRequest,
   CreateFirstDepositBonusRequest,
   CreateFreebetBonusRequest,
   CreateReferralBonusRequest,
-  CreateShareBetBonusRequest,
+  CreateShareBetBonusRequest, DeleteCampaignBonusDto,
   GetBonusRequest,
-  GetUserBonusRequest,
-  UserBet
+  GetUserBonusRequest, RedeemCampaignBonusDto, UpdateCampaignBonusDto,
 } from "./bonus.pb";
 import {
+  SwaggerAllCampaignBonus,
   SwaggerAwardBonusRequest,
   SwaggerBonusResponse,
   SwaggerBonusStatusRequest,
-  SwaggerCreateBonusResponse,
+  SwaggerCreateBonusRequest,
+  SwaggerCreateBonusResponse, SwaggerCreateCampaignBonus,
   SwaggerCreateCashbackBonusRequest,
   SwaggerCreateFirstDepositBonusRequest,
   SwaggerCreateFreebetBonusRequest,
   SwaggerCreateReferralBonusRequest,
-  SwaggerCreateShareBetBonusRequest,
+  SwaggerCreateShareBetBonusRequest, SwaggerDeleteCampaignBonusDto,
   SwaggerGetBonusRequest,
   SwaggerGetUserBonusRequest,
   SwaggerGetUserBonusResponse,
-  SwaggerHasBonusBetResponse,
-  SwaggerUserBet
+   SwaggerRedeemCampaignBonusDto, SwaggerUpdateCampaignBonus,
+  SwaggerUserBetWithBonus
 } from "./dto";
+import {SwaggerPlaceBetResponse} from "../betting/dto";
+import {UserBetWithBonus} from "./bet.interface";
 
 @ApiTags('Bonus APIs')
 @Controller('bonus-service')
@@ -46,6 +49,23 @@ export class BonusController {
     try {
 
       return this.bonusService.CreateCashbackBonus(data);
+
+    } catch (error) {
+
+      console.error(error);
+
+    }
+
+  }
+  @Post('/bonus/create')
+  @ApiOperation({ summary: 'Create Cashback Bonus ', description: 'This endpoint creates a new cashback bonus for a particular client, it enables you to create cashback bonus with different settings/terms' })
+  @ApiBody({ type: SwaggerCreateBonusRequest })
+  @ApiOkResponse({ type: SwaggerCreateBonusResponse })
+  CreateBonus(@Body() data: SwaggerCreateBonusRequest) {
+
+    try {
+
+      return this.bonusService.CreateBonus(data);
 
     } catch (error) {
 
@@ -249,6 +269,10 @@ export class BonusController {
   @ApiOperation({ summary: 'Get all bonus balance for a user ', description: 'This endpoint retrieves all the bonus balance for a particular user' })
   @ApiQuery({ name: 'clientId', description: 'ID of the client' })
   @ApiQuery({ name: 'userId', description: 'ID of the user' })
+  @ApiQuery({ name: 'id', description: 'ID of the bonus to filter' })
+  @ApiQuery({ name: 'status', description: 'bonus status' })
+  @ApiQuery({ name: 'bonus_type', description: 'filter by bonus type' })
+
   @ApiOkResponse({ type: SwaggerGetUserBonusResponse })
   GetUserBonus(@Query() query: any) {
 
@@ -257,6 +281,9 @@ export class BonusController {
       let data = {} as GetUserBonusRequest
       data.clientId =  query.clientId ? parseInt(query.clientId) : -1
       data.userId =  query.userId ? parseInt(query.userId) : -1
+      data.id =  query.id ? parseInt(query.id) : 0
+      data.status =  query.status ? parseInt(query.status) : -1
+      data.bonusType =  query.bonus_type ? query.bonus_type : ""
 
       return this.bonusService.GetUserBonus(data);
 
@@ -286,33 +313,15 @@ export class BonusController {
 
   }
 
-  @Post('/user/bonus/check')
-  @ApiOperation({ summary: 'Check if a user bet selection qualifies for a bonus ', description: 'Check if user bet selection qualifies for a particular bonus' })
-  @ApiBody({ type: SwaggerUserBet })
-  @ApiOkResponse({ type: SwaggerHasBonusBetResponse })
-  HasBonusBet(@Body() data: UserBet) {
+  @Post('/bonus/bet/create')
+  @ApiOperation({ summary: 'Place a new bet bet using bonus ', description: 'This endpoint will place a new bonus bet' })
+  @ApiBody({ type: SwaggerUserBetWithBonus })
+  @ApiOkResponse({ type: SwaggerPlaceBetResponse })
+  PlaceBonusBet(@Body() data: UserBetWithBonus) {
 
     try {
 
-      return this.bonusService.HasBonusBet(data);
-
-    } catch (error) {
-
-      console.error(error);
-
-    }
-
-  }
-
-  @Post('/user/bonus/redeem')
-  @ApiOperation({ summary: 'Place Bonus Bet', description: 'This endpoint allows placing a bonus bet. This endpoint is meant to be used by Betting Service during place bet operation' })
-  @ApiBody({ type: SwaggerUserBet })
-  @ApiOkResponse({ type: SwaggerHasBonusBetResponse })
-  DebitBonusBet(@Body() data: UserBet) {
-
-    try {
-
-      return this.bonusService.DebitBonusBet(data);
+      return this.bonusService.PlaceBonusBet(data);
 
     } catch (error) {
 
@@ -339,4 +348,98 @@ export class BonusController {
     }
 
   }
+
+  @Post('/campaign')
+  @ApiOperation({ summary: 'Create a new campaign', description: 'This endpoint creates a new promotional campaign ' })
+  @ApiBody({ type: SwaggerCreateCampaignBonus })
+  @ApiOkResponse({ type: SwaggerCreateBonusResponse })
+  CreateCampaignBonus(@Body() data: CreateCampaignBonusDto) {
+
+    try {
+
+      return this.bonusService.CreateCampaignBonus(data);
+
+    } catch (error) {
+
+      console.error(error);
+
+    }
+
+  }
+
+  @Put('/campaign')
+  @ApiOperation({ summary: 'Update an existing campaign', description: 'This endpoint updates an existing promotional campaign ' })
+  @ApiBody({ type: SwaggerUpdateCampaignBonus })
+  @ApiOkResponse({ type: SwaggerCreateBonusResponse })
+  UpdateCampaignBonus(@Body() data: UpdateCampaignBonusDto) {
+
+    try {
+
+      return this.bonusService.UpdateCampaignBonus(data);
+
+    } catch (error) {
+
+      console.error(error);
+
+    }
+
+  }
+
+  @Delete('/campaign')
+  @ApiOperation({ summary: 'Delete an existing campaign', description: 'This endpoint deletes an existing promotional campaign ' })
+  @ApiBody({ type: SwaggerDeleteCampaignBonusDto })
+  @ApiOkResponse({ type: SwaggerCreateBonusResponse })
+  DeleteCampaignBonus(@Body() data: DeleteCampaignBonusDto) {
+
+    try {
+
+      return this.bonusService.DeleteCampaignBonus(data);
+
+    } catch (error) {
+
+      console.error(error);
+
+    }
+
+  }
+
+  @Get('/campaign/:client_id')
+  @ApiOperation({ summary: 'Get all campaigns for a client ', description: 'This endpoint retrieves all campaigns for a particular client' })
+  @ApiParam({ name: 'client_id', type: 'number', description:' Unique ID of the client'})
+  @ApiOkResponse({ type: SwaggerAllCampaignBonus })
+  GetCampaignBonus(@Param() params: any) {
+
+    try {
+
+      let clientID = parseInt(params.client_id)
+
+      return this.bonusService.GetCampaignBonus({
+        clientId: clientID
+      });
+
+    } catch (error) {
+
+      console.error(error);
+    }
+
+  }
+
+  @Post('/campaign/redeem-code')
+  @ApiOperation({ summary: 'Redeems a bonus code', description: 'This endpoint redeems a bonus code ' })
+  @ApiBody({ type: SwaggerRedeemCampaignBonusDto })
+  @ApiOkResponse({ type: SwaggerCreateBonusResponse })
+  RedeemCampaignBonus(@Body() data: RedeemCampaignBonusDto) {
+
+    try {
+
+      return this.bonusService.RedeemCampaignBonus(data);
+
+    } catch (error) {
+
+      console.error(error);
+
+    }
+
+  }
+
 }

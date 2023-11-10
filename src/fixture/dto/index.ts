@@ -460,3 +460,20 @@ export class SwaggerAddSpecifierRequest {
   @ApiProperty({ description: 'specifier value' })
   specifier: string;
 }
+
+
+export class SwaggerDefaultSportMarketDTO {
+  @ApiProperty({ description: 'ID of the sport' })
+  sportID: number;
+
+  @ApiProperty({ description: 'ID of the market' })
+  marketID: number;
+}
+
+export class SwaggerDefaultSportMarketsDTO {
+  @ApiProperty({
+    type: [SwaggerDefaultSportMarketDTO],
+    description: 'sports array',
+  })
+  sports: SwaggerDefaultSportMarketDTO[];
+}

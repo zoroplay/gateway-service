@@ -9,9 +9,15 @@ import {
   CreateReferralBonusRequest,
   CreateShareBetBonusRequest,
   GetBonusRequest,
-  GetUserBonusRequest, AwardBonusRequest, UserBet, BonusStatusRequest,
+  GetUserBonusRequest,
+  AwardBonusRequest,
+  BonusStatusRequest,
+  CreateCampaignBonusDto,
+  GetBonusByClientID,
+  RedeemCampaignBonusDto, DeleteCampaignBonusDto, UpdateCampaignBonusDto,
 } from './bonus.pb';
 import { ClientGrpc } from '@nestjs/microservices';
+import {UserBetWithBonus} from "./bet.interface";
 
 @Injectable()
 export class BonusService implements OnModuleInit {
@@ -115,17 +121,10 @@ export class BonusService implements OnModuleInit {
 
   }
 
-  HasBonusBet(data: UserBet) {
+  PlaceBonusBet(data: UserBetWithBonus) {
 
-    console.log("HasBonusBet ");
-    return this.service.hasBonusBet(data);
-
-  }
-
-  DebitBonusBet(data: UserBet) {
-
-    console.log("DebitBonusBet ");
-    return this.service.debitBonusBet(data);
+    console.log("PlaceBonusBet ");
+    return this.service.placeBonusBet(data);
 
   }
 
@@ -135,4 +134,40 @@ export class BonusService implements OnModuleInit {
     return this.service.updateBonusStatus(data);
 
   }
+
+  CreateCampaignBonus(data: CreateCampaignBonusDto) {
+
+    console.log("CreateCampaignBonus ");
+    return this.service.createCampaignBonus(data);
+
+  }
+
+  UpdateCampaignBonus(data: UpdateCampaignBonusDto) {
+
+    console.log("UpdateCampaignBonus ");
+    return this.service.updateCampaignBonus(data);
+
+  }
+
+  DeleteCampaignBonus(data: DeleteCampaignBonusDto) {
+
+    console.log("DeleteCampaignBonus ");
+    return this.service.deleteCampaignBonus(data);
+
+  }
+
+  RedeemCampaignBonus(data: RedeemCampaignBonusDto) {
+
+    console.log("RedeemCampaignBonus ");
+    return this.service.redeemCampaignBonus(data);
+
+  }
+
+  GetCampaignBonus(data: GetBonusByClientID) {
+
+    console.log("GetCampaignBonus ");
+    return this.service.getCampaignBonus(data);
+
+  }
+
 }
