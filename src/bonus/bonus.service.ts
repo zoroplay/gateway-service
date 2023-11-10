@@ -9,12 +9,15 @@ import {
   CreateReferralBonusRequest,
   CreateShareBetBonusRequest,
   GetBonusRequest,
-  GetUserBonusRequest,
-  AwardBonusRequest,
-  BonusStatusRequest,
+  GetUserBonusRequest, 
+  AwardBonusRequest, UserBet, 
+  BonusStatusRequest, CreateBonusRequest, 
+  CreateNewBonusRequest,
   CreateCampaignBonusDto,
+  UpdateCampaignBonusDto,
+  DeleteCampaignBonusDto,
+  RedeemCampaignBonusDto,
   GetBonusByClientID,
-  RedeemCampaignBonusDto, DeleteCampaignBonusDto, UpdateCampaignBonusDto,
 } from './bonus.pb';
 import { ClientGrpc } from '@nestjs/microservices';
 import {UserBetWithBonus} from "./bet.interface";
@@ -34,6 +37,13 @@ export class BonusService implements OnModuleInit {
 
     console.log("CreateCashbackBonus ");
     return this.service.createCashbackBonus(data);
+
+  }
+
+  CreateBonus(data: CreateNewBonusRequest) {
+
+    console.log("CreateBonus ");
+    return this.service.createBonus(data);
 
   }
 
@@ -137,7 +147,7 @@ export class BonusService implements OnModuleInit {
 
   CreateCampaignBonus(data: CreateCampaignBonusDto) {
 
-    console.log("CreateCampaignBonus ");
+    console.log("UpdateBonusStatus ");
     return this.service.createCampaignBonus(data);
 
   }
