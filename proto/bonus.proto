@@ -2,9 +2,11 @@ syntax = "proto3";
 
 package bonus;
 
-service BonusService {
+service BonusService { 
 
   rpc CreateCashbackBonus (CreateCashbackBonusRequest) returns (CreateBonusResponse){}
+
+  rpc CreateBonus (CreateNewBonusRequest) returns (CreateBonusResponse){}
 
   rpc UpdateCashbackBonus (CreateCashbackBonusRequest) returns (CreateBonusResponse){}
 
@@ -59,6 +61,24 @@ message CreateFirstDepositBonusRequest {
   int32 minimumEntryAmount = 8;
   int32 bonusAmount = 9;
   float minimumBettingStake = 10;
+}
+
+message CreateNewBonusRequest {
+  string bonusName = 1;
+  string bonusCode = 2;
+  string target = 3;
+  string bonusCategory = 4;
+  string bonusType = 5;
+  int32 bonusAmount = 6;
+  int32 maxValue = 7;
+  string sportPercentage = 8;
+  string casinoPercentage = 9;
+  string virtualPercentage = 10;
+  string noOfSportRollover = 11;
+  string noOfCasinoRollover = 12;
+  string noOfVirtualRollover = 13;
+  string duration = 14;
+  int32 clientId =15;
 }
 
 message CreateCashbackBonusRequest {
@@ -195,6 +215,11 @@ message UserBetData {
 message GetUserBonusResponse {
 
   repeated UserBonus bonus = 1;
+
+}
+
+message GetNewBonusResponse {
+  repeated CreateNewBonusRequest bonus = 1;
 
 }
 

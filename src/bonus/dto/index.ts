@@ -9,38 +9,47 @@ export class SwaggerCreateBonusRequest {
   @ApiProperty({ description: 'ID of the client' })
   clientId: number;
 
-  @ApiProperty({ description: 'This bonus will expire after this number of hours' })
-  expiryInHours: number;
-
-  @ApiProperty({ description: 'This bonus can only be used when a punter has atleast this number of selection in their betslip' })
-  minimumEvents: number;
-
-  @ApiProperty({ description: 'This bonus can only be used when each selection in a betslip has atleast this number of odds' })
-  minimumOddsPerEvent: number;
-
-  @ApiProperty({ description: 'This bonus can only be used when total odds in a betslip has atleast this number of odds' })
-  minimumTotalOdds: number;
-
-  @ApiProperty({ description: 'This bonus can be used for the following bet types, this should be a list separated by comma, available values are 1 (sportsbook), 2 (casino)' })
-  applicableBetType: string;
-
-  @ApiProperty({ description: 'The maximum win when this bonus is used' })
-  maximumWinning: number;
-
-  @ApiProperty({ description: 'Minimum lost games for a punter to qualify for this cashback' })
-  minimumLostGames: number;
-
-  @ApiProperty({ description: 'Minimum number of games for a punter to qualify for this bonus' })
-  minimumSelection: number;
-
-  @ApiProperty({ description: 'Reset duration to award a new bonus' })
-  resetIntervalType: string;
-
-  @ApiProperty({ description: 'Minimum stake/deposit to qualify for this bonus' })
-  minimumEntryAmount: number;
-
   @ApiProperty({ description: 'Bonus amount to award' })
   bonusAmount: number;
+
+  @ApiProperty({ description: 'Bonus value' })
+  maxValue: number;
+
+  @ApiProperty({ description: 'Name of Bonus' })
+  bonusName: string;
+
+  @ApiProperty({ description: 'Bonus Code' })
+  bonusCode: string;
+
+  @ApiProperty({ description: 'Target' })
+  target: string;
+
+  @ApiProperty({ description: 'The expectedcategory of bonus, (first_deposit, referral, freebet)' })
+  bonusCategory: string;
+
+  @ApiProperty({ description: 'The expected bonus type, (All, sport, casino, virtual)' })
+  bonusType: string;
+
+  @ApiProperty({ description: 'The sport percentage' })
+  sportPercentage: string;
+
+  @ApiProperty({ description: 'The casino percentage' })
+  casinoPercentage: string;
+
+  @ApiProperty({ description: 'The virtual percentage' })
+  virtualPercentage: string;
+
+  @ApiProperty({ description: 'Number of sports rollover' })
+  noOfSportRollover: string;
+
+  @ApiProperty({ description: 'Number of casino rollover' })
+  noOfCasinoRollover: string;
+
+  @ApiProperty({ description: 'Number of virtual rollover' })
+  noOfVirtualRollover: string;
+
+  @ApiProperty({ description: 'The duration' })
+  duration: number;
 }
 
 export class SwaggerCreateCashbackBonusRequest {

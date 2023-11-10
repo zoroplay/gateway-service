@@ -31,6 +31,23 @@ export interface CreateCashbackBonusRequest {
   minimumLostGames: number;
   bonusAmount: number;
 }
+export interface CreateNewBonusRequest {
+  clientId: number
+  bonusName :string
+  bonusCode :string
+  target :string
+  bonusCategory :string
+  bonusType :string
+  bonusAmount:number
+  maxValue :number
+  sportPercentage :string
+  casinoPercentage:string
+  virtualPercentage :string
+  noOfSportRollover :string
+  noOfCasinoRollover :string
+  noOfVirtualRollover :string
+  duration :string
+}
 
 export interface CreateFreebetBonusRequest {
   clientId: number;
@@ -67,6 +84,24 @@ export interface CreateShareBetBonusRequest {
   bonusAmount: number;
 }
 
+export interface CreateNewBonusRequest {
+  clientId: number
+  bonusName :string
+  bonusCode :string
+  target :string
+  bonusCategory :string
+  bonusType :string
+  bonusAmount:number
+  maxValue :number
+  sportPercentage :string
+  casinoPercentage:string
+  virtualPercentage :string
+  noOfSportRollover :string
+  noOfCasinoRollover :string
+  noOfVirtualRollover :string
+  duration :string
+}
+
 export interface CreateBonusRequest {
   clientId: number;
   bonusType: string;
@@ -101,6 +136,10 @@ export interface DeleteBonusRequest {
 
 export interface GetBonusResponse {
   bonus: CreateBonusRequest[];
+}
+
+export interface GetNewBonusResponse {
+  bonus: CreateNewBonusRequest[];
 }
 
 export interface BonusResponse {

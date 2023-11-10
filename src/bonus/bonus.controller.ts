@@ -18,6 +18,7 @@ import {
   SwaggerAwardBonusRequest,
   SwaggerBonusResponse,
   SwaggerBonusStatusRequest,
+  SwaggerCreateBonusRequest,
   SwaggerCreateBonusResponse, SwaggerCreateCampaignBonus,
   SwaggerCreateCashbackBonusRequest,
   SwaggerCreateFirstDepositBonusRequest,
@@ -48,6 +49,23 @@ export class BonusController {
     try {
 
       return this.bonusService.CreateCashbackBonus(data);
+
+    } catch (error) {
+
+      console.error(error);
+
+    }
+
+  }
+  @Post('/bonus/create')
+  @ApiOperation({ summary: 'Create Cashback Bonus ', description: 'This endpoint creates a new cashback bonus for a particular client, it enables you to create cashback bonus with different settings/terms' })
+  @ApiBody({ type: SwaggerCreateBonusRequest })
+  @ApiOkResponse({ type: SwaggerCreateBonusResponse })
+  CreateBonus(@Body() data: SwaggerCreateBonusRequest) {
+
+    try {
+
+      return this.bonusService.CreateBonus(data);
 
     } catch (error) {
 
