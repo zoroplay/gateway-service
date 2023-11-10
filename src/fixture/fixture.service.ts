@@ -74,6 +74,7 @@ export class FixtureService implements OnModuleInit {
   }
 
   GetFixtureWithOdds(matchID: number) {
+
     console.log('GetFixtureWithOdds ');
     return this.service.getFixtureWithOdds({matchID: matchID});
   }
