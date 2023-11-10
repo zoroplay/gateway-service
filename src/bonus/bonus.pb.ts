@@ -272,6 +272,8 @@ export const BONUS_PACKAGE_NAME = "bonus";
 export interface BonusServiceClient {
   createCashbackBonus(request: CreateCashbackBonusRequest): Observable<CreateBonusResponse>;
 
+  createBonus(request: CreateNewBonusRequest): Observable<CreateBonusResponse>;
+
   updateCashbackBonus(request: CreateCashbackBonusRequest): Observable<CreateBonusResponse>;
 
   createFirstDepositBonus(request: CreateFirstDepositBonusRequest): Observable<CreateBonusResponse>;
@@ -317,6 +319,10 @@ export interface BonusServiceClient {
 export interface BonusServiceController {
   createCashbackBonus(
     request: CreateCashbackBonusRequest,
+  ): Promise<CreateBonusResponse> | Observable<CreateBonusResponse> | CreateBonusResponse;
+
+  createBonus(
+    request: CreateBonusRequest,
   ): Promise<CreateBonusResponse> | Observable<CreateBonusResponse> | CreateBonusResponse;
 
   updateCashbackBonus(
@@ -400,6 +406,7 @@ export function BonusServiceControllerMethods() {
   return function (constructor: Function) {
     const grpcMethods: string[] = [
       "createCashbackBonus",
+      "createBonus",
       "updateCashbackBonus",
       "createFirstDepositBonus",
       "updateFirstDepositBonus",

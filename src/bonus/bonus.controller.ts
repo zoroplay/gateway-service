@@ -8,6 +8,7 @@ import {
   CreateCashbackBonusRequest,
   CreateFirstDepositBonusRequest,
   CreateFreebetBonusRequest,
+  CreateNewBonusRequest,
   CreateReferralBonusRequest,
   CreateShareBetBonusRequest, DeleteCampaignBonusDto,
   GetBonusRequest,
@@ -61,7 +62,7 @@ export class BonusController {
   @ApiOperation({ summary: 'Create Cashback Bonus ', description: 'This endpoint creates a new cashback bonus for a particular client, it enables you to create cashback bonus with different settings/terms' })
   @ApiBody({ type: SwaggerCreateBonusRequest })
   @ApiOkResponse({ type: SwaggerCreateBonusResponse })
-  CreateBonus(@Body() data: SwaggerCreateBonusRequest) {
+  CreateBonus(@Body() data: CreateNewBonusRequest) {
 
     try {
 
