@@ -31,22 +31,22 @@ export class SwaggerCreateBonusRequest {
   bonusType: string;
 
   @ApiProperty({ description: 'The sport percentage' })
-  sportPercentage: string;
+  sportPercentage: number;
 
   @ApiProperty({ description: 'The casino percentage' })
-  casinoPercentage: string;
+  casinoPercentage: number;
 
   @ApiProperty({ description: 'The virtual percentage' })
-  virtualPercentage: string;
+  virtualPercentage: number;
 
   @ApiProperty({ description: 'Number of sports rollover' })
-  noOfSportRollover: string;
+  noOfSportRollover: number;
 
   @ApiProperty({ description: 'Number of casino rollover' })
-  noOfCasinoRollover: string;
+  noOfCasinoRollover: number;
 
   @ApiProperty({ description: 'Number of virtual rollover' })
-  noOfVirtualRollover: string;
+  noOfVirtualRollover: number;
 
   @ApiProperty({ description: 'The duration' })
   duration: number;

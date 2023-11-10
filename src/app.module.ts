@@ -4,7 +4,6 @@ import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
 import { AgencyController } from './agency/agency.controller';
 import { CmsController } from './cms/cms.controller';
-import { SportsController } from './sports/sports.controller';
 import { UsersController } from './users/users.controller';
 import { BetsController } from './bets/bets.controller';
 import { CommunicationsController } from './communications/communications.controller';
@@ -20,7 +19,6 @@ import {BettingModule} from "./betting/betting.module";
 import {BettingController} from "./betting/betting.controller";
 import {BonusModule} from "./bonus/bonus.module";
 import {BonusController} from "./bonus/bonus.controller";
-import {BettingService} from "./betting/betting.service";
 
 @Module({
   imports: [ConfigModule.forRoot(), AuthModule, GamingModule, BettingModule, FixtureModule,BonusModule],
@@ -28,7 +26,6 @@ import {BettingService} from "./betting/betting.service";
     AppController,
     AgencyController,
     CmsController,
-    SportsController,
     UsersController,
     BetsController,
     CommunicationsController,
