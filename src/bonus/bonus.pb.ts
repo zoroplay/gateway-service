@@ -298,7 +298,9 @@ export interface PlaceBetResponse {
 export const BONUS_PACKAGE_NAME = "bonus";
 
 export interface BonusServiceClient {
+
   createCashbackBonus(request: CreateCashbackBonusRequest): Observable<CreateBonusResponse>;
+
 
   createBonus(request: CreateNewBonusRequest): Observable<CreateBonusResponse>;
 

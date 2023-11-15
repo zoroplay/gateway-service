@@ -8,6 +8,8 @@ service BonusService {
 
   rpc CreateNewBonus (CreateNewBonusRequest) returns (CreateBonusResponse){}
 
+  rpc CreateBonus (CreateNewBonusRequest) returns (CreateBonusResponse){}
+
   rpc UpdateCashbackBonus (CreateCashbackBonusRequest) returns (CreateBonusResponse){}
 
   rpc CreateFirstDepositBonus (CreateFirstDepositBonusRequest) returns (CreateBonusResponse){}
