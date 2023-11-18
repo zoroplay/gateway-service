@@ -12,16 +12,25 @@ import { PoolsController } from './pools/pools.controller';
 import { JackpotsController } from './jackpots/jackpots.controller';
 import { PaymentsController } from './wallets/payments.controller';
 import { AuthModule } from './auth/auth.module';
-import {GamingModule} from "./gaming/gaming.module";
-import {FixtureModule} from "./fixture/fixture.module";
-import {FixtureController} from "./fixture/fixture.controller";
-import {BettingModule} from "./betting/betting.module";
-import {BettingController} from "./betting/betting.controller";
-import {BonusModule} from "./bonus/bonus.module";
-import {BonusController} from "./bonus/bonus.controller";
+import { GamingModule } from './gaming/gaming.module';
+import { FixtureModule } from './fixture/fixture.module';
+import { FixtureController } from './fixture/fixture.controller';
+import { BettingModule } from './betting/betting.module';
+import { BettingController } from './betting/betting.controller';
+import { BonusModule } from './bonus/bonus.module';
+import { BonusController } from './bonus/bonus.controller';
+import { SMSModule } from './sms/sms.module';
 
 @Module({
-  imports: [ConfigModule.forRoot(), AuthModule, GamingModule, BettingModule, FixtureModule,BonusModule],
+  imports: [
+    ConfigModule.forRoot(),
+    AuthModule,
+    GamingModule,
+    BettingModule,
+    FixtureModule,
+    BonusModule,
+    SMSModule,
+  ],
   controllers: [
     AppController,
     AgencyController,
@@ -35,7 +44,7 @@ import {BonusController} from "./bonus/bonus.controller";
     PaymentsController,
     BettingController,
     FixtureController,
-    BonusController
+    BonusController,
   ],
   providers: [AppService],
 })
