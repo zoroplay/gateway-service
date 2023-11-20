@@ -18,9 +18,27 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { SMSService } from './sms.service';
+import { SwaggerSendSMSRequest, SwaggerSendSMSResponse } from './dto';
+import { SendSMSRequest } from './sms.pb';
 
-@ApiTags('Bonus APIs')
-@Controller('bonus-service')
+@ApiTags('Sms Service APIs')
+@Controller('sms-service')
 export class SMSController {
-  constructor(private readonly bonusService: SMSService) {}
+  constructor(private readonly smsService: SMSService) {}
+
+  @Post('/cashback/create')
+  @ApiOperation({
+    summary: 'Create Cashback Bonus ',
+    description:
+      'This endpoint creates a new cashback bonus for a particular client, it enables you to create cashback bonus with different settings/terms',
+  })
+  @ApiBody({ type: SwaggerSendSMSRequest })
+  @ApiOkResponse({ type: SwaggerSendSMSResponse })
+  SendSMS(@Body() data: SendSMSRequest) {
+    try {
+      return this.smsService.SendSMS(data);
+    } catch (error) {
+      console.error(error);
+    }
+  }
 }

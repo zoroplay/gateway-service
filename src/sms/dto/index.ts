@@ -1,17 +1,19 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class SwaggerFilterBySportID {
-  @ApiProperty({ description: 'ID of the Sport' })
-  sportID: number;
+export class SwaggerSendSMSRequest {
+  @ApiProperty({ description: 'ID' })
+  msisdn: number;
+
+  @ApiProperty({ description: 'ID of the sender' })
+  senderId: number;
+
+  @ApiProperty({ description: 'Text tp be sent' })
+  text: number;
 }
 
-export class SwaggerCreateBonusRequest {
-  @ApiProperty({ description: 'ID of the client' })
-  clientId: number;
+export class SwaggerSendSMSResponse {
 
-  @ApiProperty({ description: 'Bonus amount to award' })
-  bonusAmount: number;
+  @ApiProperty({ description: 'Message' })
+  message: number;
 
-  @ApiProperty({ description: 'Bonus value' })
-  maxValue: number;
 }
