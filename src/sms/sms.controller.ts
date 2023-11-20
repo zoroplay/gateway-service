@@ -26,11 +26,10 @@ import { SendSMSRequest } from './sms.pb';
 export class SMSController {
   constructor(private readonly smsService: SMSService) {}
 
-  @Post('/cashback/create')
+  @Post('/')
   @ApiOperation({
-    summary: 'Create Cashback Bonus ',
-    description:
-      'This endpoint creates a new cashback bonus for a particular client, it enables you to create cashback bonus with different settings/terms',
+    summary: 'Send SMS ',
+    description: 'This endpoint sends sms through the Mtech API',
   })
   @ApiBody({ type: SwaggerSendSMSRequest })
   @ApiOkResponse({ type: SwaggerSendSMSResponse })
