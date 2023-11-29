@@ -184,13 +184,15 @@ export interface GetFixturesRequest {
   /** Filter fixtures by this sportID */
   sportID: number;
   /** comma separated string of market ids to be loaded */
-  markets: number;
+  markets: string;
   /** mobile or web client making the request */
-  source: number;
+  source: string;
   /** no of records to be loaded (optional) */
   limit: number;
   /** fetch fixtures of this tournamentID will */
   tournamentID: number;
+  /** date range to fetch fixtures */
+  period: string;
 }
 
 export interface HighlightOutcomes {
@@ -278,6 +280,8 @@ export interface GetHighlightsResponse {
   to: number;
   /** how many records are remaining */
   remainingRecords: number;
+  /** Array of available markets */
+  markets: AvailableMarket[];
 }
 
 export interface GetFixturesResponse {
@@ -313,6 +317,7 @@ export interface Outcome {
 export interface AvailableMarket {
   marketID: string;
   marketName: string;
+  hasSpecifier: boolean;
   marketGroupID: string;
   outcomes: MarketOutcome[];
 }
@@ -338,6 +343,9 @@ export interface Market {
 }
 
 export interface MarketOutcome {
+  /** internal id */
+  id: number;
+  /** betradar ID */
   outcomeID: number;
   /** market outcome name */
   outcomeName: string;
@@ -438,6 +446,10 @@ export interface GetAllOutcomeAliasRequest {
   clientID: number;
 }
 
+export interface ID {
+  id: number;
+}
+
 export interface DefaultSportMarketDTO {
   sportID: number;
   marketID: number;
@@ -445,10 +457,6 @@ export interface DefaultSportMarketDTO {
 
 export interface DefaultSportMarketsDTO {
   sports: DefaultSportMarketDTO[];
-}
-
-export interface ID {
-  id: number;
 }
 
 export const FIXTURE_PACKAGE_NAME = "fixture";
@@ -523,7 +531,6 @@ export interface FixtureServiceClient {
   deleteDefaultSportMarket(request: ID): Observable<ResponseString>;
 
   getDefaultSportMarket(request: Empty): Observable<DefaultSportMarketsDTO>;
-
 }
 
 export interface FixtureServiceController {
@@ -624,22 +631,18 @@ export interface FixtureServiceController {
   ): Promise<CreateOutcomeAliasResponse> | Observable<CreateOutcomeAliasResponse> | CreateOutcomeAliasResponse;
 
   createDefaultSportMarket(
-      request: DefaultSportMarketDTO,
+    request: DefaultSportMarketDTO,
   ): Promise<ResponseString> | Observable<ResponseString> | ResponseString;
 
   updateDefaultSportMarket(
-      request: DefaultSportMarketDTO,
+    request: DefaultSportMarketDTO,
   ): Promise<ResponseString> | Observable<ResponseString> | ResponseString;
 
-  deleteDefaultSportMarket(
-      request: ID,
-  ): Promise<ResponseString> | Observable<ResponseString> | ResponseString;
+  deleteDefaultSportMarket(request: ID): Promise<ResponseString> | Observable<ResponseString> | ResponseString;
 
   getDefaultSportMarket(
-      request: Empty,
+    request: Empty,
   ): Promise<DefaultSportMarketsDTO> | Observable<DefaultSportMarketsDTO> | DefaultSportMarketsDTO;
-
-
 }
 
 export function FixtureServiceControllerMethods() {
@@ -669,7 +672,7 @@ export function FixtureServiceControllerMethods() {
       "createDefaultSportMarket",
       "updateDefaultSportMarket",
       "deleteDefaultSportMarket",
-      "getDefaultSportMarket"
+      "getDefaultSportMarket",
     ];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);

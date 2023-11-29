@@ -236,11 +236,12 @@ export class FixtureController {
     try {
 
       let rq = {
-        tournamentID : params.tournament_id ? params.tournament_id : 1,
+        tournamentID : params.tournament_id ? parseInt(params.tournament_id) : 1,
         source : query.source ? query.source : 'web',
         markets : query.markets ? query.markets : '',
         limit : query.limit ? query.limit : 100,
         sportID : query.sportID ? query.sportID : 1,
+        period: query.period ? query.period : 'all'
       }
 
       return this.fixtureService.GetFixtures(rq);

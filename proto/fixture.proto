@@ -56,6 +56,7 @@ service FixtureService {
   rpc DeleteDefaultSportMarket(ID) returns (ResponseString){}
   rpc GetDefaultSportMarket(Empty) returns (DefaultSportMarketsDTO){}
 
+
 }
 
 message CreateMarketGroupRequest {
@@ -190,7 +191,7 @@ message AvailableSportMenuResponse {
   repeated SportMenuResponse sports = 1;
 }
 
-message GetSportMenuRequest {
+message GetSportMenuRequest { 
   string period = 1; // period to display
   string start = 2; // start date
   string end = 3; //end date
@@ -212,10 +213,11 @@ message GetHighlightsRequest {
 
 message GetFixturesRequest {
   int32 sportID = 1; // Filter fixtures by this sportID
-  int32 markets = 2; // comma separated string of market ids to be loaded
-  int32 source = 3; // mobile or web client making the request
+  string markets = 2; // comma separated string of market ids to be loaded
+  string source = 3; // mobile or web client making the request
   int32 limit = 4; // no of records to be loaded (optional)
   int32 tournamentID = 5; // fetch fixtures of this tournamentID will
+  string period = 6; // date range to fetch fixtures
 }
 
 message HighlightOutcomes {
@@ -266,6 +268,7 @@ message GetHighlightsResponse {
   int32 from = 3; // From data index
   int32 to = 4; // to data index
   int32 remainingRecords = 5; // how many records are remaining
+  repeated AvailableMarket markets = 6; // Array of available markets
 }
 
 message GetFixturesResponse {
@@ -290,8 +293,9 @@ message Outcome {
 message AvailableMarket {
   string marketID = 1;
   string marketName = 2;
-  string marketGroupID = 3;
-  repeated MarketOutcome outcomes = 4;
+  bool   hasSpecifier = 3;
+  string marketGroupID = 4;
+  repeated MarketOutcome outcomes = 5;
 }
 
 message MarketGroup {
@@ -309,13 +313,16 @@ message Market {
 }
 
 message MarketOutcome {
-  int32 outcomeID = 1;
+  // internal id
+  int32 id = 1;
+  // betradar ID
+  int32 outcomeID = 2;
   // market outcome name
-  string outcomeName = 2;
+  string outcomeName = 3;
   //market name
-  string marketName = 3;
+  string marketName = 4;
   // market id
-  string marketID = 4;
+  string marketID = 5;
 }
 
 message FixtureOdds {
