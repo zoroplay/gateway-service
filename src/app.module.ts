@@ -20,6 +20,7 @@ import { BettingController } from './betting/betting.controller';
 import { BonusModule } from './bonus/bonus.module';
 import { BonusController } from './bonus/bonus.controller';
 import { SMSModule } from './sms/sms.module';
+import 'dotenv/config'
 
 @Module({
   imports: [
@@ -29,7 +30,7 @@ import { SMSModule } from './sms/sms.module';
     BettingModule,
     FixtureModule,
     BonusModule,
-    SMSModule,
+    // SMSModule,
   ],
   controllers: [
     AppController,
