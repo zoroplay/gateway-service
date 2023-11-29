@@ -18,7 +18,7 @@ export class SMSService implements OnModuleInit {
   }
 
   SendSMS(data: SendSMSRequest) {
-    console.log('CreateCashbackBonus ');
+    console.log('send Sms');
     return this.service.sendsms(data);
   }
 }

@@ -5,9 +5,16 @@ import { Observable } from 'rxjs';
 export const protobufPackage = 'bonus';
 
 export class SendSMSRequest {
-  msisdn: string;
-  text: string;
-  sender_id: string;
+  mode: 'mtech'| 'yournotify';
+  msisdn!: string;
+  text!: string;
+  sender_id!: string;
+  name!: string;
+  from!: string;
+  status!: string;
+  list!: any;
+  schedule!: string;
+  channel!: string;
 }
 export class SendSMSResponse {
   message: string;
