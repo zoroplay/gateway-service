@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import {BetHistory, BetHistoryDto, BetSlip} from "../betting.pb";
+import { BetHistory, BetHistoryDto, BetSlip } from '../betting.pb';
 
 export class SwaggerSyncGameDto {
   @ApiProperty({ description: 'Provider name, e.g., shack-evolution' })
@@ -103,7 +103,6 @@ export class SwaggerOKGameArrayResponse {
 }
 
 export class SwaggerSettings {
-
   @ApiProperty({
     description: 'ID of the client',
   })
@@ -148,11 +147,9 @@ export class SwaggerSettings {
     description: 'Clients Currency, 3 letter ISO currency code ',
   })
   currency: string;
-
 }
 
 export class SwaggerSettingsResponse {
-
   @ApiProperty({
     description: 'ID of the client',
   })
@@ -210,13 +207,11 @@ export class SwaggerSettingsResponse {
 }
 
 export class SwaggerAllSettings {
-
   @ApiProperty({
     type: [SwaggerSettingsResponse],
     description: 'Array of Settings Objects',
   })
   settings: SwaggerSettingsResponse[];
-
 }
 
 export class SwaggerBetSlip {
@@ -226,7 +221,8 @@ export class SwaggerBetSlip {
   eventName: string;
 
   @ApiProperty({
-    description: 'Type of event default value is match, oter applicable values are season, stage, group',
+    description:
+      'Type of event default value is match, oter applicable values are season, stage, group',
   })
   eventType: string;
 
@@ -277,7 +273,6 @@ export class SwaggerBetSlip {
 }
 
 export class SwaggerPlaceBet {
-
   @ApiProperty({
     type: [SwaggerBetSlip],
     description: 'Array of Settings Bet slips',
@@ -300,7 +295,8 @@ export class SwaggerPlaceBet {
   stake: number;
 
   @ApiProperty({
-    description: 'Where is this bet coming from? Web - 1, SMS - 2, Mobile App - 3',
+    description:
+      'Where is this bet coming from? Web - 1, SMS - 2, Mobile App - 3',
   })
   source: string;
 
@@ -311,19 +307,20 @@ export class SwaggerPlaceBet {
 }
 
 export class SwaggerPlaceBetResponse {
-
   @ApiProperty({
     description: 'Generate Bet ID',
   })
   betId: number;
 
   @ApiProperty({
-    description: 'Corresponding http status of the action, 201 for success else failure',
+    description:
+      'Corresponding http status of the action, 201 for success else failure',
   })
   status: number;
 
   @ApiProperty({
-    description: 'Action status description, if failure, this field will contain failure reason',
+    description:
+      'Action status description, if failure, this field will contain failure reason',
   })
   statusDescription: string;
 }
@@ -341,7 +338,8 @@ export class SwaggerBetHistory {
   stake: number;
 
   @ApiProperty({
-    description: 'Where is this bet coming from? Web - 1, SMS - 2, Mobile App - 3',
+    description:
+      'Where is this bet coming from? Web - 1, SMS - 2, Mobile App - 3',
   })
   source: string;
 
@@ -351,7 +349,8 @@ export class SwaggerBetHistory {
   date: string;
 
   @ApiProperty({
-    description: 'Bet status.-1 - Cancelled, 0 - pending, 1 - Partially settled, 2 - Settled, 3 - Won, 4 - Lost, 4 - Rolled back',
+    description:
+      'Bet status.-1 - Cancelled, 0 - pending, 1 - Partially settled, 2 - Settled, 3 - Won, 4 - Lost, 4 - Rolled back',
   })
   status: number;
 
@@ -362,7 +361,6 @@ export class SwaggerBetHistory {
 }
 
 export class SwaggerBetHistoryResponse {
-
   @ApiProperty({
     type: [SwaggerBetHistory],
     description: 'Array of bets',
@@ -377,7 +375,8 @@ export class SwaggerBetHistoryRequest {
   userId: number;
 
   @ApiProperty({
-    description: 'Filter by Bet status.-1 - Cancelled, 0 - pending, 1 - Partially settled, 2 - Settled, 3 - Won, 4 - Lost, 4 - Rolled back',
+    description:
+      'Filter by Bet status.-1 - Cancelled, 0 - pending, 1 - Partially settled, 2 - Settled, 3 - Won, 4 - Lost, 4 - Rolled back',
   })
   status: number;
 
@@ -390,5 +389,4 @@ export class SwaggerBetHistoryRequest {
     description: 'Client ID',
   })
   clientId: number;
-
 }
