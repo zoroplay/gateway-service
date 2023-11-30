@@ -18,7 +18,11 @@ async function bootstrap() {
     .addBearerAuth()
     .build();
 
-  app.enableCors();
+    app.enableCors({
+      allowedHeaders: ['content-type'],
+      origin: 'https://mobile.frapapa.com',
+      credentials: true,
+    });
 
   const document = SwaggerModule.createDocument(app, options);
 
