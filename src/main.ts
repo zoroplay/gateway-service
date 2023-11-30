@@ -18,12 +18,12 @@ async function bootstrap() {
     .addBearerAuth()
     .build();
 
-  //   app.enableCors({
-  //     origin: true,
-  //     allowedHeaders: 'X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept, Observe',
-  //     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
-  //     credentials: true,
-  // });
+    app.enableCors({
+      origin: true,
+      allowedHeaders: 'X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept, Observe',
+      methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+      credentials: true,
+  });
 
   const document = SwaggerModule.createDocument(app, options);
 
