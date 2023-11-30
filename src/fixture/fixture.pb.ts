@@ -317,7 +317,7 @@ export interface Outcome {
 export interface AvailableMarket {
   marketID: string;
   marketName: string;
-  hasSpecifier: boolean;
+  specifier: string;
   marketGroupID: string;
   outcomes: MarketOutcome[];
 }

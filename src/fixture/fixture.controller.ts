@@ -152,7 +152,7 @@ export class FixtureController {
         marketID : query.marketID ? query.marketID : 1,
         page : query.page ? query.page : 1,
         perPage : query.perPage ? query.perPage : 10,
-        sportID : params.sportID ? params.sportID : 1,
+        sportID : params.sport_id ? params.sport_id : 1,
         upcoming : query.upcoming ? query.upcoming : 0,
         today : query.today ? query.today : 0,
         specifier: query.specifier ? query.specifier : "",
@@ -181,7 +181,7 @@ export class FixtureController {
   GetLiveHighlights(@Param() params: any,@Query() query: any) {
 
     try {
-      logger.log('fetching live highlights ');
+      logger.log('fetching live highlights');
 
 
       let rq = {
@@ -191,7 +191,7 @@ export class FixtureController {
         marketID : query.marketID ? query.marketID : 1,
         page : query.page ? query.page : 1,
         perPage : query.perPage ? query.perPage : 100,
-        sportID : params.sportID ? params.sportID : 0,
+        sportID : params.sport_id ? params.sport_id : 0,
         upcoming :  0,
         today :  0,
         specifier: query.specifier ? query.specifier : "",

@@ -293,7 +293,7 @@ message Outcome {
 message AvailableMarket {
   string marketID = 1;
   string marketName = 2;
-  bool   hasSpecifier = 3;
+  string specifier = 3;
   string marketGroupID = 4;
   repeated MarketOutcome outcomes = 5;
 }
