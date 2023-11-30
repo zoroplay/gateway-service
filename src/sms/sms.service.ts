@@ -1,6 +1,7 @@
 import { Injectable, Inject, OnModuleInit } from '@nestjs/common';
 import {
   protobufPackage,
+  SaveSettingsRequest,
   SendSMSRequest,
   SMS_SERVICE_NAME,
   SMSServiceClient,
@@ -20,5 +21,10 @@ export class SMSService implements OnModuleInit {
   SendSMS(data: SendSMSRequest) {
     console.log('send Sms');
     return this.service.sendsms(data);
+  }
+
+  SaveSettings(data: SaveSettingsRequest) {
+    console.log('save settings');
+    return this.service.saveSettings(data);
   }
 }
