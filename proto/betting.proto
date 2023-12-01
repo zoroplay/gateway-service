@@ -117,7 +117,8 @@ message BetHistory {
   string date = 3;
   int32 status = 4;
   string statusDescription = 5;
-  string source = 6;
+  float cashOutAmount = 6;
+  string source = 7;
 
 }
 

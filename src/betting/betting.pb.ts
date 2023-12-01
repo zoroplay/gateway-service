@@ -75,7 +75,7 @@ export interface BetSlip {
 export interface PlaceBetResponse {
   betId: number;
   status: number;
-  statusDescription: number;
+  statusDescription: string;
 }
 
 export interface BetHistoryRequest {
@@ -106,6 +106,7 @@ export interface BetHistory {
   date: string;
   status: number;
   statusDescription: string;
+  cashOutAmount: number;
   source: string;
 }
 
