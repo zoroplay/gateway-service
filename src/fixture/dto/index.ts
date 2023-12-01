@@ -178,8 +178,11 @@ export class SwaggerFixturesRequest {
   @ApiProperty({ description: 'No of Fixtures to fetch' })
   limit: number;
 
-  @ApiProperty({ description: 'Filter by country code' })
+  @ApiProperty({ description: 'Specify device type' })
   source?: string;
+
+  @ApiProperty({ description: 'filter markets by sport ID' })
+  sportID?: string;
 }
 
 export class SwaggerFixturesResponse {
