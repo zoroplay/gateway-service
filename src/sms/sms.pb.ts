@@ -15,6 +15,7 @@ export class SendSMSRequest {
   list!: any;
   schedule!: string;
   channel!: string;
+  campaign_type!: string;
 }
 
 /* eslint-disable prettier/prettier */

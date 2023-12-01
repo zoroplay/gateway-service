@@ -9,6 +9,30 @@ export class SwaggerSendSMSRequest {
 
   @ApiProperty({ description: 'Text tp be sent' })
   text: number;
+
+  @ApiProperty({ description: 'ID' })
+  mode: number;
+
+  @ApiProperty({ description: 'ID of the sender' })
+  name: number;
+
+  @ApiProperty({ description: 'Text tp be sent' })
+  from: number;
+
+  @ApiProperty({ description: 'ID' })
+  status: number;
+
+  @ApiProperty({ description: 'ID of the sender' })
+  list: number;
+
+  @ApiProperty({ description: 'Text tp be sent' })
+  schedule: number;
+
+  @ApiProperty({ description: 'ID of the sender' })
+  channel: number;
+
+  @ApiProperty({ description: 'Text tp be sent' })
+  campaign_type: number;
 }
 
 export class SwaggerSendSMSResponse {
