@@ -11,7 +11,7 @@ import { NOTIFICATION_PACKAGE_NAME, protobufPackage } from './noti.pb';
         name: protobufPackage,
         transport: Transport.GRPC,
         options: {
-          url: process.env.BONUS_SERVICE_URL,
+          url: process.env.NOTIFICATION_SERVICE_URL,
           package: NOTIFICATION_PACKAGE_NAME,
           protoPath: 'proto/noti.proto',
         },
