@@ -18,27 +18,12 @@ async function bootstrap() {
     .addBearerAuth()
     .build();
 
-    app.enableCors({
-      origin: true,
-      allowedHeaders: 'X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept, Observe',
-      methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
-      credentials: true,
-  });
+  app.enableCors();
 
   const document = SwaggerModule.createDocument(app, options);
 
   SwaggerModule.setup('swagger', app, document);
 
-  // app.connectMicroservice<MicroserviceOptions>({
-  //   transport: Transport.GRPC,
-  //   options: {
-  //     url: process.env.GRPC_SERVER_URL,
-  //     package: 'sports',
-  //     protoPath: process.cwd() + '/src/core/shared/proto/sports.proto',
-  //   },
-  // });
-
-  // await app.startAllMicroservicesAsync();
   await app.listen(process.env.PORT || 5001, () => {
     logger.log(
       'Sportsbook API Gateway Instance is running on ' + process.env.PORT,

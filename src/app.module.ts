@@ -19,7 +19,7 @@ import { BettingModule } from './betting/betting.module';
 import { BettingController } from './betting/betting.controller';
 import { BonusModule } from './bonus/bonus.module';
 import { BonusController } from './bonus/bonus.controller';
-import { SMSModule } from './sms/sms.module';
+import { NotificationModule } from './notification/notification.module';
 import 'dotenv/config'
 
 @Module({
@@ -30,22 +30,10 @@ import 'dotenv/config'
     BettingModule,
     FixtureModule,
     BonusModule,
-    // SMSModule,
+    NotificationModule
   ],
   controllers: [
     AppController,
-    AgencyController,
-    CmsController,
-    UsersController,
-    BetsController,
-    CommunicationsController,
-    TipstersController,
-    PoolsController,
-    JackpotsController,
-    PaymentsController,
-    BettingController,
-    FixtureController,
-    BonusController,
   ],
   providers: [AppService],
 })

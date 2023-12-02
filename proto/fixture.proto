@@ -234,6 +234,7 @@ message HighlightOutcomes {
   int32 producerID = 11; // ID of the producer that send the odds
   int32 marketID = 12; // Unique ID of this market
   int32 producerStatus = 13; // ID of the producer that send the odds
+  string displayName = 14; // outcome display name
 
 }
 

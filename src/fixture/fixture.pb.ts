@@ -222,6 +222,8 @@ export interface HighlightOutcomes {
   marketID: number;
   /** ID of the producer that send the odds */
   producerStatus: number;
+  /** outcome display name */
+  displayName: string;
 }
 
 export interface FixturesWithOdds {

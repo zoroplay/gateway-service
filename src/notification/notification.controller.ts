@@ -17,25 +17,25 @@ import {
   ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
-import { SMSService } from './sms.service';
+import { NotificationService } from './notification.service';
 import { SwaggerSendSMSRequest, SwaggerSendSMSResponse } from './dto';
-import { SendSMSRequest } from './sms.pb';
+import { SendSmsRequest } from './noti.pb';
 
-@ApiTags('Sms Service APIs')
-@Controller('sms-service')
-export class SMSController {
-  constructor(private readonly smsService: SMSService) {}
+@ApiTags('Notification Service APIs')
+@Controller('notification')
+export class NotificationController {
+  constructor(private readonly notiService: NotificationService) {}
 
-  @Post('/')
+  @Post('/send-sms')
   @ApiOperation({
     summary: 'Send SMS ',
     description: 'This endpoint sends sms through the Mtech API',
   })
   @ApiBody({ type: SwaggerSendSMSRequest })
   @ApiOkResponse({ type: SwaggerSendSMSResponse })
-  SendSMS(@Body() data: SendSMSRequest) {
+  SendSMS(@Body() data: SendSmsRequest) {
     try {
-      return this.smsService.SendSMS(data);
+      return this.notiService.sendSMS(data);
     } catch (error) {
       console.error(error);
     }
