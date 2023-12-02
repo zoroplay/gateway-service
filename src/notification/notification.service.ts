@@ -4,6 +4,7 @@ import {
   SendSmsRequest,
   NOTIFICATION_SERVICE_NAME,
   NotificationServiceClient,
+  SaveSettingsRequest,
 } from './noti.pb';
 import { ClientGrpc } from '@nestjs/microservices';
 
@@ -20,5 +21,10 @@ export class NotificationService implements OnModuleInit {
   sendSMS(data: SendSmsRequest) {
     console.log('CreateCashbackBonus ');
     return this.service.sendSms(data);
+  }
+
+  saveSettings(data: SaveSettingsRequest) {
+    console.log('save settings');
+    return this.service.saveSettings(data);
   }
 }

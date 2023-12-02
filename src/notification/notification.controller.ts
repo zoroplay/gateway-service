@@ -18,8 +18,13 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { NotificationService } from './notification.service';
-import { SwaggerSendSMSRequest, SwaggerSendSMSResponse } from './dto';
-import { SendSmsRequest } from './noti.pb';
+import { SaveSettingsRequest, SendSmsRequest } from './noti.pb';
+import {
+  SwaggerSaveSettingsRequest,
+  SwaggerSaveSettingsResponse,
+  SwaggerSendSMSRequest,
+  SwaggerSendSMSResponse,
+} from './dto';
 
 @ApiTags('Notification Service APIs')
 @Controller('notification')
@@ -36,6 +41,21 @@ export class NotificationController {
   SendSMS(@Body() data: SendSmsRequest) {
     try {
       return this.notiService.sendSMS(data);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  @Put('/save-settings')
+  @ApiOperation({
+    summary: 'Save Settings',
+    description: 'This endpoint saves/edits settings for SMS providers',
+  })
+  @ApiBody({ type: SwaggerSaveSettingsRequest })
+  @ApiOkResponse({ type: SwaggerSaveSettingsResponse })
+  SaveSettings(@Body() data: SaveSettingsRequest) {
+    try {
+      return this.notiService.saveSettings(data);
     } catch (error) {
       console.error(error);
     }
