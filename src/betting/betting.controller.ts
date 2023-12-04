@@ -159,7 +159,7 @@ export class BettingController {
 
     try {
 
-      return this.bettingService.getProbabilityFromBetID({
+      return this.bettingService.getProbabilityFromBetId({
         betID: params.client_id,
       });
 

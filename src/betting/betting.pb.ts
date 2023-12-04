@@ -145,7 +145,7 @@ export interface BettingServiceClient {
   getProbabilityFromSelection(request: Selections): Observable<Probability>;
 
 
-  getProbabilityFromBetID(request: BetID): Observable<Probability>;
+  getProbabilityFromBetId(request: BetID): Observable<Probability>;
 
 }
 
@@ -188,7 +188,7 @@ export function BettingServiceControllerMethods() {
       "placeBet",
       "betHistory",
       "getProbabilityFromSelection",
-      "getProbabilityFromBetID"
+      "getProbabilityFromBetId"
     ];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
