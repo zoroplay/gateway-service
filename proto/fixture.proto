@@ -297,6 +297,7 @@ message AvailableMarket {
   string specifier = 3;
   string marketGroupID = 4;
   repeated MarketOutcome outcomes = 5;
+  int32 sportID = 6;
 }
 
 message MarketGroup {

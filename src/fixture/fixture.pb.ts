@@ -322,6 +322,7 @@ export interface AvailableMarket {
   specifier: string;
   marketGroupID: string;
   outcomes: MarketOutcome[];
+  sportID: number;
 }
 
 export interface MarketGroup {
