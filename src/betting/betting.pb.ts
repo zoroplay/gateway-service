@@ -127,6 +127,7 @@ export interface Probability {
 export const BETTING_PACKAGE_NAME = "betting";
 
 export interface BettingServiceClient {
+
   createSetting(request: Settings): Observable<SettingsResponse>;
 
   updateSetting(request: Settings): Observable<SettingsResponse>;
