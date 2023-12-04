@@ -10,6 +10,8 @@ service BettingService {
   rpc CancelBet (BetID) returns (StatusResponse) {}
   rpc PlaceBet (PlaceBetRequest) returns (PlaceBetResponse) {}
   rpc BetHistory (BetHistoryRequest) returns (BetHistoryResponse) {}
+  rpc GetProbabilityFromSelection(Selections) returns (Probability) {}
+  rpc GetProbabilityFromBetID(BetID) returns (Probability) {}
 
 }
 
@@ -125,5 +127,16 @@ message BetHistory {
 message BetHistoryResponse {
 
   repeated BetHistoryResponse data = 1;
+
+}
+
+message Selections {
+
+  repeated BetSlip selections = 1;
+
+}
+
+message Probability {
+  float probability = 1;
 
 }

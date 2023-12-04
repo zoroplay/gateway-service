@@ -391,3 +391,21 @@ export class SwaggerBetHistoryRequest {
   clientId: number;
 
 }
+
+export class SwaggerProbability {
+  @ApiProperty({
+    description: 'Probability of the supplied selections or betID',
+  })
+  probability: number;
+
+}
+
+export class SwaggerSelections {
+
+  @ApiProperty({
+    type: [SwaggerBetSlip],
+    description: 'Array of odds selections',
+  })
+  selections: SwaggerBetSlip[];
+
+}

@@ -1,7 +1,14 @@
 import { Injectable, Inject, OnModuleInit } from '@nestjs/common';
 import {
   protobufPackage,
-  BettingServiceClient, BETTING_SERVICE_NAME, Settings, SettingsById, BetHistoryRequest, PlaceBetRequest,
+  BettingServiceClient,
+  BETTING_SERVICE_NAME,
+  Settings,
+  SettingsById,
+  BetHistoryRequest,
+  PlaceBetRequest,
+  Selections,
+  BetID,
 } from './betting.pb';
 import { ClientGrpc } from '@nestjs/microservices';
 
@@ -44,6 +51,16 @@ export class BettingService implements OnModuleInit {
   BetHistory(data: BetHistoryRequest) {
     console.log('bet history ');
     return this.service.betHistory(data);
+  }
+
+  getProbabilityFromSelection(data: Selections) {
+    console.log('check probability from selections ');
+    return this.service.getProbabilityFromSelection(data);
+  }
+
+  getProbabilityFromBetID(data: BetID) {
+    console.log('check probability from betID ');
+    return this.service.getProbabilityFromBetID(data);
   }
 
 }
