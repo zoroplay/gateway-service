@@ -144,8 +144,8 @@ export interface BettingServiceClient {
 
   getProbabilityFromSelection(request: Selections): Observable<Probability>;
 
-  getProbabilityFromBetID(request: BetID): Observable<Probability>;
 
+  getProbabilityFromBetID(request: BetID): Observable<Probability>;
 
 }
 
