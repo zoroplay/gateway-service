@@ -114,15 +114,24 @@ export interface BetHistoryResponse {
   data: BetHistoryResponse[];
 }
 
-export interface Selections {
-
-  selections: BetSlip;
+export interface ProbabilityBetSlipSelection {
+  eventId: number;
+  marketId: number;
+  marketName: string;
+  specifier: string;
+  outcomeId: string;
+  outcomeName: string;
+  sportId: number;
+  currentProbability: number;
+  initialProbability: number;
 }
 
 export interface Probability {
-
-  probability: number;
+  currentProbability: number;
+  initialProbability: number;
+  selections: ProbabilityBetSlipSelection[];
 }
+
 
 export const BETTING_PACKAGE_NAME = "betting";
 
@@ -141,9 +150,6 @@ export interface BettingServiceClient {
   placeBet(request: PlaceBetRequest): Observable<PlaceBetResponse>;
 
   betHistory(request: BetHistoryRequest): Observable<BetHistoryResponse>;
-
-  getProbabilityFromSelection(request: Selections): Observable<Probability>;
-
 
   getProbabilityFromBetId(request: BetID): Observable<Probability>;
 
@@ -166,14 +172,9 @@ export interface BettingServiceController {
     request: BetHistoryRequest,
   ): Promise<BetHistoryResponse> | Observable<BetHistoryResponse> | BetHistoryResponse;
 
-  getProbabilityFromSelection(
-      request: Selections,
-  ): Promise<Probability> | Observable<Probability> | Probability;
-
   getProbabilityFromBetID(
       request: BetID,
   ): Promise<Probability> | Observable<Probability> | Probability;
-
 
 }
 
@@ -187,7 +188,6 @@ export function BettingServiceControllerMethods() {
       "cancelBet",
       "placeBet",
       "betHistory",
-      "getProbabilityFromSelection",
       "getProbabilityFromBetId"
     ];
     for (const method of grpcMethods) {

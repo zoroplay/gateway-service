@@ -10,7 +10,6 @@ service BettingService {
   rpc CancelBet (BetID) returns (StatusResponse) {}
   rpc PlaceBet (PlaceBetRequest) returns (PlaceBetResponse) {}
   rpc BetHistory (BetHistoryRequest) returns (BetHistoryResponse) {}
-  rpc GetProbabilityFromSelection(Selections) returns (Probability) {}
   rpc GetProbabilityFromBetID(BetID) returns (Probability) {}
 
 }
@@ -130,13 +129,22 @@ message BetHistoryResponse {
 
 }
 
-message Selections {
-
-  repeated BetSlip selections = 1;
-
+message ProbabilityBetSlipSelection {
+  int64 eventId = 1;
+  int32 marketId = 2;
+  string marketName = 3;
+  string specifier = 4;
+  string outcomeId = 5;
+  string outcomeName = 6;
+  int64 sportId = 7;
+  float currentProbability = 8;
+  float initialProbability = 9;
 }
 
 message Probability {
   float probability = 1;
+  float currentProbability = 2;
+  float initialProbability = 3;
+  repeated ProbabilityBetSlipSelection selections = 4;
 
 }
