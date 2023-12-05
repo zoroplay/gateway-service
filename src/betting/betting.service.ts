@@ -53,11 +53,6 @@ export class BettingService implements OnModuleInit {
     return this.service.betHistory(data);
   }
 
-  getProbabilityFromSelection(data: Selections) {
-    console.log('check probability from selections ');
-    return this.service.getProbabilityFromSelection(data);
-  }
-
   getProbabilityFromBetId(data: BetID) {
 
     console.log('check probability from betID  ');

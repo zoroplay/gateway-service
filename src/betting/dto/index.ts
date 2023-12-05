@@ -392,20 +392,73 @@ export class SwaggerBetHistoryRequest {
 
 }
 
-export class SwaggerProbability {
-  @ApiProperty({
-    description: 'Probability of the supplied selections or betID',
-  })
-  probability: number;
+export class SwaggerProbabilityBetSlipSelection {
 
+  @ApiProperty({
+    description: 'Event ID',
+  })
+  eventId: number;
+
+  @ApiProperty({
+    description: 'Betradar market ID',
+  })
+  marketId: number;
+
+  @ApiProperty({
+    description: 'Market name',
+  })
+  marketName: string;
+
+  @ApiProperty({
+    description: 'Market specifier',
+  })
+  specifier: string;
+
+  @ApiProperty({
+    description: 'Outcome ID',
+  })
+  outcomeId: string;
+
+  @ApiProperty({
+    description: 'Outcome name',
+  })
+  outcomeName: string;
+
+  @ApiProperty({
+    description: 'Event odds',
+  })
+  odds: number;
+
+  @ApiProperty({
+    description: 'ID of the sport',
+  })
+  sportId: number;
+
+  @ApiProperty({
+    description: 'Current Probability of the supplied selections or betID',
+  })
+  currentProbability: number;
+
+  @ApiProperty({
+    description: 'Initial Probability of the supplied selections or betID',
+  })
+  initialProbability: number;
 }
 
-export class SwaggerSelections {
+export class SwaggerProbability {
+  @ApiProperty({
+    description: 'Current Probability of the supplied selections or betID',
+  })
+  currentProbability: number;
 
   @ApiProperty({
-    type: [SwaggerBetSlip],
-    description: 'Array of odds selections',
+    description: 'Initial Probability of the supplied selections or betID',
   })
-  selections: SwaggerBetSlip[];
+  initialProbability: number;
 
+  @ApiProperty({
+    type: [SwaggerProbabilityBetSlipSelection],
+    description: 'Array of probability of each selections',
+  })
+  selections: SwaggerProbabilityBetSlipSelection[];
 }

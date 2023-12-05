@@ -12,14 +12,14 @@ import {
   SwaggerBetHistoryRequest,
   SwaggerBetHistoryResponse,
   SwaggerPlaceBet,
-  SwaggerPlaceBetResponse, SwaggerProbability, SwaggerSelections,
+  SwaggerPlaceBetResponse, SwaggerProbability,
   SwaggerSettings,
   SwaggerSettingsResponse,
 } from './dto';
 import {
   BetHistoryRequest,
   BetHistoryResponse, BetID,
-  PlaceBetRequest, Selections,
+  PlaceBetRequest,
   Settings,
 } from './betting.pb';
 
@@ -123,28 +123,6 @@ export class BettingController {
     } catch (error) {
       console.error(error);
     }
-  }
-
-  @Post('/probability')
-  @ApiOperation({
-    summary: 'Get probability of the odds selections',
-    description:
-        'This endpoints retrieve probability of the supplied odds selections',
-  })
-  @ApiBody({ type: SwaggerSelections })
-  @ApiOkResponse({ type: SwaggerProbability })
-  GetProbabilityFromSelection(@Body() data: Selections) {
-
-    try {
-
-      return this.bettingService.getProbabilityFromSelection(data);
-
-    } catch (error) {
-
-      console.error(error);
-
-    }
-
   }
 
   @Get('/probability/:bet_id')
