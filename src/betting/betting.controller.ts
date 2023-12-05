@@ -18,13 +18,12 @@ import {
 } from './dto';
 import {
   BetHistoryRequest,
-  BetHistoryResponse, BetID,
   PlaceBetRequest, Selections,
   Settings,
 } from './betting.pb';
 
 @ApiTags('Betting APIs')
-@Controller('betting-service')
+@Controller('sports/bets')
 export class BettingController {
   constructor(private readonly bettingService: BettingService) {}
 
@@ -93,7 +92,7 @@ export class BettingController {
     }
   }
 
-  @Post('/bet/create')
+  @Post('/place-bet')
   @ApiOperation({
     summary: 'Place a bet request',
     description:
@@ -109,7 +108,7 @@ export class BettingController {
     }
   }
 
-  @Post('/bet/history')
+  @Post('/history')
   @ApiOperation({
     summary: 'Retrieve bet history of a user',
     description:
