@@ -7,7 +7,6 @@ import {
   SettingsById,
   BetHistoryRequest,
   PlaceBetRequest,
-  Selections,
   BetID,
 } from './betting.pb';
 import { ClientGrpc } from '@nestjs/microservices';
