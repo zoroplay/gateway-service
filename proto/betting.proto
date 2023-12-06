@@ -24,6 +24,7 @@ message Settings {
   int32 maximumSelections = 7;
   int32 mtsLimitID = 8;
   string currency = 9;
+  string url = 10;
 }
 
 message SettingsResponse {
@@ -36,8 +37,9 @@ message SettingsResponse {
   int32 maximumSelections = 7;
   int32 mtsLimitID = 8;
   string currency = 9;
-  string created = 10;
-  string updated = 11;
+  string url = 10;
+  string created = 11;
+  string updated = 12;
 }
 
 message SettingsById {
@@ -117,8 +119,8 @@ message BetHistory {
   float stake = 2;
   string date = 3;
   int32 status = 4;
-  string statusDescription = 5;
-  float cashOutAmount = 6;
+  float cashOutAmount = 5;
+  string statusDescription = 6;
   string source = 7;
 
 }

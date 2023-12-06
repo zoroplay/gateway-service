@@ -14,6 +14,7 @@ export interface Settings {
   maximumSelections: number;
   mtsLimitID: number;
   currency: string;
+  url: string;
 }
 
 export interface SettingsResponse {
@@ -26,6 +27,7 @@ export interface SettingsResponse {
   maximumSelections: number;
   mtsLimitID: number;
   currency: string;
+  url: string;
   created: string;
   updated: string;
 }
@@ -105,8 +107,8 @@ export interface BetHistory {
   stake: number;
   date: string;
   status: number;
-  statusDescription: string;
   cashOutAmount: number;
+  statusDescription: string;
   source: string;
 }
 
@@ -127,16 +129,15 @@ export interface ProbabilityBetSlipSelection {
 }
 
 export interface Probability {
+  probability: number;
   currentProbability: number;
   initialProbability: number;
   selections: ProbabilityBetSlipSelection[];
 }
 
-
 export const BETTING_PACKAGE_NAME = "betting";
 
 export interface BettingServiceClient {
-
   createSetting(request: Settings): Observable<SettingsResponse>;
 
   updateSetting(request: Settings): Observable<SettingsResponse>;
@@ -152,7 +153,6 @@ export interface BettingServiceClient {
   betHistory(request: BetHistoryRequest): Observable<BetHistoryResponse>;
 
   getProbabilityFromBetId(request: BetID): Observable<Probability>;
-
 }
 
 export interface BettingServiceController {
@@ -172,10 +172,7 @@ export interface BettingServiceController {
     request: BetHistoryRequest,
   ): Promise<BetHistoryResponse> | Observable<BetHistoryResponse> | BetHistoryResponse;
 
-  getProbabilityFromBetID(
-      request: BetID,
-  ): Promise<Probability> | Observable<Probability> | Probability;
-
+  getProbabilityFromBetId(request: BetID): Promise<Probability> | Observable<Probability> | Probability;
 }
 
 export function BettingServiceControllerMethods() {
@@ -188,7 +185,7 @@ export function BettingServiceControllerMethods() {
       "cancelBet",
       "placeBet",
       "betHistory",
-      "getProbabilityFromBetId"
+      "getProbabilityFromBetId",
     ];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
