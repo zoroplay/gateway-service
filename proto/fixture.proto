@@ -290,6 +290,7 @@ message Outcome {
   int32 oddID = 6; // Odd ID
   int32 active = 7; // wether odd is active (1) or not (0), only display active odds on the site
   int32 displayName = 8;
+  int32 producerID = 9;
 }
 
 message AvailableMarket {
@@ -322,11 +323,11 @@ message MarketOutcome {
   int32 outcomeID = 2;
   // market outcome name
   string outcomeName = 3;
-  //market name
+  // market name
   string marketName = 4;
   // market id
   string marketID = 5;
-
+  // 
   string displayName = 6;
 }
 

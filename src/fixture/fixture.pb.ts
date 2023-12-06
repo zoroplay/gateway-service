@@ -315,6 +315,7 @@ export interface Outcome {
   /** wether odd is active (1) or not (0), only display active odds on the site */
   active: number;
   displayName: number;
+  producerID: number;
 }
 
 export interface AvailableMarket {
@@ -357,6 +358,7 @@ export interface MarketOutcome {
   marketName: string;
   /** market id */
   marketID: string;
+  /**  */
   displayName: string;
 }
 
