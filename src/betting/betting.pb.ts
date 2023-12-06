@@ -52,7 +52,7 @@ export interface StatusResponse {
 }
 
 export interface PlaceBetRequest {
-  betslip: BetSlip[];
+  selections: BetSlip[];
   clientId: number;
   userId: number;
   stake: number;
@@ -72,6 +72,14 @@ export interface BetSlip {
   outcomeName: string;
   odds: number;
   sportId: number;
+  sport: string;
+  tournament: string;
+  category: string;
+  matchID: number;
+  awayTeam: string;
+  homeTeam: string;
+  type: string;
+  fixed: boolean;
 }
 
 export interface PlaceBetResponse {

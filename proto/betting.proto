@@ -63,7 +63,7 @@ message StatusResponse {
 }
 
 message PlaceBetRequest {
-  repeated BetSlip betslip = 1;
+  repeated BetSlip selections = 1;
   int32 clientId = 2;
   int32 userId = 3;
   float stake = 4;
@@ -83,7 +83,14 @@ message BetSlip {
   string outcomeName = 9;
   float odds = 10;
   int64 sportId = 11;
-
+  string sport = 12;
+  string tournament = 13;
+  string category = 14;
+  int32 matchID = 15;
+  string awayTeam = 16;
+  string homeTeam = 17;
+  string type = 18;
+  bool fixed = 19;
 }
 
 message PlaceBetResponse {
