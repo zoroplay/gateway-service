@@ -81,6 +81,7 @@ export interface BetSlip {
   type: string;
   fixed: boolean;
   selectionId: boolean;
+  eventDate: boolean;
 }
 
 export interface PlaceBetResponse {

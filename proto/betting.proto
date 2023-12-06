@@ -92,6 +92,7 @@ message BetSlip {
   string type = 18;
   bool fixed = 19;
   bool selectionId = 20;
+  bool eventDate = 21;
 }
 
 message PlaceBetResponse {
