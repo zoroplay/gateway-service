@@ -80,6 +80,7 @@ export interface BetSlip {
   homeTeam: string;
   type: string;
   fixed: boolean;
+  selectionId: boolean;
 }
 
 export interface PlaceBetResponse {

@@ -91,6 +91,7 @@ message BetSlip {
   string homeTeam = 17;
   string type = 18;
   bool fixed = 19;
+  bool selectionId = 20;
 }
 
 message PlaceBetResponse {
