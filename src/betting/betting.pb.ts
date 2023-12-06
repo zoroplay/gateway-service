@@ -75,7 +75,7 @@ export interface BetSlip {
   sport: string;
   tournament: string;
   category: string;
-  matchID: number;
+  matchId: number;
   awayTeam: string;
   homeTeam: string;
   type: string;

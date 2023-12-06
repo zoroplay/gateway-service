@@ -74,7 +74,7 @@ message PlaceBetRequest {
 message BetSlip {
   string eventName = 1;
   string eventType = 2;
-  int64 eventId = 3;
+  int32 eventId = 3;
   int32 producerId = 4;
   int32 marketId = 5;
   string marketName = 6;
@@ -86,7 +86,7 @@ message BetSlip {
   string sport = 12;
   string tournament = 13;
   string category = 14;
-  int32 matchID = 15;
+  int32 matchId = 15;
   string awayTeam = 16;
   string homeTeam = 17;
   string type = 18;

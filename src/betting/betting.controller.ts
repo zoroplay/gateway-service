@@ -108,6 +108,7 @@ export class BettingController {
     @Ip() ip: any
     ) {
     try {
+      console.log(data)
       data.clientId = param.client_id
       data.ipAddress = ip;
       return this.bettingService.PlaceBet(data);
