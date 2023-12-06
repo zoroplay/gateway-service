@@ -75,7 +75,7 @@ export interface BetSlip {
 }
 
 export interface PlaceBetResponse {
-  success: number;
+  success: boolean;
   status: number;
   message: string;
   data?: BetHistory | undefined;

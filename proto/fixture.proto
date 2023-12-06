@@ -289,6 +289,7 @@ message Outcome {
   float previousOdds = 5; // Previous odds of the outcome
   int32 oddID = 6; // Odd ID
   int32 active = 7; // wether odd is active (1) or not (0), only display active odds on the site
+  int32 displayName = 8;
 }
 
 message AvailableMarket {
@@ -311,7 +312,7 @@ message Market {
   string statusName = 3; // Market status name
   int32 status = 4; // Market status, 0 - active, 1 - suspended, 2 - deactivated, 5 - handedover, only displaye markets with status 0 on the site
   string specifier = 5; // Market line
-  repeated Outcome outcome = 6; // Array of outcomes
+  repeated Outcome outcomes = 6; // Array of outcomes
 }
 
 message MarketOutcome {
@@ -325,6 +326,8 @@ message MarketOutcome {
   string marketName = 4;
   // market id
   string marketID = 5;
+
+  string displayName = 6;
 }
 
 message FixtureOdds {
@@ -337,16 +340,17 @@ message FixtureOdds {
   string date = 6; // Fixture date
   int32 producerID = 7; // Unique ID of the producer that sent the odd
   repeated Market markets = 8; // array of markets
-  string country = 9; // Fixture country
+  string categoryName = 9; // Fixture country
   int32 statusCode = 10; // match status code
   int32 producerStatus = 11; // producer status
-
   string matchStatus = 12; // Match status description, available values NotStarted,Live,Ended,Suspended
   string homeScore = 13; // Current score of the home team
   string awayScore = 14; // Current score of the away team
   string competitor1 = 15; // Home team name
   string competitor2 = 16; // Away team name
   string eventTime = 17; //Current event time e.g 00:10
+  string sportName = 18;
+  string categoryID = 19;
 }
 
 message ResponseString {

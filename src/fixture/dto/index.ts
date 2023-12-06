@@ -255,6 +255,9 @@ export class SwaggerFixtureOdds {
   @ApiProperty({ description: 'Sport ID' })
   sportID: number;
 
+  @ApiProperty({ description: 'Sport name' })
+  sportName: string;
+
   @ApiProperty({ description: 'Game ID' })
   gameID: number;
 
@@ -277,7 +280,10 @@ export class SwaggerFixtureOdds {
   markets: SwaggerOddsMarket[];
 
   @ApiProperty({ description: 'Country name' })
-  country: string;
+  categoryName: string;
+
+  @ApiProperty({ description: 'category ID' })
+  categoryID: number;
 
   @ApiProperty({ description: 'Match status code' })
   status_code: number;

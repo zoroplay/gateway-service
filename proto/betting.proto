@@ -87,7 +87,7 @@ message BetSlip {
 }
 
 message PlaceBetResponse {
-  int32 success = 1;
+  bool success = 1;
   int32 status = 2;
   string message = 3;
   optional BetHistory data = 4;

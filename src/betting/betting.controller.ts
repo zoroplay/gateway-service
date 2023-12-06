@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Patch, Param } from '@nestjs/common';
+import { Body, Controller, Get, Post, Patch, Param, Ip } from '@nestjs/common';
 import {
   ApiBody,
   ApiOkResponse,
@@ -93,16 +93,23 @@ export class BettingController {
     }
   }
 
-  @Post('/place-bet')
+  @Post('/place-bet/:client_id')
   @ApiOperation({
     summary: 'Place a bet request',
     description:
       'Receives a bet request with all the required detailed, upon successful bet placement, unique betID is returned',
   })
+  @ApiParam({ name: 'client_id', type: 'number' })
   @ApiBody({ type: SwaggerPlaceBet })
   @ApiOkResponse({ type: SwaggerPlaceBetResponse })
-  PlaceBet(@Body() data: PlaceBetRequest) {
+  PlaceBet(
+    @Body() data: PlaceBetRequest,
+    @Param() param: any,
+    @Ip() ip: any
+    ) {
     try {
+      data.clientId = param.client_id
+      data.ipAddress = ip;
       return this.bettingService.PlaceBet(data);
     } catch (error) {
       console.error(error);
@@ -138,7 +145,7 @@ export class BettingController {
     try {
 
       return this.bettingService.getProbabilityFromBetId({
-        betID: params.client_id,
+        betID: params.bet_id,
       });
 
     } catch (error) {

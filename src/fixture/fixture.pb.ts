@@ -314,6 +314,7 @@ export interface Outcome {
   oddID: number;
   /** wether odd is active (1) or not (0), only display active odds on the site */
   active: number;
+  displayName: number;
 }
 
 export interface AvailableMarket {
@@ -342,7 +343,7 @@ export interface Market {
   /** Market line */
   specifier: string;
   /** Array of outcomes */
-  outcome: Outcome[];
+  outcomes: Outcome[];
 }
 
 export interface MarketOutcome {
@@ -356,6 +357,7 @@ export interface MarketOutcome {
   marketName: string;
   /** market id */
   marketID: string;
+  displayName: string;
 }
 
 export interface FixtureOdds {
@@ -376,7 +378,7 @@ export interface FixtureOdds {
   /** array of markets */
   markets: Market[];
   /** Fixture country */
-  country: string;
+  categoryName: string;
   /** match status code */
   statusCode: number;
   /** producer status */
@@ -393,6 +395,8 @@ export interface FixtureOdds {
   competitor2: string;
   /** Current event time e.g 00:10 */
   eventTime: string;
+  sportName: string;
+  categoryID: string;
 }
 
 export interface ResponseString {

@@ -3,7 +3,6 @@ import { BettingController } from './betting.controller';
 import { BettingService } from './betting.service';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { BETTING_PACKAGE_NAME, protobufPackage } from './betting.pb';
-import {AuthService} from "../auth/auth.service";
 
 @Module({
   imports: [
