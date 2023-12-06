@@ -312,9 +312,9 @@ export class SwaggerPlaceBet {
 export class SwaggerPlaceBetResponse {
 
   @ApiProperty({
-    description: 'Generate Bet ID',
+    description: 'Generate Bet Slip',
   })
-  betId: number;
+  data: any;
 
   @ApiProperty({
     description: 'Corresponding http status of the action, 201 for success else failure',
@@ -324,7 +324,12 @@ export class SwaggerPlaceBetResponse {
   @ApiProperty({
     description: 'Action status description, if failure, this field will contain failure reason',
   })
-  statusDescription: string;
+  message: string;
+
+  @ApiProperty({
+    description: 'Request success status, true or false if request was succesfull',
+  })
+  success: string;
 }
 
 export class SwaggerBetHistory {

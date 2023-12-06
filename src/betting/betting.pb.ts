@@ -75,9 +75,10 @@ export interface BetSlip {
 }
 
 export interface PlaceBetResponse {
-  betId: number;
+  success: number;
   status: number;
-  statusDescription: string;
+  message: string;
+  data?: BetHistory | undefined;
 }
 
 export interface BetHistoryRequest {
