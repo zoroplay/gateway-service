@@ -135,7 +135,7 @@ export interface BetHistory {
 }
 
 export interface BetHistoryResponse {
-  data: BetHistory[];
+  bets: BetHistory[];
 }
 
 export interface ProbabilityBetSlipSelection {

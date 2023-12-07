@@ -147,7 +147,7 @@ message BetHistory {
 
 message BetHistoryResponse {
 
-  repeated BetHistory data = 1;
+  repeated BetHistory bets = 1;
 
 }
 
