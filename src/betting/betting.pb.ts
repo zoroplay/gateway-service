@@ -94,7 +94,9 @@ export interface PlaceBetResponse {
 export interface BetHistoryRequest {
   userId: number;
   clientId: number;
-  date: string;
+  from: string;
+  to: string;
+  status: string;
 }
 
 export interface BetSlipHistory {

@@ -105,7 +105,9 @@ message PlaceBetResponse {
 message BetHistoryRequest {
   int32 userId = 1;
   int32 clientId = 2;
-  string date = 3;
+  string from = 3;
+  string to = 4;
+  string status = 5;
 }
 
 message BetSlipHistory {
