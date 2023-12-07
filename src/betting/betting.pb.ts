@@ -113,23 +113,25 @@ export interface BetSlipHistory {
   statusDescription: string;
   won: number;
   type: string;
-  sportName: string;
-  tournamentName: string;
-  categoryName: string;
+  sport: string;
+  tournament: string;
+  category: string;
   matchId: string;
+  eventDate: string;
 }
 
 export interface BetHistory {
   selections: BetSlipHistory[];
   stake: number;
   created: string;
-  status: string;
+  status: number;
   cashOutAmount: number;
   statusDescription: string;
   source: string;
   totalOdd: number;
   possibleWin: number;
   betType: string;
+  betslipId: string;
 }
 
 export interface BetHistoryResponse {

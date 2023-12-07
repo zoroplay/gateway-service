@@ -111,7 +111,7 @@ message BetHistoryRequest {
 message BetSlipHistory {
   string eventName = 1;
   string eventType = 2;
-  int64 eventId = 3;
+  int32 eventId = 3;
   int32 producerId = 4;
   int32 marketId = 5;
   string marketName = 6;
@@ -124,23 +124,25 @@ message BetSlipHistory {
   string statusDescription = 13;
   int32 won = 14;
   string type = 15;
-  string sportName = 16;
-  string tournamentName = 17;
-  string categoryName = 18;
+  string sport = 16;
+  string tournament = 17;
+  string category = 18;
   string matchId = 19;
+  string eventDate = 20;
 }
 
 message BetHistory {
   repeated BetSlipHistory selections = 1;
   float stake = 2;
   string created = 3;
-  string status = 4;
+  int32 status = 4;
   float cashOutAmount = 5;
   string statusDescription = 6;
   string source = 7;
-  float total_odd = 8;
-  float possible_win = 9;
-  string bet_type = 10;
+  float totalOdd = 8;
+  float possibleWin = 9;
+  string betType = 10;
+  string betslipId = 11;
 }
 
 message BetHistoryResponse {
