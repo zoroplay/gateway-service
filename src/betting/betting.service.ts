@@ -43,8 +43,10 @@ export class BettingService implements OnModuleInit {
   }
 
   PlaceBet(data: PlaceBetRequest) {
-    console.log('place bet ');
+
+    console.log('place bet with data '+JSON.stringify(data));
     return this.service.placeBet(data);
+
   }
 
   BetHistory(data: BetHistoryRequest) {
