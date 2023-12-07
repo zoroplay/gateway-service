@@ -44,7 +44,7 @@ export class BettingService implements OnModuleInit {
 
   PlaceBet(data: PlaceBetRequest) {
 
-    console.log('place bet with data '+JSON.stringify(data));
+    // console.log('place bet with data '+JSON.stringify(data));
     return this.service.placeBet(data);
 
   }

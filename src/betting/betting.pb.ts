@@ -52,7 +52,7 @@ export interface StatusResponse {
 }
 
 export interface PlaceBetRequest {
-  betslip: BetSlip[];
+  selections: BetSlip[];
   clientId: number;
   userId: number;
   stake: number;

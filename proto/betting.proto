@@ -63,7 +63,7 @@ message StatusResponse {
 }
 
 message PlaceBetRequest {
-  repeated BetSlip betslip = 1;
+  repeated BetSlip selections = 1;
   int32 clientId = 2;
   int32 userId = 3;
   float stake = 4;
