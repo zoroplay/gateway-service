@@ -114,7 +114,7 @@ export interface BetSlipHistory {
 }
 
 export interface BetHistory {
-  betslip: BetSlipHistory[];
+  selections: BetSlipHistory[];
   stake: number;
   date: string;
   status: number;
@@ -124,7 +124,7 @@ export interface BetHistory {
 }
 
 export interface BetHistoryResponse {
-  data: BetHistoryResponse[];
+  data: BetHistory[];
 }
 
 export interface ProbabilityBetSlipSelection {
