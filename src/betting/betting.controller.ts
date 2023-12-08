@@ -134,7 +134,7 @@ export class BettingController {
     try {
       data.clientId = param.client_id
       data.ipAddress = ip;
-      return this.bettingService.PlaceBet(data);
+      return this.bettingService.BookBet(data);
     } catch (error) {
       console.error(error);
     }
