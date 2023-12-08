@@ -47,6 +47,11 @@ export interface BetID {
   betID: number;
 }
 
+export interface BookingCode {
+  code: string;
+  clientId: number;
+}
+
 export interface StatusResponse {
   response: string;
 }
@@ -181,6 +186,8 @@ export interface BettingServiceClient {
   betHistory(request: BetHistoryRequest): Observable<BetHistoryResponse>;
 
   getProbabilityFromBetId(request: BetID): Observable<Probability>;
+
+  getBooking(request: BookingCode): Observable<PlaceBetResponse>;
 }
 
 export interface BettingServiceController {
@@ -203,6 +210,8 @@ export interface BettingServiceController {
   ): Promise<BetHistoryResponse> | Observable<BetHistoryResponse> | BetHistoryResponse;
 
   getProbabilityFromBetId(request: BetID): Promise<Probability> | Observable<Probability> | Probability;
+
+  getBooking(request: BookingCode): Promise<PlaceBetResponse> | Observable<PlaceBetResponse> | PlaceBetResponse;
 }
 
 export function BettingServiceControllerMethods() {
@@ -217,6 +226,7 @@ export function BettingServiceControllerMethods() {
       "bookBet",
       "betHistory",
       "getProbabilityFromBetId",
+      "getBooking",
     ];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);

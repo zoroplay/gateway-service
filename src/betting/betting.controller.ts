@@ -1,9 +1,10 @@
-import { Body, Controller, Get, Post, Patch, Param, Ip } from '@nestjs/common';
+import { Body, Controller, Get, Post, Patch, Param, Ip, Query } from '@nestjs/common';
 import {
   ApiBody,
   ApiOkResponse,
   ApiOperation,
   ApiParam,
+  ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
 import { BettingService } from './betting.service';
@@ -170,6 +171,35 @@ export class BettingController {
 
       return this.bettingService.getProbabilityFromBetId({
         betID: params.bet_id,
+      });
+
+    } catch (error) {
+
+      console.error(error);
+
+    }
+
+  }
+
+  @Get('/bets/get-booking/:client_id')
+  @ApiOperation({
+    summary: 'Get booking code',
+    description:
+        'This endpoints retrieves a booked game for rebet',
+  })
+  @ApiParam({ name: 'client_id', type: 'number' })
+  @ApiQuery({ name: 'code', type: 'string' })
+  @ApiOkResponse({ type: SwaggerPlaceBetResponse })
+  GetBooking(
+    @Param() param: any,
+    @Query() query: any
+  ) {
+
+    try {
+
+      return this.bettingService.GetBooking({
+        code: query.code,
+        clientId: param.client_id
       });
 
     } catch (error) {
