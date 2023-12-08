@@ -139,7 +139,7 @@ message BetSlipHistory {
   string category = 18;
   string matchId = 19;
   string eventDate = 20;
-  string betslipId = 21;
+  string selectionId = 21;
 }
 
 message BetHistory {

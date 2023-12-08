@@ -126,7 +126,7 @@ export interface BetSlipHistory {
   category: string;
   matchId: string;
   eventDate: string;
-  betslipId: string;
+  selectionId: string;
 }
 
 export interface BetHistory {
