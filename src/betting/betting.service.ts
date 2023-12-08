@@ -9,6 +9,7 @@ import {
   PlaceBetRequest,
   BetID,
   BookingCode,
+  UpdateBetRequest,
 } from './betting.pb';
 import { ClientGrpc } from '@nestjs/microservices';
 
@@ -46,6 +47,11 @@ export class BettingService implements OnModuleInit {
   PlaceBet(data: PlaceBetRequest) {
     console.log('place bet ');
     return this.service.placeBet(data);
+  }
+
+  UpdateBet(data: UpdateBetRequest) {
+    console.log('update bet ');
+    return this.service.updateBet(data);
   }
 
   BookBet(data: PlaceBetRequest) {

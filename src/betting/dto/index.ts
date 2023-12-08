@@ -472,3 +472,39 @@ export class SwaggerProbability {
   })
   selections: SwaggerProbabilityBetSlipSelection[];
 }
+
+export class SwaggerUpdateBetRequest {
+  @ApiProperty({
+    description: 'Entity ID bet or bet selection ID',
+  })
+  betId: number;
+
+  @ApiProperty({
+    description: 'The bet status to update. Expecte status could either of the following won|lost|void|pending',
+  })
+  status: string;
+
+  @ApiProperty({
+    description: 'The entity type to be updated. bet or selection',
+  })
+  entityType: string;
+}
+
+export class SwaggerUpdateBetResponse {
+
+
+  @ApiProperty({
+    description: 'Corresponding http status of the action, 201|200 for success else failure',
+  })
+  status: number;
+
+  @ApiProperty({
+    description: 'Action status description, if failure, this field will contain failure reason',
+  })
+  message: string;
+
+  @ApiProperty({
+    description: 'Request success status, true or false if request was succesfull',
+  })
+  success: string;
+}

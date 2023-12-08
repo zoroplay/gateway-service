@@ -11,6 +11,7 @@ service BettingService {
   rpc PlaceBet (PlaceBetRequest) returns (PlaceBetResponse) {}
   rpc BookBet (PlaceBetRequest) returns (PlaceBetResponse) {}
   rpc BetHistory (BetHistoryRequest) returns (BetHistoryResponse) {}
+  rpc UpdateBet (UpdateBetRequest) returns (UpdateBetResponse) {}
   rpc GetProbabilityFromBetID(BetID) returns (Probability) {}
   rpc GetBooking(BookingCode) returns (PlaceBetResponse) {}
 
@@ -58,6 +59,19 @@ message AllSettingsResponse {
 
 message BetID {
   int32 betID = 1;
+}
+
+message UpdateBetRequest {
+  int32 betId = 1;
+  string status = 2;
+  string entityType = 3;
+  int32 clientId = 4;
+}
+
+message UpdateBetResponse {
+  bool success = 1;
+  int32 status = 2;
+  string message = 3;
 }
 
 message BookingCode {

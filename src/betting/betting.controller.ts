@@ -16,12 +16,15 @@ import {
   SwaggerPlaceBetResponse, SwaggerProbability,
   SwaggerSettings,
   SwaggerSettingsResponse,
+  SwaggerUpdateBetRequest,
+  SwaggerUpdateBetResponse,
 } from './dto';
 import {
   BetHistoryRequest,
   BetHistoryResponse, BetID,
   PlaceBetRequest,
   Settings,
+  UpdateBetRequest,
 } from './betting.pb';
 
 @ApiTags('Betting APIs')
@@ -112,6 +115,29 @@ export class BettingController {
       data.clientId = param.client_id
       data.ipAddress = ip;
       return this.bettingService.PlaceBet(data);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+
+  @Post('/update-bet/:client_id')
+  @ApiOperation({
+    summary: 'Update a bet request',
+    description:
+      'Update bet or bet selections status',
+  })
+  @ApiParam({ name: 'client_id', type: 'number' })
+  @ApiBody({ type: SwaggerUpdateBetRequest })
+  @ApiOkResponse({ type: SwaggerUpdateBetResponse })
+  UpdateBet(
+    @Body() data: UpdateBetRequest,
+    @Param() param: any,
+    @Ip() ip: any
+    ) {
+    try {
+      data.clientId = param.client_id
+      return this.bettingService.UpdateBet(data);
     } catch (error) {
       console.error(error);
     }

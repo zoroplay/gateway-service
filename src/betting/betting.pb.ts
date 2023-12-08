@@ -47,6 +47,19 @@ export interface BetID {
   betID: number;
 }
 
+export interface UpdateBetRequest {
+  betId: number;
+  status: string;
+  entityType: string;
+  clientId: number;
+}
+
+export interface UpdateBetResponse {
+  success: boolean;
+  status: number;
+  message: string;
+}
+
 export interface BookingCode {
   code: string;
   clientId: number;
@@ -185,6 +198,8 @@ export interface BettingServiceClient {
 
   betHistory(request: BetHistoryRequest): Observable<BetHistoryResponse>;
 
+  updateBet(request: UpdateBetRequest): Observable<UpdateBetResponse>;
+
   getProbabilityFromBetId(request: BetID): Observable<Probability>;
 
   getBooking(request: BookingCode): Observable<PlaceBetResponse>;
@@ -209,6 +224,8 @@ export interface BettingServiceController {
     request: BetHistoryRequest,
   ): Promise<BetHistoryResponse> | Observable<BetHistoryResponse> | BetHistoryResponse;
 
+  updateBet(request: UpdateBetRequest): Promise<UpdateBetResponse> | Observable<UpdateBetResponse> | UpdateBetResponse;
+
   getProbabilityFromBetId(request: BetID): Promise<Probability> | Observable<Probability> | Probability;
 
   getBooking(request: BookingCode): Promise<PlaceBetResponse> | Observable<PlaceBetResponse> | PlaceBetResponse;
@@ -225,6 +242,7 @@ export function BettingServiceControllerMethods() {
       "placeBet",
       "bookBet",
       "betHistory",
+      "updateBet",
       "getProbabilityFromBetId",
       "getBooking",
     ];
