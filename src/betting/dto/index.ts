@@ -386,9 +386,14 @@ export class SwaggerBetHistoryRequest {
   status: number;
 
   @ApiProperty({
-    description: 'Filter by Date',
+    description: 'Start date to filter from',
   })
-  date: string;
+  from: string;
+
+  @ApiProperty({
+    description: 'End date to filter to',
+  })
+  to: string;
 
   @ApiProperty({
     description: 'Client ID',
