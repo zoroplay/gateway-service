@@ -181,7 +181,7 @@ export class BettingController {
 
   }
 
-  @Get('/bets/get-booking/:client_id')
+  @Get('/get-booking/:client_id')
   @ApiOperation({
     summary: 'Get booking code',
     description:
