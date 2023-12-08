@@ -116,6 +116,30 @@ export class BettingController {
     }
   }
 
+
+  @Post('/book-bet/:client_id')
+  @ApiOperation({
+    summary: 'Book a bet request',
+    description:
+      'Receives a booking request with all the required detailed, upon successful a booking code is turned',
+  })
+  @ApiParam({ name: 'client_id', type: 'number' })
+  @ApiBody({ type: SwaggerPlaceBet })
+  @ApiOkResponse({ type: SwaggerPlaceBetResponse })
+  BookBet(
+    @Body() data: PlaceBetRequest,
+    @Param() param: any,
+    @Ip() ip: any
+    ) {
+    try {
+      data.clientId = param.client_id
+      data.ipAddress = ip;
+      return this.bettingService.PlaceBet(data);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   @Post('/history')
   @ApiOperation({
     summary: 'Retrieve bet history of a user',

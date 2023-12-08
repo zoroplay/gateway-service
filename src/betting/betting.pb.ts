@@ -58,6 +58,7 @@ export interface PlaceBetRequest {
   stake: number;
   source: string;
   ipAddress: string;
+  betType: string;
 }
 
 export interface BetSlip {
@@ -120,6 +121,7 @@ export interface BetSlipHistory {
   category: string;
   matchId: string;
   eventDate: string;
+  betslipId: string;
 }
 
 export interface BetHistory {
@@ -174,6 +176,8 @@ export interface BettingServiceClient {
 
   placeBet(request: PlaceBetRequest): Observable<PlaceBetResponse>;
 
+  bookBet(request: PlaceBetRequest): Observable<PlaceBetResponse>;
+
   betHistory(request: BetHistoryRequest): Observable<BetHistoryResponse>;
 
   getProbabilityFromBetId(request: BetID): Observable<Probability>;
@@ -192,6 +196,8 @@ export interface BettingServiceController {
 
   placeBet(request: PlaceBetRequest): Promise<PlaceBetResponse> | Observable<PlaceBetResponse> | PlaceBetResponse;
 
+  bookBet(request: PlaceBetRequest): Promise<PlaceBetResponse> | Observable<PlaceBetResponse> | PlaceBetResponse;
+
   betHistory(
     request: BetHistoryRequest,
   ): Promise<BetHistoryResponse> | Observable<BetHistoryResponse> | BetHistoryResponse;
@@ -208,6 +214,7 @@ export function BettingServiceControllerMethods() {
       "getAllSettings",
       "cancelBet",
       "placeBet",
+      "bookBet",
       "betHistory",
       "getProbabilityFromBetId",
     ];

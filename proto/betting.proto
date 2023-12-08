@@ -9,6 +9,7 @@ service BettingService {
   rpc GetAllSettings (GetAll) returns (AllSettingsResponse) {}
   rpc CancelBet (BetID) returns (StatusResponse) {}
   rpc PlaceBet (PlaceBetRequest) returns (PlaceBetResponse) {}
+  rpc BookBet (PlaceBetRequest) returns (PlaceBetResponse) {}
   rpc BetHistory (BetHistoryRequest) returns (BetHistoryResponse) {}
   rpc GetProbabilityFromBetID(BetID) returns (Probability) {}
 
@@ -69,6 +70,7 @@ message PlaceBetRequest {
   float stake = 4;
   string source = 5;
   string ipAddress = 6;
+  string betType = 7;
 }
 
 message BetSlip {
@@ -131,6 +133,7 @@ message BetSlipHistory {
   string category = 18;
   string matchId = 19;
   string eventDate = 20;
+  string betslipId = 21;
 }
 
 message BetHistory {
