@@ -65,6 +65,7 @@ export interface FilterByMarketID {
 export interface FilterByMatchID {
   /** matchID of a particular match */
   matchID: number;
+  timeoffset: number;
 }
 
 export interface SportFilters {
@@ -158,6 +159,8 @@ export interface GetSportMenuRequest {
   start: string;
   /** end date */
   end: string;
+  timeoffset: number;
+
 }
 
 export interface GetHighlightsRequest {
@@ -178,6 +181,8 @@ export interface GetHighlightsRequest {
   upcoming: number;
   today: number;
   specifier: string;
+  timeoffset: number;
+
 }
 
 export interface GetFixturesRequest {
@@ -193,6 +198,8 @@ export interface GetFixturesRequest {
   tournamentID: number;
   /** date range to fetch fixtures */
   period: string;
+  timeoffset: number;
+
 }
 
 export interface HighlightOutcomes {
