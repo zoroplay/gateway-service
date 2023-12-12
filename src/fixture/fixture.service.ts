@@ -73,10 +73,10 @@ export class FixtureService implements OnModuleInit {
     return this.service.getFixtures(data);
   }
 
-  GetFixtureWithOdds(matchID: number) {
+  GetFixtureWithOdds(matchID: number,timeoffset: number) {
 
     console.log('GetFixtureWithOdds ');
-    return this.service.getFixtureWithOdds({matchID: matchID});
+    return this.service.getFixtureWithOdds({matchID: matchID, timeoffset: timeoffset});
   }
 
   UpdateMarketPriority(data: UpdateMarketRequest) {

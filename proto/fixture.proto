@@ -119,7 +119,7 @@ message FilterByMarketID {
 
 message FilterByMatchID {
   int32 matchID = 1; // matchID of a particular match
-
+  int32 timeoffset = 2;
 }
 
 message SportFilters {
@@ -191,11 +191,11 @@ message AvailableSportMenuResponse {
   repeated SportMenuResponse sports = 1;
 }
 
-message GetSportMenuRequest { 
+message GetSportMenuRequest {
   string period = 1; // period to display
   string start = 2; // start date
   string end = 3; //end date
-
+  int32 timeoffset = 4;
 }
 
 message GetHighlightsRequest {
@@ -209,6 +209,7 @@ message GetHighlightsRequest {
   int32 upcoming = 8;
   int32 today = 9;
   string specifier = 10;
+  int32 timeoffset = 11;
 }
 
 message GetFixturesRequest {
@@ -218,6 +219,7 @@ message GetFixturesRequest {
   int32 limit = 4; // no of records to be loaded (optional)
   int32 tournamentID = 5; // fetch fixtures of this tournamentID will
   string period = 6; // date range to fetch fixtures
+  int32 timeoffset = 7;
 }
 
 message HighlightOutcomes {
