@@ -116,6 +116,10 @@ export interface BetHistoryRequest {
   from: string;
   to: string;
   status: string;
+  page: number;
+  perPage: number;
+  totalRecords: number;
+  totalStake: number;
 }
 
 export interface BetSlipHistory {

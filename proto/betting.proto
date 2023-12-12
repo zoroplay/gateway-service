@@ -132,6 +132,8 @@ message BetHistoryRequest {
   string status = 5;
   int32 page = 6;
   int32 perPage = 7;
+  int32 totalRecords = 8;
+  int32 totalStake = 9;
 }
 
 message BetSlipHistory {
