@@ -132,8 +132,6 @@ message BetHistoryRequest {
   string status = 5;
   int32 page = 6;
   int32 perPage = 7;
-  int32 totalRecords = 8;
-  int32 totalStake = 9;
 }
 
 message BetSlipHistory {
@@ -182,6 +180,8 @@ message BetHistoryResponse {
   int32 from = 3; // From data index
   int32 to = 4; // to data index
   int32 remainingRecords = 5; // how many records are remaining
+  int32 totalRecords = 6;
+  int32 totalStake = 7;
 }
 
 message ProbabilityBetSlipSelection {

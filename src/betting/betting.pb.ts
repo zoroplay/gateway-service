@@ -118,8 +118,6 @@ export interface BetHistoryRequest {
   status: string;
   page: number;
   perPage: number;
-  totalRecords: number;
-  totalStake: number;
 }
 
 export interface BetSlipHistory {
@@ -172,6 +170,8 @@ export interface BetHistoryResponse {
   to: number;
   /** how many records are remaining */
   remainingRecords: number;
+  totalRecords: number;
+  totalStake: number;
 }
 
 export interface ProbabilityBetSlipSelection {
