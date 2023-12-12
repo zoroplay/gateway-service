@@ -17,7 +17,7 @@ import {
   SwaggerMarketGroupResponse,
   SwaggerResponseString,
   SwaggerSportMenuRequest,
-  SwaggerSportMenuResponse,
+  SwaggerSportMenuResponse, SwaggerTimeoffset,
   SwaggerUpdateMarketRequest
 } from "./dto";
 import {
@@ -136,6 +136,7 @@ export class FixtureController {
   @ApiQuery({ name: 'countryCode', description: 'ID of the countryCode' })
   @ApiQuery({ name: 'upcoming', description: 'Default is 0, If value is 1 then get Upcoming matches (start date is >= tomorrow )' })
   @ApiQuery({ name: 'today', description: 'Default is 0, If value is 1 then get todays matches (start date is todat )' })
+  @ApiQuery({ name: 'timeoffset', description: 'Default is 0, GMT timeoffset' })
   @ApiOkResponse({ type: SwaggerHighlightsResponse })
   GetHighlights(
     @Param() params: any,
@@ -155,6 +156,7 @@ export class FixtureController {
         sportID : params.sport_id ? params.sport_id : 1,
         upcoming : query.upcoming ? query.upcoming : 0,
         today : query.today ? query.today : 0,
+        timeoffset: query.timeoffset ? query.timeoffset : 0,
         specifier: query.specifier ? query.specifier : "",
       }
 
@@ -178,6 +180,7 @@ export class FixtureController {
   @ApiQuery({ name: 'perPage', description: 'record per page' })
   @ApiQuery({ name: 'tournamentID', description: 'filter by tournamentID' })
   @ApiQuery({ name: 'countryCode', description: 'ID of the countryCode' })
+  @ApiQuery({ name: 'timeoffset', description: 'Default is 0, GMT timeoffset' })
   GetLiveHighlights(@Param() params: any,@Query() query: any) {
 
     try {
@@ -194,6 +197,7 @@ export class FixtureController {
         sportID : params.sport_id ? params.sport_id : 0,
         upcoming :  0,
         today :  0,
+        timeoffset: query.timeoffset ? query.timeoffset : 0,
         specifier: query.specifier ? query.specifier : "",
       }
 
@@ -211,12 +215,15 @@ export class FixtureController {
   @Get('/match/:match_id')
   @ApiOperation({ summary: 'Get all match odds ', description: 'This endpoint gets odds for all the markets for the supplied matchID' })
   @ApiParam({ name: 'match_id', type: 'number', description:' Unique ID of the match'})
+  @ApiQuery({ type: SwaggerTimeoffset })
   @ApiOkResponse({ type: SwaggerFixtureOdds })
-  GetFixtureWithOdds(@Param() params: any) {
+  GetFixtureWithOdds(@Param() params: any, @Query() query: any) {
+
+    let timeoffset = query.timeoffset ? query.timeoffset : 0;
 
     try {
 
-      return this.fixtureService.GetFixtureWithOdds(params.match_id);
+      return this.fixtureService.GetFixtureWithOdds(params.match_id,timeoffset);
 
     } catch (error) {
 
@@ -241,7 +248,8 @@ export class FixtureController {
         markets : query.markets ? query.markets : '',
         limit : query.limit ? query.limit : 100,
         sportID : query.sportID ? query.sportID : 1,
-        period: query.period ? query.period : 'all'
+        period: query.period ? query.period : 'all',
+        timeoffset: query.timeoffset ? query.timeoffset : 0
       }
 
       return this.fixtureService.GetFixtures(rq);

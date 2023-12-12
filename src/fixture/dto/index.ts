@@ -110,6 +110,9 @@ export class SwaggerSportMenuRequest {
 
   @ApiProperty({ description: "End date", nullable: true, example: '2023-10-10'})
   end: string;
+
+  @ApiProperty({ description: 'GTM Time offset of the customer, default is 0, can either be a positive or negative integer' })
+  timeoffset: number;
 }
 
 export class SwaggerSportMenuResponse {
@@ -183,6 +186,16 @@ export class SwaggerFixturesRequest {
 
   @ApiProperty({ description: 'filter markets by sport ID' })
   sportID?: string;
+
+  @ApiProperty({ description: 'GTM Time offset of the customer, default is 0, can either be a positive or negative integer' })
+  timeoffset: number;
+}
+
+export class SwaggerTimeoffset {
+
+  @ApiProperty({ description: 'GTM Time offset of the customer, default is 0, can either be a positive or negative integer' })
+  timeoffset: number;
+
 }
 
 export class SwaggerFixturesResponse {
