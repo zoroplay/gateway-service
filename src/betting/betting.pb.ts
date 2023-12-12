@@ -172,6 +172,7 @@ export interface BetHistoryResponse {
   remainingRecords: number;
   totalRecords: number;
   totalStake: number;
+  currentPage: number;
 }
 
 export interface ProbabilityBetSlipSelection {
