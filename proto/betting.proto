@@ -61,6 +61,25 @@ message BetID {
   int32 betID = 1;
 }
 
+message GamingActivityRequest {
+  string period = 1;
+  string username = 2;
+  string from = 3;
+  string to = 4;
+  string betType = 5;
+  string event_type = 6;
+  string sport = 7;
+  string league = 8;
+  string market = 9;
+  string state = 10;
+  string product = 11;
+  string source = 12;
+  string groupBy = 13;
+  int32 clientId = 14;
+}
+message GamingActivityResponse {
+  
+}
 message UpdateBetRequest {
   int32 betId = 1;
   string status = 2;
@@ -172,6 +191,7 @@ message BetHistory {
   string betslipId = 11;
   int32 totalSelections = 12;
   int32 betCategory = 13;
+  int32 id = 14;
 }
 
 message BetHistoryResponse {

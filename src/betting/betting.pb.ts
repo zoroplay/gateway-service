@@ -47,6 +47,26 @@ export interface BetID {
   betID: number;
 }
 
+export interface GamingActivityRequest {
+  period: string;
+  username: string;
+  from: string;
+  to: string;
+  betType: string;
+  eventType: string;
+  sport: string;
+  league: string;
+  market: string;
+  state: string;
+  product: string;
+  source: string;
+  groupBy: string;
+  clientId: number;
+}
+
+export interface GamingActivityResponse {
+}
+
 export interface UpdateBetRequest {
   betId: number;
   status: string;
@@ -158,6 +178,7 @@ export interface BetHistory {
   betslipId: string;
   totalSelections: number;
   betCategory: number;
+  id: number;
 }
 
 export interface BetHistoryResponse {
