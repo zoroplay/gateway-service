@@ -11,6 +11,7 @@ import { BettingController } from './betting/betting.controller';
 import { BonusModule } from './bonus/bonus.module';
 import { BonusController } from './bonus/bonus.controller';
 import { NotificationModule } from './notification/notification.module';
+import { WalletModule } from './wallet/wallet.module';
 import 'dotenv/config'
 
 @Module({
@@ -21,7 +22,8 @@ import 'dotenv/config'
     BettingModule,
     FixtureModule,
     BonusModule,
-    NotificationModule
+    NotificationModule,
+    WalletModule
   ],
   controllers: [
     AppController,

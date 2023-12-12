@@ -400,6 +400,16 @@ export class SwaggerBetHistoryRequest {
   })
   clientId: number;
 
+  @ApiProperty({
+    description: 'Current page number',
+  })
+  page: number;
+
+  @ApiProperty({
+    description: 'Number of records per page',
+  })
+  perPage: number;
+
 }
 
 export class SwaggerProbabilityBetSlipSelection {

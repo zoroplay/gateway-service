@@ -154,10 +154,20 @@ export interface BetHistory {
   possibleWin: number;
   betType: string;
   betslipId: string;
+  totalSelections: number;
+  betCategory: number;
 }
 
 export interface BetHistoryResponse {
   bets: BetHistory[];
+  /** Last pagination page */
+  lastPage: number;
+  /** From data index */
+  from: number;
+  /** to data index */
+  to: number;
+  /** how many records are remaining */
+  remainingRecords: number;
 }
 
 export interface ProbabilityBetSlipSelection {
