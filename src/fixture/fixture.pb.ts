@@ -160,7 +160,6 @@ export interface GetSportMenuRequest {
   /** end date */
   end: string;
   timeoffset: number;
-
 }
 
 export interface GetHighlightsRequest {
@@ -182,7 +181,7 @@ export interface GetHighlightsRequest {
   today: number;
   specifier: string;
   timeoffset: number;
-
+  search: string;
 }
 
 export interface GetFixturesRequest {
@@ -199,7 +198,6 @@ export interface GetFixturesRequest {
   /** date range to fetch fixtures */
   period: string;
   timeoffset: number;
-
 }
 
 export interface HighlightOutcomes {

@@ -181,6 +181,7 @@ export class FixtureController {
   @ApiQuery({ name: 'tournamentID', description: 'filter by tournamentID' })
   @ApiQuery({ name: 'countryCode', description: 'ID of the countryCode' })
   @ApiQuery({ name: 'timeoffset', description: 'Default is 0, GMT timeoffset' })
+  @ApiQuery({ name: 'search', description: 'Search string for team name, tournament or category' })
   GetLiveHighlights(@Param() params: any,@Query() query: any) {
 
     try {
@@ -199,6 +200,7 @@ export class FixtureController {
         today :  0,
         timeoffset: query.timeoffset ? query.timeoffset : 0,
         specifier: query.specifier ? query.specifier : "",
+        search: query.search ? query.search : "",
       }
 
       return this.fixtureService.GetLiveHighlights(rq);

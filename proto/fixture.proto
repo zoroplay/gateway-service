@@ -210,6 +210,7 @@ message GetHighlightsRequest {
   int32 today = 9;
   string specifier = 10;
   int32 timeoffset = 11;
+  string search = 12;
 }
 
 message GetFixturesRequest {
