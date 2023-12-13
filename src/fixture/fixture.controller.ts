@@ -158,6 +158,7 @@ export class FixtureController {
         today : query.today ? query.today : 0,
         timeoffset: query.timeoffset ? query.timeoffset : 0,
         specifier: query.specifier ? query.specifier : "",
+        search: query.search ? query.search : "",
       }
 
       return this.fixtureService.GetHighlights(rq);
