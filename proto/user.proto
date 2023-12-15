@@ -1,0 +1,52 @@
+syntax = "proto3";
+
+package auth;
+
+service AuthService {
+    rpc RegisterUser (LoginRequest) returns (CommonResponse) {}
+    rpc UpdateDetails (User) returns (CommonResponse) {}
+    rpc CreateShopUser (ShopUser) returns (CommonResponse) {}
+    rpc LoginUser (LoginRequest) returns (CommonResponse) {}
+}
+
+// user
+message User {
+    string userID = 1;
+    string firstName =2 ;
+    string lastName =3 ;
+    string email= 4;
+    string city =5;
+    string country= 6;
+    string gender= 7;
+    string currency = 8;
+    string phone =9;
+    string  roleId =10;
+  }
+  message ShopUser {
+    string userId = 1;
+    string firstName =2 ;
+    string lastName =3 ;
+    string email= 4;
+    string city =5;
+    string country= 6;
+    string gender= 7;
+    string currency = 8;
+    string phone =9;
+    string  roleId =10;
+    string username = 11;
+    string password = 12;
+  }
+
+  
+  // Login
+message LoginRequest {
+    string username = 1;
+    string password = 2;
+  }
+  
+message CommonResponse {
+    bool status = 1;
+    string message = 2;
+    repeated string data = 3;
+    string errors = 4;
+  }
