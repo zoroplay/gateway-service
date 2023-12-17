@@ -181,7 +181,7 @@ export interface BetHistory {
   betCategory: number;
   id: number;
   userId: number;
-  username: number;
+  username: string;
 }
 
 export interface BetHistoryResponse {

@@ -194,7 +194,7 @@ message BetHistory {
   int32 betCategory = 13;
   int32 id = 14;
   int32 userId = 15;
-  int32 username = 16;
+  string username = 16;
 }
 
 message BetHistoryResponse {
