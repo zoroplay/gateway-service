@@ -97,6 +97,7 @@ export interface PlaceBetRequest {
   source: string;
   ipAddress: string;
   betType: string;
+  username: string;
 }
 
 export interface BetSlip {
@@ -179,6 +180,8 @@ export interface BetHistory {
   totalSelections: number;
   betCategory: number;
   id: number;
+  userId: number;
+  username: number;
 }
 
 export interface BetHistoryResponse {

@@ -114,6 +114,7 @@ export class BettingController {
     try {
       data.clientId = param.client_id
       data.ipAddress = ip;
+      data.betType = param.bet_type;
       return this.bettingService.PlaceBet(data);
     } catch (error) {
       console.error(error);

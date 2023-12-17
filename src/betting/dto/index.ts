@@ -294,6 +294,11 @@ export class SwaggerPlaceBet {
   userId: number;
 
   @ApiProperty({
+    description: 'Username',
+  })
+  username: string;
+
+  @ApiProperty({
     description: 'Stake',
   })
   stake: number;
