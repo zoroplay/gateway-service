@@ -139,6 +139,8 @@ export interface BetHistoryRequest {
   status: string;
   page: number;
   perPage: number;
+  betslipId: string;
+  username: string;
 }
 
 export interface BetSlipHistory {

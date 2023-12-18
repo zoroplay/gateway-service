@@ -189,6 +189,8 @@ export class BettingController {
         to : data.to,
         page: query.page ? query.page : 1,
         perPage : query.perPage ? query.perPage : 100,
+        betslipId: data.betslipId,
+        username: data.username
       }
       return this.bettingService.BetHistory(rq);
     } catch (error) {
