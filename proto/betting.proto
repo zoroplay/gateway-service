@@ -124,7 +124,7 @@ message BetSlip {
   string outcomeId = 8;
   string outcomeName = 9;
   float odds = 10;
-  int64 sportId = 11;
+  int32 sportId = 11;
   string sport = 12;
   string tournament = 13;
   string category = 14;
