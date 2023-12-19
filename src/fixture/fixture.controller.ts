@@ -2,6 +2,8 @@ import {Body, Controller, Delete, Get, Logger, Param, Post, Put, Query} from '@n
 import {ApiBody, ApiOkResponse, ApiOperation, ApiParam, ApiQuery, ApiTags} from '@nestjs/swagger';
 import {FixtureService} from './fixture.service';
 import {
+  AddFavouriteResponse,
+  AddFavouritesDTO,
   SwaggerAddSpecifierRequest,
   SwaggerAllMarketsResponse,
   SwaggerAllSportResponse,
@@ -21,6 +23,7 @@ import {
   SwaggerUpdateMarketRequest
 } from "./dto";
 import {
+  AddFavouriteRequest,
   AddSpecifierRequest,
   CreateMarketGroupRequest,
   CreateOutcomeAliasRequest, DefaultSportMarketDTO,
@@ -560,4 +563,21 @@ export class FixtureController {
 
   }
 
+  @Post('/sports/add-favourite')
+  @ApiOperation({ summary: 'Save Favourite Sports Team for userl', description: 'This endpoint saves selected sport teams as favourites for the authenticated user' })
+  @ApiBody({ type: AddFavouritesDTO })
+  @ApiOkResponse({ type: AddFavouriteResponse })
+  addFavourites(@Body() data: AddFavouriteRequest) {
+
+    try {
+
+      return this.fixtureService.saveFavourite(data);
+
+    } catch (error) {
+
+      console.error(error);
+
+    }
+
+  }
 }

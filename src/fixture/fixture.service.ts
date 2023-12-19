@@ -1,5 +1,6 @@
 import {Inject, Injectable, OnModuleInit} from '@nestjs/common';
 import {
+  AddFavouriteRequest,
   AddSpecifierRequest,
   CreateMarketGroupRequest,
   CreateOutcomeAliasRequest, DefaultSportMarketDTO,
@@ -192,6 +193,14 @@ export class FixtureService implements OnModuleInit {
 
     console.log('deleteDefaultSportMarket ');
     return this.service.deleteDefaultSportMarket({id: sportID});
+
+  }
+
+
+  saveFavourite(data: AddFavouriteRequest) {
+
+    console.log('add favourite ');
+    return this.service.addFavourites(data);
 
   }
 

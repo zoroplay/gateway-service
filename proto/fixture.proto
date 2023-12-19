@@ -56,6 +56,8 @@ service FixtureService {
   rpc DeleteDefaultSportMarket(ID) returns (ResponseString){}
   rpc GetDefaultSportMarket(Empty) returns (DefaultSportMarketsDTO){}
 
+  rpc AddFavourites(AddFavouriteRequest) returns (AddFavouriteResponse) {}
+
 
 }
 
@@ -260,9 +262,11 @@ message FixturesWithOdds {
   string eventStatus = 16; // event status of a live game available values Live,1st Half,2nd Half,Break,Overtime
   string awayScore = 17; // Current score of the away team
   string homeTeam = 18; // Home team name
-  string awayTeam = 19; // Away team name
-  string sportName = 20; // Away team name
-  repeated HighlightOutcomes outcomes = 21; // Market Outcomes
+  int32 homeTeamID = 19; // Home team ID
+  string awayTeam = 20; // Away team name
+  string awayTeamID = 21; // Away team ID
+  string sportName = 22; // Away team name
+  repeated HighlightOutcomes outcomes = 23; // Market Outcomes
 }
 
 message GetHighlightsResponse {
@@ -421,4 +425,16 @@ message DefaultSportMarketDTO {
 
 message DefaultSportMarketsDTO {
   repeated DefaultSportMarketDTO sports = 1;
+}
+
+message AddFavouriteRequest {
+  int32 userId = 1;
+  int32 clientId = 2;
+  int32 competitor1 = 3;
+  int32 competitor2 = 4;
+}
+
+message AddFavouriteResponse {
+  bool success = 1;
+  string message = 2;
 }

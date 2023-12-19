@@ -268,8 +268,12 @@ export interface FixturesWithOdds {
   awayScore: string;
   /** Home team name */
   homeTeam: string;
+  /** Home team ID */
+  homeTeamID: number;
   /** Away team name */
   awayTeam: string;
+  /** Away team ID */
+  awayTeamID: string;
   /** Away team name */
   sportName: string;
   /** Market Outcomes */
@@ -473,6 +477,18 @@ export interface DefaultSportMarketsDTO {
   sports: DefaultSportMarketDTO[];
 }
 
+export interface AddFavouriteRequest {
+  userId: number;
+  clientId: number;
+  competitor1: number;
+  competitor2: number;
+}
+
+export interface AddFavouriteResponse {
+  success: boolean;
+  message: string;
+}
+
 export const FIXTURE_PACKAGE_NAME = "fixture";
 
 export interface FixtureServiceClient {
@@ -545,6 +561,8 @@ export interface FixtureServiceClient {
   deleteDefaultSportMarket(request: ID): Observable<ResponseString>;
 
   getDefaultSportMarket(request: Empty): Observable<DefaultSportMarketsDTO>;
+
+  addFavourites(request: AddFavouriteRequest): Observable<AddFavouriteResponse>;
 }
 
 export interface FixtureServiceController {
@@ -657,6 +675,10 @@ export interface FixtureServiceController {
   getDefaultSportMarket(
     request: Empty,
   ): Promise<DefaultSportMarketsDTO> | Observable<DefaultSportMarketsDTO> | DefaultSportMarketsDTO;
+
+  addFavourites(
+    request: AddFavouriteRequest,
+  ): Promise<AddFavouriteResponse> | Observable<AddFavouriteResponse> | AddFavouriteResponse;
 }
 
 export function FixtureServiceControllerMethods() {
@@ -687,6 +709,7 @@ export function FixtureServiceControllerMethods() {
       "updateDefaultSportMarket",
       "deleteDefaultSportMarket",
       "getDefaultSportMarket",
+      "addFavourites",
     ];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
