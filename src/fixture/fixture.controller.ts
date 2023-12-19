@@ -140,6 +140,8 @@ export class FixtureController {
   @ApiQuery({ name: 'upcoming', description: 'Default is 0, If value is 1 then get Upcoming matches (start date is >= tomorrow )' })
   @ApiQuery({ name: 'today', description: 'Default is 0, If value is 1 then get todays matches (start date is todat )' })
   @ApiQuery({ name: 'timeoffset', description: 'Default is 0, GMT timeoffset' })
+  @ApiQuery({ name: 'favourite', description: 'Default is 0, Query fixtures by favourite teams' })
+  @ApiQuery({ name: 'userId', description: 'UserID to query for favourites' })
   @ApiOkResponse({ type: SwaggerHighlightsResponse })
   GetHighlights(
     @Param() params: any,
@@ -162,6 +164,8 @@ export class FixtureController {
         timeoffset: query.timeoffset ? query.timeoffset : 0,
         specifier: query.specifier ? query.specifier : "",
         search: query.search ? query.search : "",
+        favourite: query.favourite ? query.favourite : 0,
+        userId: query.userId ? query.userId : "",
       }
 
       return this.fixtureService.GetHighlights(rq);

@@ -181,7 +181,9 @@ export interface GetHighlightsRequest {
   today: number;
   specifier: string;
   timeoffset: number;
-  search: string;
+  search?: string | undefined;
+  favourite?: string | undefined;
+  userId?: string | undefined;
 }
 
 export interface GetFixturesRequest {
@@ -273,7 +275,7 @@ export interface FixturesWithOdds {
   /** Away team name */
   awayTeam: string;
   /** Away team ID */
-  awayTeamID: string;
+  awayTeamID: number;
   /** Away team name */
   sportName: string;
   /** Market Outcomes */

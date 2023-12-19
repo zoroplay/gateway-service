@@ -212,7 +212,9 @@ message GetHighlightsRequest {
   int32 today = 9;
   string specifier = 10;
   int32 timeoffset = 11;
-  string search = 12;
+  optional string search = 12;
+  optional string favourite = 13;
+  optional string userId = 14;
 }
 
 message GetFixturesRequest {
@@ -264,7 +266,7 @@ message FixturesWithOdds {
   string homeTeam = 18; // Home team name
   int32 homeTeamID = 19; // Home team ID
   string awayTeam = 20; // Away team name
-  string awayTeamID = 21; // Away team ID
+  int32 awayTeamID = 21; // Away team ID
   string sportName = 22; // Away team name
   repeated HighlightOutcomes outcomes = 23; // Market Outcomes
 }
