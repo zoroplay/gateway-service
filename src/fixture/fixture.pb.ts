@@ -484,6 +484,7 @@ export interface AddFavouriteRequest {
   clientId: number;
   competitor1: number;
   competitor2: number;
+  action: string;
 }
 
 export interface AddFavouriteResponse {

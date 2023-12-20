@@ -434,6 +434,7 @@ message AddFavouriteRequest {
   int32 clientId = 2;
   int32 competitor1 = 3;
   int32 competitor2 = 4;
+  string action = 5;
 }
 
 message AddFavouriteResponse {

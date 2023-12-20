@@ -512,6 +512,9 @@ export class AddFavouritesDTO {
 
   @ApiProperty({ description: 'Away Team ID' })
   competitor2: number;
+
+  @ApiProperty({ description: 'Add or remove favourite', example: 'add|remove'})
+  action: string
 }
 
 export class AddFavouriteResponse {
