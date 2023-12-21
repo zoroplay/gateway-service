@@ -1,0 +1,265 @@
+syntax = "proto3";
+
+package outrights;
+
+service OutrightService {
+  rpc CreateSetting (Settings) returns (SettingsResponse) {}
+  rpc UpdateSetting (Settings) returns (SettingsResponse) {}
+  rpc GetSettingsByID (SettingsById) returns (SettingsResponse) {}
+  rpc GetAllSettings (GetAll) returns (AllSettingsResponse) {}
+  rpc CancelBet (BetID) returns (StatusResponse) {}
+  rpc PlaceBet (PlaceBetRequest) returns (PlaceBetResponse) {}
+  rpc BookBet (PlaceBetRequest) returns (PlaceBetResponse) {}
+  rpc BetHistory (BetHistoryRequest) returns (BetHistoryResponse) {}
+  rpc UpdateBet (UpdateBetRequest) returns (UpdateBetResponse) {}
+  rpc GetProbabilityFromBetID(BetID) returns (Probability) {}
+  rpc GetBooking(BookingCode) returns (PlaceBetResponse) {}
+  rpc GetFixtures(GetHighlightsRequest) returns (PlaceBetResponse) {}
+
+}
+
+message Settings {
+  int32 clientID = 1;
+  int32 taxOnStake = 2;
+  int32 taxOnWinning = 3;
+  int32 minimumStake = 4;
+  int32 maximumStake = 5;
+  int32 maximumWinning = 6;
+  int32 maximumSelections = 7;
+  int32 mtsLimitID = 8;
+  string currency = 9;
+  string url = 10;
+}
+
+message SettingsResponse {
+  int32 clientID = 1;
+  float taxOnStake = 2;
+  float taxOnWinning = 3;
+  float minimumStake = 4;
+  float maximumStake = 5;
+  float maximumWinning = 6;
+  int32 maximumSelections = 7;
+  int32 mtsLimitID = 8;
+  string currency = 9;
+  string url = 10;
+  string created = 11;
+  string updated = 12;
+}
+
+message SettingsById {
+  int32 clientID = 1;
+}
+
+message GetAll{
+
+}
+
+message AllSettingsResponse {
+  repeated SettingsResponse settings = 1;
+}
+
+message BetID {
+  int32 betID = 1;
+}
+
+message GamingActivityRequest {
+  string period = 1;
+  string username = 2;
+  string from = 3;
+  string to = 4;
+  string betType = 5;
+  string event_type = 6;
+  string sport = 7;
+  string league = 8;
+  string market = 9;
+  string state = 10;
+  string product = 11;
+  string source = 12;
+  string groupBy = 13;
+  int32 clientId = 14;
+}
+message GamingActivityResponse {
+
+}
+message UpdateBetRequest {
+  int32 betId = 1;
+  string status = 2;
+  string entityType = 3;
+  int32 clientId = 4;
+}
+
+message UpdateBetResponse {
+  bool success = 1;
+  int32 status = 2;
+  string message = 3;
+}
+
+message BookingCode {
+  string code = 1;
+  int32 clientId = 2;
+}
+
+message StatusResponse {
+  string response = 1;
+}
+
+message PlaceBetRequest {
+  repeated BetSlip selections = 1;
+  int32 clientId = 2;
+  int32 userId = 3;
+  float stake = 4;
+  string source = 5;
+  string ipAddress = 6;
+  string betType = 7;
+}
+
+message BetSlip {
+  string eventName = 1;
+  string urn = 2;
+  int32 producerId = 3;
+  int32 marketId = 4;
+  string marketName = 5;
+  string specifier = 6;
+  string outcomeId = 7;
+  string outcomeName = 8;
+  float odds = 9;
+  int64 sportId = 10;
+  string sport = 11;
+  string tournament = 12;
+  string category = 13;
+  string awayTeam = 14;
+  string homeTeam = 15;
+  string type = 16;
+  bool fixed = 17;
+  string selectionId = 18;
+  string eventDate = 19;
+}
+
+message PlaceBetResponse {
+  bool success = 1;
+  int32 status = 2;
+  string message = 3;
+  optional BetHistory data = 4;
+}
+
+message BetHistoryRequest {
+  int32 userId = 1;
+  int32 clientId = 2;
+  string from = 3;
+  string to = 4;
+  string status = 5;
+  int32 page = 6;
+  int32 perPage = 7;
+}
+
+message BetSlipHistory {
+  string eventName = 1;
+  string urn = 2;
+  int32 producerId = 3;
+  int32 marketId = 4;
+  string marketName = 5;
+  string specifier = 6;
+  string outcomeId = 7;
+  string outcomeName = 8;
+  float odds = 9;
+  int64 sportId = 10;
+  string status = 11;
+  string statusDescription = 12;
+  int32 won = 13;
+  string type = 14;
+  string sport = 15;
+  string tournament = 16;
+  string category = 17;
+  string eventDate = 18;
+  string selectionId = 19;
+}
+
+message BetHistory {
+  repeated BetSlipHistory selections = 1;
+  float stake = 2;
+  string created = 3;
+  int32 status = 4;
+  float cashOutAmount = 5;
+  string statusDescription = 6;
+  string source = 7;
+  float totalOdd = 8;
+  float possibleWin = 9;
+  string betType = 10;
+  string betslipId = 11;
+  int32 totalSelections = 12;
+  int32 betCategory = 13;
+  int32 id = 14;
+}
+
+message BetHistoryResponse {
+  repeated BetHistory bets = 1;
+  int32 lastPage = 2; // Last pagination page
+  int32 from = 3; // From data index
+  int32 to = 4; // to data index
+  int32 remainingRecords = 5; // how many records are remaining
+  int32 totalRecords = 6;
+  int32 totalStake = 7;
+  int32 currentPage = 8;
+}
+
+message ProbabilityBetSlipSelection {
+  int64 eventId = 1;
+  int32 marketId = 2;
+  string marketName = 3;
+  string specifier = 4;
+  string outcomeId = 5;
+  string outcomeName = 6;
+  int64 sportId = 7;
+  float currentProbability = 8;
+  float initialProbability = 9;
+}
+
+message Probability {
+  float probability = 1;
+  float currentProbability = 2;
+  float initialProbability = 3;
+  repeated ProbabilityBetSlipSelection selections = 4;
+
+}
+
+message GetHighlightsRequest {
+  int64  sportID = 1;
+  int64 page = 2;
+  int64 perPage = 3;
+  string tournament = 4;
+  string countryCode = 5;
+}
+
+message HighlightOutcomes {
+  string outcomeName = 1;
+  string outcomeID = 2;
+  int64 odds = 3;
+  int64 oddID = 4;
+  int64 active = 5;
+  int64 producerID = 6;
+  int64 status = 7;
+  string statusName = 8;
+}
+
+message HighlightMarket {
+  string marketName = 1;
+  int64 marketID = 2;
+  string specifier = 3;
+  repeated HighlightOutcomes outcomes = 4;
+}
+
+message TournamentsData {
+  string tournamentName = 1;
+  string countryCode = 2;
+  string urn = 3;
+  repeated HighlightMarket markets = 4;
+}
+
+message GetHighlightsResponse {
+  repeated TournamentsData tournaments = 1;
+  int64 lastPage = 2;
+  int64 from = 3;
+  int64 to = 4;
+  int64 remainingRecords = 5;
+
+}
