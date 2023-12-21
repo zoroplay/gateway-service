@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package outrights;
 
-service OutrightService {
+service OutrightsService {
   rpc CreateSetting (Settings) returns (SettingsResponse) {}
   rpc UpdateSetting (Settings) returns (SettingsResponse) {}
   rpc GetSettingsByID (SettingsById) returns (SettingsResponse) {}
