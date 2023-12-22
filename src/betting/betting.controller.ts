@@ -12,6 +12,7 @@ import {
   SwaggerAllSettings,
   SwaggerBetHistoryRequest,
   SwaggerBetHistoryResponse,
+  SwaggerFindBet,
   SwaggerPlaceBet,
   SwaggerPlaceBetResponse, SwaggerProbability,
   SwaggerSettings,
@@ -242,6 +243,31 @@ export class BettingController {
         code: query.code,
         clientId: param.client_id
       });
+
+    } catch (error) {
+
+      console.error(error);
+
+    }
+
+  }
+
+  @Get('/find-bet')
+  @ApiOperation({
+    summary: 'Find bet by betslip ID',
+    description:
+        'This endpoints retrieves a bet if found',
+  })
+  @ApiParam({ name: 'client_id', type: 'number' })
+  @ApiParam({ name: 'betlipId', type: 'string' })
+  @ApiOkResponse({ type: SwaggerFindBet })
+  FindBet(
+    @Body() body: any,
+  ) {
+
+    try {
+
+      return this.bettingService.findBetById(body);
 
     } catch (error) {
 

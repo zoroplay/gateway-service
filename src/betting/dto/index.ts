@@ -523,3 +523,18 @@ export class SwaggerUpdateBetResponse {
   })
   success: string;
 }
+
+export class SwaggerFindBet {
+
+
+  @ApiProperty({
+    description: 'Client ID to make the request',
+  })
+  clientId: number;
+
+  @ApiProperty({
+    description: 'Betslip ID to search for',
+  })
+  betslipId: string;
+
+}

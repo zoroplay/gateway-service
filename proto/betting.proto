@@ -11,6 +11,7 @@ service BettingService {
   rpc PlaceBet (PlaceBetRequest) returns (PlaceBetResponse) {}
   rpc BookBet (PlaceBetRequest) returns (PlaceBetResponse) {}
   rpc BetHistory (BetHistoryRequest) returns (BetHistoryResponse) {}
+  rpc FindBet (FindBetRequest) returns (FindBetResponse) {}
   rpc UpdateBet (UpdateBetRequest) returns (UpdateBetResponse) {}
   rpc GetProbabilityFromBetID(BetID) returns (Probability) {}
   rpc GetBooking(BookingCode) returns (PlaceBetResponse) {}
@@ -228,4 +229,15 @@ message Probability {
   float initialProbability = 3;
   repeated ProbabilityBetSlipSelection selections = 4;
 
+}
+
+message FindBetRequest {
+  int32 clientId = 1;
+  string betslipId = 2;
+}
+
+message FindBetResponse {
+  optional BetHistory bet = 1;
+  string message = 2;
+  string status = 3;
 }
