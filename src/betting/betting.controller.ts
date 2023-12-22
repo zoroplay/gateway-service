@@ -9,10 +9,11 @@ import {
 } from '@nestjs/swagger';
 import { BettingService } from './betting.service';
 import {
+  FindBetDTO,
   SwaggerAllSettings,
   SwaggerBetHistoryRequest,
   SwaggerBetHistoryResponse,
-  SwaggerFindBet,
+  SwaggerFindBetResponse,
   SwaggerPlaceBet,
   SwaggerPlaceBetResponse, SwaggerProbability,
   SwaggerSettings,
@@ -252,18 +253,18 @@ export class BettingController {
 
   }
 
-  @Get('/find-bet')
+  @Post('/find-bet')
   @ApiOperation({
     summary: 'Find bet by betslip ID',
     description:
         'This endpoints retrieves a bet if found',
   })
-  @ApiParam({ name: 'client_id', type: 'number' })
-  @ApiParam({ name: 'betlipId', type: 'string' })
-  @ApiOkResponse({ type: SwaggerFindBet })
+  @ApiOkResponse({ type: SwaggerFindBetResponse })
   FindBet(
-    @Body() body: any,
+    @Body() body: FindBetDTO,
   ) {
+
+    console.log(body);
 
     try {
 
