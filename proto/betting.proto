@@ -198,6 +198,7 @@ message BetHistory {
   int32 id = 14;
   int32 userId = 15;
   string username = 16;
+  float winnings = 17;
 }
 
 message BetHistoryResponse {
