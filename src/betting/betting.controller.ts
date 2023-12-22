@@ -264,8 +264,6 @@ export class BettingController {
     @Body() body: FindBetDTO,
   ) {
 
-    console.log(body);
-
     try {
 
       return this.bettingService.findBetById(body);
