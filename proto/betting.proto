@@ -240,5 +240,5 @@ message FindBetRequest {
 message FindBetResponse {
   optional BetHistory bet = 1;
   string message = 2;
-  string status = 3;
+  bool status = 3;
 }

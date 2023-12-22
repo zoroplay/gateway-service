@@ -229,7 +229,7 @@ export interface FindBetRequest {
 export interface FindBetResponse {
   bet?: BetHistory | undefined;
   message: string;
-  status: string;
+  status: boolean;
 }
 
 export const BETTING_PACKAGE_NAME = "betting";
