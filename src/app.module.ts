@@ -13,6 +13,7 @@ import { BonusController } from './bonus/bonus.controller';
 import { NotificationModule } from './notification/notification.module';
 import { WalletModule } from './wallet/wallet.module';
 import 'dotenv/config'
+import {OutrightsModule} from "./outrights/outrights.module";
 
 @Module({
   imports: [
@@ -23,7 +24,8 @@ import 'dotenv/config'
     FixtureModule,
     BonusModule,
     NotificationModule,
-    WalletModule
+    WalletModule,
+      OutrightsModule,
   ],
   controllers: [
     AppController,
