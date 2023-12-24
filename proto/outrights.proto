@@ -39,8 +39,8 @@ message TournamentsData {
   string tournamentName = 1;
   string countryCode = 2;
   int64 eventId = 3;
-  int64 eventType = 4;
-  int64 eventPrefix = 5;
+  string eventType = 4;
+  string eventPrefix = 5;
   repeated HighlightMarket markets = 6;
 }
 
@@ -57,8 +57,8 @@ message GetHighlightsResponse {
 message GetOddsRequest {
   int32 producerID = 1;
   int32 eventID = 2;
-  int32 eventType = 3;
-  int32 eventPrefix = 4;
+  string eventType = 3;
+  string eventPrefix = 4;
   int32 marketID = 5;
   string specifier = 6;
   string outcomeID = 7;
