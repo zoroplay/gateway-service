@@ -10,6 +10,7 @@ import {
   BetID,
   BookingCode,
   UpdateBetRequest,
+  FindBetRequest,
 } from './betting.pb';
 import { ClientGrpc } from '@nestjs/microservices';
 
@@ -73,6 +74,10 @@ export class BettingService implements OnModuleInit {
 
     console.log('check probability from betID  ');
     return this.service.getProbabilityFromBetId(data);
+  }
+
+  findBetById(data: FindBetRequest) {
+    return this.service.findBet(data);
   }
 
 

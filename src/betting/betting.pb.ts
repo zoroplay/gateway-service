@@ -186,6 +186,7 @@ export interface BetHistory {
   id: number;
   userId: number;
   username: string;
+  winnings: number;
 }
 
 export interface BetHistoryResponse {
@@ -224,6 +225,17 @@ export interface Probability {
   selections: ProbabilityBetSlipSelection[];
 }
 
+export interface FindBetRequest {
+  clientId: number;
+  betslipId: string;
+}
+
+export interface FindBetResponse {
+  bet?: BetHistory | undefined;
+  message: string;
+  status: boolean;
+}
+
 export const BETTING_PACKAGE_NAME = "betting";
 
 export interface BettingServiceClient {
@@ -242,6 +254,8 @@ export interface BettingServiceClient {
   bookBet(request: PlaceBetRequest): Observable<PlaceBetResponse>;
 
   betHistory(request: BetHistoryRequest): Observable<BetHistoryResponse>;
+
+  findBet(request: FindBetRequest): Observable<FindBetResponse>;
 
   updateBet(request: UpdateBetRequest): Observable<UpdateBetResponse>;
 
@@ -269,6 +283,8 @@ export interface BettingServiceController {
     request: BetHistoryRequest,
   ): Promise<BetHistoryResponse> | Observable<BetHistoryResponse> | BetHistoryResponse;
 
+  findBet(request: FindBetRequest): Promise<FindBetResponse> | Observable<FindBetResponse> | FindBetResponse;
+
   updateBet(request: UpdateBetRequest): Promise<UpdateBetResponse> | Observable<UpdateBetResponse> | UpdateBetResponse;
 
   getProbabilityFromBetId(request: BetID): Promise<Probability> | Observable<Probability> | Probability;
@@ -287,6 +303,7 @@ export function BettingServiceControllerMethods() {
       "placeBet",
       "bookBet",
       "betHistory",
+      "findBet",
       "updateBet",
       "getProbabilityFromBetId",
       "getBooking",

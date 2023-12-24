@@ -538,3 +538,24 @@ export class SwaggerUpdateBetResponse {
   })
   success: string;
 }
+
+export class FindBetDTO {
+  @ApiProperty({ description: 'Operator ID' })
+  clientId: number;
+
+  @ApiProperty({ description: 'Betslip ID' })
+  betslipId: string;
+}
+
+export class SwaggerFindBetResponse {
+
+  @ApiProperty({ description: 'Request status' })
+  success: boolean;
+
+  @ApiProperty({ description: 'Server response message' })
+  message: string;
+
+  @ApiProperty({ description: 'Bet object if found'})
+  bet: any;
+
+}
