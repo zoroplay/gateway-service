@@ -230,6 +230,11 @@ export class SwaggerBetSlip {
   eventType: string;
 
   @ApiProperty({
+    description: 'Type of event prefix default value is sr, oter applicable values are sr',
+  })
+  eventPrefix: string;
+
+  @ApiProperty({
     description: 'Event ID',
   })
   eventId: number;
@@ -418,6 +423,16 @@ export class SwaggerBetHistoryRequest {
 }
 
 export class SwaggerProbabilityBetSlipSelection {
+
+  @ApiProperty({
+    description: 'Type of event default value is match, oter applicable values are season, stage, group',
+  })
+  eventType: string;
+
+  @ApiProperty({
+    description: 'Type of event prefix default value is sr, oter applicable values are sr',
+  })
+  eventPrefix: string;
 
   @ApiProperty({
     description: 'Event ID',

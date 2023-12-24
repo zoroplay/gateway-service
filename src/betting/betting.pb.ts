@@ -103,6 +103,7 @@ export interface PlaceBetRequest {
 export interface BetSlip {
   eventName: string;
   eventType: string;
+  eventPrefix: string;
   eventId: number;
   producerId: number;
   marketId: number;
@@ -146,6 +147,7 @@ export interface BetHistoryRequest {
 export interface BetSlipHistory {
   eventName: string;
   eventType: string;
+  eventPrefix: string;
   eventId: number;
   producerId: number;
   marketId: number;
@@ -202,6 +204,8 @@ export interface BetHistoryResponse {
 }
 
 export interface ProbabilityBetSlipSelection {
+  eventType: string;
+  eventPrefix: string;
   eventId: number;
   marketId: number;
   marketName: string;

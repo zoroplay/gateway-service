@@ -135,6 +135,7 @@ message BetSlip {
   bool fixed = 19;
   string selectionId = 20;
   string eventDate = 21;
+  string eventPrefix = 22;
 }
 
 message PlaceBetResponse {
@@ -178,6 +179,7 @@ message BetSlipHistory {
   string matchId = 19;
   string eventDate = 20;
   string selectionId = 21;
+  string eventPrefix = 22;
 }
 
 message BetHistory {
