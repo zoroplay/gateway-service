@@ -58,13 +58,18 @@ export interface GamingActivityRequest {
   league: string;
   market: string;
   state: string;
-  product: string;
+  productType: string;
   source: string;
   groupBy: string;
-  clientId: number;
+  clientID: number;
 }
 
 export interface GamingActivityResponse {
+  success: boolean;
+  status: number;
+  message: string;
+  bets: GamingActivity[];
+  error: string;
 }
 
 export interface UpdateBetRequest {
@@ -103,7 +108,6 @@ export interface PlaceBetRequest {
 export interface BetSlip {
   eventName: string;
   eventType: string;
-  eventPrefix: string;
   eventId: number;
   producerId: number;
   marketId: number;
@@ -147,7 +151,6 @@ export interface BetHistoryRequest {
 export interface BetSlipHistory {
   eventName: string;
   eventType: string;
-  eventPrefix: string;
   eventId: number;
   producerId: number;
   marketId: number;
@@ -205,8 +208,6 @@ export interface BetHistoryResponse {
 }
 
 export interface ProbabilityBetSlipSelection {
-  eventType: string;
-  eventPrefix: string;
   eventId: number;
   marketId: number;
   marketName: string;
@@ -236,6 +237,20 @@ export interface FindBetResponse {
   status: boolean;
 }
 
+export interface GamingActivity {
+  month: string;
+  date: string;
+  turnover: number;
+  total: number;
+  average: number;
+  winnings: number;
+  source: string;
+  betType: string;
+  marketName: string;
+  sportName: string;
+  tournamentName: string;
+}
+
 export const BETTING_PACKAGE_NAME = "betting";
 
 export interface BettingServiceClient {
@@ -262,6 +277,8 @@ export interface BettingServiceClient {
   getProbabilityFromBetId(request: BetID): Observable<Probability>;
 
   getBooking(request: BookingCode): Observable<PlaceBetResponse>;
+
+  gamingActivity(request: GamingActivityRequest): Observable<GamingActivityResponse>;
 }
 
 export interface BettingServiceController {
@@ -290,6 +307,10 @@ export interface BettingServiceController {
   getProbabilityFromBetId(request: BetID): Promise<Probability> | Observable<Probability> | Probability;
 
   getBooking(request: BookingCode): Promise<PlaceBetResponse> | Observable<PlaceBetResponse> | PlaceBetResponse;
+
+  gamingActivity(
+    request: GamingActivityRequest,
+  ): Promise<GamingActivityResponse> | Observable<GamingActivityResponse> | GamingActivityResponse;
 }
 
 export function BettingServiceControllerMethods() {
@@ -307,6 +328,7 @@ export function BettingServiceControllerMethods() {
       "updateBet",
       "getProbabilityFromBetId",
       "getBooking",
+      "gamingActivity",
     ];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);

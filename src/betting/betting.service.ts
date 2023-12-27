@@ -11,6 +11,7 @@ import {
   BookingCode,
   UpdateBetRequest,
   FindBetRequest,
+  GamingActivityRequest,
 } from './betting.pb';
 import { ClientGrpc } from '@nestjs/microservices';
 
@@ -78,6 +79,10 @@ export class BettingService implements OnModuleInit {
 
   findBetById(data: FindBetRequest) {
     return this.service.findBet(data);
+  }
+
+  getGamingActivity(data: GamingActivityRequest) {
+    return this.service.gamingActivity(data);
   }
 
 

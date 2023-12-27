@@ -24,6 +24,8 @@ import {
 import {
   BetHistoryRequest,
   BetHistoryResponse, BetID,
+  GamingActivityRequest,
+  GamingActivityResponse,
   PlaceBetRequest,
   Settings,
   UpdateBetRequest,
@@ -273,7 +275,28 @@ export class BettingController {
       console.error(error);
 
     }
+  }
 
+  @Post('/reporting/gaming-activity')
+  @ApiOperation({
+    summary: 'Get client Gaming activity for a period',
+    description:
+        'This endpoints retrieves a summary of bets placed for either sports, virtual or casino',
+  })
+  @ApiOkResponse({ type:  SwaggerFindBetResponse})
+  GamingActivity(
+    @Body() body: GamingActivityRequest,
+  ) {
+
+    try {
+
+      return this.bettingService.getGamingActivity(body);
+
+    } catch (error) {
+
+      console.error(error);
+
+    }
   }
 
 }

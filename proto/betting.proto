@@ -15,6 +15,7 @@ service BettingService {
   rpc UpdateBet (UpdateBetRequest) returns (UpdateBetResponse) {}
   rpc GetProbabilityFromBetID(BetID) returns (Probability) {}
   rpc GetBooking(BookingCode) returns (PlaceBetResponse) {}
+  rpc GamingActivity(GamingActivityRequest) returns (GamingActivityResponse) {}
 
 }
 
@@ -68,19 +69,24 @@ message GamingActivityRequest {
   string from = 3;
   string to = 4;
   string betType = 5;
-  string event_type = 6;
+  string eventType = 6;
   string sport = 7;
   string league = 8;
   string market = 9;
   string state = 10;
-  string product = 11;
+  string productType = 11;
   string source = 12;
   string groupBy = 13;
-  int32 clientId = 14;
+  int32 clientID = 14;
 }
 message GamingActivityResponse {
-  
+  bool success = 1;
+  int32 status = 2;
+  string message = 3;
+  repeated GamingActivity bets = 4;
+  string error = 5;
 }
+
 message UpdateBetRequest {
   int32 betId = 1;
   string status = 2;
@@ -136,7 +142,6 @@ message BetSlip {
   bool fixed = 19;
   string selectionId = 20;
   string eventDate = 21;
-  string eventPrefix = 22;
 }
 
 message PlaceBetResponse {
@@ -180,7 +185,6 @@ message BetSlipHistory {
   string matchId = 19;
   string eventDate = 20;
   string selectionId = 21;
-  string eventPrefix = 22;
 }
 
 message BetHistory {
@@ -243,4 +247,18 @@ message FindBetResponse {
   optional BetHistory bet = 1;
   string message = 2;
   bool status = 3;
+}
+
+message GamingActivity {
+  string month = 1;
+  string date = 2;
+  float turnover = 3;
+  float total = 4;
+  float average = 5;
+  float winnings = 6;
+  string source = 7;
+  string bet_type = 8;
+  string market_name = 9;
+  string sport_name = 10;
+  string tournament_name = 11;
 }
