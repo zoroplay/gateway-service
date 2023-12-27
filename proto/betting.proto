@@ -83,7 +83,7 @@ message GamingActivityResponse {
   bool success = 1;
   int32 status = 2;
   string message = 3;
-  repeated GamingActivity data = 4;
+  optional GamingActivity data = 4;
   string error = 5;
 }
 
@@ -253,6 +253,14 @@ message FindBetResponse {
 }
 
 message GamingActivity {
+  bool success = 1;
+  int32 status = 2;
+  string message = 3;
+  optional string error = 4;
+  repeated GamingActivity bets = 5;
+}
+
+message GamingActivityBets {
   string month = 1;
   string date = 2;
   float turnover = 3;

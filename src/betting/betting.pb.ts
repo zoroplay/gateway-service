@@ -68,7 +68,7 @@ export interface GamingActivityResponse {
   success: boolean;
   status: number;
   message: string;
-  data: GamingActivity[];
+  data?: GamingActivity | undefined;
   error: string;
 }
 
@@ -240,6 +240,14 @@ export interface FindBetResponse {
 }
 
 export interface GamingActivity {
+  success: boolean;
+  status: number;
+  message: string;
+  error?: string | undefined;
+  bets: GamingActivity[];
+}
+
+export interface GamingActivityBets {
   month: string;
   date: string;
   turnover: number;
