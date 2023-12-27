@@ -83,7 +83,7 @@ message GamingActivityResponse {
   bool success = 1;
   int32 status = 2;
   string message = 3;
-  repeated GamingActivity bets = 4;
+  repeated GamingActivity data = 4;
   string error = 5;
 }
 
@@ -142,6 +142,7 @@ message BetSlip {
   bool fixed = 19;
   string selectionId = 20;
   string eventDate = 21;
+  string eventPrefix = 22;
 }
 
 message PlaceBetResponse {
@@ -185,6 +186,8 @@ message BetSlipHistory {
   string matchId = 19;
   string eventDate = 20;
   string selectionId = 21;
+  string eventPrefix = 22;
+
 }
 
 message BetHistory {

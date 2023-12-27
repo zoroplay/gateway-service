@@ -68,7 +68,7 @@ export interface GamingActivityResponse {
   success: boolean;
   status: number;
   message: string;
-  bets: GamingActivity[];
+  data: GamingActivity[];
   error: string;
 }
 
@@ -127,6 +127,7 @@ export interface BetSlip {
   fixed: boolean;
   selectionId: string;
   eventDate: string;
+  eventPrefix: string;
 }
 
 export interface PlaceBetResponse {
@@ -170,6 +171,7 @@ export interface BetSlipHistory {
   matchId: string;
   eventDate: string;
   selectionId: string;
+  eventPrefix: string;
 }
 
 export interface BetHistory {
