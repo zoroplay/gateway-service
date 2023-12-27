@@ -283,6 +283,7 @@ export class BettingController {
     description:
         'This endpoints retrieves a summary of bets placed for either sports, virtual or casino',
   })
+  @ApiBody({ type: SwaggerBetHistoryRequest })
   @ApiOkResponse({ type:  SwaggerFindBetResponse})
   GamingActivity(
     @Body() body: GamingActivityRequest,

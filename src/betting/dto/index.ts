@@ -422,6 +422,73 @@ export class SwaggerBetHistoryRequest {
 
 }
 
+export class SwaggerGamingActivityRequest {
+  @ApiProperty({
+    description: 'Username',
+  })
+  username: string;
+
+  @ApiProperty({
+    description: 'Item to group result by',
+  })
+  groupBy: string;
+
+  @ApiProperty({
+    description: 'Start date to filter from',
+  })
+  from: string;
+
+  @ApiProperty({
+    description: 'End date to filter to',
+  })
+  to: string;
+
+  @ApiProperty({
+    description: 'Client ID',
+  })
+  clientId: number;
+
+  @ApiProperty({
+    description: 'Current page number',
+  })
+  page: number;
+
+  @ApiProperty({
+    description: 'Number of records per page',
+  })
+  perPage: number;
+
+  @ApiProperty({
+    description: 'Filter by event type Live, Prematch or both',
+  })
+  eventType: string;
+
+  @ApiProperty({
+    description: 'Filter by product type. Sports, Virtual, Casino',
+  })
+  productType: string;
+
+  @ApiProperty({
+    description: 'Filter by bet type',
+  })
+  betType: string;
+
+  @ApiProperty({
+    description: 'Source by which bet was placed',
+  })
+  source: string;
+
+  @ApiProperty({
+    description: 'Filter by sport',
+  })
+  sport: string;
+
+  @ApiProperty({
+    description: 'filter by league',
+  })
+  league: string;
+}
+
 export class SwaggerProbabilityBetSlipSelection {
 
   @ApiProperty({
