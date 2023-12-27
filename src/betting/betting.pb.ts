@@ -240,11 +240,10 @@ export interface FindBetResponse {
 }
 
 export interface GamingActivity {
-  success: boolean;
-  status: number;
-  message: string;
-  error?: string | undefined;
-  bets: GamingActivity[];
+  totalStake: number;
+  totalWinnings: number;
+  totalTickets: number;
+  bets: GamingActivityBets[];
 }
 
 export interface GamingActivityBets {
