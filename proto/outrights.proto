@@ -1,0 +1,77 @@
+syntax = "proto3";
+
+package outrights;
+
+service OutrightsService {
+  rpc GetFixtures(GetHighlightsRequest) returns (GetHighlightsResponse) {}
+  rpc GetOdds (GetOddsRequest) returns (GetOddsReply) {}
+  rpc GetProbability (GetOddsRequest) returns (Probability) {}
+
+}
+
+message GetHighlightsRequest {
+  int64  sportID = 1;
+  int64 page = 2;
+  int64 perPage = 3;
+  string tournament = 4;
+  string countryCode = 5;
+}
+
+message HighlightOutcomes {
+  string outcomeName = 1;
+  string outcomeID = 2;
+  int64 odds = 3;
+  int64 oddID = 4;
+  int64 active = 5;
+  int64 producerID = 6;
+  int64 status = 7;
+  string statusName = 8;
+}
+
+message HighlightMarket {
+  string marketName = 1;
+  int64 marketID = 2;
+  string specifier = 3;
+  repeated HighlightOutcomes outcomes = 4;
+}
+
+message TournamentsData {
+  string tournamentName = 1;
+  string countryCode = 2;
+  int64 eventId = 3;
+  string eventType = 4;
+  string eventPrefix = 5;
+  repeated HighlightMarket markets = 6;
+}
+
+message GetHighlightsResponse {
+  repeated TournamentsData tournaments = 1;
+  int64 lastPage = 2;
+  int64 from = 3;
+  int64 to = 4;
+  int64 remainingRecords = 5;
+
+}
+
+// The request message containing the selection details.
+message GetOddsRequest {
+  int32 producerID = 1;
+  int32 eventID = 2;
+  string eventType = 3;
+  string eventPrefix = 4;
+  int32 marketID = 5;
+  string specifier = 6;
+  string outcomeID = 7;
+}
+
+// The response message containing the odds status
+message GetOddsReply {
+  float odds = 1;
+  int32 status = 2;
+  string statusName = 3;
+  int32 active = 4;
+}
+
+message Probability {
+  float probability = 1;
+}

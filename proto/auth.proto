@@ -1,0 +1,66 @@
+syntax = "proto3";
+
+package auth;
+
+service AuthService {
+  rpc SportRegister (SportBookRegisterRequest) returns (SportBookRegisterResponse) {}
+  rpc Login (LoginRequest) returns (LoginResponse) {}
+  rpc Validate (ValidateRequest) returns (ValidateResponse) {}
+  rpc SendOTP (SendOtpRequest) returns (SendOtpResponse) {}
+}
+// user
+message UserData {
+  int32 id = 1;
+  string username = 2;
+  string email = 3;
+}
+
+//send otp
+message SendOtpRequest {
+  string username = 1;
+  string type = 2;
+}
+
+message SendOtpResponse {
+  int32 status = 1;
+  bool success = 2;
+  string message = 3;
+  string error = 4;
+}
+
+// Register
+message SportBookRegisterRequest {
+  string username = 1;
+  string password = 2;
+  string phone = 3;
+}
+
+message SportBookRegisterResponse {
+  int32 status = 1;
+  string error = 2;
+  UserData data = 3;
+}
+
+// Login
+message LoginRequest {
+  string username = 1;
+  string password = 2;
+}
+
+message LoginResponse {
+  int32 status = 1;
+  string error = 2;
+  string token = 3;
+  UserData data = 4;
+}
+
+// Validate
+message ValidateRequest {
+  string token = 1;
+}
+
+message ValidateResponse {
+  int32 status = 1;
+  string error = 2;
+  int32 userId = 3;
+}

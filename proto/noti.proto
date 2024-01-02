@@ -1,0 +1,62 @@
+syntax = "proto3";
+
+package notification;
+
+service NotificationService {
+  rpc SaveSettings (SaveSettingsRequest) returns (SaveSettingsResponse);
+  rpc SendSms (SendSmsRequest) returns (SendSmsResponse);
+  rpc GetDeliveryReport (DeliveryReportRequest) returns (DeliveryReportResponse);
+}
+
+message SaveSettingsRequest {
+  int32  settingID = 1;
+  int32  clientId = 2;
+  bool   enable = 3;
+  string displayName = 4;
+  string gatewayName = 5;
+  string senderID = 6;
+  string apiKey = 7;
+  string username = 8;
+  string password = 9;
+}
+
+message SaveSettingsResponse {
+  string message = 1;
+  bool   status = 2;
+}
+
+
+message SendSmsRequest {
+  string msisdn = 1;
+  string text = 2;
+  string senderID = 3;
+  string name = 4;
+  string from = 5;
+  string status = 6;
+  string list = 7;
+  string schedule = 8;
+  string channel = 9;
+  string mode = 10;
+  string campaignType = 11;
+  int32 clientID = 12;
+}
+
+message SendSmsResponse {
+  string message = 1;
+  bool   status = 2;
+}
+
+message DeliveryReportRequest {
+  string username = 1;
+  string password = 2;
+  string messageId = 3;
+}
+
+message DeliveryReportResponse {
+  string status = 1;
+  string timeSubmitted = 2;
+  string timeDelivered = 3;
+  string message = 4;
+  string sender = 5;
+  string messageId = 6;
+}

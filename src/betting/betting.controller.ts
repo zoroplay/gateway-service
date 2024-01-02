@@ -1,23 +1,47 @@
-import { Body, Controller, Get, Post, Patch, Param } from '@nestjs/common';
-import { ApiBody, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { Body, Controller, Get, Post, Patch, Param, Ip, Query } from '@nestjs/common';
+import {
+  ApiBody,
+  ApiOkResponse,
+  ApiOperation,
+  ApiParam,
+  ApiQuery,
+  ApiTags,
+} from '@nestjs/swagger';
 import { BettingService } from './betting.service';
 import {
+  FindBetDTO,
   SwaggerAllSettings,
   SwaggerBetHistoryRequest,
   SwaggerBetHistoryResponse,
+  SwaggerFindBetResponse,
   SwaggerPlaceBet,
-  SwaggerPlaceBetResponse,
+  SwaggerPlaceBetResponse, SwaggerProbability,
   SwaggerSettings,
   SwaggerSettingsResponse,
+  SwaggerUpdateBetRequest,
+  SwaggerUpdateBetResponse,
 } from './dto';
-import { BetHistoryDto, PlaceBetDto, Settings } from './betting.pb';
+import {
+  BetHistoryRequest,
+  BetHistoryResponse, BetID,
+  GamingActivityRequest,
+  GamingActivityResponse,
+  PlaceBetRequest,
+  Settings,
+  UpdateBetRequest,
+} from './betting.pb';
 
 @ApiTags('Betting APIs')
-@Controller('betting-service')
+@Controller('bets')
 export class BettingController {
   constructor(private readonly bettingService: BettingService) {}
 
   @Post('/settings')
+  @ApiOperation({
+    summary: 'Create a client betting settings',
+    description:
+      'Clients betting settings includes all the unique features of particular client in regards to processing bets, this includes tax settings, stake settings, risk settings etc',
+  })
   @ApiBody({ type: SwaggerSettings })
   @ApiOkResponse({ type: [SwaggerSettingsResponse] })
   CreateSetting(@Body() data: Settings) {
@@ -29,6 +53,11 @@ export class BettingController {
   }
 
   @Patch('/settings')
+  @ApiOperation({
+    summary: 'Update a client betting settings',
+    description:
+      'Clients betting settings includes all the unique features of particular client in regards to processing bets, this includes tax settings, stake settings, risk settings etc',
+  })
   @ApiBody({ type: SwaggerSettings })
   @ApiOkResponse({ type: [SwaggerSettingsResponse] })
   UpdateSetting(@Body() data: Settings) {
@@ -40,6 +69,11 @@ export class BettingController {
   }
 
   @Get('/settings')
+  @ApiOperation({
+    summary: 'Get all clients betting settings',
+    description:
+      'Clients betting settings includes all the unique features of particular client in regards to processing bets, this includes tax settings, stake settings, risk settings etc',
+  })
   @ApiOkResponse({ type: [SwaggerAllSettings] })
   GetAllSettings() {
     try {
@@ -50,6 +84,12 @@ export class BettingController {
   }
 
   @Get('/settings/:client_id')
+  @ApiOperation({
+    summary: 'Get a client betting settings',
+    description:
+      'Clients betting settings includes all the unique features of particular client in regards to processing bets, this includes tax settings, stake settings, risk settings etc',
+  })
+  @ApiParam({ name: 'client_id', type: 'number' })
   @ApiOkResponse({ type: [SwaggerSettingsResponse] })
   GetSettingsByID(@Param() params: any) {
     try {
@@ -61,25 +101,203 @@ export class BettingController {
     }
   }
 
-  @Post('/bet/create')
+  @Post('/place-bet/:client_id')
+  @ApiOperation({
+    summary: 'Place a bet request',
+    description:
+      'Receives a bet request with all the required detailed, upon successful bet placement, unique betID is returned',
+  })
+  @ApiParam({ name: 'client_id', type: 'number' })
   @ApiBody({ type: SwaggerPlaceBet })
   @ApiOkResponse({ type: SwaggerPlaceBetResponse })
-  PlaceBet(@Body() data: PlaceBetDto) {
+  PlaceBet(
+    @Body() data: PlaceBetRequest,
+    @Param() param: any,
+    @Ip() ip: any
+    ) {
     try {
+      data.clientId = param.client_id
+      data.ipAddress = ip;
+      data.betType = param.bet_type;
       return this.bettingService.PlaceBet(data);
     } catch (error) {
       console.error(error);
     }
   }
 
-  @Post('/bet/history')
-  @ApiBody({ type: SwaggerBetHistoryRequest })
-  @ApiOkResponse({ type: SwaggerBetHistoryResponse })
-  BetHistory(@Body() data: BetHistoryDto) {
+
+  @Post('/update-bet/:client_id')
+  @ApiOperation({
+    summary: 'Update a bet request',
+    description:
+      'Update bet or bet selections status',
+  })
+  @ApiParam({ name: 'client_id', type: 'number' })
+  @ApiBody({ type: SwaggerUpdateBetRequest })
+  @ApiOkResponse({ type: SwaggerUpdateBetResponse })
+  UpdateBet(
+    @Body() data: UpdateBetRequest,
+    @Param() param: any,
+    @Ip() ip: any
+    ) {
     try {
-      return this.bettingService.BetHistory(data);
+      data.clientId = param.client_id
+      return this.bettingService.UpdateBet(data);
     } catch (error) {
       console.error(error);
     }
   }
+
+
+  @Post('/book-bet/:client_id')
+  @ApiOperation({
+    summary: 'Book a bet request',
+    description:
+      'Receives a booking request with all the required detailed, upon successful a booking code is turned',
+  })
+  @ApiParam({ name: 'client_id', type: 'number' })
+  @ApiBody({ type: SwaggerPlaceBet })
+  @ApiOkResponse({ type: SwaggerPlaceBetResponse })
+  BookBet(
+    @Body() data: PlaceBetRequest,
+    @Param() param: any,
+    @Ip() ip: any
+    ) {
+    try {
+      data.clientId = param.client_id
+      data.ipAddress = ip;
+      return this.bettingService.BookBet(data);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  @Post('/history')
+  @ApiOperation({
+    summary: 'Retrieve bet history of a user',
+    description:
+      'Retrieves bet history of user, date object can be passed to filter only bets for a specific day',
+  })
+  @ApiBody({ type: SwaggerBetHistoryRequest })
+  @ApiOkResponse({ type: SwaggerBetHistoryResponse })
+  BetHistory(
+    @Query() query,
+    @Body() data: BetHistoryRequest
+  ) {
+    try {
+      let rq = {
+        userId : data.userId,
+        clientId : data.clientId,
+        status : data.status,
+        from : data.from,
+        to : data.to,
+        page: query.page ? query.page : 1,
+        perPage : query.perPage ? query.perPage : 100,
+        betslipId: data.betslipId,
+        username: data.username
+      }
+      return this.bettingService.BetHistory(rq);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  @Get('/probability/:bet_id')
+  @ApiOperation({
+    summary: 'Get probability of the supplied betID',
+    description:
+        'This endpoints retrieve probability of the supplied betID',
+  })
+  @ApiParam({ name: 'bet_id', type: 'number' })
+  @ApiOkResponse({ type: SwaggerProbability })
+  GetProbabilityFromBetID(@Param() params: any) {
+
+    try {
+
+      return this.bettingService.getProbabilityFromBetId({
+        betID: params.bet_id,
+      });
+
+    } catch (error) {
+
+      console.error(error);
+
+    }
+
+  }
+
+  @Get('/get-booking/:client_id')
+  @ApiOperation({
+    summary: 'Get booking code',
+    description:
+        'This endpoints retrieves a booked game for rebet',
+  })
+  @ApiParam({ name: 'client_id', type: 'number' })
+  @ApiQuery({ name: 'code', type: 'string' })
+  @ApiOkResponse({ type: SwaggerPlaceBetResponse })
+  GetBooking(
+    @Param() param: any,
+    @Query() query: any
+  ) {
+
+    try {
+
+      return this.bettingService.GetBooking({
+        code: query.code,
+        clientId: param.client_id
+      });
+
+    } catch (error) {
+
+      console.error(error);
+
+    }
+
+  }
+
+  @Post('/find-bet')
+  @ApiOperation({
+    summary: 'Find bet by betslip ID',
+    description:
+        'This endpoints retrieves a bet if found',
+  })
+  @ApiOkResponse({ type: SwaggerFindBetResponse })
+  FindBet(
+    @Body() body: FindBetDTO,
+  ) {
+
+    try {
+
+      return this.bettingService.findBetById(body);
+
+    } catch (error) {
+
+      console.error(error);
+
+    }
+  }
+
+  @Post('/reporting/gaming-activity')
+  @ApiOperation({
+    summary: 'Get client Gaming activity for a period',
+    description:
+        'This endpoints retrieves a summary of bets placed for either sports, virtual or casino',
+  })
+  @ApiBody({ type: SwaggerBetHistoryRequest })
+  @ApiOkResponse({ type:  SwaggerFindBetResponse})
+  GamingActivity(
+    @Body() body: GamingActivityRequest,
+  ) {
+
+    try {
+
+      return this.bettingService.getGamingActivity(body);
+
+    } catch (error) {
+
+      console.error(error);
+
+    }
+  }
+
 }

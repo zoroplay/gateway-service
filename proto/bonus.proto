@@ -1,0 +1,356 @@
+syntax = "proto3";
+
+package bonus;
+
+service BonusService {
+
+  rpc CreateCashbackBonus (CreateCashbackBonusRequest) returns (CreateBonusResponse){}
+
+  rpc CreateNewBonus (CreateNewBonusRequest) returns (CreateBonusResponse){}
+
+  rpc CreateBonus (CreateNewBonusRequest) returns (CreateBonusResponse){}
+
+  rpc UpdateCashbackBonus (CreateCashbackBonusRequest) returns (CreateBonusResponse){}
+
+  rpc CreateFirstDepositBonus (CreateFirstDepositBonusRequest) returns (CreateBonusResponse){}
+
+  rpc UpdateFirstDepositBonus (CreateFirstDepositBonusRequest) returns (CreateBonusResponse){}
+
+  rpc CreateFreebetBonus (CreateFreebetBonusRequest) returns (CreateBonusResponse){}
+
+  rpc UpdateFreebetBonus (CreateFreebetBonusRequest) returns (CreateBonusResponse){}
+
+  rpc CreateReferralBonus (CreateReferralBonusRequest) returns (CreateBonusResponse){}
+
+  rpc UpdateReferralBonus (CreateReferralBonusRequest) returns (CreateBonusResponse){}
+
+  rpc CreateShareBetBonus (CreateShareBetBonusRequest) returns (CreateBonusResponse){}
+
+  rpc UpdateShareBetBonus (CreateShareBetBonusRequest) returns (CreateBonusResponse){}
+
+  rpc GetBonus (GetBonusRequest) returns (GetBonusResponse){}
+
+  rpc DeleteBonus (DeleteBonusRequest) returns (BonusResponse){}
+
+  rpc GetUserBonus (GetUserBonusRequest) returns (GetUserBonusResponse){}
+
+  rpc AwardBonus (AwardBonusRequest) returns (UserBonusResponse){}
+
+  rpc PlaceBonusBet(UserBet) returns (PlaceBetResponse){}
+
+  rpc UpdateBonusStatus (BonusStatusRequest) returns (CreateBonusResponse){}
+
+  rpc CreateCampaignBonus(CreateCampaignBonusDto) returns (CreateBonusResponse){}
+
+  rpc UpdateCampaignBonus(UpdateCampaignBonusDto) returns (CreateBonusResponse){}
+
+  rpc DeleteCampaignBonus(DeleteCampaignBonusDto) returns (CreateBonusResponse){}
+
+  rpc RedeemCampaignBonus(RedeemCampaignBonusDto) returns (CreateBonusResponse){}
+
+  rpc GetCampaignBonus(GetBonusByClientID) returns (AllCampaignBonus){}
+
+}
+
+message CreateFirstDepositBonusRequest {
+  int32 clientId = 1;
+  int32 expiryInHours = 2;
+  int32 minimumEvents = 3;
+  float minimumOddsPerEvent = 4;
+  float minimumTotalOdds = 5;
+  string applicableBetType = 6;
+  int32 maximumWinning = 7;
+  int32 minimumEntryAmount = 8;
+  int32 bonusAmount = 9;
+  float minimumBettingStake = 10;
+}
+message CreateNewBonusRequest {
+  string bonusName = 1;
+  string bonusCode = 2;
+  string target = 3;
+  string bonusCategory = 4;
+  string bonusType = 5;
+  float bonusAmount = 6;
+  int32 maxValue = 7;
+  float sportPercentage = 8;
+  float casinoPercentage = 9;
+  float virtualPercentage = 10;
+  int32 noOfSportRollover = 11;
+  int32 noOfCasinoRollover = 12;
+  int32 noOfVirtualRollover = 13;
+  int32 duration = 14;
+  int32 clientId =15;
+}
+
+message CreateCashbackBonusRequest {
+  int32 clientId = 1;
+  float minimumStake = 2;
+  int32 expiryInHours = 3;
+  int32 minimumEvents = 4;
+  float minimumOddsPerEvent = 5;
+  float minimumTotalOdds = 6;
+  string applicableBetType = 7;
+  int32 maximumWinning = 8;
+  int32 minimumSelection = 9;
+  int32 minimumLostGames = 10;
+  int32 bonusAmount = 11;
+  int32 bonusAmountMultiplier = 12;
+  int32 rolloverCount = 13;
+  string name = 14;
+  float minimumBettingStake = 15;
+
+}
+
+message CreateFreebetBonusRequest {
+  int32 clientId = 1;
+  int32 expiryInHours = 2;
+  int32 minimumEvents = 3;
+  float minimumOddsPerEvent = 4;
+  float minimumTotalOdds = 5;
+  string applicableBetType = 6;
+  int32 maximumWinning = 7;
+  int32 bonusAmount = 8;
+  float minimumBettingStake = 9;
+}
+
+message CreateReferralBonusRequest {
+  int32 clientId = 1;
+  int32 expiryInHours = 2;
+  int32 minimumEvents = 3;
+  float minimumOddsPerEvent = 4;
+  float minimumTotalOdds = 5;
+  string applicableBetType = 6;
+  int32 maximumWinning = 7;
+  int32 minimumEntryAmount = 8;
+  int32 bonusAmount = 9;
+  int32 bonusAmountMultiplier = 10;
+  int32 rolloverCount = 11;
+  string name = 12;
+  float minimumBettingStake = 13;
+
+}
+
+message CreateShareBetBonusRequest {
+  int32 clientId = 1;
+  int32 expiryInHours = 2;
+  int32 minimumEvents = 3;
+  float minimumOddsPerEvent = 4;
+  float minimumTotalOdds = 5;
+  string applicableBetType = 6;
+  int32 maximumWinning = 7;
+  int32 minimumEntryAmount = 8;
+  int32 bonusAmount = 9;
+  int32 bonusAmountMultiplier = 10;
+  int32 rolloverCount = 11;
+  string name = 12;
+  float minimumBettingStake = 13;
+
+}
+
+message CreateBonusRequest {
+  int32 clientId = 1;
+  string bonusType = 2;
+  float minimumStake = 3;
+  int32 expiryInHours = 4;
+  int32 minimumEvents = 5;
+  float minimumOddsPerEvent = 6;
+  float minimumTotalOdds = 7;
+  string applicableBetType = 8;
+  int32 maximumWinning = 9;
+  int32 bonusAmount = 10;
+  int32 status = 11;
+  string created = 12;
+  string updated = 13;
+  int32 id = 14;
+  int32 bonusAmountMultiplier = 15;
+  int32 rolloverCount = 16;
+  string name = 17;
+  float minimumBettingStake = 18;
+}
+
+message CreateNewBonusResponse {
+  int32 bonusId = 1;
+  int32 status = 2;
+  string description = 3;
+}
+
+message CreateBonusResponse {
+  int32 bonusId = 1;
+  int32 status = 2;
+  string description = 3;
+}
+
+message GetBonusRequest {
+  int32 clientId = 1;
+}
+
+message DeleteBonusRequest {
+  int32 clientId = 1;
+  string bonusType = 2;
+}
+
+message GetBonusResponse {
+  repeated CreateBonusRequest bonus = 1;
+
+}
+message GetNewBonusResponse {
+  repeated CreateNewBonusRequest bonus = 1;
+
+}
+
+message BonusResponse {
+  int32 status = 1;
+  string description = 2;
+}
+
+message GetUserBonusRequest {
+  int32 clientId = 1;
+  int64 userId = 2;
+  string bonusType = 3;
+  int32 id = 4;
+  int32 status = 5;
+}
+
+message UserBetData {
+  int32 betId = 1;
+  float stake = 2;
+  int32 rolloverCount = 3;
+  int32 status = 4;
+  int32 rolledAmount = 5;
+  int32 pendingAmount = 6;
+  string created = 7;
+}
+
+
+message GetUserBonusResponse {
+
+  repeated UserBonus bonus = 1;
+
+}
+
+message UserBonus {
+  string bonusType = 1;
+  float amount = 2;
+  int32 expiryDateInTimestamp = 3;
+  string created = 4;
+  int32 id = 5;
+  string name = 6;
+  float rolledAmount = 7;
+  float pendingAmount = 8;
+  int32 totalRolloverCount = 9;
+  int32 completedRolloverCount = 10;
+  repeated UserBetData bets = 11;
+
+}
+
+message UserBonusResponse {
+  string description = 1;
+  int32 status = 2;
+  UserBonus bonus = 3;
+}
+
+
+
+message AwardBonusRequest {
+  int32 clientId = 1;
+  int32 bonusId = 2;
+  string userId = 3;
+  float amount = 4;
+  float baseValue = 5;
+}
+
+message UserBet {
+  repeated BetSlip betslip = 1;
+  int32 clientId = 2;
+  int32 userId = 3;
+  float stake = 4;
+  float totalOdds = 5;
+  int32 bonusId = 6;
+}
+
+message BetSlip {
+  string eventName = 1;
+  string eventType = 2;
+  int64 eventId = 3;
+  int32 producerId = 4;
+  int32 marketId = 5;
+  string marketName = 6;
+  string specifier = 7;
+  string outcomeId = 8;
+  string outcomeName = 9;
+  float odds = 10;
+  int64 sportId = 11;
+
+}
+
+message DebitBonusRequest {
+  int32 clientId = 1;
+  int32 userId = 2;
+  float amount = 3;
+  string bonusType = 4;
+}
+
+message HasBonusBetResponse {
+  int32 status = 1;
+  string description = 2;
+  UserBonus bonus = 3;
+}
+
+
+message BonusStatusRequest {
+  int32 clientId = 1;
+  string bonusType = 2;
+  int32 status = 3;
+}
+
+message CreateCampaignBonusDto {
+  int32 clientId = 1;
+  string name = 2;
+  string bonusCode = 3;
+  int32 bonusId = 4;
+  string expiryDate = 5;
+}
+
+message UpdateCampaignBonusDto {
+  int32 clientId = 1;
+  string name = 2;
+  string bonusCode = 3;
+  int32 bonusId = 4;
+  string expiryDate = 5;
+  int32 id = 6;
+}
+
+message RedeemCampaignBonusDto {
+  int32 clientId = 1;
+  string    bonusCode = 2;
+  int32   userId = 3;
+}
+
+
+message DeleteCampaignBonusDto {
+  int32 clientId = 1;
+  int32 id = 2;
+}
+
+message CampaignBonusData {
+  int32 id = 1;
+  int32 clientId = 2;
+  string name = 3;
+  string bonusCode = 4;
+  CreateBonusRequest bonus = 5 ;
+  string expiryDate = 6;
+}
+
+message AllCampaignBonus {
+  repeated CampaignBonusData bonus = 1;
+}
+
+message GetBonusByClientID {
+  int32 clientId = 1;
+}
+
+message PlaceBetResponse {
+  int32 betId = 1;
+  int32 status = 2;
+  string statusDescription = 3;
+}

@@ -4,6 +4,7 @@
 github_ssh_key
 
 .env
+package-lock.json
 
 # Logs
 logs
