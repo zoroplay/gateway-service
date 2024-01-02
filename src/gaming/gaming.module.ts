@@ -12,7 +12,7 @@ import { GAMING_PACKAGE_NAME, protobufPackage } from './gaming.pb';
         transport: Transport.GRPC,
         options: {
           package: GAMING_PACKAGE_NAME,
-          protoPath: 'node_modules/sbe-service-proto/proto/gaming.proto',
+          protoPath: 'proto/gaming.proto',
         },
       },
     ]),

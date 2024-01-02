@@ -2,42 +2,33 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
-import { AgencyController } from './agency/agency.controller';
-import { CmsController } from './cms/cms.controller';
-import { SportsController } from './sports/sports.controller';
-import { UsersController } from './users/users.controller';
-import { BetsController } from './bets/bets.controller';
-import { CommunicationsController } from './communications/communications.controller';
-import { TipstersController } from './tipsters/tipsters.controller';
-import { PoolsController } from './pools/pools.controller';
-import { JackpotsController } from './jackpots/jackpots.controller';
-import { PaymentsController } from './wallets/payments.controller';
 import { AuthModule } from './auth/auth.module';
-import {GamingModule} from "./gaming/gaming.module";
-import {FixtureModule} from "./fixture/fixture.module";
-import {FixtureController} from "./fixture/fixture.controller";
-import {BettingModule} from "./betting/betting.module";
-import {BettingController} from "./betting/betting.controller";
-import {BonusModule} from "./bonus/bonus.module";
-import {BonusController} from "./bonus/bonus.controller";
+import { GamingModule } from './gaming/gaming.module';
+import { FixtureModule } from './fixture/fixture.module';
+import { FixtureController } from './fixture/fixture.controller';
+import { BettingModule } from './betting/betting.module';
+import { BettingController } from './betting/betting.controller';
+import { BonusModule } from './bonus/bonus.module';
+import { BonusController } from './bonus/bonus.controller';
+import { NotificationModule } from './notification/notification.module';
+import { WalletModule } from './wallet/wallet.module';
+import 'dotenv/config'
+import {OutrightsModule} from "./outrights/outrights.module";
 
 @Module({
-  imports: [ConfigModule.forRoot(), AuthModule, GamingModule, BettingModule, FixtureModule,BonusModule],
+  imports: [
+    ConfigModule.forRoot(),
+    AuthModule,
+    GamingModule,
+    BettingModule,
+    FixtureModule,
+    BonusModule,
+    NotificationModule,
+    WalletModule,
+      OutrightsModule,
+  ],
   controllers: [
     AppController,
-    AgencyController,
-    CmsController,
-    SportsController,
-    UsersController,
-    BetsController,
-    CommunicationsController,
-    TipstersController,
-    PoolsController,
-    JackpotsController,
-    PaymentsController,
-    BettingController,
-    FixtureController,
-    BonusController
   ],
   providers: [AppService],
 })

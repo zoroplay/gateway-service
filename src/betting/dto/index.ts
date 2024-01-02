@@ -1,5 +1,4 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { BetHistory, BetHistoryDto, BetSlip } from '../betting.pb';
 
 export class SwaggerSyncGameDto {
   @ApiProperty({ description: 'Provider name, e.g., shack-evolution' })
@@ -103,6 +102,7 @@ export class SwaggerOKGameArrayResponse {
 }
 
 export class SwaggerSettings {
+
   @ApiProperty({
     description: 'ID of the client',
   })
@@ -147,9 +147,11 @@ export class SwaggerSettings {
     description: 'Clients Currency, 3 letter ISO currency code ',
   })
   currency: string;
+
 }
 
 export class SwaggerSettingsResponse {
+
   @ApiProperty({
     description: 'ID of the client',
   })
@@ -207,11 +209,13 @@ export class SwaggerSettingsResponse {
 }
 
 export class SwaggerAllSettings {
+
   @ApiProperty({
     type: [SwaggerSettingsResponse],
     description: 'Array of Settings Objects',
   })
   settings: SwaggerSettingsResponse[];
+
 }
 
 export class SwaggerBetSlip {
@@ -221,10 +225,14 @@ export class SwaggerBetSlip {
   eventName: string;
 
   @ApiProperty({
-    description:
-      'Type of event default value is match, oter applicable values are season, stage, group',
+    description: 'Type of event default value is match, oter applicable values are season, stage, group',
   })
   eventType: string;
+
+  @ApiProperty({
+    description: 'Type of event prefix default value is sr, oter applicable values are sr',
+  })
+  eventPrefix: string;
 
   @ApiProperty({
     description: 'Event ID',
@@ -273,11 +281,12 @@ export class SwaggerBetSlip {
 }
 
 export class SwaggerPlaceBet {
+
   @ApiProperty({
     type: [SwaggerBetSlip],
     description: 'Array of Settings Bet slips',
   })
-  betslip: SwaggerBetSlip[];
+  selections: SwaggerBetSlip[];
 
   @ApiProperty({
     description: 'Unique ID of the client',
@@ -290,13 +299,17 @@ export class SwaggerPlaceBet {
   userId: number;
 
   @ApiProperty({
+    description: 'Username',
+  })
+  username: string;
+
+  @ApiProperty({
     description: 'Stake',
   })
   stake: number;
 
   @ApiProperty({
-    description:
-      'Where is this bet coming from? Web - 1, SMS - 2, Mobile App - 3',
+    description: 'Where is this bet coming from? Web - 1, SMS - 2, Mobile App - 3',
   })
   source: string;
 
@@ -307,22 +320,26 @@ export class SwaggerPlaceBet {
 }
 
 export class SwaggerPlaceBetResponse {
-  @ApiProperty({
-    description: 'Generate Bet ID',
-  })
-  betId: number;
 
   @ApiProperty({
-    description:
-      'Corresponding http status of the action, 201 for success else failure',
+    description: 'Generate Bet Slip',
+  })
+  data: any;
+
+  @ApiProperty({
+    description: 'Corresponding http status of the action, 201 for success else failure',
   })
   status: number;
 
   @ApiProperty({
-    description:
-      'Action status description, if failure, this field will contain failure reason',
+    description: 'Action status description, if failure, this field will contain failure reason',
   })
-  statusDescription: string;
+  message: string;
+
+  @ApiProperty({
+    description: 'Request success status, true or false if request was succesfull',
+  })
+  success: string;
 }
 
 export class SwaggerBetHistory {
@@ -338,8 +355,7 @@ export class SwaggerBetHistory {
   stake: number;
 
   @ApiProperty({
-    description:
-      'Where is this bet coming from? Web - 1, SMS - 2, Mobile App - 3',
+    description: 'Where is this bet coming from? Web - 1, SMS - 2, Mobile App - 3',
   })
   source: string;
 
@@ -349,8 +365,7 @@ export class SwaggerBetHistory {
   date: string;
 
   @ApiProperty({
-    description:
-      'Bet status.-1 - Cancelled, 0 - pending, 1 - Partially settled, 2 - Settled, 3 - Won, 4 - Lost, 4 - Rolled back',
+    description: 'Bet status.-1 - Cancelled, 0 - pending, 1 - Partially settled, 2 - Settled, 3 - Won, 4 - Lost, 4 - Rolled back',
   })
   status: number;
 
@@ -361,6 +376,7 @@ export class SwaggerBetHistory {
 }
 
 export class SwaggerBetHistoryResponse {
+
   @ApiProperty({
     type: [SwaggerBetHistory],
     description: 'Array of bets',
@@ -375,18 +391,238 @@ export class SwaggerBetHistoryRequest {
   userId: number;
 
   @ApiProperty({
-    description:
-      'Filter by Bet status.-1 - Cancelled, 0 - pending, 1 - Partially settled, 2 - Settled, 3 - Won, 4 - Lost, 4 - Rolled back',
+    description: 'Filter by Bet status.-1 - Cancelled, 0 - pending, 1 - Partially settled, 2 - Settled, 3 - Won, 4 - Lost, 4 - Rolled back',
   })
   status: number;
 
   @ApiProperty({
-    description: 'Filter by Date',
+    description: 'Start date to filter from',
   })
-  date: string;
+  from: string;
+
+  @ApiProperty({
+    description: 'End date to filter to',
+  })
+  to: string;
 
   @ApiProperty({
     description: 'Client ID',
   })
   clientId: number;
+
+  @ApiProperty({
+    description: 'Current page number',
+  })
+  page: number;
+
+  @ApiProperty({
+    description: 'Number of records per page',
+  })
+  perPage: number;
+
+}
+
+export class SwaggerGamingActivityRequest {
+  @ApiProperty({
+    description: 'Username',
+  })
+  username: string;
+
+  @ApiProperty({
+    description: 'Item to group result by',
+  })
+  groupBy: string;
+
+  @ApiProperty({
+    description: 'Start date to filter from',
+  })
+  from: string;
+
+  @ApiProperty({
+    description: 'End date to filter to',
+  })
+  to: string;
+
+  @ApiProperty({
+    description: 'Client ID',
+  })
+  clientId: number;
+
+  @ApiProperty({
+    description: 'Current page number',
+  })
+  page: number;
+
+  @ApiProperty({
+    description: 'Number of records per page',
+  })
+  perPage: number;
+
+  @ApiProperty({
+    description: 'Filter by event type Live, Prematch or both',
+  })
+  eventType: string;
+
+  @ApiProperty({
+    description: 'Filter by product type. Sports, Virtual, Casino',
+  })
+  productType: string;
+
+  @ApiProperty({
+    description: 'Filter by bet type',
+  })
+  betType: string;
+
+  @ApiProperty({
+    description: 'Source by which bet was placed',
+  })
+  source: string;
+
+  @ApiProperty({
+    description: 'Filter by sport',
+  })
+  sport: string;
+
+  @ApiProperty({
+    description: 'filter by league',
+  })
+  league: string;
+}
+
+export class SwaggerProbabilityBetSlipSelection {
+
+  @ApiProperty({
+    description: 'Type of event default value is match, oter applicable values are season, stage, group',
+  })
+  eventType: string;
+
+  @ApiProperty({
+    description: 'Type of event prefix default value is sr, oter applicable values are sr',
+  })
+  eventPrefix: string;
+
+  @ApiProperty({
+    description: 'Event ID',
+  })
+  eventId: number;
+
+  @ApiProperty({
+    description: 'Betradar market ID',
+  })
+  marketId: number;
+
+  @ApiProperty({
+    description: 'Market name',
+  })
+  marketName: string;
+
+  @ApiProperty({
+    description: 'Market specifier',
+  })
+  specifier: string;
+
+  @ApiProperty({
+    description: 'Outcome ID',
+  })
+  outcomeId: string;
+
+  @ApiProperty({
+    description: 'Outcome name',
+  })
+  outcomeName: string;
+
+  @ApiProperty({
+    description: 'Event odds',
+  })
+  odds: number;
+
+  @ApiProperty({
+    description: 'ID of the sport',
+  })
+  sportId: number;
+
+  @ApiProperty({
+    description: 'Current Probability of the supplied selections or betID',
+  })
+  currentProbability: number;
+
+  @ApiProperty({
+    description: 'Initial Probability of the supplied selections or betID',
+  })
+  initialProbability: number;
+}
+
+export class SwaggerProbability {
+  @ApiProperty({
+    description: 'Current Probability of the supplied selections or betID',
+  })
+  currentProbability: number;
+
+  @ApiProperty({
+    description: 'Initial Probability of the supplied selections or betID',
+  })
+  initialProbability: number;
+
+  @ApiProperty({
+    type: [SwaggerProbabilityBetSlipSelection],
+    description: 'Array of probability of each selections',
+  })
+  selections: SwaggerProbabilityBetSlipSelection[];
+}
+
+export class SwaggerUpdateBetRequest {
+  @ApiProperty({
+    description: 'Entity ID bet or bet selection ID',
+  })
+  betId: number;
+
+  @ApiProperty({
+    description: 'The bet status to update. Expecte status could either of the following won|lost|void|pending',
+  })
+  status: string;
+
+  @ApiProperty({
+    description: 'The entity type to be updated. bet or selection',
+  })
+  entityType: string;
+}
+
+export class SwaggerUpdateBetResponse {
+
+
+  @ApiProperty({
+    description: 'Corresponding http status of the action, 201|200 for success else failure',
+  })
+  status: number;
+
+  @ApiProperty({
+    description: 'Action status description, if failure, this field will contain failure reason',
+  })
+  message: string;
+
+  @ApiProperty({
+    description: 'Request success status, true or false if request was succesfull',
+  })
+  success: string;
+}
+
+export class FindBetDTO {
+  @ApiProperty({ description: 'Operator ID' })
+  clientId: number;
+
+  @ApiProperty({ description: 'Betslip ID' })
+  betslipId: string;
+}
+
+export class SwaggerFindBetResponse {
+
+  @ApiProperty({ description: 'Request status' })
+  success: boolean;
+
+  @ApiProperty({ description: 'Server response message' })
+  message: string;
+
+  @ApiProperty({ description: 'Bet object if found'})
+  bet: any;
+
 }
