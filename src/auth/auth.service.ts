@@ -5,13 +5,14 @@ import {
   AuthServiceClient,
   AUTH_SERVICE_NAME,
   ValidateResponse,
+  protobufPackage,
 } from './auth.pb';
 
 @Injectable()
 export class AuthService {
   private svc: AuthServiceClient;
 
-  @Inject(AUTH_SERVICE_NAME)
+  @Inject(protobufPackage)
   private readonly client: ClientGrpc;
 
   public onModuleInit(): void {
