@@ -111,14 +111,16 @@ export class BettingController {
   @ApiBody({ type: SwaggerPlaceBet })
   @ApiOkResponse({ type: SwaggerPlaceBetResponse })
   PlaceBet(
-    @Body() data: PlaceBetRequest,
+    @Body() data,
     @Param() param: any,
     @Ip() ip: any
     ) {
     try {
       data.clientId = param.client_id
       data.ipAddress = ip;
-      data.betType = param.bet_type;
+      data.betType = data.bet_type;
+      data.type = data.event_type
+      
       return this.bettingService.PlaceBet(data);
     } catch (error) {
       console.error(error);

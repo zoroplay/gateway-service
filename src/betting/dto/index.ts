@@ -286,7 +286,7 @@ export class SwaggerPlaceBet {
     type: [SwaggerBetSlip],
     description: 'Array of Settings Bet slips',
   })
-  betslip: SwaggerBetSlip[];
+  selections: SwaggerBetSlip[];
 
   @ApiProperty({
     description: 'Unique ID of the client',
