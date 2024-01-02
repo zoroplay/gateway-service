@@ -103,6 +103,12 @@ export interface PlaceBetRequest {
   ipAddress: string;
   betType: string;
   username: string;
+  minBonus: number;
+  maxBonus: number;
+  minOdds: number;
+  maxOdds: number;
+  type: string;
+  combos: Combo[];
 }
 
 export interface BetSlip {
@@ -128,6 +134,9 @@ export interface BetSlip {
   selectionId: string;
   eventDate: string;
   eventPrefix: string;
+}
+
+export interface Combo {
 }
 
 export interface PlaceBetResponse {

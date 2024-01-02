@@ -79,6 +79,7 @@ message GamingActivityRequest {
   string groupBy = 13;
   int32 clientID = 14;
 }
+
 message GamingActivityResponse {
   bool success = 1;
   int32 status = 2;
@@ -118,6 +119,12 @@ message PlaceBetRequest {
   string ipAddress = 6;
   string betType = 7;
   string username = 8;
+  float minBonus = 9;
+  float maxBonus = 10;
+  float minOdds = 11;
+  float maxOdds = 12;
+  string type = 13;
+  repeated Combo combos = 14;
 }
 
 message BetSlip {
@@ -143,6 +150,10 @@ message BetSlip {
   string selectionId = 20;
   string eventDate = 21;
   string eventPrefix = 22;
+}
+
+message Combo {
+
 }
 
 message PlaceBetResponse {
