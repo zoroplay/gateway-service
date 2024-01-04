@@ -187,7 +187,7 @@ export interface BetHistory {
   selections: BetSlipHistory[];
   stake: number;
   created: string;
-  status: number;
+  statusCode: number;
   cashOutAmount: number;
   statusDescription: string;
   source: string;

@@ -205,7 +205,7 @@ message BetHistory {
   repeated BetSlipHistory selections = 1;
   float stake = 2;
   string created = 3;
-  int32 status = 4;
+  int32 statusCode = 4;
   float cashOutAmount = 5;
   string statusDescription = 6;
   string source = 7;
