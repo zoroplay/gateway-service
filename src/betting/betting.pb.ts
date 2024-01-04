@@ -193,10 +193,10 @@ export interface BetHistory {
   source: string;
   totalOdd: number;
   possibleWin: number;
-  betType: string;
+  betType: number;
   betslipId: string;
   totalSelections: number;
-  betCategory: number;
+  betCategory: string;
   id: number;
   userId: number;
   username: string;
