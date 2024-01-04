@@ -201,6 +201,12 @@ export interface BetHistory {
   userId: number;
   username: string;
   winnings: number;
+  eventType: string;
+  sports: string;
+  tournaments: string;
+  events: string;
+  markets: string;
+  betCategoryDesc: string;
 }
 
 export interface BetHistoryResponse {

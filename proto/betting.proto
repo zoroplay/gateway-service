@@ -219,6 +219,12 @@ message BetHistory {
   int32 userId = 15;
   string username = 16;
   float winnings = 17;
+  string eventType = 18;
+  string sports = 19;
+  string tournaments = 20;
+  string events = 21;
+  string markets = 22;
+  string betCategoryDesc = 23;
 }
 
 message BetHistoryResponse {
