@@ -65,6 +65,7 @@ export interface FilterByMarketID {
 export interface FilterByMatchID {
   /** matchID of a particular match */
   matchID: number;
+  timeoffset: number;
 }
 
 export interface SportFilters {
@@ -158,6 +159,7 @@ export interface GetSportMenuRequest {
   start: string;
   /** end date */
   end: string;
+  timeoffset: number;
 }
 
 export interface GetHighlightsRequest {
@@ -178,6 +180,10 @@ export interface GetHighlightsRequest {
   upcoming: number;
   today: number;
   specifier: string;
+  timeoffset: number;
+  search?: string | undefined;
+  favourite?: string | undefined;
+  userId?: string | undefined;
 }
 
 export interface GetFixturesRequest {
@@ -193,6 +199,7 @@ export interface GetFixturesRequest {
   tournamentID: number;
   /** date range to fetch fixtures */
   period: string;
+  timeoffset: number;
 }
 
 export interface HighlightOutcomes {
@@ -222,6 +229,8 @@ export interface HighlightOutcomes {
   marketID: number;
   /** ID of the producer that send the odds */
   producerStatus: number;
+  /** outcome display name */
+  displayName: string;
 }
 
 export interface FixturesWithOdds {
@@ -261,8 +270,12 @@ export interface FixturesWithOdds {
   awayScore: string;
   /** Home team name */
   homeTeam: string;
+  /** Home team ID */
+  homeTeamID: number;
   /** Away team name */
   awayTeam: string;
+  /** Away team ID */
+  awayTeamID: number;
   /** Away team name */
   sportName: string;
   /** Market Outcomes */
@@ -312,14 +325,17 @@ export interface Outcome {
   oddID: number;
   /** wether odd is active (1) or not (0), only display active odds on the site */
   active: number;
+  displayName: number;
+  producerID: number;
 }
 
 export interface AvailableMarket {
   marketID: string;
   marketName: string;
-  hasSpecifier: boolean;
+  specifier: string;
   marketGroupID: string;
   outcomes: MarketOutcome[];
+  sportID: number;
 }
 
 export interface MarketGroup {
@@ -339,7 +355,7 @@ export interface Market {
   /** Market line */
   specifier: string;
   /** Array of outcomes */
-  outcome: Outcome[];
+  outcomes: Outcome[];
 }
 
 export interface MarketOutcome {
@@ -353,6 +369,8 @@ export interface MarketOutcome {
   marketName: string;
   /** market id */
   marketID: string;
+  /**  */
+  displayName: string;
 }
 
 export interface FixtureOdds {
@@ -373,7 +391,7 @@ export interface FixtureOdds {
   /** array of markets */
   markets: Market[];
   /** Fixture country */
-  country: string;
+  categoryName: string;
   /** match status code */
   statusCode: number;
   /** producer status */
@@ -390,6 +408,8 @@ export interface FixtureOdds {
   competitor2: string;
   /** Current event time e.g 00:10 */
   eventTime: string;
+  sportName: string;
+  categoryID: string;
 }
 
 export interface ResponseString {
@@ -457,6 +477,19 @@ export interface DefaultSportMarketDTO {
 
 export interface DefaultSportMarketsDTO {
   sports: DefaultSportMarketDTO[];
+}
+
+export interface AddFavouriteRequest {
+  userId: number;
+  clientId: number;
+  competitor1: number;
+  competitor2: number;
+  action: string;
+}
+
+export interface AddFavouriteResponse {
+  success: boolean;
+  message: string;
 }
 
 export const FIXTURE_PACKAGE_NAME = "fixture";
@@ -531,6 +564,8 @@ export interface FixtureServiceClient {
   deleteDefaultSportMarket(request: ID): Observable<ResponseString>;
 
   getDefaultSportMarket(request: Empty): Observable<DefaultSportMarketsDTO>;
+
+  addFavourites(request: AddFavouriteRequest): Observable<AddFavouriteResponse>;
 }
 
 export interface FixtureServiceController {
@@ -643,6 +678,10 @@ export interface FixtureServiceController {
   getDefaultSportMarket(
     request: Empty,
   ): Promise<DefaultSportMarketsDTO> | Observable<DefaultSportMarketsDTO> | DefaultSportMarketsDTO;
+
+  addFavourites(
+    request: AddFavouriteRequest,
+  ): Promise<AddFavouriteResponse> | Observable<AddFavouriteResponse> | AddFavouriteResponse;
 }
 
 export function FixtureServiceControllerMethods() {
@@ -673,6 +712,7 @@ export function FixtureServiceControllerMethods() {
       "updateDefaultSportMarket",
       "deleteDefaultSportMarket",
       "getDefaultSportMarket",
+      "addFavourites",
     ];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);

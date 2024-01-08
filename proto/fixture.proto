@@ -56,6 +56,8 @@ service FixtureService {
   rpc DeleteDefaultSportMarket(ID) returns (ResponseString){}
   rpc GetDefaultSportMarket(Empty) returns (DefaultSportMarketsDTO){}
 
+  rpc AddFavourites(AddFavouriteRequest) returns (AddFavouriteResponse) {}
+
 
 }
 
@@ -119,7 +121,7 @@ message FilterByMarketID {
 
 message FilterByMatchID {
   int32 matchID = 1; // matchID of a particular match
-
+  int32 timeoffset = 2;
 }
 
 message SportFilters {
@@ -191,11 +193,11 @@ message AvailableSportMenuResponse {
   repeated SportMenuResponse sports = 1;
 }
 
-message GetSportMenuRequest { 
+message GetSportMenuRequest {
   string period = 1; // period to display
   string start = 2; // start date
   string end = 3; //end date
-
+  int32 timeoffset = 4;
 }
 
 message GetHighlightsRequest {
@@ -209,6 +211,10 @@ message GetHighlightsRequest {
   int32 upcoming = 8;
   int32 today = 9;
   string specifier = 10;
+  int32 timeoffset = 11;
+  optional string search = 12;
+  optional string favourite = 13;
+  optional string userId = 14;
 }
 
 message GetFixturesRequest {
@@ -218,6 +224,7 @@ message GetFixturesRequest {
   int32 limit = 4; // no of records to be loaded (optional)
   int32 tournamentID = 5; // fetch fixtures of this tournamentID will
   string period = 6; // date range to fetch fixtures
+  int32 timeoffset = 7;
 }
 
 message HighlightOutcomes {
@@ -234,6 +241,7 @@ message HighlightOutcomes {
   int32 producerID = 11; // ID of the producer that send the odds
   int32 marketID = 12; // Unique ID of this market
   int32 producerStatus = 13; // ID of the producer that send the odds
+  string displayName = 14; // outcome display name
 
 }
 
@@ -256,9 +264,11 @@ message FixturesWithOdds {
   string eventStatus = 16; // event status of a live game available values Live,1st Half,2nd Half,Break,Overtime
   string awayScore = 17; // Current score of the away team
   string homeTeam = 18; // Home team name
-  string awayTeam = 19; // Away team name
-  string sportName = 20; // Away team name
-  repeated HighlightOutcomes outcomes = 21; // Market Outcomes
+  int32 homeTeamID = 19; // Home team ID
+  string awayTeam = 20; // Away team name
+  int32 awayTeamID = 21; // Away team ID
+  string sportName = 22; // Away team name
+  repeated HighlightOutcomes outcomes = 23; // Market Outcomes
 }
 
 message GetHighlightsResponse {
@@ -288,14 +298,17 @@ message Outcome {
   float previousOdds = 5; // Previous odds of the outcome
   int32 oddID = 6; // Odd ID
   int32 active = 7; // wether odd is active (1) or not (0), only display active odds on the site
+  int32 displayName = 8;
+  int32 producerID = 9;
 }
 
 message AvailableMarket {
   string marketID = 1;
   string marketName = 2;
-  bool   hasSpecifier = 3;
+  string specifier = 3;
   string marketGroupID = 4;
   repeated MarketOutcome outcomes = 5;
+  int32 sportID = 6;
 }
 
 message MarketGroup {
@@ -309,7 +322,7 @@ message Market {
   string statusName = 3; // Market status name
   int32 status = 4; // Market status, 0 - active, 1 - suspended, 2 - deactivated, 5 - handedover, only displaye markets with status 0 on the site
   string specifier = 5; // Market line
-  repeated Outcome outcome = 6; // Array of outcomes
+  repeated Outcome outcomes = 6; // Array of outcomes
 }
 
 message MarketOutcome {
@@ -319,10 +332,12 @@ message MarketOutcome {
   int32 outcomeID = 2;
   // market outcome name
   string outcomeName = 3;
-  //market name
+  // market name
   string marketName = 4;
   // market id
   string marketID = 5;
+  // 
+  string displayName = 6;
 }
 
 message FixtureOdds {
@@ -335,16 +350,17 @@ message FixtureOdds {
   string date = 6; // Fixture date
   int32 producerID = 7; // Unique ID of the producer that sent the odd
   repeated Market markets = 8; // array of markets
-  string country = 9; // Fixture country
+  string categoryName = 9; // Fixture country
   int32 statusCode = 10; // match status code
   int32 producerStatus = 11; // producer status
-
   string matchStatus = 12; // Match status description, available values NotStarted,Live,Ended,Suspended
   string homeScore = 13; // Current score of the home team
   string awayScore = 14; // Current score of the away team
   string competitor1 = 15; // Home team name
   string competitor2 = 16; // Away team name
   string eventTime = 17; //Current event time e.g 00:10
+  string sportName = 18;
+  string categoryID = 19;
 }
 
 message ResponseString {
@@ -411,4 +427,17 @@ message DefaultSportMarketDTO {
 
 message DefaultSportMarketsDTO {
   repeated DefaultSportMarketDTO sports = 1;
+}
+
+message AddFavouriteRequest {
+  int32 userId = 1;
+  int32 clientId = 2;
+  int32 competitor1 = 3;
+  int32 competitor2 = 4;
+  string action = 5;
+}
+
+message AddFavouriteResponse {
+  bool success = 1;
+  string message = 2;
 }

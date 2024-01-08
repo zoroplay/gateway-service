@@ -1,8 +1,8 @@
 /* eslint-disable */
-import { GrpcMethod, GrpcStreamMethod } from '@nestjs/microservices';
-import { Observable } from 'rxjs';
+import { GrpcMethod, GrpcStreamMethod } from "@nestjs/microservices";
+import { Observable } from "rxjs";
 
-export const protobufPackage = 'bonus';
+export const protobufPackage = "bonus";
 
 export interface CreateFirstDepositBonusRequest {
   clientId: number;
@@ -295,50 +295,32 @@ export interface PlaceBetResponse {
   statusDescription: string;
 }
 
-export const BONUS_PACKAGE_NAME = 'bonus';
+export const BONUS_PACKAGE_NAME = "bonus";
 
 export interface BonusServiceClient {
-  createCashbackBonus(
-    request: CreateCashbackBonusRequest,
-  ): Observable<CreateBonusResponse>;
+  createCashbackBonus(request: CreateCashbackBonusRequest): Observable<CreateBonusResponse>;
+
+  createNewBonus(request: CreateNewBonusRequest): Observable<CreateBonusResponse>;
 
   createBonus(request: CreateNewBonusRequest): Observable<CreateBonusResponse>;
 
-  updateCashbackBonus(
-    request: CreateCashbackBonusRequest,
-  ): Observable<CreateBonusResponse>;
+  updateCashbackBonus(request: CreateCashbackBonusRequest): Observable<CreateBonusResponse>;
 
-  createFirstDepositBonus(
-    request: CreateFirstDepositBonusRequest,
-  ): Observable<CreateBonusResponse>;
+  createFirstDepositBonus(request: CreateFirstDepositBonusRequest): Observable<CreateBonusResponse>;
 
-  updateFirstDepositBonus(
-    request: CreateFirstDepositBonusRequest,
-  ): Observable<CreateBonusResponse>;
+  updateFirstDepositBonus(request: CreateFirstDepositBonusRequest): Observable<CreateBonusResponse>;
 
-  createFreebetBonus(
-    request: CreateFreebetBonusRequest,
-  ): Observable<CreateBonusResponse>;
+  createFreebetBonus(request: CreateFreebetBonusRequest): Observable<CreateBonusResponse>;
 
-  updateFreebetBonus(
-    request: CreateFreebetBonusRequest,
-  ): Observable<CreateBonusResponse>;
+  updateFreebetBonus(request: CreateFreebetBonusRequest): Observable<CreateBonusResponse>;
 
-  createReferralBonus(
-    request: CreateReferralBonusRequest,
-  ): Observable<CreateBonusResponse>;
+  createReferralBonus(request: CreateReferralBonusRequest): Observable<CreateBonusResponse>;
 
-  updateReferralBonus(
-    request: CreateReferralBonusRequest,
-  ): Observable<CreateBonusResponse>;
+  updateReferralBonus(request: CreateReferralBonusRequest): Observable<CreateBonusResponse>;
 
-  createShareBetBonus(
-    request: CreateShareBetBonusRequest,
-  ): Observable<CreateBonusResponse>;
+  createShareBetBonus(request: CreateShareBetBonusRequest): Observable<CreateBonusResponse>;
 
-  updateShareBetBonus(
-    request: CreateShareBetBonusRequest,
-  ): Observable<CreateBonusResponse>;
+  updateShareBetBonus(request: CreateShareBetBonusRequest): Observable<CreateBonusResponse>;
 
   getBonus(request: GetBonusRequest): Observable<GetBonusResponse>;
 
@@ -350,25 +332,15 @@ export interface BonusServiceClient {
 
   placeBonusBet(request: UserBet): Observable<PlaceBetResponse>;
 
-  updateBonusStatus(
-    request: BonusStatusRequest,
-  ): Observable<CreateBonusResponse>;
+  updateBonusStatus(request: BonusStatusRequest): Observable<CreateBonusResponse>;
 
-  createCampaignBonus(
-    request: CreateCampaignBonusDto,
-  ): Observable<CreateBonusResponse>;
+  createCampaignBonus(request: CreateCampaignBonusDto): Observable<CreateBonusResponse>;
 
-  updateCampaignBonus(
-    request: UpdateCampaignBonusDto,
-  ): Observable<CreateBonusResponse>;
+  updateCampaignBonus(request: UpdateCampaignBonusDto): Observable<CreateBonusResponse>;
 
-  deleteCampaignBonus(
-    request: DeleteCampaignBonusDto,
-  ): Observable<CreateBonusResponse>;
+  deleteCampaignBonus(request: DeleteCampaignBonusDto): Observable<CreateBonusResponse>;
 
-  redeemCampaignBonus(
-    request: RedeemCampaignBonusDto,
-  ): Observable<CreateBonusResponse>;
+  redeemCampaignBonus(request: RedeemCampaignBonusDto): Observable<CreateBonusResponse>;
 
   getCampaignBonus(request: GetBonusByClientID): Observable<AllCampaignBonus>;
 }
@@ -376,206 +348,128 @@ export interface BonusServiceClient {
 export interface BonusServiceController {
   createCashbackBonus(
     request: CreateCashbackBonusRequest,
-  ):
-    | Promise<CreateBonusResponse>
-    | Observable<CreateBonusResponse>
-    | CreateBonusResponse;
+  ): Promise<CreateBonusResponse> | Observable<CreateBonusResponse> | CreateBonusResponse;
+
+  createNewBonus(
+    request: CreateNewBonusRequest,
+  ): Promise<CreateBonusResponse> | Observable<CreateBonusResponse> | CreateBonusResponse;
 
   createBonus(
-    request: CreateBonusRequest,
-  ):
-    | Promise<CreateBonusResponse>
-    | Observable<CreateBonusResponse>
-    | CreateBonusResponse;
+    request: CreateNewBonusRequest,
+  ): Promise<CreateBonusResponse> | Observable<CreateBonusResponse> | CreateBonusResponse;
 
   updateCashbackBonus(
     request: CreateCashbackBonusRequest,
-  ):
-    | Promise<CreateBonusResponse>
-    | Observable<CreateBonusResponse>
-    | CreateBonusResponse;
+  ): Promise<CreateBonusResponse> | Observable<CreateBonusResponse> | CreateBonusResponse;
 
   createFirstDepositBonus(
     request: CreateFirstDepositBonusRequest,
-  ):
-    | Promise<CreateBonusResponse>
-    | Observable<CreateBonusResponse>
-    | CreateBonusResponse;
+  ): Promise<CreateBonusResponse> | Observable<CreateBonusResponse> | CreateBonusResponse;
 
   updateFirstDepositBonus(
     request: CreateFirstDepositBonusRequest,
-  ):
-    | Promise<CreateBonusResponse>
-    | Observable<CreateBonusResponse>
-    | CreateBonusResponse;
+  ): Promise<CreateBonusResponse> | Observable<CreateBonusResponse> | CreateBonusResponse;
 
   createFreebetBonus(
     request: CreateFreebetBonusRequest,
-  ):
-    | Promise<CreateBonusResponse>
-    | Observable<CreateBonusResponse>
-    | CreateBonusResponse;
+  ): Promise<CreateBonusResponse> | Observable<CreateBonusResponse> | CreateBonusResponse;
 
   updateFreebetBonus(
     request: CreateFreebetBonusRequest,
-  ):
-    | Promise<CreateBonusResponse>
-    | Observable<CreateBonusResponse>
-    | CreateBonusResponse;
+  ): Promise<CreateBonusResponse> | Observable<CreateBonusResponse> | CreateBonusResponse;
 
   createReferralBonus(
     request: CreateReferralBonusRequest,
-  ):
-    | Promise<CreateBonusResponse>
-    | Observable<CreateBonusResponse>
-    | CreateBonusResponse;
+  ): Promise<CreateBonusResponse> | Observable<CreateBonusResponse> | CreateBonusResponse;
 
   updateReferralBonus(
     request: CreateReferralBonusRequest,
-  ):
-    | Promise<CreateBonusResponse>
-    | Observable<CreateBonusResponse>
-    | CreateBonusResponse;
+  ): Promise<CreateBonusResponse> | Observable<CreateBonusResponse> | CreateBonusResponse;
 
   createShareBetBonus(
     request: CreateShareBetBonusRequest,
-  ):
-    | Promise<CreateBonusResponse>
-    | Observable<CreateBonusResponse>
-    | CreateBonusResponse;
+  ): Promise<CreateBonusResponse> | Observable<CreateBonusResponse> | CreateBonusResponse;
 
   updateShareBetBonus(
     request: CreateShareBetBonusRequest,
-  ):
-    | Promise<CreateBonusResponse>
-    | Observable<CreateBonusResponse>
-    | CreateBonusResponse;
+  ): Promise<CreateBonusResponse> | Observable<CreateBonusResponse> | CreateBonusResponse;
 
-  getBonus(
-    request: GetBonusRequest,
-  ):
-    | Promise<GetBonusResponse>
-    | Observable<GetBonusResponse>
-    | GetBonusResponse;
+  getBonus(request: GetBonusRequest): Promise<GetBonusResponse> | Observable<GetBonusResponse> | GetBonusResponse;
 
-  deleteBonus(
-    request: DeleteBonusRequest,
-  ): Promise<BonusResponse> | Observable<BonusResponse> | BonusResponse;
+  deleteBonus(request: DeleteBonusRequest): Promise<BonusResponse> | Observable<BonusResponse> | BonusResponse;
 
   getUserBonus(
     request: GetUserBonusRequest,
-  ):
-    | Promise<GetUserBonusResponse>
-    | Observable<GetUserBonusResponse>
-    | GetUserBonusResponse;
+  ): Promise<GetUserBonusResponse> | Observable<GetUserBonusResponse> | GetUserBonusResponse;
 
   awardBonus(
     request: AwardBonusRequest,
-  ):
-    | Promise<UserBonusResponse>
-    | Observable<UserBonusResponse>
-    | UserBonusResponse;
+  ): Promise<UserBonusResponse> | Observable<UserBonusResponse> | UserBonusResponse;
 
-  placeBonusBet(
-    request: UserBet,
-  ):
-    | Promise<PlaceBetResponse>
-    | Observable<PlaceBetResponse>
-    | PlaceBetResponse;
+  placeBonusBet(request: UserBet): Promise<PlaceBetResponse> | Observable<PlaceBetResponse> | PlaceBetResponse;
 
   updateBonusStatus(
     request: BonusStatusRequest,
-  ):
-    | Promise<CreateBonusResponse>
-    | Observable<CreateBonusResponse>
-    | CreateBonusResponse;
+  ): Promise<CreateBonusResponse> | Observable<CreateBonusResponse> | CreateBonusResponse;
 
   createCampaignBonus(
     request: CreateCampaignBonusDto,
-  ):
-    | Promise<CreateBonusResponse>
-    | Observable<CreateBonusResponse>
-    | CreateBonusResponse;
+  ): Promise<CreateBonusResponse> | Observable<CreateBonusResponse> | CreateBonusResponse;
 
   updateCampaignBonus(
     request: UpdateCampaignBonusDto,
-  ):
-    | Promise<CreateBonusResponse>
-    | Observable<CreateBonusResponse>
-    | CreateBonusResponse;
+  ): Promise<CreateBonusResponse> | Observable<CreateBonusResponse> | CreateBonusResponse;
 
   deleteCampaignBonus(
     request: DeleteCampaignBonusDto,
-  ):
-    | Promise<CreateBonusResponse>
-    | Observable<CreateBonusResponse>
-    | CreateBonusResponse;
+  ): Promise<CreateBonusResponse> | Observable<CreateBonusResponse> | CreateBonusResponse;
 
   redeemCampaignBonus(
     request: RedeemCampaignBonusDto,
-  ):
-    | Promise<CreateBonusResponse>
-    | Observable<CreateBonusResponse>
-    | CreateBonusResponse;
+  ): Promise<CreateBonusResponse> | Observable<CreateBonusResponse> | CreateBonusResponse;
 
   getCampaignBonus(
     request: GetBonusByClientID,
-  ):
-    | Promise<AllCampaignBonus>
-    | Observable<AllCampaignBonus>
-    | AllCampaignBonus;
+  ): Promise<AllCampaignBonus> | Observable<AllCampaignBonus> | AllCampaignBonus;
 }
 
 export function BonusServiceControllerMethods() {
   return function (constructor: Function) {
     const grpcMethods: string[] = [
-      'createCashbackBonus',
-      'createBonus',
-      'updateCashbackBonus',
-      'createFirstDepositBonus',
-      'updateFirstDepositBonus',
-      'createFreebetBonus',
-      'updateFreebetBonus',
-      'createReferralBonus',
-      'updateReferralBonus',
-      'createShareBetBonus',
-      'updateShareBetBonus',
-      'getBonus',
-      'deleteBonus',
-      'getUserBonus',
-      'awardBonus',
-      'placeBonusBet',
-      'updateBonusStatus',
-      'createCampaignBonus',
-      'updateCampaignBonus',
-      'deleteCampaignBonus',
-      'redeemCampaignBonus',
-      'getCampaignBonus',
+      "createCashbackBonus",
+      "createNewBonus",
+      "createBonus",
+      "updateCashbackBonus",
+      "createFirstDepositBonus",
+      "updateFirstDepositBonus",
+      "createFreebetBonus",
+      "updateFreebetBonus",
+      "createReferralBonus",
+      "updateReferralBonus",
+      "createShareBetBonus",
+      "updateShareBetBonus",
+      "getBonus",
+      "deleteBonus",
+      "getUserBonus",
+      "awardBonus",
+      "placeBonusBet",
+      "updateBonusStatus",
+      "createCampaignBonus",
+      "updateCampaignBonus",
+      "deleteCampaignBonus",
+      "redeemCampaignBonus",
+      "getCampaignBonus",
     ];
     for (const method of grpcMethods) {
-      const descriptor: any = Reflect.getOwnPropertyDescriptor(
-        constructor.prototype,
-        method,
-      );
-      GrpcMethod('BonusService', method)(
-        constructor.prototype[method],
-        method,
-        descriptor,
-      );
+      const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
+      GrpcMethod("BonusService", method)(constructor.prototype[method], method, descriptor);
     }
     const grpcStreamMethods: string[] = [];
     for (const method of grpcStreamMethods) {
-      const descriptor: any = Reflect.getOwnPropertyDescriptor(
-        constructor.prototype,
-        method,
-      );
-      GrpcStreamMethod('BonusService', method)(
-        constructor.prototype[method],
-        method,
-        descriptor,
-      );
+      const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
+      GrpcStreamMethod("BonusService", method)(constructor.prototype[method], method, descriptor);
     }
   };
 }
 
-export const BONUS_SERVICE_NAME = 'BonusService';
+export const BONUS_SERVICE_NAME = "BonusService";

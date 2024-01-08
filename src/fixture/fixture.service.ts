@@ -1,5 +1,6 @@
 import {Inject, Injectable, OnModuleInit} from '@nestjs/common';
 import {
+  AddFavouriteRequest,
   AddSpecifierRequest,
   CreateMarketGroupRequest,
   CreateOutcomeAliasRequest, DefaultSportMarketDTO,
@@ -73,10 +74,10 @@ export class FixtureService implements OnModuleInit {
     return this.service.getFixtures(data);
   }
 
-  GetFixtureWithOdds(matchID: number) {
+  GetFixtureWithOdds(matchID: number,timeoffset: number) {
 
     console.log('GetFixtureWithOdds ');
-    return this.service.getFixtureWithOdds({matchID: matchID});
+    return this.service.getFixtureWithOdds({matchID: matchID, timeoffset: timeoffset});
   }
 
   UpdateMarketPriority(data: UpdateMarketRequest) {
@@ -192,6 +193,14 @@ export class FixtureService implements OnModuleInit {
 
     console.log('deleteDefaultSportMarket ');
     return this.service.deleteDefaultSportMarket({id: sportID});
+
+  }
+
+
+  saveFavourite(data: AddFavouriteRequest) {
+
+    console.log('add favourite ');
+    return this.service.addFavourites(data);
 
   }
 

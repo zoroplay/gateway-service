@@ -14,6 +14,7 @@ export interface Settings {
   maximumSelections: number;
   mtsLimitID: number;
   currency: string;
+  url: string;
 }
 
 export interface SettingsResponse {
@@ -26,6 +27,7 @@ export interface SettingsResponse {
   maximumSelections: number;
   mtsLimitID: number;
   currency: string;
+  url: string;
   created: string;
   updated: string;
 }
@@ -45,17 +47,68 @@ export interface BetID {
   betID: number;
 }
 
+export interface GamingActivityRequest {
+  period: string;
+  username: string;
+  from: string;
+  to: string;
+  betType: string;
+  eventType: string;
+  sport: string;
+  league: string;
+  market: string;
+  state: string;
+  productType: string;
+  source: string;
+  groupBy: string;
+  clientID: number;
+}
+
+export interface GamingActivityResponse {
+  success: boolean;
+  status: number;
+  message: string;
+  data?: GamingActivity | undefined;
+  error: string;
+}
+
+export interface UpdateBetRequest {
+  betId: number;
+  status: string;
+  entityType: string;
+  clientId: number;
+}
+
+export interface UpdateBetResponse {
+  success: boolean;
+  status: number;
+  message: string;
+}
+
+export interface BookingCode {
+  code: string;
+  clientId: number;
+}
+
 export interface StatusResponse {
   response: string;
 }
 
 export interface PlaceBetRequest {
-  betslip: BetSlip[];
+  selections: BetSlip[];
   clientId: number;
   userId: number;
   stake: number;
   source: string;
   ipAddress: string;
+  betType: string;
+  username: string;
+  minBonus: number;
+  maxBonus: number;
+  minOdds: number;
+  maxOdds: number;
+  type: string;
+  combos: Combo[];
 }
 
 export interface BetSlip {
@@ -70,18 +123,39 @@ export interface BetSlip {
   outcomeName: string;
   odds: number;
   sportId: number;
+  sport: string;
+  tournament: string;
+  category: string;
+  matchId: number;
+  awayTeam: string;
+  homeTeam: string;
+  type: string;
+  fixed: boolean;
+  selectionId: string;
+  eventDate: string;
+  eventPrefix: string;
+}
+
+export interface Combo {
 }
 
 export interface PlaceBetResponse {
-  betId: number;
+  success: boolean;
   status: number;
-  statusDescription: number;
+  message: string;
+  data?: BetHistory | undefined;
 }
 
 export interface BetHistoryRequest {
   userId: number;
   clientId: number;
-  date: string;
+  from: string;
+  to: string;
+  status: string;
+  page: number;
+  perPage: number;
+  betslipId: string;
+  username: string;
 }
 
 export interface BetSlipHistory {
@@ -96,21 +170,103 @@ export interface BetSlipHistory {
   outcomeName: string;
   odds: number;
   sportId: number;
-  status: number;
+  status: string;
   statusDescription: string;
+  won: number;
+  type: string;
+  sport: string;
+  tournament: string;
+  category: string;
+  matchId: string;
+  eventDate: string;
+  selectionId: string;
+  eventPrefix: string;
 }
 
 export interface BetHistory {
-  betslip: BetSlipHistory[];
+  selections: BetSlipHistory[];
   stake: number;
-  date: string;
+  created: string;
   status: number;
+  cashOutAmount: number;
   statusDescription: string;
   source: string;
+  totalOdd: number;
+  possibleWin: number;
+  betType: string;
+  betslipId: string;
+  totalSelections: number;
+  betCategory: number;
+  id: number;
+  userId: number;
+  username: string;
+  winnings: number;
 }
 
 export interface BetHistoryResponse {
-  data: BetHistoryResponse[];
+  bets: BetHistory[];
+  /** Last pagination page */
+  lastPage: number;
+  /** From data index */
+  from: number;
+  /** to data index */
+  to: number;
+  /** how many records are remaining */
+  remainingRecords: number;
+  totalRecords: number;
+  totalStake: number;
+  currentPage: number;
+}
+
+export interface ProbabilityBetSlipSelection {
+  eventId: number;
+  marketId: number;
+  marketName: string;
+  specifier: string;
+  outcomeId: string;
+  outcomeName: string;
+  sportId: number;
+  currentProbability: number;
+  initialProbability: number;
+}
+
+export interface Probability {
+  probability: number;
+  currentProbability: number;
+  initialProbability: number;
+  selections: ProbabilityBetSlipSelection[];
+}
+
+export interface FindBetRequest {
+  clientId: number;
+  betslipId: string;
+}
+
+export interface FindBetResponse {
+  bet?: BetHistory | undefined;
+  message: string;
+  status: boolean;
+}
+
+export interface GamingActivity {
+  totalStake: number;
+  totalWinnings: number;
+  totalTickets: number;
+  bets: GamingActivityBets[];
+}
+
+export interface GamingActivityBets {
+  month: string;
+  date: string;
+  turnover: number;
+  total: number;
+  average: number;
+  winnings: number;
+  source: string;
+  betType: string;
+  marketName: string;
+  sportName: string;
+  tournamentName: string;
 }
 
 export const BETTING_PACKAGE_NAME = "betting";
@@ -128,7 +284,19 @@ export interface BettingServiceClient {
 
   placeBet(request: PlaceBetRequest): Observable<PlaceBetResponse>;
 
+  bookBet(request: PlaceBetRequest): Observable<PlaceBetResponse>;
+
   betHistory(request: BetHistoryRequest): Observable<BetHistoryResponse>;
+
+  findBet(request: FindBetRequest): Observable<FindBetResponse>;
+
+  updateBet(request: UpdateBetRequest): Observable<UpdateBetResponse>;
+
+  getProbabilityFromBetId(request: BetID): Observable<Probability>;
+
+  getBooking(request: BookingCode): Observable<PlaceBetResponse>;
+
+  gamingActivity(request: GamingActivityRequest): Observable<GamingActivityResponse>;
 }
 
 export interface BettingServiceController {
@@ -144,9 +312,23 @@ export interface BettingServiceController {
 
   placeBet(request: PlaceBetRequest): Promise<PlaceBetResponse> | Observable<PlaceBetResponse> | PlaceBetResponse;
 
+  bookBet(request: PlaceBetRequest): Promise<PlaceBetResponse> | Observable<PlaceBetResponse> | PlaceBetResponse;
+
   betHistory(
     request: BetHistoryRequest,
   ): Promise<BetHistoryResponse> | Observable<BetHistoryResponse> | BetHistoryResponse;
+
+  findBet(request: FindBetRequest): Promise<FindBetResponse> | Observable<FindBetResponse> | FindBetResponse;
+
+  updateBet(request: UpdateBetRequest): Promise<UpdateBetResponse> | Observable<UpdateBetResponse> | UpdateBetResponse;
+
+  getProbabilityFromBetId(request: BetID): Promise<Probability> | Observable<Probability> | Probability;
+
+  getBooking(request: BookingCode): Promise<PlaceBetResponse> | Observable<PlaceBetResponse> | PlaceBetResponse;
+
+  gamingActivity(
+    request: GamingActivityRequest,
+  ): Promise<GamingActivityResponse> | Observable<GamingActivityResponse> | GamingActivityResponse;
 }
 
 export function BettingServiceControllerMethods() {
@@ -158,7 +340,13 @@ export function BettingServiceControllerMethods() {
       "getAllSettings",
       "cancelBet",
       "placeBet",
+      "bookBet",
       "betHistory",
+      "findBet",
+      "updateBet",
+      "getProbabilityFromBetId",
+      "getBooking",
+      "gamingActivity",
     ];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);

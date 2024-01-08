@@ -2,6 +2,8 @@ import {Body, Controller, Delete, Get, Logger, Param, Post, Put, Query} from '@n
 import {ApiBody, ApiOkResponse, ApiOperation, ApiParam, ApiQuery, ApiTags} from '@nestjs/swagger';
 import {FixtureService} from './fixture.service';
 import {
+  AddFavouriteResponse,
+  AddFavouritesDTO,
   SwaggerAddSpecifierRequest,
   SwaggerAllMarketsResponse,
   SwaggerAllSportResponse,
@@ -17,10 +19,11 @@ import {
   SwaggerMarketGroupResponse,
   SwaggerResponseString,
   SwaggerSportMenuRequest,
-  SwaggerSportMenuResponse,
+  SwaggerSportMenuResponse, SwaggerTimeoffset,
   SwaggerUpdateMarketRequest
 } from "./dto";
 import {
+  AddFavouriteRequest,
   AddSpecifierRequest,
   CreateMarketGroupRequest,
   CreateOutcomeAliasRequest, DefaultSportMarketDTO,
@@ -136,6 +139,9 @@ export class FixtureController {
   @ApiQuery({ name: 'countryCode', description: 'ID of the countryCode' })
   @ApiQuery({ name: 'upcoming', description: 'Default is 0, If value is 1 then get Upcoming matches (start date is >= tomorrow )' })
   @ApiQuery({ name: 'today', description: 'Default is 0, If value is 1 then get todays matches (start date is todat )' })
+  @ApiQuery({ name: 'timeoffset', description: 'Default is 0, GMT timeoffset' })
+  @ApiQuery({ name: 'favourite', description: 'Default is 0, Query fixtures by favourite teams' })
+  @ApiQuery({ name: 'userId', description: 'UserID to query for favourites' })
   @ApiOkResponse({ type: SwaggerHighlightsResponse })
   GetHighlights(
     @Param() params: any,
@@ -152,10 +158,14 @@ export class FixtureController {
         marketID : query.marketID ? query.marketID : 1,
         page : query.page ? query.page : 1,
         perPage : query.perPage ? query.perPage : 10,
-        sportID : params.sportID ? params.sportID : 1,
+        sportID : params.sport_id ? params.sport_id : 1,
         upcoming : query.upcoming ? query.upcoming : 0,
         today : query.today ? query.today : 0,
+        timeoffset: query.timeoffset ? query.timeoffset : 0,
         specifier: query.specifier ? query.specifier : "",
+        search: query.search ? query.search : "",
+        favourite: query.favourite ? query.favourite : 0,
+        userId: query.userId ? query.userId : "",
       }
 
       return this.fixtureService.GetHighlights(rq);
@@ -178,10 +188,12 @@ export class FixtureController {
   @ApiQuery({ name: 'perPage', description: 'record per page' })
   @ApiQuery({ name: 'tournamentID', description: 'filter by tournamentID' })
   @ApiQuery({ name: 'countryCode', description: 'ID of the countryCode' })
+  @ApiQuery({ name: 'timeoffset', description: 'Default is 0, GMT timeoffset' })
+  @ApiQuery({ name: 'search', description: 'Search string for team name, tournament or category' })
   GetLiveHighlights(@Param() params: any,@Query() query: any) {
 
     try {
-      logger.log('fetching live highlights ');
+      logger.log('fetching live highlights');
 
 
       let rq = {
@@ -191,10 +203,12 @@ export class FixtureController {
         marketID : query.marketID ? query.marketID : 1,
         page : query.page ? query.page : 1,
         perPage : query.perPage ? query.perPage : 100,
-        sportID : params.sportID ? params.sportID : 0,
+        sportID : params.sport_id ? params.sport_id : 0,
         upcoming :  0,
         today :  0,
+        timeoffset: query.timeoffset ? query.timeoffset : 0,
         specifier: query.specifier ? query.specifier : "",
+        search: query.search ? query.search : "",
       }
 
       return this.fixtureService.GetLiveHighlights(rq);
@@ -211,12 +225,15 @@ export class FixtureController {
   @Get('/match/:match_id')
   @ApiOperation({ summary: 'Get all match odds ', description: 'This endpoint gets odds for all the markets for the supplied matchID' })
   @ApiParam({ name: 'match_id', type: 'number', description:' Unique ID of the match'})
+  @ApiQuery({ type: SwaggerTimeoffset })
   @ApiOkResponse({ type: SwaggerFixtureOdds })
-  GetFixtureWithOdds(@Param() params: any) {
+  GetFixtureWithOdds(@Param() params: any, @Query() query: any) {
+
+    let timeoffset = query.timeoffset ? query.timeoffset : 0;
 
     try {
 
-      return this.fixtureService.GetFixtureWithOdds(params.match_id);
+      return this.fixtureService.GetFixtureWithOdds(params.match_id,timeoffset);
 
     } catch (error) {
 
@@ -241,7 +258,8 @@ export class FixtureController {
         markets : query.markets ? query.markets : '',
         limit : query.limit ? query.limit : 100,
         sportID : query.sportID ? query.sportID : 1,
-        period: query.period ? query.period : 'all'
+        period: query.period ? query.period : 'all',
+        timeoffset: query.timeoffset ? query.timeoffset : 0
       }
 
       return this.fixtureService.GetFixtures(rq);
@@ -549,4 +567,21 @@ export class FixtureController {
 
   }
 
+  @Post('/sports/add-favourite')
+  @ApiOperation({ summary: 'Save Favourite Sports Team for userl', description: 'This endpoint saves selected sport teams as favourites for the authenticated user' })
+  @ApiBody({ type: AddFavouritesDTO })
+  @ApiOkResponse({ type: AddFavouriteResponse })
+  addFavourites(@Body() data: AddFavouriteRequest) {
+
+    try {
+
+      return this.fixtureService.saveFavourite(data);
+
+    } catch (error) {
+
+      console.error(error);
+
+    }
+
+  }
 }

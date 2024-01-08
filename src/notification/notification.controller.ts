@@ -17,36 +17,36 @@ import {
   ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
-import { SMSService } from './sms.service';
+import { NotificationService } from './notification.service';
+import { SaveSettingsRequest, SendSmsRequest } from './noti.pb';
 import {
   SwaggerSaveSettingsRequest,
   SwaggerSaveSettingsResponse,
   SwaggerSendSMSRequest,
   SwaggerSendSMSResponse,
 } from './dto';
-import { SaveSettingsRequest, SendSMSRequest } from './sms.pb';
 
-@ApiTags('Sms Service APIs')
-@Controller('sms-service')
-export class SMSController {
-  constructor(private readonly smsService: SMSService) {}
+@ApiTags('Notification Service APIs')
+@Controller('notification')
+export class NotificationController {
+  constructor(private readonly notiService: NotificationService) {}
 
-  @Post('/')
+  @Post('/send-sms')
   @ApiOperation({
     summary: 'Send SMS ',
     description: 'This endpoint sends sms through the Mtech API',
   })
   @ApiBody({ type: SwaggerSendSMSRequest })
   @ApiOkResponse({ type: SwaggerSendSMSResponse })
-  SendSMS(@Body() data: SendSMSRequest) {
+  SendSMS(@Body() data: SendSmsRequest) {
     try {
-      return this.smsService.SendSMS(data);
+      return this.notiService.sendSMS(data);
     } catch (error) {
       console.error(error);
     }
   }
 
-  @Put('/')
+  @Put('/save-settings')
   @ApiOperation({
     summary: 'Save Settings',
     description: 'This endpoint saves/edits settings for SMS providers',
@@ -55,7 +55,7 @@ export class SMSController {
   @ApiOkResponse({ type: SwaggerSaveSettingsResponse })
   SaveSettings(@Body() data: SaveSettingsRequest) {
     try {
-      return this.smsService.SaveSettings(data);
+      return this.notiService.saveSettings(data);
     } catch (error) {
       console.error(error);
     }

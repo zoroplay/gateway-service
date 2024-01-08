@@ -9,7 +9,13 @@ service BettingService {
   rpc GetAllSettings (GetAll) returns (AllSettingsResponse) {}
   rpc CancelBet (BetID) returns (StatusResponse) {}
   rpc PlaceBet (PlaceBetRequest) returns (PlaceBetResponse) {}
+  rpc BookBet (PlaceBetRequest) returns (PlaceBetResponse) {}
   rpc BetHistory (BetHistoryRequest) returns (BetHistoryResponse) {}
+  rpc FindBet (FindBetRequest) returns (FindBetResponse) {}
+  rpc UpdateBet (UpdateBetRequest) returns (UpdateBetResponse) {}
+  rpc GetProbabilityFromBetID(BetID) returns (Probability) {}
+  rpc GetBooking(BookingCode) returns (PlaceBetResponse) {}
+  rpc GamingActivity(GamingActivityRequest) returns (GamingActivityResponse) {}
 
 }
 
@@ -23,6 +29,7 @@ message Settings {
   int32 maximumSelections = 7;
   int32 mtsLimitID = 8;
   string currency = 9;
+  string url = 10;
 }
 
 message SettingsResponse {
@@ -35,8 +42,9 @@ message SettingsResponse {
   int32 maximumSelections = 7;
   int32 mtsLimitID = 8;
   string currency = 9;
-  string created = 10;
-  string updated = 11;
+  string url = 10;
+  string created = 11;
+  string updated = 12;
 }
 
 message SettingsById {
@@ -55,23 +63,74 @@ message BetID {
   int32 betID = 1;
 }
 
+message GamingActivityRequest {
+  string period = 1;
+  string username = 2;
+  string from = 3;
+  string to = 4;
+  string betType = 5;
+  string eventType = 6;
+  string sport = 7;
+  string league = 8;
+  string market = 9;
+  string state = 10;
+  string productType = 11;
+  string source = 12;
+  string groupBy = 13;
+  int32 clientID = 14;
+}
+
+message GamingActivityResponse {
+  bool success = 1;
+  int32 status = 2;
+  string message = 3;
+  optional GamingActivity data = 4;
+  string error = 5;
+}
+
+message UpdateBetRequest {
+  int32 betId = 1;
+  string status = 2;
+  string entityType = 3;
+  int32 clientId = 4;
+}
+
+message UpdateBetResponse {
+  bool success = 1;
+  int32 status = 2;
+  string message = 3;
+}
+
+message BookingCode {
+  string code = 1;
+  int32 clientId = 2;
+}
+
 message StatusResponse {
   string response = 1;
 }
 
 message PlaceBetRequest {
-  repeated BetSlip betslip = 1;
+  repeated BetSlip selections = 1;
   int32 clientId = 2;
   int32 userId = 3;
   float stake = 4;
   string source = 5;
   string ipAddress = 6;
+  string betType = 7;
+  string username = 8;
+  float minBonus = 9;
+  float maxBonus = 10;
+  float minOdds = 11;
+  float maxOdds = 12;
+  string type = 13;
+  repeated Combo combos = 14;
 }
 
 message BetSlip {
   string eventName = 1;
   string eventType = 2;
-  int64 eventId = 3;
+  int32 eventId = 3;
   int32 producerId = 4;
   int32 marketId = 5;
   string marketName = 6;
@@ -79,26 +138,47 @@ message BetSlip {
   string outcomeId = 8;
   string outcomeName = 9;
   float odds = 10;
-  int64 sportId = 11;
+  int32 sportId = 11;
+  string sport = 12;
+  string tournament = 13;
+  string category = 14;
+  int32 matchId = 15;
+  string awayTeam = 16;
+  string homeTeam = 17;
+  string type = 18;
+  bool fixed = 19;
+  string selectionId = 20;
+  string eventDate = 21;
+  string eventPrefix = 22;
+}
+
+message Combo {
 
 }
 
 message PlaceBetResponse {
-  int32 betId = 1;
+  bool success = 1;
   int32 status = 2;
-  string statusDescription = 3;
+  string message = 3;
+  optional BetHistory data = 4;
 }
 
 message BetHistoryRequest {
   int32 userId = 1;
   int32 clientId = 2;
-  string date = 3;
+  string from = 3;
+  string to = 4;
+  string status = 5;
+  int32 page = 6;
+  int32 perPage = 7;
+  string betslipId = 8;
+  string username = 9;
 }
 
 message BetSlipHistory {
   string eventName = 1;
   string eventType = 2;
-  int64 eventId = 3;
+  int32 eventId = 3;
   int32 producerId = 4;
   int32 marketId = 5;
   string marketName = 6;
@@ -107,22 +187,99 @@ message BetSlipHistory {
   string outcomeName = 9;
   float odds = 10;
   int64 sportId = 11;
-  int32 status = 12;
+  string status = 12;
   string statusDescription = 13;
+  int32 won = 14;
+  string type = 15;
+  string sport = 16;
+  string tournament = 17;
+  string category = 18;
+  string matchId = 19;
+  string eventDate = 20;
+  string selectionId = 21;
+  string eventPrefix = 22;
+
 }
 
 message BetHistory {
-  repeated BetSlipHistory betslip = 1;
+  repeated BetSlipHistory selections = 1;
   float stake = 2;
-  string date = 3;
+  string created = 3;
   int32 status = 4;
-  string statusDescription = 5;
-  string source = 6;
-
+  float cashOutAmount = 5;
+  string statusDescription = 6;
+  string source = 7;
+  float totalOdd = 8;
+  float possibleWin = 9;
+  string betType = 10;
+  string betslipId = 11;
+  int32 totalSelections = 12;
+  int32 betCategory = 13;
+  int32 id = 14;
+  int32 userId = 15;
+  string username = 16;
+  float winnings = 17;
 }
 
 message BetHistoryResponse {
+  repeated BetHistory bets = 1;
+  int32 lastPage = 2; // Last pagination page
+  int32 from = 3; // From data index
+  int32 to = 4; // to data index
+  int32 remainingRecords = 5; // how many records are remaining
+  int32 totalRecords = 6;
+  int32 totalStake = 7;
+  int32 currentPage = 8;
+}
 
-  repeated BetHistoryResponse data = 1;
+message ProbabilityBetSlipSelection {
+  int64 eventId = 1;
+  int32 marketId = 2;
+  string marketName = 3;
+  string specifier = 4;
+  string outcomeId = 5;
+  string outcomeName = 6;
+  int64 sportId = 7;
+  float currentProbability = 8;
+  float initialProbability = 9;
+}
 
+message Probability {
+  float probability = 1;
+  float currentProbability = 2;
+  float initialProbability = 3;
+  repeated ProbabilityBetSlipSelection selections = 4;
+
+}
+
+message FindBetRequest {
+  int32 clientId = 1;
+  string betslipId = 2;
+}
+
+message FindBetResponse {
+  optional BetHistory bet = 1;
+  string message = 2;
+  bool status = 3;
+}
+
+message GamingActivity {
+  float totalStake = 1;
+  float totalWinnings = 2;
+  float totalTickets = 3;
+  repeated GamingActivityBets bets = 4;
+}
+
+message GamingActivityBets {
+  string month = 1;
+  string date = 2;
+  float turnover = 3;
+  float total = 4;
+  float average = 5;
+  float winnings = 6;
+  string source = 7;
+  string bet_type = 8;
+  string market_name = 9;
+  string sport_name = 10;
+  string tournament_name = 11;
 }

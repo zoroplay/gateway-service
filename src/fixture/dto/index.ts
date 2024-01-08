@@ -110,6 +110,9 @@ export class SwaggerSportMenuRequest {
 
   @ApiProperty({ description: "End date", nullable: true, example: '2023-10-10'})
   end: string;
+
+  @ApiProperty({ description: 'GTM Time offset of the customer, default is 0, can either be a positive or negative integer' })
+  timeoffset: number;
 }
 
 export class SwaggerSportMenuResponse {
@@ -183,6 +186,16 @@ export class SwaggerFixturesRequest {
 
   @ApiProperty({ description: 'filter markets by sport ID' })
   sportID?: string;
+
+  @ApiProperty({ description: 'GTM Time offset of the customer, default is 0, can either be a positive or negative integer' })
+  timeoffset: number;
+}
+
+export class SwaggerTimeoffset {
+
+  @ApiProperty({ description: 'GTM Time offset of the customer, default is 0, can either be a positive or negative integer' })
+  timeoffset: number;
+
 }
 
 export class SwaggerFixturesResponse {
@@ -255,6 +268,9 @@ export class SwaggerFixtureOdds {
   @ApiProperty({ description: 'Sport ID' })
   sportID: number;
 
+  @ApiProperty({ description: 'Sport name' })
+  sportName: string;
+
   @ApiProperty({ description: 'Game ID' })
   gameID: number;
 
@@ -277,7 +293,10 @@ export class SwaggerFixtureOdds {
   markets: SwaggerOddsMarket[];
 
   @ApiProperty({ description: 'Country name' })
-  country: string;
+  categoryName: string;
+
+  @ApiProperty({ description: 'category ID' })
+  categoryID: number;
 
   @ApiProperty({ description: 'Match status code' })
   status_code: number;
@@ -479,4 +498,31 @@ export class SwaggerDefaultSportMarketsDTO {
     description: 'sports array',
   })
   sports: SwaggerDefaultSportMarketDTO[];
+}
+
+export class AddFavouritesDTO {
+  @ApiProperty({ description: 'Operator ID' })
+  clientId: number;
+
+  @ApiProperty({ description: 'Authenticated user ID' })
+  userId: number;
+
+  @ApiProperty({ description: 'Home Team ID' })
+  competitor1: number;
+
+  @ApiProperty({ description: 'Away Team ID' })
+  competitor2: number;
+
+  @ApiProperty({ description: 'Add or remove favourite', example: 'add|remove'})
+  action: string
+}
+
+export class AddFavouriteResponse {
+
+  @ApiProperty({ description: 'Request status' })
+  success: boolean;
+
+  @ApiProperty({ description: 'Server response message' })
+  message: string;
+
 }

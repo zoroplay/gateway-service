@@ -1,7 +1,17 @@
 import { Injectable, Inject, OnModuleInit } from '@nestjs/common';
 import {
   protobufPackage,
-  BettingServiceClient, BETTING_SERVICE_NAME, Settings, SettingsById, BetHistoryRequest, PlaceBetRequest,
+  BettingServiceClient,
+  BETTING_SERVICE_NAME,
+  Settings,
+  SettingsById,
+  BetHistoryRequest,
+  PlaceBetRequest,
+  BetID,
+  BookingCode,
+  UpdateBetRequest,
+  FindBetRequest,
+  GamingActivityRequest,
 } from './betting.pb';
 import { ClientGrpc } from '@nestjs/microservices';
 
@@ -41,9 +51,39 @@ export class BettingService implements OnModuleInit {
     return this.service.placeBet(data);
   }
 
+  UpdateBet(data: UpdateBetRequest) {
+    console.log('update bet ');
+    return this.service.updateBet(data);
+  }
+
+  BookBet(data: PlaceBetRequest) {
+    console.log('book bet ');
+    return this.service.bookBet(data);
+  }
+
+  GetBooking(data: BookingCode) {
+    console.log('get booking code ');
+    return this.service.getBooking(data);
+  }
+
   BetHistory(data: BetHistoryRequest) {
     console.log('bet history ');
     return this.service.betHistory(data);
   }
+
+  getProbabilityFromBetId(data: BetID) {
+
+    console.log('check probability from betID  ');
+    return this.service.getProbabilityFromBetId(data);
+  }
+
+  findBetById(data: FindBetRequest) {
+    return this.service.findBet(data);
+  }
+
+  getGamingActivity(data: GamingActivityRequest) {
+    return this.service.gamingActivity(data);
+  }
+
 
 }
