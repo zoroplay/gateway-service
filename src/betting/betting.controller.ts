@@ -121,7 +121,7 @@ export class BettingController {
       data.betType = data.bet_type;
       data.type = data.event_type
 
-      console.log(data);
+      // console.log(data);
       
       return this.bettingService.PlaceBet(data);
     } catch (error) {
