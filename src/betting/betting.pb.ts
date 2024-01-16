@@ -97,18 +97,19 @@ export interface StatusResponse {
 export interface PlaceBetRequest {
   selections: BetSlip[];
   clientId: number;
-  userId: number;
+  userId?: number | undefined;
   stake: number;
   source: string;
   ipAddress: string;
   betType: string;
-  username: string;
+  username?: string | undefined;
   minBonus: number;
   maxBonus: number;
   minOdds: number;
   maxOdds: number;
   type: string;
   combos: Combo[];
+  isBooking: number;
 }
 
 export interface BetSlip {
@@ -290,8 +291,6 @@ export interface BettingServiceClient {
 
   placeBet(request: PlaceBetRequest): Observable<PlaceBetResponse>;
 
-  bookBet(request: PlaceBetRequest): Observable<PlaceBetResponse>;
-
   betHistory(request: BetHistoryRequest): Observable<BetHistoryResponse>;
 
   findBet(request: FindBetRequest): Observable<FindBetResponse>;
@@ -317,8 +316,6 @@ export interface BettingServiceController {
   cancelBet(request: BetID): Promise<StatusResponse> | Observable<StatusResponse> | StatusResponse;
 
   placeBet(request: PlaceBetRequest): Promise<PlaceBetResponse> | Observable<PlaceBetResponse> | PlaceBetResponse;
-
-  bookBet(request: PlaceBetRequest): Promise<PlaceBetResponse> | Observable<PlaceBetResponse> | PlaceBetResponse;
 
   betHistory(
     request: BetHistoryRequest,
@@ -346,7 +343,6 @@ export function BettingServiceControllerMethods() {
       "getAllSettings",
       "cancelBet",
       "placeBet",
-      "bookBet",
       "betHistory",
       "findBet",
       "updateBet",

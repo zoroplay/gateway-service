@@ -9,7 +9,6 @@ service BettingService {
   rpc GetAllSettings (GetAll) returns (AllSettingsResponse) {}
   rpc CancelBet (BetID) returns (StatusResponse) {}
   rpc PlaceBet (PlaceBetRequest) returns (PlaceBetResponse) {}
-  rpc BookBet (PlaceBetRequest) returns (PlaceBetResponse) {}
   rpc BetHistory (BetHistoryRequest) returns (BetHistoryResponse) {}
   rpc FindBet (FindBetRequest) returns (FindBetResponse) {}
   rpc UpdateBet (UpdateBetRequest) returns (UpdateBetResponse) {}
@@ -113,18 +112,19 @@ message StatusResponse {
 message PlaceBetRequest {
   repeated BetSlip selections = 1;
   int32 clientId = 2;
-  int32 userId = 3;
+  optional int32 userId = 3;
   float stake = 4;
   string source = 5;
   string ipAddress = 6;
   string betType = 7;
-  string username = 8;
+  optional string username = 8;
   float minBonus = 9;
   float maxBonus = 10;
   float minOdds = 11;
   float maxOdds = 12;
   string type = 13;
   repeated Combo combos = 14;
+  int32 isBooking = 15;
 }
 
 message BetSlip {

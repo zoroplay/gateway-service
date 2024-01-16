@@ -120,6 +120,8 @@ export class BettingController {
       data.ipAddress = ip;
       data.betType = data.bet_type;
       data.type = data.event_type
+
+      console.log(data);
       
       return this.bettingService.PlaceBet(data);
     } catch (error) {
@@ -150,29 +152,6 @@ export class BettingController {
     }
   }
 
-
-  @Post('/book-bet/:client_id')
-  @ApiOperation({
-    summary: 'Book a bet request',
-    description:
-      'Receives a booking request with all the required detailed, upon successful a booking code is turned',
-  })
-  @ApiParam({ name: 'client_id', type: 'number' })
-  @ApiBody({ type: SwaggerPlaceBet })
-  @ApiOkResponse({ type: SwaggerPlaceBetResponse })
-  BookBet(
-    @Body() data: PlaceBetRequest,
-    @Param() param: any,
-    @Ip() ip: any
-    ) {
-    try {
-      data.clientId = param.client_id
-      data.ipAddress = ip;
-      return this.bettingService.BookBet(data);
-    } catch (error) {
-      console.error(error);
-    }
-  }
 
   @Post('/history')
   @ApiOperation({
@@ -225,36 +204,6 @@ export class BettingController {
       console.error(error);
 
     }
-
-  }
-
-  @Get('/get-booking/:client_id')
-  @ApiOperation({
-    summary: 'Get booking code',
-    description:
-        'This endpoints retrieves a booked game for rebet',
-  })
-  @ApiParam({ name: 'client_id', type: 'number' })
-  @ApiQuery({ name: 'code', type: 'string' })
-  @ApiOkResponse({ type: SwaggerPlaceBetResponse })
-  GetBooking(
-    @Param() param: any,
-    @Query() query: any
-  ) {
-
-    try {
-
-      return this.bettingService.GetBooking({
-        code: query.code,
-        clientId: param.client_id
-      });
-
-    } catch (error) {
-
-      console.error(error);
-
-    }
-
   }
 
   @Post('/find-bet')

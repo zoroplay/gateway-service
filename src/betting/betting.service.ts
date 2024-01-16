@@ -56,15 +56,15 @@ export class BettingService implements OnModuleInit {
     return this.service.updateBet(data);
   }
 
-  BookBet(data: PlaceBetRequest) {
-    console.log('book bet ');
-    return this.service.bookBet(data);
-  }
+  // BookBet(data: PlaceBetRequest) {
+  //   console.log('book bet ');
+  //   return this.service.bookBet(data);
+  // }
 
-  GetBooking(data: BookingCode) {
-    console.log('get booking code ');
-    return this.service.getBooking(data);
-  }
+  // GetBooking(data: BookingCode) {
+  //   console.log('get booking code ');
+  //   return this.service.getBooking(data);
+  // }
 
   BetHistory(data: BetHistoryRequest) {
     console.log('bet history ');
