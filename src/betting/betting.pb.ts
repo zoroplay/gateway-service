@@ -299,7 +299,7 @@ export interface BettingServiceClient {
 
   getProbabilityFromBetId(request: BetID): Observable<Probability>;
 
-  getBooking(request: BookingCode): Observable<PlaceBetResponse>;
+  getCoupon(request: BookingCode): Observable<PlaceBetResponse>;
 
   gamingActivity(request: GamingActivityRequest): Observable<GamingActivityResponse>;
 }
@@ -327,7 +327,7 @@ export interface BettingServiceController {
 
   getProbabilityFromBetId(request: BetID): Promise<Probability> | Observable<Probability> | Probability;
 
-  getBooking(request: BookingCode): Promise<PlaceBetResponse> | Observable<PlaceBetResponse> | PlaceBetResponse;
+  getCoupon(request: BookingCode): Promise<PlaceBetResponse> | Observable<PlaceBetResponse> | PlaceBetResponse;
 
   gamingActivity(
     request: GamingActivityRequest,
@@ -347,7 +347,7 @@ export function BettingServiceControllerMethods() {
       "findBet",
       "updateBet",
       "getProbabilityFromBetId",
-      "getBooking",
+      "getCoupon",
       "gamingActivity",
     ];
     for (const method of grpcMethods) {

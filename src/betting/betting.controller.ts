@@ -24,6 +24,7 @@ import {
 import {
   BetHistoryRequest,
   BetHistoryResponse, BetID,
+  BookingCode,
   GamingActivityRequest,
   GamingActivityResponse,
   PlaceBetRequest,
@@ -220,6 +221,28 @@ export class BettingController {
     try {
 
       return this.bettingService.findBetById(body);
+
+    } catch (error) {
+
+      console.error(error);
+
+    }
+  }
+
+  @Post('/find-coupon')
+  @ApiOperation({
+    summary: 'Find bet by betslip ID',
+    description:
+        'This endpoints retrieves a bet if found',
+  })
+  @ApiOkResponse({ type: SwaggerFindBetResponse })
+  FindCoupon(
+    @Body() body: BookingCode,
+  ) {
+
+    try {
+
+      return this.bettingService.GetCoupon(body);
 
     } catch (error) {
 

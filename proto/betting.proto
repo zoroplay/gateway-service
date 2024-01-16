@@ -13,7 +13,7 @@ service BettingService {
   rpc FindBet (FindBetRequest) returns (FindBetResponse) {}
   rpc UpdateBet (UpdateBetRequest) returns (UpdateBetResponse) {}
   rpc GetProbabilityFromBetID(BetID) returns (Probability) {}
-  rpc GetBooking(BookingCode) returns (PlaceBetResponse) {}
+  rpc GetCoupon(BookingCode) returns (PlaceBetResponse) {}
   rpc GamingActivity(GamingActivityRequest) returns (GamingActivityResponse) {}
 
 }
