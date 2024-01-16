@@ -237,7 +237,7 @@ export class BettingController {
   })
   @ApiOkResponse({ type: SwaggerFindBetResponse })
   FindCoupon(
-    @Body() body: BookingCode,
+    @Body() body: FindBetDTO,
   ) {
 
     try {

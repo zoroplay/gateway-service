@@ -61,8 +61,8 @@ export class BettingService implements OnModuleInit {
   //   return this.service.bookBet(data);
   // }
 
-  GetCoupon(data: BookingCode) {
-    console.log('get booking code ');
+  GetCoupon(data: FindBetRequest) {
+    console.log('get booking code', data);
     return this.service.getCoupon(data);
   }
 
@@ -72,7 +72,6 @@ export class BettingService implements OnModuleInit {
   }
 
   getProbabilityFromBetId(data: BetID) {
-
     console.log('check probability from betID  ');
     return this.service.getProbabilityFromBetId(data);
   }

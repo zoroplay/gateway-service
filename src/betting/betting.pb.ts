@@ -86,7 +86,7 @@ export interface UpdateBetResponse {
 }
 
 export interface BookingCode {
-  code: string;
+  betslipId: string;
   clientId: number;
 }
 
@@ -299,7 +299,7 @@ export interface BettingServiceClient {
 
   getProbabilityFromBetId(request: BetID): Observable<Probability>;
 
-  getCoupon(request: BookingCode): Observable<PlaceBetResponse>;
+  getCoupon(request: FindBetRequest): Observable<FindBetResponse>;
 
   gamingActivity(request: GamingActivityRequest): Observable<GamingActivityResponse>;
 }
@@ -327,7 +327,7 @@ export interface BettingServiceController {
 
   getProbabilityFromBetId(request: BetID): Promise<Probability> | Observable<Probability> | Probability;
 
-  getCoupon(request: BookingCode): Promise<PlaceBetResponse> | Observable<PlaceBetResponse> | PlaceBetResponse;
+  getCoupon(request: FindBetRequest): Promise<FindBetResponse> | Observable<FindBetResponse> | FindBetResponse;
 
   gamingActivity(
     request: GamingActivityRequest,
