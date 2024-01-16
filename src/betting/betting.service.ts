@@ -62,7 +62,7 @@ export class BettingService implements OnModuleInit {
   // }
 
   GetCoupon(data: FindBetRequest) {
-    console.log('get booking code', data);
+    console.log('get booking code');
     return this.service.getCoupon(data);
   }
 
