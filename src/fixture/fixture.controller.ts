@@ -19,6 +19,8 @@ import {
 } from '@nestjs/swagger';
 import { FixtureService } from './fixture.service';
 import {
+  AddFavouriteResponse,
+  AddFavouritesDTO,
   SwaggerAddSpecifierRequest,
   SwaggerAllMarketsResponse,
   SwaggerAllSportResponse,
@@ -41,6 +43,7 @@ import {
   SwaggerUpdateMarketRequest,
 } from './dto';
 import {
+  AddFavouriteRequest,
   AddSpecifierRequest,
   CreateMarketGroupRequest,
   CreateOutcomeAliasRequest,
@@ -175,6 +178,11 @@ export class FixtureController {
       'Default is 0, If value is 1 then get todays matches (start date is todat )',
   })
   @ApiQuery({ name: 'timeoffset', description: 'Default is 0, GMT timeoffset' })
+  @ApiQuery({
+    name: 'favourite',
+    description: 'Default is 0, Query fixtures by favourite teams',
+  })
+  @ApiQuery({ name: 'userId', description: 'UserID to query for favourites' })
   @ApiOkResponse({ type: SwaggerHighlightsResponse })
   GetHighlights(@Param() params: any, @Query() query: any) {
     logger.log('fetching highlights ');

@@ -12,16 +12,17 @@ import {
   AuthServiceClient,
   AUTH_SERVICE_NAME,
   LoginRequest,
-  LoginResponse, SportBookRegisterRequest, SportBookRegisterResponse,
+  LoginResponse, SportBookRegisterRequest, SportBookRegisterResponse, protobufPackage,
 } from './auth.pb';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { LoginDTO } from './dto';
 
 @ApiTags('Auth APIs')
 @Controller('auth')
 export class AuthController implements OnModuleInit {
   private svc: AuthServiceClient;
 
-  @Inject(AUTH_SERVICE_NAME)
+  @Inject(protobufPackage)
   private readonly client: ClientGrpc;
 
   public onModuleInit(): void {
@@ -29,16 +30,22 @@ export class AuthController implements OnModuleInit {
   }
 
   @Post('register')
-  private async register(
+  register(
     @Body() body: SportBookRegisterRequest,
-  ): Promise<Observable<SportBookRegisterResponse>> {
+  ){
     return this.svc.sportRegister(body);
   }
 
-  @Put('login')
-  private async login(
+  @Post('login')
+  @ApiOperation({
+    summary: 'Get client Gaming activity for a period',
+    description:
+        'This endpoints retrieves a summary of bets placed for either sports, virtual or casino',
+  })
+  @ApiBody({ type: LoginDTO })
+  login(
     @Body() body: LoginRequest,
-  ): Promise<Observable<LoginResponse>> {
+  ) {
     return this.svc.login(body);
   }
 }

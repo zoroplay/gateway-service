@@ -499,3 +499,30 @@ export class SwaggerDefaultSportMarketsDTO {
   })
   sports: SwaggerDefaultSportMarketDTO[];
 }
+
+export class AddFavouritesDTO {
+  @ApiProperty({ description: 'Operator ID' })
+  clientId: number;
+
+  @ApiProperty({ description: 'Authenticated user ID' })
+  userId: number;
+
+  @ApiProperty({ description: 'Home Team ID' })
+  competitor1: number;
+
+  @ApiProperty({ description: 'Away Team ID' })
+  competitor2: number;
+
+  @ApiProperty({ description: 'Add or remove favourite', example: 'add|remove'})
+  action: string
+}
+
+export class AddFavouriteResponse {
+
+  @ApiProperty({ description: 'Request status' })
+  success: boolean;
+
+  @ApiProperty({ description: 'Server response message' })
+  message: string;
+
+}

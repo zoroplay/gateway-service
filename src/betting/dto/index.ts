@@ -230,6 +230,11 @@ export class SwaggerBetSlip {
   eventType: string;
 
   @ApiProperty({
+    description: 'Type of event prefix default value is sr, oter applicable values are sr',
+  })
+  eventPrefix: string;
+
+  @ApiProperty({
     description: 'Event ID',
   })
   eventId: number;
@@ -281,7 +286,7 @@ export class SwaggerPlaceBet {
     type: [SwaggerBetSlip],
     description: 'Array of Settings Bet slips',
   })
-  betslip: SwaggerBetSlip[];
+  selections: SwaggerBetSlip[];
 
   @ApiProperty({
     description: 'Unique ID of the client',
@@ -417,7 +422,84 @@ export class SwaggerBetHistoryRequest {
 
 }
 
+export class SwaggerGamingActivityRequest {
+  @ApiProperty({
+    description: 'Username',
+  })
+  username: string;
+
+  @ApiProperty({
+    description: 'Item to group result by',
+  })
+  groupBy: string;
+
+  @ApiProperty({
+    description: 'Start date to filter from',
+  })
+  from: string;
+
+  @ApiProperty({
+    description: 'End date to filter to',
+  })
+  to: string;
+
+  @ApiProperty({
+    description: 'Client ID',
+  })
+  clientId: number;
+
+  @ApiProperty({
+    description: 'Current page number',
+  })
+  page: number;
+
+  @ApiProperty({
+    description: 'Number of records per page',
+  })
+  perPage: number;
+
+  @ApiProperty({
+    description: 'Filter by event type Live, Prematch or both',
+  })
+  eventType: string;
+
+  @ApiProperty({
+    description: 'Filter by product type. Sports, Virtual, Casino',
+  })
+  productType: string;
+
+  @ApiProperty({
+    description: 'Filter by bet type',
+  })
+  betType: string;
+
+  @ApiProperty({
+    description: 'Source by which bet was placed',
+  })
+  source: string;
+
+  @ApiProperty({
+    description: 'Filter by sport',
+  })
+  sport: string;
+
+  @ApiProperty({
+    description: 'filter by league',
+  })
+  league: string;
+}
+
 export class SwaggerProbabilityBetSlipSelection {
+
+  @ApiProperty({
+    description: 'Type of event default value is match, oter applicable values are season, stage, group',
+  })
+  eventType: string;
+
+  @ApiProperty({
+    description: 'Type of event prefix default value is sr, oter applicable values are sr',
+  })
+  eventPrefix: string;
 
   @ApiProperty({
     description: 'Event ID',
@@ -522,4 +604,25 @@ export class SwaggerUpdateBetResponse {
     description: 'Request success status, true or false if request was succesfull',
   })
   success: string;
+}
+
+export class FindBetDTO {
+  @ApiProperty({ description: 'Operator ID' })
+  clientId: number;
+
+  @ApiProperty({ description: 'Betslip ID' })
+  betslipId: string;
+}
+
+export class SwaggerFindBetResponse {
+
+  @ApiProperty({ description: 'Request status' })
+  success: boolean;
+
+  @ApiProperty({ description: 'Server response message' })
+  message: string;
+
+  @ApiProperty({ description: 'Bet object if found'})
+  bet: any;
+
 }
