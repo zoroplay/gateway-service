@@ -12,7 +12,8 @@ import { BonusModule } from './bonus/bonus.module';
 import { BonusController } from './bonus/bonus.controller';
 import { NotificationModule } from './notification/notification.module';
 import { WalletModule } from './wallet/wallet.module';
-import 'dotenv/config'
+import { RetailModule } from './retail/retail.module';
+import 'dotenv/config';
 
 @Module({
   imports: [
@@ -23,11 +24,10 @@ import 'dotenv/config'
     FixtureModule,
     BonusModule,
     NotificationModule,
-    WalletModule
+    WalletModule,
+    RetailModule,
   ],
-  controllers: [
-    AppController,
-  ],
+  controllers: [AppController],
   providers: [AppService],
 })
 export class AppModule {}

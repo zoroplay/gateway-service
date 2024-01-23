@@ -1,0 +1,240 @@
+syntax = "proto3";
+
+package retail;
+
+service RetailService {
+
+    // Bonus Groups
+    rpc getBonusGroups(Empty) returns (BonusGroupResponse) {}
+    rpc createBonusGroups(BonusGroups) returns (BonusGroupResponse) {}
+
+    // Profiles
+    rpc getCommissionProfiles(Empty) returns (CommissionProfilesResponse) {}
+    rpc createCommissionProfile(CreateCommissionProfile) returns (CommissionProfileResponse) {}
+    rpc updateCommissionProfile(UpdateCommissionProfile) returns (CommissionProfileResponse) {}
+    rpc assignUserCommissionProfile(AssignUserCommissionProfile) returns (CommissionProfileResponse) {}
+    
+    //rpc getAllCommissions(ProfileId) returns (CommissionResponse) {}
+    // rpc getCommissionsReport(CommissionReportRequest) returns (CommissionReportResponse) {}
+    
+    rpc getPowerBonus(PowerRequest) returns (PowerBonusResponse) {}
+    rpc payOutPowerBonus(PayPowerRequest) returns (PowerResponse) {}
+
+    rpc getNormalBonus(NormalRequest) returns (NormalResponse) {}
+    rpc payOutNormalBonus(NormalRequest) returns (NormalResponse) {}
+}
+
+message Empty {
+
+}
+// Bonus
+message BonusGroup {
+    string group = 1;
+    int32 maxSel = 2;
+    int32 minSel = 3;
+    int32 rate = 4;
+    int32 rateIsLess = 5;
+    int32 rateIsMore = 6;
+    int32 targetCoupon = 7;
+    int32 targetStake = 8;
+}
+
+message BonusGroups {
+    repeated BonusGroup bonusGroups = 1;
+}
+
+message BonusGroupResponse {
+    bool success = 1;
+    string message = 2;
+    repeated BonusGroup  data = 3;
+}
+
+// Commission Profile
+message CommissionProfileWithDate {
+    int32 id = 1;
+    string name = 2;
+    int32 default = 3;
+    string description = 4;
+    string providerGroup = 5;
+    string period = 6;
+    string type = 7;
+    string percentage = 8;
+    int32 commissionType = 9;
+    repeated CreateCommissionTurnover turnovers = 10;
+    string createdAt = 11;
+    string updatedAt = 12;
+}
+
+message CommissionProfileResponse {
+    bool success = 1;
+    string message = 2;
+    CommissionProfileWithDate  data = 3;
+}
+
+message CommissionProfilesResponse {
+    bool success = 1;
+    string message = 2;
+    repeated CommissionProfileWithDate  data = 3;
+}
+
+message AssignUserCommissionProfile {
+    int32 profileId = 1; 
+    int32 userId = 2;
+}
+
+// Commissions
+
+
+// Power Bonus
+message PowerRequest {
+    string fromDate = 1;
+    string toDate = 2;
+}
+
+message BetData {
+    string date = 1;
+    int32 settledBet = 2;
+    int32 selectionCount = 3;
+    int32 totalStake =4;
+    double totalCommission = 5;
+    double totalWinnings = 6;
+    double weightedStake = 7;
+}
+
+message PowerBonusData {
+    double totalStake = 1;
+    int32 totalTickets = 2;
+    double totalWeightedStake = 3;
+    double averageNoOfSelections = 4;
+    double grossProfit = 5;
+    double ggrPercent = 6;
+    int32 rateIsLess = 7;
+    int32 rateIsMore = 8;
+    double rate = 9;
+    double turnoverCommission = 10;
+    double monthlyBonus = 11;
+    double totalWinnings = 12;
+    repeated BetData bets = 13;
+
+}
+
+message PayPowerRequest {
+    repeated int32 agentIds = 1;
+    string fromDate = 2;
+    string toDate = 3;
+    string provider = 4;
+}
+message PowerCountData {
+    repeated string paidUsers = 1;
+    repeated string unPaidUsers = 2;
+    repeated string errors = 3;
+}
+message PowerResponse {
+    bool success = 1;
+    string message = 2;
+    PowerCountData data = 3;
+}
+
+message PowerBonusResponse {
+    bool success = 1;
+    string message = 2;
+    PowerBonusData data = 3;
+}
+
+// Normal Bonus
+message NormalRequest {
+    string fromDate = 1;
+    string toDate = 2;
+    string provider = 3;
+}
+
+message CurrentWeekData {
+    int32 totalWeeks = 1;
+    int32 current_week= 2;
+    int32 no_of_tickets = 3;
+    int32 played = 4;
+    int32 won = 5;
+    int32 net = 6;
+    int32 commission = 7;
+}
+message CurrentMonth {
+    string month = 1;
+}
+message NormalDataResponse {
+    CurrentWeekData currentWeek = 1;
+    CurrentMonth currentMonth = 2;
+    repeated Commission commissions = 3;
+}
+
+message NormalResponse {
+    bool success = 1;
+    string message = 2;
+    NormalDataResponse data = 3;
+}
+
+message CommissionRequest {
+    string provider = 1;
+}
+
+message ArrayCommissionResponse {
+    repeated Commission commissions = 1;
+}
+
+message Commission {
+    string userId = 1;
+    string totalTickets = 2;
+    string totalSales = 3;
+    string totalWon = 4;
+    string net = 5;
+    string commission = 6;
+    string startDate = 7;
+    string endDate = 8;
+    bool isPaid = 9;
+    int32 userCommissionProfileId = 10;
+    string createdAt = 11;
+    string updatedAt = 12;
+}
+
+message CreateCommissionProfile {
+    string name = 1;
+    int32 default = 2;
+    string description = 3;
+    string providerGroup = 4;
+    string period = 5;
+    string type = 6;
+    string percentage = 7;
+    int32 commissionType = 8;
+    repeated CreateCommissionTurnover turnovers = 9;
+}
+
+message UpdateCommissionProfile {
+    int32 id = 1;
+    string name = 2;
+    int32 default = 3;
+    string description = 4;
+    string providerGroup = 5;
+    string period = 6;
+    string type = 7;
+    string percentage = 8;
+    int32 commissionType = 9;
+    repeated UpdateCommissionTurnover turnovers = 10;
+}
+
+message CreateCommissionTurnover {
+    string event = 1;
+    int32 CommissionProfileId = 2;
+    string percentage = 3;
+    string maxOdd = 4;
+    string minOdd = 5;
+    string oddSet = 6;
+}
+
+message UpdateCommissionTurnover {
+    int32 id = 1;
+    string event = 2;
+    int32 CommissionProfileId = 3;
+    string percentage = 4;
+    string maxOdd = 5;
+    string minOdd = 6;
+    string oddSet = 7;
+}

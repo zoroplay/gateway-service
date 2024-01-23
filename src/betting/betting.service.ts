@@ -70,10 +70,7 @@ export class BettingService implements OnModuleInit {
   }
 
   getProbabilityFromBetId(data: BetID) {
-
     console.log('check probability from betID  ');
     return this.service.getProbabilityFromBetId(data);
   }
-
-
 }

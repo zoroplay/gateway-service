@@ -1,4 +1,13 @@
-import { Body, Controller, Get, Post, Patch, Param, Ip, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Patch,
+  Param,
+  Ip,
+  Query,
+} from '@nestjs/common';
 import {
   ApiBody,
   ApiOkResponse,
@@ -13,7 +22,8 @@ import {
   SwaggerBetHistoryRequest,
   SwaggerBetHistoryResponse,
   SwaggerPlaceBet,
-  SwaggerPlaceBetResponse, SwaggerProbability,
+  SwaggerPlaceBetResponse,
+  SwaggerProbability,
   SwaggerSettings,
   SwaggerSettingsResponse,
   SwaggerUpdateBetRequest,
@@ -21,7 +31,8 @@ import {
 } from './dto';
 import {
   BetHistoryRequest,
-  BetHistoryResponse, BetID,
+  BetHistoryResponse,
+  BetID,
   PlaceBetRequest,
   Settings,
   UpdateBetRequest,
@@ -106,13 +117,9 @@ export class BettingController {
   @ApiParam({ name: 'client_id', type: 'number' })
   @ApiBody({ type: SwaggerPlaceBet })
   @ApiOkResponse({ type: SwaggerPlaceBetResponse })
-  PlaceBet(
-    @Body() data: PlaceBetRequest,
-    @Param() param: any,
-    @Ip() ip: any
-    ) {
+  PlaceBet(@Body() data: PlaceBetRequest, @Param() param: any, @Ip() ip: any) {
     try {
-      data.clientId = param.client_id
+      data.clientId = param.client_id;
       data.ipAddress = ip;
       data.betType = param.bet_type;
       return this.bettingService.PlaceBet(data);
@@ -121,12 +128,10 @@ export class BettingController {
     }
   }
 
-
   @Post('/update-bet/:client_id')
   @ApiOperation({
     summary: 'Update a bet request',
-    description:
-      'Update bet or bet selections status',
+    description: 'Update bet or bet selections status',
   })
   @ApiParam({ name: 'client_id', type: 'number' })
   @ApiBody({ type: SwaggerUpdateBetRequest })
@@ -134,16 +139,15 @@ export class BettingController {
   UpdateBet(
     @Body() data: UpdateBetRequest,
     @Param() param: any,
-    @Ip() ip: any
-    ) {
+    @Ip() ip: any,
+  ) {
     try {
-      data.clientId = param.client_id
+      data.clientId = param.client_id;
       return this.bettingService.UpdateBet(data);
     } catch (error) {
       console.error(error);
     }
   }
-
 
   @Post('/book-bet/:client_id')
   @ApiOperation({
@@ -154,13 +158,9 @@ export class BettingController {
   @ApiParam({ name: 'client_id', type: 'number' })
   @ApiBody({ type: SwaggerPlaceBet })
   @ApiOkResponse({ type: SwaggerPlaceBetResponse })
-  BookBet(
-    @Body() data: PlaceBetRequest,
-    @Param() param: any,
-    @Ip() ip: any
-    ) {
+  BookBet(@Body() data: PlaceBetRequest, @Param() param: any, @Ip() ip: any) {
     try {
-      data.clientId = param.client_id
+      data.clientId = param.client_id;
       data.ipAddress = ip;
       return this.bettingService.BookBet(data);
     } catch (error) {
@@ -176,20 +176,17 @@ export class BettingController {
   })
   @ApiBody({ type: SwaggerBetHistoryRequest })
   @ApiOkResponse({ type: SwaggerBetHistoryResponse })
-  BetHistory(
-    @Query() query,
-    @Body() data: BetHistoryRequest
-  ) {
+  BetHistory(@Query() query, @Body() data: BetHistoryRequest) {
     try {
-      let rq = {
-        userId : data.userId,
-        clientId : data.clientId,
-        status : data.status,
-        from : data.from,
-        to : data.to,
+      const rq = {
+        userId: data.userId,
+        clientId: data.clientId,
+        status: data.status,
+        from: data.from,
+        to: data.to,
         page: query.page ? query.page : 1,
-        perPage : query.perPage ? query.perPage : 100,
-      }
+        perPage: query.perPage ? query.perPage : 100,
+      };
       return this.bettingService.BetHistory(rq);
     } catch (error) {
       console.error(error);
@@ -199,54 +196,36 @@ export class BettingController {
   @Get('/probability/:bet_id')
   @ApiOperation({
     summary: 'Get probability of the supplied betID',
-    description:
-        'This endpoints retrieve probability of the supplied betID',
+    description: 'This endpoints retrieve probability of the supplied betID',
   })
   @ApiParam({ name: 'bet_id', type: 'number' })
   @ApiOkResponse({ type: SwaggerProbability })
   GetProbabilityFromBetID(@Param() params: any) {
-
     try {
-
       return this.bettingService.getProbabilityFromBetId({
         betID: params.bet_id,
       });
-
     } catch (error) {
-
       console.error(error);
-
     }
-
   }
 
   @Get('/get-booking/:client_id')
   @ApiOperation({
     summary: 'Get booking code',
-    description:
-        'This endpoints retrieves a booked game for rebet',
+    description: 'This endpoints retrieves a booked game for rebet',
   })
   @ApiParam({ name: 'client_id', type: 'number' })
   @ApiQuery({ name: 'code', type: 'string' })
   @ApiOkResponse({ type: SwaggerPlaceBetResponse })
-  GetBooking(
-    @Param() param: any,
-    @Query() query: any
-  ) {
-
+  GetBooking(@Param() param: any, @Query() query: any) {
     try {
-
       return this.bettingService.GetBooking({
         code: query.code,
-        clientId: param.client_id
+        clientId: param.client_id,
       });
-
     } catch (error) {
-
       console.error(error);
-
     }
-
   }
-
 }
