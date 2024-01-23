@@ -115,7 +115,7 @@ export class BettingController {
   @ApiParam({ name: 'client_id', type: 'number' })
   @ApiBody({ type: SwaggerPlaceBet })
   @ApiOkResponse({ type: SwaggerPlaceBetResponse })
-  PlaceBet(@Body() data: PlaceBetRequest, @Param() param: any, @Ip() ip: any) {
+  PlaceBet(@Body() data, @Param() param: any, @Ip() ip: any) {
     try {
       data.clientId = param.client_id;
       data.ipAddress = ip;
