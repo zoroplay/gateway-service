@@ -11,13 +11,13 @@ import {
 import {
   AssignUserCommissionProfile,
   BonusGroups,
-  CreateCommissionProfile,
   Empty,
-  NormalRequest,
   PayPowerRequest,
   PowerRequest,
-  PowerResponse,
-  UpdateCommissionProfile,
+  CommissionProfile,
+  GetNormalRequest,
+  PayNormalRequest,
+  Meta,
 } from './retail.pb';
 import {
   SwaggerAssignUserCommissionProfile,
@@ -25,9 +25,9 @@ import {
   SwaggerBonusGroups,
   SwaggerCommissionProfileResponse,
   SwaggerCreateCommissionProfile,
+  SwaggerMeta,
   SwaggerNormalDataResponse,
   SwaggerNormalRequest,
-  SwaggerNormalResponse,
   SwaggerPayPowerRequest,
   SwaggerPowerBonusResponse,
   SwaggerPowerRequest,
@@ -48,7 +48,13 @@ export class RetailController {
   })
   @ApiOkResponse({ type: [SwaggerBonusGroupResponse] })
   getBonusGroups(@Body() data: Empty) {
-    return this.retailService.getBonusGroups(data);
+    console.log('here');
+    try {
+      const resp = this.retailService.getBonusGroups(data);
+      return resp;
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   @Post('/bonus-groups')
@@ -69,8 +75,9 @@ export class RetailController {
     description:
       'These are Profiles with parameters used in calculating commissions when bet is placed',
   })
+  @ApiBody({ type: SwaggerMeta })
   @ApiOkResponse({ type: [SwaggerCommissionProfileResponse] })
-  getCommissionProfiles(@Body() data: Empty) {
+  getCommissionProfiles(@Body() data: Meta) {
     return this.retailService.getCommissionProfiles(data);
   }
 
@@ -82,7 +89,7 @@ export class RetailController {
   })
   @ApiBody({ type: SwaggerCreateCommissionProfile })
   @ApiOkResponse({ type: SwaggerCommissionProfileResponse })
-  createCommissionProfile(@Body() data: CreateCommissionProfile) {
+  createCommissionProfile(@Body() data: CommissionProfile) {
     return this.retailService.createCommissionProfile(data);
   }
 
@@ -94,7 +101,7 @@ export class RetailController {
   })
   @ApiBody({ type: SwaggerUpdateCommissionProfile })
   @ApiOkResponse({ type: SwaggerCommissionProfileResponse })
-  updateCommissionProfile(@Body() data: UpdateCommissionProfile) {
+  updateCommissionProfile(@Body() data: CommissionProfile) {
     return this.retailService.updateCommissionProfile(data);
   }
 
@@ -138,7 +145,7 @@ export class RetailController {
   })
   @ApiBody({ type: SwaggerNormalRequest })
   @ApiOkResponse({ type: SwaggerNormalDataResponse })
-  getNormalBonus(@Body() data: NormalRequest) {
+  getNormalBonus(@Body() data: GetNormalRequest) {
     return this.retailService.getNormalBonus(data);
   }
 
@@ -149,7 +156,7 @@ export class RetailController {
   })
   @ApiBody({ type: SwaggerNormalRequest })
   @ApiOkResponse({ type: SwaggerNormalDataResponse })
-  payOutNormalBonus(@Body() data: NormalRequest) {
+  payOutNormalBonus(@Body() data: PayNormalRequest) {
     return this.retailService.payOutNormalBonus(data);
   }
 }

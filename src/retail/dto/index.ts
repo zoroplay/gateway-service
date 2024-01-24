@@ -5,6 +5,17 @@ export class SwaggerSyncGameDto {
   provider: string;
 }
 
+export class SwaggerMeta {
+  @ApiProperty({
+    description: 'Current Page',
+  })
+  currentPage: number;
+  @ApiProperty({
+    description: 'Items Per Page',
+  })
+  itemsPerPage: number;
+}
+
 export class SwaggerBonusGroup {
   @ApiProperty({
     description: 'group of the bonus',
@@ -53,6 +64,7 @@ export class SwaggerBonusGroups {
   })
   bonusGroups: SwaggerBonusGroup[];
 }
+
 export class SwaggerBonusGroupResponse {
   @ApiProperty({
     description: 'Status of request',

@@ -2,15 +2,16 @@ import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import {
   AssignUserCommissionProfile,
   BonusGroups,
-  CreateCommissionProfile,
   Empty,
-  NormalRequest,
   PayPowerRequest,
   PowerRequest,
   protobufPackage,
   RETAIL_SERVICE_NAME,
   RetailServiceClient,
-  UpdateCommissionProfile,
+  CommissionProfile,
+  GetNormalRequest,
+  PayNormalRequest,
+  Meta,
 } from './retail.pb';
 import { ClientGrpc } from '@nestjs/microservices';
 
@@ -26,9 +27,10 @@ export class RetailService implements OnModuleInit {
   }
 
   // Bonus Groups
-  getBonusGroups(data: Empty) {
+  async getBonusGroups(data: Empty) {
     console.log(data);
-    return this.service.getBonusGroups(data);
+    console.log('Service here');
+    return await this.service.getBonusGroups(data);
   }
 
   createBonusGroups(data: BonusGroups) {
@@ -38,15 +40,15 @@ export class RetailService implements OnModuleInit {
 
   // Commission Profiles
 
-  getCommissionProfiles(data: Empty) {
+  getCommissionProfiles(data: Meta) {
     console.log(data);
     return this.service.getCommissionProfiles(data);
   }
-  createCommissionProfile(data: CreateCommissionProfile) {
+  createCommissionProfile(data: CommissionProfile) {
     console.log(data);
     return this.service.createCommissionProfile(data);
   }
-  updateCommissionProfile(data: UpdateCommissionProfile) {
+  updateCommissionProfile(data: CommissionProfile) {
     console.log(data);
     return this.service.updateCommissionProfile(data);
   }
@@ -65,11 +67,11 @@ export class RetailService implements OnModuleInit {
     return this.service.payOutPowerBonus(data);
   }
   // Normal Bonus
-  getNormalBonus(data: NormalRequest) {
+  getNormalBonus(data: GetNormalRequest) {
     console.log(data);
     return this.service.getNormalBonus(data);
   }
-  payOutNormalBonus(data: NormalRequest) {
+  payOutNormalBonus(data: PayNormalRequest) {
     console.log(data);
     return this.service.payOutNormalBonus(data);
   }
