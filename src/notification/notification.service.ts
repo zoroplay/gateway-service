@@ -15,12 +15,19 @@ export class NotificationService implements OnModuleInit {
   constructor(@Inject(protobufPackage) private client: ClientGrpc) {}
 
   onModuleInit() {
-    this.service = this.client.getService<NotificationServiceClient>(NOTIFICATION_SERVICE_NAME);
+    this.service = this.client.getService<NotificationServiceClient>(
+      NOTIFICATION_SERVICE_NAME,
+    );
   }
 
   sendSMS(data: SendSmsRequest) {
-    console.log('CreateCashbackBonus ');
     return this.service.sendSms(data);
+  }
+  sendOTP(data: SendSmsRequest) {
+    return this.service.sendOtp(data);
+  }
+  verifyOTP(data: SendSmsRequest) {
+    return this.service.verifyOtp(data);
   }
 
   saveSettings(data: SaveSettingsRequest) {
