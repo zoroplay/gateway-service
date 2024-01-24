@@ -4,6 +4,7 @@ import { AuthService } from './auth.service';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { AUTH_PACKAGE_NAME, protobufPackage } from './auth.pb';
 import {join} from "path";
+import 'dotenv/config'
 
 @Module({
   imports: [

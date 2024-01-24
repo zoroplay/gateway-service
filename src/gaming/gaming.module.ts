@@ -11,6 +11,7 @@ import { GAMING_PACKAGE_NAME, protobufPackage } from './gaming.pb';
         name: protobufPackage,
         transport: Transport.GRPC,
         options: {
+          url: process.env.GAMING_SERVICE_URL,
           package: GAMING_PACKAGE_NAME,
           protoPath: 'proto/gaming.proto',
         },

@@ -75,14 +75,4 @@ export class BettingService implements OnModuleInit {
     console.log('check probability from betID  ');
     return this.service.getProbabilityFromBetId(data);
   }
-
-  findBetById(data: FindBetRequest) {
-    return this.service.findBet(data);
-  }
-
-  getGamingActivity(data: GamingActivityRequest) {
-    return this.service.gamingActivity(data);
-  }
-
-
 }
