@@ -3,8 +3,8 @@ import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { AUTH_PACKAGE_NAME, protobufPackage } from './auth.pb';
-import {join} from "path";
-import 'dotenv/config'
+import { join } from 'path';
+import 'dotenv/config';
 
 @Module({
   imports: [
@@ -15,7 +15,7 @@ import 'dotenv/config'
         options: {
           url: process.env.AUTH_SERVICE_URL,
           package: AUTH_PACKAGE_NAME,
-          protoPath: join('node_modules/sbe-service-proto/proto/auth.proto'),
+          protoPath: 'proto/auth.proto',
         },
       },
     ]),

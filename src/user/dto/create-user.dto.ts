@@ -50,4 +50,3 @@ export class SwaggerCommonResponse {
   @ApiProperty({ description: 'error message' })
   error?: string;
 }
-
