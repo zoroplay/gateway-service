@@ -5,6 +5,8 @@ import {
   NOTIFICATION_SERVICE_NAME,
   NotificationServiceClient,
   SaveSettingsRequest,
+  SendOtpRequest,
+  VerifyOtpRequest,
 } from './noti.pb';
 import { ClientGrpc } from '@nestjs/microservices';
 
@@ -23,10 +25,10 @@ export class NotificationService implements OnModuleInit {
   sendSMS(data: SendSmsRequest) {
     return this.service.sendSms(data);
   }
-  sendOTP(data: SendSmsRequest) {
+  sendOTP(data: SendOtpRequest) {
     return this.service.sendOtp(data);
   }
-  verifyOTP(data: SendSmsRequest) {
+  verifyOTP(data: VerifyOtpRequest) {
     return this.service.verifyOtp(data);
   }
 

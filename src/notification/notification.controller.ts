@@ -18,7 +18,12 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { NotificationService } from './notification.service';
-import { SaveSettingsRequest, SendSmsRequest } from './noti.pb';
+import {
+  SaveSettingsRequest,
+  SendOtpRequest,
+  SendSmsRequest,
+  VerifyOtpRequest,
+} from './noti.pb';
 import {
   SwaggerSaveSettingsRequest,
   SwaggerSaveSettingsResponse,
@@ -38,7 +43,7 @@ export class NotificationController {
   })
   @ApiBody({ type: SwaggerSendSMSRequest })
   @ApiOkResponse({ type: SwaggerSendSMSResponse })
-  VerifyOTP(@Body() data: SendSmsRequest) {
+  VerifyOTP(@Body() data: VerifyOtpRequest) {
     try {
       return this.notiService.verifyOTP(data);
     } catch (error) {
@@ -53,7 +58,7 @@ export class NotificationController {
   })
   @ApiBody({ type: SwaggerSendSMSRequest })
   @ApiOkResponse({ type: SwaggerSendSMSResponse })
-  SendOTP(@Body() data: SendSmsRequest) {
+  SendOTP(@Body() data: SendOtpRequest) {
     try {
       return this.notiService.sendOTP(data);
     } catch (error) {
