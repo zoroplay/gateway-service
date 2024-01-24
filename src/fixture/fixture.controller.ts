@@ -318,6 +318,37 @@ export class FixtureController {
     }
   }
 
+  @Get('/get-fixtures-by-category/:category_id')
+  @ApiOperation({
+    summary: 'Get all upcoming fixtures by category ',
+    description:
+      'This endpoint gets matches with odds for the supplied categoryID',
+  })
+  @ApiParam({
+    name: 'category_id',
+    type: 'number',
+    description: ' Unique ID of the category',
+  })
+  @ApiQuery({ type: SwaggerFixturesRequest })
+  @ApiOkResponse({ type: SwaggerFixturesResponse })
+  GetFixturesByCategory(@Param() params: any, @Query() query: any) {
+    try {
+      const rq = {
+        categoryID: params.category_id ? parseInt(params.category_id) : 1,
+        source: query.source ? query.source : 'web',
+        markets: query.markets ? query.markets : '',
+        limit: query.limit ? query.limit : 100,
+        sportID: query.sportID ? query.sportID : 1,
+        period: query.period ? query.period : 'all',
+        timeoffset: query.timeoffset ? query.timeoffset : 0,
+      };
+
+      return this.fixtureService.GetFixtures(rq);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   @Post('/admin/setting/market')
   @ApiOperation({
     summary: 'Update Market Order ',
