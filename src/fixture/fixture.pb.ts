@@ -200,6 +200,8 @@ export interface GetFixturesRequest {
   /** date range to fetch fixtures */
   period: string;
   timeoffset: number;
+  /** fetch fixtures of this categoryID if present */
+  categoryID?: number | undefined;
 }
 
 export interface HighlightOutcomes {
