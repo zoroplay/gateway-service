@@ -222,7 +222,7 @@ message GetFixturesRequest {
   string markets = 2; // comma separated string of market ids to be loaded
   string source = 3; // mobile or web client making the request
   int32 limit = 4; // no of records to be loaded (optional)
-  int32 tournamentID = 5; // fetch fixtures of this tournamentID will
+  optional int32 tournamentID = 5; // fetch fixtures of this tournamentID will
   string period = 6; // date range to fetch fixtures
   int32 timeoffset = 7;
   optional int32 categoryID = 8; // fetch fixtures of this categoryID if present

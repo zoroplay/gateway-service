@@ -196,7 +196,9 @@ export interface GetFixturesRequest {
   /** no of records to be loaded (optional) */
   limit: number;
   /** fetch fixtures of this tournamentID will */
-  tournamentID: number;
+  tournamentID?:
+    | number
+    | undefined;
   /** date range to fetch fixtures */
   period: string;
   timeoffset: number;
