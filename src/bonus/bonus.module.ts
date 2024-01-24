@@ -3,7 +3,7 @@ import { BonusController } from './bonus.controller';
 import { BonusService } from './bonus.service';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { BONUS_PACKAGE_NAME, protobufPackage } from './bonus.pb';
-import {BettingService} from "../betting/betting.service";
+import { BettingService } from '../betting/betting.service';
 
 @Module({
   imports: [

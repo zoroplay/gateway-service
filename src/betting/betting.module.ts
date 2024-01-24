@@ -21,6 +21,5 @@ import { BETTING_PACKAGE_NAME, protobufPackage } from './betting.pb';
   controllers: [BettingController],
   providers: [BettingService],
   exports: [BettingService],
-
 })
 export class BettingModule {}
