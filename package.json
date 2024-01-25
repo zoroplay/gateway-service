@@ -27,7 +27,7 @@
     "proto:fixture": "protoc --plugin=node_modules/.bin/protoc-gen-ts_proto -I=./proto --ts_proto_out=src/fixture/ proto/fixture.proto --ts_proto_opt=nestJs=true --ts_proto_opt=fileSuffix=.pb",
     "proto:bonus": "protoc --plugin=node_modules/.bin/protoc-gen-ts_proto -I=./proto --ts_proto_out=src/bonus/ proto/bonus.proto --ts_proto_opt=nestJs=true --ts_proto_opt=fileSuffix=.pb",
     "proto:noti": "protoc --plugin=node_modules/.bin/protoc-gen-ts_proto -I=./proto --ts_proto_out=src/notification/ proto/noti.proto --ts_proto_opt=nestJs=true --ts_proto_opt=fileSuffix=.pb",
-    "proto:all": "yarn proto:auth && yarn proto:retail && yarn proto:gaming && yarn proto:betting && yarn proto:fixture && yarn proto:bonus"
+    "proto:all": "yarn proto:auth && yarn proto:retail && yarn proto:betting && yarn proto:fixture && yarn proto:bonus"
   },
   "dependencies": {
     "@grpc/grpc-js": "^1.9.5",
