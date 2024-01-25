@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
-import { AuthModule } from './auth/auth.module';
+import { IdentityModule } from './identity/identity.module';
 import { GamingModule } from './gaming/gaming.module';
 import { FixtureModule } from './fixture/fixture.module';
 import { BettingModule } from './betting/betting.module';
@@ -15,7 +15,7 @@ import 'dotenv/config';
 @Module({
   imports: [
     ConfigModule.forRoot(),
-    AuthModule,
+    IdentityModule,
     GamingModule,
     BettingModule,
     FixtureModule,

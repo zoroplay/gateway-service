@@ -2,8 +2,7 @@ import { Injectable } from '@nestjs/common';
 import {
   SwaggerUserDetailsRequest,
   SwaggerUserRequest,
-} from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+} from '../identity/dto';
 
 @Injectable()
 export class UserService {
@@ -33,7 +32,7 @@ export class UserService {
     return `This action returns a #${id} user`;
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
+  update(id: number, updateUserDto) {
     return `This action updates a #${id} user`;
   }
 

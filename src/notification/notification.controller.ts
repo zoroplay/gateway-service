@@ -25,8 +25,7 @@ import {
   VerifyOtpRequest,
 } from './noti.pb';
 import {
-  SwaggerSaveSettingsRequest,
-  SwaggerSaveSettingsResponse,
+  SwaggerSendOtpRequest,
   SwaggerSendSMSRequest,
   SwaggerSendSMSResponse,
 } from './dto';
@@ -56,7 +55,7 @@ export class NotificationController {
     summary: 'Send OTP ',
     description: 'This endpoint sends otp through the our SMS provders',
   })
-  @ApiBody({ type: SwaggerSendSMSRequest })
+  @ApiBody({ type: SwaggerSendOtpRequest })
   @ApiOkResponse({ type: SwaggerSendSMSResponse })
   SendOTP(@Body() data: SendOtpRequest) {
     try {
@@ -76,21 +75,6 @@ export class NotificationController {
   SendSMS(@Body() data: SendSmsRequest) {
     try {
       return this.notiService.sendSMS(data);
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
-  @Put('/save-settings')
-  @ApiOperation({
-    summary: 'Save Settings',
-    description: 'This endpoint saves/edits settings for SMS providers',
-  })
-  @ApiBody({ type: SwaggerSaveSettingsRequest })
-  @ApiOkResponse({ type: SwaggerSaveSettingsResponse })
-  SaveSettings(@Body() data: SaveSettingsRequest) {
-    try {
-      return this.notiService.saveSettings(data);
     } catch (error) {
       console.error(error);
     }

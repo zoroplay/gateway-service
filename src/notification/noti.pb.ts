@@ -5,20 +5,41 @@ import { Observable } from "rxjs";
 export const protobufPackage = "notification";
 
 export interface SaveSettingsRequest {
-  settingsID: number;
+  settingsID?: number | undefined;
   clientId: number;
   enable: boolean;
+  displayName: string;
+  gatewayName: string;
+  senderID: string;
+  apiKey?: string | undefined;
+  username?: string | undefined;
+  password?: string | undefined;
+}
+
+export interface SaveSettingsResponse {
+  message: string;
+  status: boolean;
+}
+
+export interface GetSettingsRequest {
+  clientId: number;
+}
+
+export interface GetSettingsResponse {
+  message: string;
+  status: boolean;
+  data: SettingData[];
+}
+
+export interface SettingData {
+  id: number;
+  status: boolean;
   displayName: string;
   gatewayName: string;
   senderID: string;
   apiKey: string;
   username: string;
   password: string;
-}
-
-export interface SaveSettingsResponse {
-  message: string;
-  status: boolean;
 }
 
 export interface SendSmsRequest {
@@ -72,6 +93,8 @@ export const NOTIFICATION_PACKAGE_NAME = "notification";
 export interface NotificationServiceClient {
   saveSettings(request: SaveSettingsRequest): Observable<SaveSettingsResponse>;
 
+  getSettings(request: GetSettingsRequest): Observable<GetSettingsResponse>;
+
   sendSms(request: SendSmsRequest): Observable<SendSmsResponse>;
 
   sendOtp(request: SendOtpRequest): Observable<SendSmsResponse>;
@@ -86,6 +109,10 @@ export interface NotificationServiceController {
     request: SaveSettingsRequest,
   ): Promise<SaveSettingsResponse> | Observable<SaveSettingsResponse> | SaveSettingsResponse;
 
+  getSettings(
+    request: GetSettingsRequest,
+  ): Promise<GetSettingsResponse> | Observable<GetSettingsResponse> | GetSettingsResponse;
+
   sendSms(request: SendSmsRequest): Promise<SendSmsResponse> | Observable<SendSmsResponse> | SendSmsResponse;
 
   sendOtp(request: SendOtpRequest): Promise<SendSmsResponse> | Observable<SendSmsResponse> | SendSmsResponse;
@@ -99,7 +126,14 @@ export interface NotificationServiceController {
 
 export function NotificationServiceControllerMethods() {
   return function (constructor: Function) {
-    const grpcMethods: string[] = ["saveSettings", "sendSms", "sendOtp", "verifyOtp", "getDeliveryReport"];
+    const grpcMethods: string[] = [
+      "saveSettings",
+      "getSettings",
+      "sendSms",
+      "sendOtp",
+      "verifyOtp",
+      "getDeliveryReport",
+    ];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
       GrpcMethod("NotificationService", method)(constructor.prototype[method], method, descriptor);
