@@ -15,6 +15,7 @@ RUN apt-get update \
 #COPY ./github_ssh_key /opt/my-app
 
 RUN npm install
+RUN npm run proto:install
 RUN npm run proto:all
 RUN npm run build
 EXPOSE 80
