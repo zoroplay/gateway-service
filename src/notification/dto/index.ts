@@ -5,7 +5,7 @@ export class SwaggerSendSMSRequest {
   msisdn: number;
 
   @ApiProperty({ description: 'ID of the sender' })
-  senderId: number;
+  senderID: number;
 
   @ApiProperty({ description: 'Text tp be sent' })
   text: number;
@@ -23,7 +23,7 @@ export class SwaggerSendSMSRequest {
   status: number;
 
   @ApiProperty({ description: 'ID of the sender' })
-  list: number;
+  lists: string[];
 
   @ApiProperty({ description: 'Text tp be sent' })
   schedule: number;
@@ -32,7 +32,7 @@ export class SwaggerSendSMSRequest {
   channel: number;
 
   @ApiProperty({ description: 'Text tp be sent' })
-  campaign_type: number;
+  campaignType: number;
 }
 
 export class SwaggerSendSMSResponse {
@@ -42,19 +42,19 @@ export class SwaggerSendSMSResponse {
 
 export class SwaggerSaveSettingsRequest {
   @ApiProperty({ description: 'ID' })
-  settings_id: string;
+  settingsID: string;
 
   @ApiProperty({ description: 'Enable' })
   enable: boolean;
 
   @ApiProperty({ description: 'Display Name' })
-  display_name: string;
+  displayName: string;
 
   @ApiProperty({ description: 'Gateway Id' })
-  gateway_name: string;
+  gatewayName: string;
 
   @ApiProperty({ description: 'Sender Id' })
-  sender_id: string;
+  senderID: string;
 
   @ApiProperty({ description: 'API KEY' })
   api_key: string;

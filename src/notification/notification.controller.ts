@@ -18,7 +18,12 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { NotificationService } from './notification.service';
-import { SaveSettingsRequest, SendSmsRequest } from './noti.pb';
+import {
+  SaveSettingsRequest,
+  SendOtpRequest,
+  SendSmsRequest,
+  VerifyOtpRequest,
+} from './noti.pb';
 import {
   SwaggerSaveSettingsRequest,
   SwaggerSaveSettingsResponse,
@@ -31,10 +36,40 @@ import {
 export class NotificationController {
   constructor(private readonly notiService: NotificationService) {}
 
+  @Post('/verify-otp')
+  @ApiOperation({
+    summary: 'Verify OTP ',
+    description: 'This endpoint verifies otp through the our SMS provders',
+  })
+  @ApiBody({ type: SwaggerSendSMSRequest })
+  @ApiOkResponse({ type: SwaggerSendSMSResponse })
+  VerifyOTP(@Body() data: VerifyOtpRequest) {
+    try {
+      return this.notiService.verifyOTP(data);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  @Post('/send-otp')
+  @ApiOperation({
+    summary: 'Send OTP ',
+    description: 'This endpoint sends otp through the our SMS provders',
+  })
+  @ApiBody({ type: SwaggerSendSMSRequest })
+  @ApiOkResponse({ type: SwaggerSendSMSResponse })
+  SendOTP(@Body() data: SendOtpRequest) {
+    try {
+      return this.notiService.sendOTP(data);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   @Post('/send-sms')
   @ApiOperation({
     summary: 'Send SMS ',
-    description: 'This endpoint sends sms through the Mtech API',
+    description: 'This endpoint sends sms through the our SMS providers',
   })
   @ApiBody({ type: SwaggerSendSMSRequest })
   @ApiOkResponse({ type: SwaggerSendSMSResponse })
