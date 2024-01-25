@@ -12,8 +12,8 @@ async function bootstrap() {
   app.setGlobalPrefix('/api/v2');
 
   const options = new DocumentBuilder()
-    .setTitle('Sportsbook Engine')
-    .setDescription('Sportsbook API description')
+    .setTitle('SportsBook Engine APIs')
+    .setDescription('API Description for SBE sportsbook platform')
     .setVersion('2.0')
     .addBearerAuth()
     .build();

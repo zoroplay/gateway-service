@@ -70,7 +70,7 @@ export class FixtureService implements OnModuleInit {
   }
 
   GetFixtures(data: GetFixturesRequest) {
-    console.log('GetFixturesByTournament');
+    console.log('GetFixturesByTournamentOrCategory');
     return this.service.getFixtures(data);
   }
 
