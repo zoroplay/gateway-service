@@ -20,5 +20,6 @@ import { GAMING_PACKAGE_NAME, protobufPackage } from './gaming.pb';
   ],
   controllers: [GamingController],
   providers: [GamingService],
+  exports: [GamingService],
 })
 export class GamingModule {}

@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Patch, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Query,
+} from '@nestjs/common';
 import { RetailService } from './retail.service';
 import {
   ApiBody,
@@ -11,13 +19,11 @@ import {
 import {
   AssignUserCommissionProfile,
   BonusGroups,
-  Empty,
   PayPowerRequest,
   PowerRequest,
   CommissionProfile,
   GetNormalRequest,
   PayNormalRequest,
-  Meta,
 } from './retail.pb';
 import {
   SwaggerAssignUserCommissionProfile,
@@ -25,7 +31,6 @@ import {
   SwaggerBonusGroups,
   SwaggerCommissionProfileResponse,
   SwaggerCreateCommissionProfile,
-  SwaggerMeta,
   SwaggerNormalDataResponse,
   SwaggerNormalRequest,
   SwaggerPayPowerRequest,
@@ -47,13 +52,12 @@ export class RetailController {
       'Retail Bonus Group are parameters used to calculate power bonus commissions',
   })
   @ApiOkResponse({ type: [SwaggerBonusGroupResponse] })
-  getBonusGroups(@Body() data: Empty) {
-    console.log('here');
+  getBonusGroups() {
+    console.log('get bonus groups');
     try {
-      const resp = this.retailService.getBonusGroups(data);
-      return resp;
+      return this.retailService.getBonusGroups();
     } catch (error) {
-      console.error(error);
+      console.error(error.message);
     }
   }
 
@@ -66,7 +70,11 @@ export class RetailController {
   @ApiBody({ type: SwaggerBonusGroups })
   @ApiOkResponse({ type: [SwaggerBonusGroupResponse] })
   createBonusGroups(@Body() data: BonusGroups) {
-    return this.retailService.createBonusGroups(data);
+    try {
+      return this.retailService.createBonusGroups(data);
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   @Get('/commission-profile')
@@ -75,10 +83,18 @@ export class RetailController {
     description:
       'These are Profiles with parameters used in calculating commissions when bet is placed',
   })
-  @ApiBody({ type: SwaggerMeta })
+  @ApiParam({ name: 'currentPage', type: 'number' })
+  @ApiQuery({ name: 'itemsPerPage', type: 'number' })
   @ApiOkResponse({ type: [SwaggerCommissionProfileResponse] })
-  getCommissionProfiles(@Body() data: Meta) {
-    return this.retailService.getCommissionProfiles(data);
+  getCommissionProfiles(@Param() param: any, @Query() query: any) {
+    try {
+      return this.retailService.getCommissionProfiles({
+        currentPage: param.currentPage || 1,
+        itemsPerPage: query.itemsPerPage || 10,
+      });
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   @Post('/commission-profile')
@@ -90,7 +106,11 @@ export class RetailController {
   @ApiBody({ type: SwaggerCreateCommissionProfile })
   @ApiOkResponse({ type: SwaggerCommissionProfileResponse })
   createCommissionProfile(@Body() data: CommissionProfile) {
-    return this.retailService.createCommissionProfile(data);
+    try {
+      return this.retailService.createCommissionProfile(data);
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   @Patch('/commission-profile')
@@ -102,7 +122,11 @@ export class RetailController {
   @ApiBody({ type: SwaggerUpdateCommissionProfile })
   @ApiOkResponse({ type: SwaggerCommissionProfileResponse })
   updateCommissionProfile(@Body() data: CommissionProfile) {
-    return this.retailService.updateCommissionProfile(data);
+    try {
+      return this.retailService.updateCommissionProfile(data);
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   @Post('/commission-profile/assign-user')
@@ -113,7 +137,11 @@ export class RetailController {
   @ApiBody({ type: SwaggerAssignUserCommissionProfile })
   @ApiOkResponse({ type: SwaggerCommissionProfileResponse })
   assignUserCommissionProfile(@Body() data: AssignUserCommissionProfile) {
-    return this.retailService.assignUserCommissionProfile(data);
+    try {
+      return this.retailService.assignUserCommissionProfile(data);
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   @Get('/power-bonus')
@@ -124,7 +152,11 @@ export class RetailController {
   @ApiBody({ type: SwaggerPowerRequest })
   @ApiOkResponse({ type: SwaggerPowerBonusResponse })
   getPowerBonus(@Body() data: PowerRequest) {
-    return this.retailService.getPowerBonus(data);
+    try {
+      return this.retailService.getPowerBonus(data);
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   @Post('/power-bonus/pay')
@@ -135,7 +167,11 @@ export class RetailController {
   @ApiBody({ type: SwaggerPayPowerRequest })
   @ApiOkResponse({ type: SwaggerPowerResponse })
   payOutPowerBonus(@Body() data: PayPowerRequest) {
-    return this.retailService.payOutPowerBonus(data);
+    try {
+      return this.retailService.payOutPowerBonus(data);
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   @Get('/normal-bonus')
@@ -146,7 +182,11 @@ export class RetailController {
   @ApiBody({ type: SwaggerNormalRequest })
   @ApiOkResponse({ type: SwaggerNormalDataResponse })
   getNormalBonus(@Body() data: GetNormalRequest) {
-    return this.retailService.getNormalBonus(data);
+    try {
+      return this.retailService.getNormalBonus(data);
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   @Post('/normal-bonus/pay')
@@ -157,6 +197,10 @@ export class RetailController {
   @ApiBody({ type: SwaggerNormalRequest })
   @ApiOkResponse({ type: SwaggerNormalDataResponse })
   payOutNormalBonus(@Body() data: PayNormalRequest) {
-    return this.retailService.payOutNormalBonus(data);
+    try {
+      return this.retailService.payOutNormalBonus(data);
+    } catch (error) {
+      console.error(error);
+    }
   }
 }

@@ -20,5 +20,6 @@ import { RETAIL_PACKAGE_NAME, protobufPackage } from './retail.pb';
   ],
   controllers: [RetailController],
   providers: [RetailService],
+  exports: [RetailService],
 })
 export class RetailModule {}

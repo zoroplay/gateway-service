@@ -27,10 +27,9 @@ export class RetailService implements OnModuleInit {
   }
 
   // Bonus Groups
-  async getBonusGroups(data: Empty) {
-    console.log(data);
+  getBonusGroups() {
     console.log('Service here');
-    return await this.service.getBonusGroups(data);
+    return this.service.getBonusGroups({});
   }
 
   createBonusGroups(data: BonusGroups) {
@@ -39,11 +38,11 @@ export class RetailService implements OnModuleInit {
   }
 
   // Commission Profiles
-
   getCommissionProfiles(data: Meta) {
     console.log(data);
     return this.service.getCommissionProfiles(data);
   }
+
   createCommissionProfile(data: CommissionProfile) {
     console.log(data);
     return this.service.createCommissionProfile(data);
