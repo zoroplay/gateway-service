@@ -14,7 +14,7 @@ import { join } from 'path';
         options: {
           url: process.env.RETAIL_SERVICE_URL,
           package: RETAIL_PACKAGE_NAME,
-          protoPath: join('node_modules/sbe-service-proto/proto/retails.proto'),
+          protoPath: join('node_modules/sbe-service-proto/proto/retail.proto'),
         },
       },
     ]),
