@@ -15,3 +15,27 @@ export class SaveRoleRequest {
 
     roleID?: string;
 }
+
+export class SwaggerSaveClientRequest {
+    @ApiProperty({ description: 'Name of client' })
+    @IsNotEmpty()
+    name: string;
+
+    @ApiProperty({ description: 'Country of Client' })
+    country: string;
+
+    @ApiProperty({ description: 'Default Currency' })
+    currency: string;
+
+    @ApiProperty({ description: 'Client website URL' })
+    website?: string;
+
+    @ApiProperty({ description: 'Contact number',  })
+    contactNumber?: string;
+
+    @ApiProperty({ description: 'Contact email',  })
+    contactEmail: string;
+
+    @ApiProperty({ description: 'Client ID incase for editting',  })
+    clientID?: number;
+}
