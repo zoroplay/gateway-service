@@ -24,6 +24,7 @@ import {
   CommissionProfile,
   GetNormalRequest,
   PayNormalRequest,
+  Meta,
 } from './retail.pb';
 import {
   SwaggerAssignUserCommissionProfile,
@@ -83,14 +84,15 @@ export class RetailController {
     description:
       'These are Profiles with parameters used in calculating commissions when bet is placed',
   })
-  @ApiParam({ name: 'currentPage', type: 'number' })
   @ApiQuery({ name: 'itemsPerPage', type: 'number' })
+  @ApiQuery({ name: 'currentPage', type: 'number' })
   @ApiOkResponse({ type: [SwaggerCommissionProfileResponse] })
-  getCommissionProfiles(@Param() param: any, @Query() query: any) {
+  getCommissionProfiles(@Query() query: Meta) {
     try {
+      console.log(query);
       return this.retailService.getCommissionProfiles({
-        currentPage: param.currentPage || 1,
-        itemsPerPage: query.itemsPerPage || 10,
+        currentPage: Number(query.currentPage) || 1,
+        itemsPerPage: Number(query.itemsPerPage) || 10,
       });
     } catch (error) {
       console.error(error);

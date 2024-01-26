@@ -61,6 +61,48 @@ export class SwaggerBonusGroups {
   @ApiProperty({
     type: [SwaggerBonusGroup],
     description: 'Array of Bonus Group Objects',
+    example: [
+      {
+        minSel: 1.01,
+        maxSel: 10,
+        rateIsLess: 5,
+        rateIsMore: 5,
+        rate: 80,
+        targetCoupon: 100,
+        targetStake: 15000,
+        group: 'A',
+      },
+      {
+        minSel: 10.01,
+        maxSel: 30,
+        rateIsLess: 15,
+        rateIsMore: 5,
+        rate: 80,
+        targetCoupon: 100,
+        targetStake: 15000,
+        group: 'B',
+      },
+      {
+        minSel: 30.01,
+        maxSel: 90,
+        rateIsLess: 20,
+        rateIsMore: 10,
+        rate: 80,
+        targetCoupon: 100,
+        targetStake: 15000,
+        group: 'C',
+      },
+      {
+        minSel: 90.01,
+        maxSel: 100000,
+        rateIsLess: 30,
+        rateIsMore: 15,
+        rate: 80,
+        targetCoupon: 100,
+        targetStake: 15000,
+        group: 'D',
+      },
+    ],
   })
   bonusGroups: SwaggerBonusGroup[];
 }

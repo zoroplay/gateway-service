@@ -31,13 +31,13 @@ message Empty {
 // Bonus
 message BonusGroup {
     string group = 1;
-    int32 maxSel = 2;
-    int32 minSel = 3;
-    int32 rate = 4;
-    int32 rateIsLess = 5;
-    int32 rateIsMore = 6;
+    double maxSel = 2;
+    double minSel = 3;
+    double rate = 4;
+    double rateIsLess = 5;
+    double rateIsMore = 6;
     int32 targetCoupon = 7;
-    int32 targetStake = 8;
+    double targetStake = 8;
     optional string createdAt = 9;
     optional string updatedAt = 10;
 }
@@ -234,12 +234,12 @@ message ArrayCommissionResponse {
 
 message Commission {
     optional int32 id = 1;
-    string userId = 2;
-    string totalTickets = 3;
-    string totalSales = 4;
-    string totalWon = 5;
-    string net = 6;
-    string commission = 7;
+    int32 userId = 2;
+    int32 totalTickets = 3;
+    double totalSales = 4;
+    double totalWon = 5;
+    double net = 6;
+    double commission = 7;
     string startDate = 8;
     string endDate = 9;
     bool isPaid = 10;

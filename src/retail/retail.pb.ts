@@ -9,6 +9,7 @@ export interface Empty {
 
 /** Bonus */
 export interface BonusGroup {
+  id?: number;
   group: string;
   maxSel: number;
   minSel: number;
@@ -57,7 +58,7 @@ export interface CommissionProfilesResponse {
   success: boolean;
   message: string;
   data: CommissionProfile[];
-  meta: Meta;
+  meta?: Meta;
 }
 
 export interface AssignUserCommissionProfile {
@@ -69,8 +70,8 @@ export interface AssignUserCommissionProfile {
 
 /** Power Bonus */
 export interface PowerRequest {
-  fromDate: string;
-  toDate: string;
+  fromDate: string | Date;
+  toDate: string | Date;
 }
 
 export interface BetData {
@@ -107,8 +108,8 @@ export interface PowerBonusData {
 
 export interface PayPowerRequest {
   agentIds: number[];
-  fromDate: string;
-  toDate: string;
+  fromDate: string | Date;
+  toDate: string | Date;
   provider: string;
 }
 
@@ -132,8 +133,8 @@ export interface PowerBonusResponse {
 
 /** Normal Bonus */
 export interface GetNormalRequest {
-  fromDate: Date;
-  toDate: Date;
+  fromDate:  Date;
+  toDate:  Date;
   provider: string;
   meta?: Meta | undefined;
 }
@@ -197,8 +198,8 @@ export interface NormalPayout {
   profileGroup: string;
   commission: number;
   isPaid: boolean;
-  createdAt?: string | Date | undefined;
-  updatedAt?: string | Date | undefined;
+  createdAt?:  Date | undefined;
+  updatedAt?:  Date | undefined;
 }
 
 /** Commission Reequest */
@@ -212,14 +213,14 @@ export interface ArrayCommissionResponse {
 
 export interface Commission {
   id?: number | undefined;
-  userId: string;
-  totalTickets: string;
-  totalSales: string;
-  totalWon: string;
-  net: string;
-  commission: string;
-  startDate: string;
-  endDate: string;
+  userId: number;
+  totalTickets: number;
+  totalSales: number;
+  totalWon: number;
+  net: number;
+  commission: number;
+  startDate: string | Date | Date;
+  endDate: string | Date | Date;
   isPaid: boolean;
   userCommissionProfileId: number;
   createdAt?: string | Date | undefined;
@@ -229,7 +230,7 @@ export interface Commission {
 export interface CommissionTurnover {
   id?: number | undefined;
   event: number;
-  commissionProfile?: CommissionProfile;
+  commissionProfile?: CommissionProfile | undefined;
   percentage: number;
   maxOdd: number;
   minOdd: number;
