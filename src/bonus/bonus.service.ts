@@ -9,9 +9,11 @@ import {
   CreateReferralBonusRequest,
   CreateShareBetBonusRequest,
   GetBonusRequest,
-  GetUserBonusRequest, 
-  AwardBonusRequest, UserBet, 
-  BonusStatusRequest, CreateBonusRequest, 
+  GetUserBonusRequest,
+  AwardBonusRequest,
+  UserBet,
+  BonusStatusRequest,
+  CreateBonusRequest,
   CreateNewBonusRequest,
   CreateCampaignBonusDto,
   UpdateCampaignBonusDto,
@@ -20,7 +22,7 @@ import {
   GetBonusByClientID,
 } from './bonus.pb';
 import { ClientGrpc } from '@nestjs/microservices';
-import {UserBetWithBonus} from "./bet.interface";
+import { UserBetWithBonus } from './bet.interface';
 
 @Injectable()
 export class BonusService implements OnModuleInit {
@@ -34,151 +36,107 @@ export class BonusService implements OnModuleInit {
   }
 
   CreateCashbackBonus(data: CreateCashbackBonusRequest) {
-
-    console.log("CreateCashbackBonus ");
+    console.log('CreateCashbackBonus ');
     return this.service.createCashbackBonus(data);
-
   }
 
-
   CreateBonus(data: CreateNewBonusRequest) {
-
-    console.log("CreateBonus ");
+    console.log('CreateBonus ');
     return this.service.createBonus(data);
-
   }
 
   UpdateCashbackBonus(data: CreateCashbackBonusRequest) {
-
-    console.log("UpdateCashbackBonus ");
+    console.log('UpdateCashbackBonus ');
     return this.service.updateCashbackBonus(data);
-
   }
 
   CreateFirstDepositBonus(data: CreateFirstDepositBonusRequest) {
-
-    console.log("CreateFirstDepositBonus ");
+    console.log('CreateFirstDepositBonus ');
     return this.service.createFirstDepositBonus(data);
-
   }
 
   UpdateFirstDepositBonus(data: CreateFirstDepositBonusRequest) {
-
-    console.log("UpdateFirstDepositBonus ");
+    console.log('UpdateFirstDepositBonus ');
     return this.service.updateFirstDepositBonus(data);
-
   }
 
   CreateFreebetBonus(data: CreateFreebetBonusRequest) {
-
-    console.log("CreateFreebetBonus ");
+    console.log('CreateFreebetBonus ');
     return this.service.createFreebetBonus(data);
-
   }
 
   UpdateFreebetBonus(data: CreateFreebetBonusRequest) {
-
-    console.log("UpdateFreebetBonus ");
+    console.log('UpdateFreebetBonus ');
     return this.service.updateFreebetBonus(data);
-
   }
 
   CreateReferralBonus(data: CreateReferralBonusRequest) {
-
-    console.log("CreateReferralBonus ");
+    console.log('CreateReferralBonus ');
     return this.service.createReferralBonus(data);
-
   }
 
   UpdateReferralBonus(data: CreateReferralBonusRequest) {
-
-    console.log("UpdateReferralBonus ");
+    console.log('UpdateReferralBonus ');
     return this.service.updateReferralBonus(data);
-
   }
 
   CreateShareBetBonus(data: CreateShareBetBonusRequest) {
-
-    console.log("CreateShareBetBonus ");
+    console.log('CreateShareBetBonus ');
     return this.service.createShareBetBonus(data);
-
   }
 
   UpdateShareBetBonus(data: CreateShareBetBonusRequest) {
-
-    console.log("UpdateShareBetBonus ");
+    console.log('UpdateShareBetBonus ');
     return this.service.updateShareBetBonus(data);
-
   }
 
   GetBonus(data: GetBonusRequest) {
-
-    console.log("GetBonus ");
+    console.log('GetBonus ');
     return this.service.getBonus(data);
-
   }
 
   GetUserBonus(data: GetUserBonusRequest) {
-
-    console.log("GetUserBonus ");
+    console.log('GetUserBonus ');
     return this.service.getUserBonus(data);
-
   }
 
   AwardBonus(data: AwardBonusRequest) {
-
-    console.log("AwardBonus ");
+    console.log('AwardBonus ');
     return this.service.awardBonus(data);
-
   }
 
   PlaceBonusBet(data: UserBetWithBonus) {
-
-    console.log("PlaceBonusBet ");
+    console.log('PlaceBonusBet ');
     return this.service.placeBonusBet(data);
-
   }
 
   UpdateBonusStatus(data: BonusStatusRequest) {
-
-    console.log("UpdateBonusStatus ");
+    console.log('UpdateBonusStatus ');
     return this.service.updateBonusStatus(data);
-
   }
 
   CreateCampaignBonus(data: CreateCampaignBonusDto) {
-
-    console.log("UpdateBonusStatus ");
+    console.log('UpdateBonusStatus ');
     return this.service.createCampaignBonus(data);
-
   }
 
   UpdateCampaignBonus(data: UpdateCampaignBonusDto) {
-
-    console.log("UpdateCampaignBonus ");
+    console.log('UpdateCampaignBonus ');
     return this.service.updateCampaignBonus(data);
-
   }
 
   DeleteCampaignBonus(data: DeleteCampaignBonusDto) {
-
-    console.log("DeleteCampaignBonus ");
+    console.log('DeleteCampaignBonus ');
     return this.service.deleteCampaignBonus(data);
-
   }
 
   RedeemCampaignBonus(data: RedeemCampaignBonusDto) {
-
-    console.log("RedeemCampaignBonus ");
+    console.log('RedeemCampaignBonus ');
     return this.service.redeemCampaignBonus(data);
-
   }
 
   GetCampaignBonus(data: GetBonusByClientID) {
-
-    console.log("GetCampaignBonus ");
+    console.log('GetCampaignBonus ');
     return this.service.getCampaignBonus(data);
-
   }
-
 }

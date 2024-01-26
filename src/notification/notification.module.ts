@@ -3,6 +3,9 @@ import { NotificationController } from './notification.controller';
 import { NotificationService } from './notification.service';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { NOTIFICATION_PACKAGE_NAME, protobufPackage } from './noti.pb';
+import { AdminController } from './admin/admin.controller';
+import {join} from "path";
+import 'dotenv/config'
 
 @Module({
   imports: [
@@ -13,12 +16,12 @@ import { NOTIFICATION_PACKAGE_NAME, protobufPackage } from './noti.pb';
         options: {
           url: process.env.NOTIFICATION_SERVICE_URL,
           package: NOTIFICATION_PACKAGE_NAME,
-          protoPath: 'proto/noti.proto',
+          protoPath: join('node_modules/sbe-service-proto/proto/noti.proto'),
         },
       },
     ]),
   ],
-  controllers: [NotificationController],
+  controllers: [NotificationController, AdminController],
   providers: [NotificationService],
   exports: [NotificationService],
 })

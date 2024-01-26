@@ -5,11 +5,13 @@ package notification;
 service NotificationService {
   rpc SaveSettings (SaveSettingsRequest) returns (SaveSettingsResponse);
   rpc SendSms (SendSmsRequest) returns (SendSmsResponse);
+  rpc SendOtp (SendOtpRequest) returns (SendSmsResponse);
+  rpc verifyOtp (VerifyOtpRequest) returns (SendSmsResponse);
   rpc GetDeliveryReport (DeliveryReportRequest) returns (DeliveryReportResponse);
 }
 
 message SaveSettingsRequest {
-  int32  settingID = 1;
+  int32  settingsID = 1;
   int32  clientId = 2;
   bool   enable = 3;
   string displayName = 4;
@@ -25,7 +27,6 @@ message SaveSettingsResponse {
   bool   status = 2;
 }
 
-
 message SendSmsRequest {
   string msisdn = 1;
   string text = 2;
@@ -33,12 +34,23 @@ message SendSmsRequest {
   string name = 4;
   string from = 5;
   string status = 6;
-  string list = 7;
+  repeated string phoneNumbers = 7;
   string schedule = 8;
   string channel = 9;
   string mode = 10;
   string campaignType = 11;
   int32 clientID = 12;
+}
+
+message SendOtpRequest {
+  int32 clientID = 1;
+  string phoneNumber = 2;
+}
+
+message VerifyOtpRequest {
+  int32 clientID = 1;
+  string phoneNumber = 2;
+  string otpCode =3 ;
 }
 
 message SendSmsResponse {

@@ -86,7 +86,7 @@ export interface UpdateBetResponse {
 }
 
 export interface BookingCode {
-  code: string;
+  betslipId: string;
   clientId: number;
 }
 
@@ -97,18 +97,19 @@ export interface StatusResponse {
 export interface PlaceBetRequest {
   selections: BetSlip[];
   clientId: number;
-  userId: number;
+  userId?: number | undefined;
   stake: number;
   source: string;
   ipAddress: string;
   betType: string;
-  username: string;
+  username?: string | undefined;
   minBonus: number;
   maxBonus: number;
   minOdds: number;
   maxOdds: number;
   type: string;
   combos: Combo[];
+  isBooking: number;
 }
 
 export interface BetSlip {
@@ -187,20 +188,26 @@ export interface BetHistory {
   selections: BetSlipHistory[];
   stake: number;
   created: string;
-  status: number;
+  statusCode: number;
   cashOutAmount: number;
   statusDescription: string;
   source: string;
   totalOdd: number;
   possibleWin: number;
-  betType: string;
+  betType: number;
   betslipId: string;
   totalSelections: number;
-  betCategory: number;
+  betCategory: string;
   id: number;
   userId: number;
   username: string;
   winnings: number;
+  eventType: string;
+  sports: string;
+  tournaments: string;
+  events: string;
+  markets: string;
+  betCategoryDesc: string;
 }
 
 export interface BetHistoryResponse {
@@ -284,8 +291,6 @@ export interface BettingServiceClient {
 
   placeBet(request: PlaceBetRequest): Observable<PlaceBetResponse>;
 
-  bookBet(request: PlaceBetRequest): Observable<PlaceBetResponse>;
-
   betHistory(request: BetHistoryRequest): Observable<BetHistoryResponse>;
 
   findBet(request: FindBetRequest): Observable<FindBetResponse>;
@@ -294,7 +299,7 @@ export interface BettingServiceClient {
 
   getProbabilityFromBetId(request: BetID): Observable<Probability>;
 
-  getBooking(request: BookingCode): Observable<PlaceBetResponse>;
+  getCoupon(request: FindBetRequest): Observable<FindBetResponse>;
 
   gamingActivity(request: GamingActivityRequest): Observable<GamingActivityResponse>;
 }
@@ -312,8 +317,6 @@ export interface BettingServiceController {
 
   placeBet(request: PlaceBetRequest): Promise<PlaceBetResponse> | Observable<PlaceBetResponse> | PlaceBetResponse;
 
-  bookBet(request: PlaceBetRequest): Promise<PlaceBetResponse> | Observable<PlaceBetResponse> | PlaceBetResponse;
-
   betHistory(
     request: BetHistoryRequest,
   ): Promise<BetHistoryResponse> | Observable<BetHistoryResponse> | BetHistoryResponse;
@@ -324,7 +327,7 @@ export interface BettingServiceController {
 
   getProbabilityFromBetId(request: BetID): Promise<Probability> | Observable<Probability> | Probability;
 
-  getBooking(request: BookingCode): Promise<PlaceBetResponse> | Observable<PlaceBetResponse> | PlaceBetResponse;
+  getCoupon(request: FindBetRequest): Promise<FindBetResponse> | Observable<FindBetResponse> | FindBetResponse;
 
   gamingActivity(
     request: GamingActivityRequest,
@@ -340,12 +343,11 @@ export function BettingServiceControllerMethods() {
       "getAllSettings",
       "cancelBet",
       "placeBet",
-      "bookBet",
       "betHistory",
       "findBet",
       "updateBet",
       "getProbabilityFromBetId",
-      "getBooking",
+      "getCoupon",
       "gamingActivity",
     ];
     for (const method of grpcMethods) {

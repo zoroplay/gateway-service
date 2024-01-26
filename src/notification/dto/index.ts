@@ -1,11 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { IsNotEmpty } from 'class-validator';
 
 export class SwaggerSendSMSRequest {
   @ApiProperty({ description: 'ID' })
   msisdn: number;
 
   @ApiProperty({ description: 'ID of the sender' })
-  senderId: number;
+  senderID: number;
 
   @ApiProperty({ description: 'Text tp be sent' })
   text: number;
@@ -23,7 +24,7 @@ export class SwaggerSendSMSRequest {
   status: number;
 
   @ApiProperty({ description: 'ID of the sender' })
-  list: number;
+  lists: string[];
 
   @ApiProperty({ description: 'Text tp be sent' })
   schedule: number;
@@ -32,32 +33,49 @@ export class SwaggerSendSMSRequest {
   channel: number;
 
   @ApiProperty({ description: 'Text tp be sent' })
-  campaign_type: number;
+  campaignType: number;
 }
 
 export class SwaggerSendSMSResponse {
   @ApiProperty({ description: 'Message' })
   message: number;
+
+  @ApiProperty({ description: 'Request status'})
+  status: boolean
 }
 
-export class SwaggerSaveSettingsRequest {
+
+export class SwaggerSendOtpRequest {
+  @ApiProperty({ description: 'SBE Client ID' })
+  @IsNotEmpty()
+  client: number;
+
+  @ApiProperty({ description: 'Phone number' })
+  @IsNotEmpty()
+  phoneNumber: string;
+}
+
+export class SaveSMSSettingsRequest {
   @ApiProperty({ description: 'ID' })
-  settings_id: string;
+  settingsID?: string;
+
+  @ApiProperty({ description: 'SBE Client ID' })
+  clientId: number;
 
   @ApiProperty({ description: 'Enable' })
   enable: boolean;
 
   @ApiProperty({ description: 'Display Name' })
-  display_name: string;
+  displayName: string;
 
   @ApiProperty({ description: 'Gateway Id' })
-  gateway_name: string;
+  gatewayName: string;
 
   @ApiProperty({ description: 'Sender Id' })
-  sender_id: string;
+  senderID: string;
 
   @ApiProperty({ description: 'API KEY' })
-  api_key: string;
+  apiKey: string;
 
   @ApiProperty({ description: 'Username' })
   username: string;
@@ -66,7 +84,38 @@ export class SwaggerSaveSettingsRequest {
   password: string;
 }
 
-export class SwaggerSaveSettingsResponse {
+export class SaveSMSSettingsResponse {
   @ApiProperty({ description: 'Message' })
-  message: number;
+  message: string;
+
+  @ApiProperty({ description: 'Request Status (true or false)' })
+  status: boolean;
+
+  data?: SMSSetting;
+}
+
+export class GettSmsSettingsRequest {
+  @ApiProperty({ description: 'SBE Client ID to fetch settings for' })
+  client_id: number;
+}
+
+export class GettSmsSettingsResponse {
+  @ApiProperty({ description: 'Message' })
+  message: string;
+
+  @ApiProperty({ description: 'Request Status (true or false)' })
+  status: boolean;
+
+  data: SMSSetting[]
+}
+
+interface SMSSetting {
+  id: number;
+  status: boolean;
+  displayName: string;
+  gatewayName: string;
+  senderID: string;
+  apiKey: string;
+  username: string;
+  password: string;
 }

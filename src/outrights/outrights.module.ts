@@ -3,6 +3,7 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
 import { OUTRIGHTS_PACKAGE_NAME, protobufPackage } from './outrights.pb';
 import {OutrightsController} from "./outrights.controller";
 import {OutrightsService} from "./outrights.service";
+import { join } from 'path';
 
 @Module({
   imports: [
@@ -13,7 +14,7 @@ import {OutrightsService} from "./outrights.service";
         options: {
           url: process.env.OUTRIGHTS_SERVICE_URL,
           package: OUTRIGHTS_PACKAGE_NAME,
-          protoPath: 'proto/outrights.proto',
+          protoPath: join('node_modules/sbe-service-proto/proto/outrights.proto'),
         },
       },
     ]),

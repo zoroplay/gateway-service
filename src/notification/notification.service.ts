@@ -5,6 +5,8 @@ import {
   NOTIFICATION_SERVICE_NAME,
   NotificationServiceClient,
   SaveSettingsRequest,
+  SendOtpRequest,
+  VerifyOtpRequest,
 } from './noti.pb';
 import { ClientGrpc } from '@nestjs/microservices';
 
@@ -15,12 +17,19 @@ export class NotificationService implements OnModuleInit {
   constructor(@Inject(protobufPackage) private client: ClientGrpc) {}
 
   onModuleInit() {
-    this.service = this.client.getService<NotificationServiceClient>(NOTIFICATION_SERVICE_NAME);
+    this.service = this.client.getService<NotificationServiceClient>(
+      NOTIFICATION_SERVICE_NAME,
+    );
   }
 
   sendSMS(data: SendSmsRequest) {
-    console.log('CreateCashbackBonus ');
     return this.service.sendSms(data);
+  }
+  sendOTP(data: SendOtpRequest) {
+    return this.service.sendOtp(data);
+  }
+  verifyOTP(data: VerifyOtpRequest) {
+    return this.service.verifyOtp(data);
   }
 
   saveSettings(data: SaveSettingsRequest) {

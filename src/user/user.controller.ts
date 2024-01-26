@@ -13,8 +13,7 @@ import {
   SwaggerCommonResponse,
   SwaggerUserDetailsRequest,
   SwaggerUserRequest,
-} from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+} from '../identity/dto';
 import { ApiOperation, ApiBody, ApiOkResponse } from '@nestjs/swagger';
 
 @Controller('user')
@@ -78,7 +77,10 @@ export class UsersController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+  update(
+    @Param('id') id: string, 
+    @Body() updateUserDto
+  ) {
     return this.usersService.update(+id, updateUserDto);
   }
 
