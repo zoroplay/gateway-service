@@ -1,7 +1,9 @@
 import { Body, Controller, Get, Inject, Post } from '@nestjs/common';
 import { ApiBody, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { IDENTITY_SERVICE_NAME, IdentityServiceClient, protobufPackage } from '../identity.pb';
+import { ClientRequest, IDENTITY_SERVICE_NAME, IdentityServiceClient, protobufPackage } from '../identity.pb';
 import { ClientGrpc } from '@nestjs/microservices';
+import { SwaggerSaveClientRequest } from '../dto/admin.dto';
+import { SwaggerCommonResponse } from '../dto';
 
 @ApiTags('BackOffice')
 @Controller('admin')
@@ -21,9 +23,9 @@ export class UsersController {
         summary: 'Save SBE Client info',
         description: 'This endpoint is used to save or update SBE client info',
     })
-    @ApiBody({ type: SaveSMSSettingsRequest })
-    @ApiOkResponse({ type: SaveSMSSettingsResponse })
-    saveClient(@Body() body: SaveSettingsRequest) {
+    @ApiBody({ type: SwaggerSaveClientRequest })
+    @ApiOkResponse({ type: SwaggerCommonResponse })
+    saveClient(@Body() body: ClientRequest) {
         return this.svc.createClient(body);
     }
 
@@ -33,9 +35,9 @@ export class UsersController {
         summary: 'Fetch SMS Settings',
         description: 'This endpoint is used to fetch sms settings for a particular SBE client',
     })
-    @ApiOkResponse({ type: GettSmsSettingsResponse })
+    @ApiOkResponse({ type: SwaggerCommonResponse })
     fetchClients() {
-        return this.svc.getClients({});
+        // return this.svc.getClients({});
     }
 
     
