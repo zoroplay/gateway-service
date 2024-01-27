@@ -122,8 +122,8 @@ export class BettingController {
     try {
       data.clientId = param.client_id;
       data.ipAddress = ip;
-      data.betType = data.betType;
-      data.type = data.type;
+      data.betType = data.bet_type;
+      data.type = data.event_type
 
       // console.log(data);
       return this.bettingService.PlaceBet(data);
