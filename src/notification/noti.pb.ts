@@ -65,7 +65,7 @@ export interface SendOtpRequest {
 export interface VerifyOtpRequest {
   clientID: number;
   phoneNumber: string;
-  otpCode: string;
+  code: string;
 }
 
 export interface SendSmsResponse {
