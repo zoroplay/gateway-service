@@ -48,11 +48,25 @@ export class SwaggerSendSMSResponse {
 export class SwaggerSendOtpRequest {
   @ApiProperty({ description: 'SBE Client ID' })
   @IsNotEmpty()
-  client: number;
+  clientID: number;
 
   @ApiProperty({ description: 'Phone number' })
   @IsNotEmpty()
   phoneNumber: string;
+}
+
+export class SwaggerVerifyOtpRequest {
+  @ApiProperty({ description: 'SBE Client ID' })
+  @IsNotEmpty()
+  clientID: number;
+
+  @ApiProperty({ description: 'Phone number' })
+  @IsNotEmpty()
+  phoneNumber: string;
+
+  @ApiProperty({ description: 'OTP' })
+  @IsNotEmpty()
+  code: string;
 }
 
 export class SaveSMSSettingsRequest {
