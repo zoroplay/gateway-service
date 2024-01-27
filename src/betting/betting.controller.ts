@@ -33,6 +33,7 @@ import {
 } from './dto';
 import {
   BetHistoryRequest,
+  GamingActivityRequest,
   PlaceBetRequest,
   Settings,
   UpdateBetRequest,
@@ -232,6 +233,29 @@ export class BettingController {
       });
     } catch (error) {
       console.error(error);
+    }
+  }
+
+  @Post('/reporting/gaming-activity')
+  @ApiOperation({
+    summary: 'Get client Gaming activity for a period',
+    description:
+        'This endpoints retrieves a summary of bets placed for either sports, virtual or casino',
+  })
+  @ApiBody({ type: SwaggerBetHistoryRequest })
+  @ApiOkResponse({ type:  SwaggerFindBetResponse})
+  GamingActivity(
+    @Body() body: GamingActivityRequest,
+  ) {
+
+    try {
+
+      return this.bettingService.getGamingActivity(body);
+
+    } catch (error) {
+
+      console.error(error);
+
     }
   }
 }
