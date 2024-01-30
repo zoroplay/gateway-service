@@ -126,168 +126,221 @@ export class SwaggerBonusGroupResponse {
 }
 export class SwaggerCreateCommissionTurnover {
   @ApiProperty({
-    description: 'name of commission profile',
+    description: 'number of events/ selection',
+    example: 1,
   })
-  event: string;
+  event: number;
+  @ApiProperty({
+    description: 'selection',
+    example: 1,
+  })
+  percentage: number;
 
   @ApiProperty({
-    description: 'maximum selection allowed',
+    description: 'maximum odd',
+    example: 5.5,
   })
-  commissionProfileId: number;
+  maxOdd: number;
 
   @ApiProperty({
-    description: 'minimum selection allowed',
+    description: 'minimum odd',
+    example: 1.83,
   })
-  percentage: string;
+  minOdd: number;
 
   @ApiProperty({
-    description: 'bonus rate',
+    description: 'Is Odd Set',
+    example: true,
   })
-  maxOdd: string;
-
-  @ApiProperty({
-    description: 'rate is less threshold',
-  })
-  minOdd: string;
-
-  @ApiProperty({
-    description: 'rate is more threshold',
-  })
-  oddSet: string;
+  oddSet: boolean;
 }
 
 export class SwaggerCreateCommissionProfile {
   @ApiProperty({
     description: 'name of commission profile',
+    example: 'Testing turnovers 29',
   })
   name: string;
 
   @ApiProperty({
-    description: 'maximum selection allowed',
+    description: 'set default state',
+    example: false,
   })
-  default: number;
+  default: boolean;
+  @ApiProperty({
+    description: 'profile description',
+    example: 'Testing',
+  })
+  description: string;
+  @ApiProperty({
+    description: 'Provider Group',
+    example: 'sports',
+  })
+  providerGroup: string;
 
   @ApiProperty({
-    description: 'minimum selection allowed',
+    description: 'profile period',
+    example: 'monthly',
   })
-  description: number;
+  period: string;
+  @ApiProperty({
+    description: 'profile type',
+    example: 'multiple',
+  })
+  type: string;
 
   @ApiProperty({
-    description: 'bonus rate',
-  })
-  providerGroup: number;
-
-  @ApiProperty({
-    description: 'rate is less threshold',
-  })
-  period: number;
-
-  @ApiProperty({
-    description: 'rate is more threshold',
-  })
-  type: number;
-
-  @ApiProperty({
-    description: 'coupon target to reach payout',
+    description: 'profile percentage',
+    example: 70,
   })
   percentage: number;
 
   @ApiProperty({
-    description: 'stake target to reach payout',
+    description: 'profile commission type',
+    example: 1,
   })
   commissionType: number;
   @ApiProperty({
     type: [SwaggerCreateCommissionTurnover],
     description: 'Array of Turnover Objects',
+    example: [
+      {
+        event: 1,
+        percentage: 20,
+        maxOdd: 5.5,
+        minOdd: 1.03,
+        oddSet: true,
+      },
+      {
+        event: 2,
+        percentage: 20,
+        maxOdd: 5.5,
+        minOdd: 1.03,
+        oddSet: true,
+      },
+      {
+        event: 3,
+        percentage: 20,
+        maxOdd: 5.5,
+        minOdd: 1.03,
+        oddSet: true,
+      },
+    ],
   })
   turnovers: SwaggerCreateCommissionTurnover[];
 }
 
 export class SwaggerUpdateCommissionTurnover {
   @ApiProperty({
-    description: 'name of commission profile',
+    description: 'id of commission Turnover',
+    example: 1,
   })
-  id: string;
-
+  id: number;
   @ApiProperty({
-    description: 'name of commission profile',
+    description: 'number of events/ selection',
+    example: 1,
   })
-  event: string;
-
+  event: number;
   @ApiProperty({
-    description: 'maximum selection allowed',
-  })
-  commissionProfileId: number;
-
-  @ApiProperty({
-    description: 'minimum selection allowed',
-  })
-  percentage: string;
-
-  @ApiProperty({
-    description: 'bonus rate',
-  })
-  maxOdd: string;
-
-  @ApiProperty({
-    description: 'rate is less threshold',
-  })
-  minOdd: string;
-
-  @ApiProperty({
-    description: 'rate is more threshold',
-  })
-  oddSet: string;
-}
-
-export class SwaggerUpdateCommissionProfile {
-  @ApiProperty({
-    description: 'name of commission profile',
-  })
-  id: string;
-
-  @ApiProperty({
-    description: 'name of commission profile',
-  })
-  name: string;
-
-  @ApiProperty({
-    description: 'maximum selection allowed',
-  })
-  default: number;
-
-  @ApiProperty({
-    description: 'minimum selection allowed',
-  })
-  description: number;
-
-  @ApiProperty({
-    description: 'bonus rate',
-  })
-  providerGroup: number;
-
-  @ApiProperty({
-    description: 'rate is less threshold',
-  })
-  period: number;
-
-  @ApiProperty({
-    description: 'rate is more threshold',
-  })
-  type: number;
-
-  @ApiProperty({
-    description: 'coupon target to reach payout',
+    description: 'selection',
+    example: 85,
   })
   percentage: number;
 
   @ApiProperty({
-    description: 'stake target to reach payout',
+    description: 'maximum odd',
+    example: 5.5,
+  })
+  maxOdd: number;
+
+  @ApiProperty({
+    description: 'minimum odd',
+    example: 1.83,
+  })
+  minOdd: number;
+
+  @ApiProperty({
+    description: 'Is Odd Set',
+    example: true,
+  })
+  oddSet: boolean;
+}
+
+export class SwaggerUpdateCommissionProfile {
+  @ApiProperty({
+    description: 'id of commission profile',
+    example: 1,
+  })
+  id: string;
+  @ApiProperty({
+    description: 'name of commission profile',
+    example: 'Testing turnovers 29',
+  })
+  name: string;
+
+  @ApiProperty({
+    description: 'set default state',
+    example: true,
+  })
+  default: boolean;
+  @ApiProperty({
+    description: 'profile description',
+    example: 'Testing',
+  })
+  description: string;
+  @ApiProperty({
+    description: 'Provider Group',
+    example: 'sports',
+  })
+  providerGroup: string;
+
+  @ApiProperty({
+    description: 'profile period',
+    example: 'monthly',
+  })
+  period: string;
+  @ApiProperty({
+    description: 'profile type',
+    example: 'multiple',
+  })
+  type: string;
+
+  @ApiProperty({
+    description: 'profile percentage',
+  })
+  percentage: number;
+
+  @ApiProperty({
+    description: 'profile commission type',
+    example: 85,
   })
   commissionType: number;
   @ApiProperty({
     type: [SwaggerUpdateCommissionTurnover],
     description: 'Array of Turnover Objects',
+    example: [
+      {
+        event: 1,
+        percentage: 20,
+        maxOdd: 5.5,
+        minOdd: 1.03,
+        oddSet: true,
+      },
+      {
+        event: 2,
+        percentage: 20,
+        max_odd: 5.5,
+        min_odd: 1.03,
+        oddSet: true,
+      },
+      {
+        event: 3,
+        percentage: 20,
+        maxOdd: 5.5,
+        minOdd: 1.03,
+        oddSet: true,
+      },
+    ],
   })
   turnovers: SwaggerUpdateCommissionTurnover[];
 }
@@ -313,11 +366,13 @@ export class SwaggerCommissionProfileResponse {
 export class SwaggerAssignUserCommissionProfile {
   @ApiProperty({
     description: 'commission profile id',
+    example: 1,
   })
   profileId: number;
 
   @ApiProperty({
     description: 'user id',
+    example: 1,
   })
   userId: number;
 }
@@ -348,6 +403,7 @@ export class SwaggerPayPowerRequest {
   toDate: string;
   @ApiProperty({
     description: 'Provider type : sports, casino etc.',
+    example: 'sports',
   })
   provider: string;
 }
