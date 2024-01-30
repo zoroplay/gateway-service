@@ -307,12 +307,13 @@ export class SwaggerUpdateCommissionProfile {
 
   @ApiProperty({
     description: 'profile percentage',
+    example: 85,
   })
   percentage: number;
 
   @ApiProperty({
     description: 'profile commission type',
-    example: 85,
+    example: 1,
   })
   commissionType: number;
   @ApiProperty({
@@ -320,6 +321,7 @@ export class SwaggerUpdateCommissionProfile {
     description: 'Array of Turnover Objects',
     example: [
       {
+        id: 1,
         event: 1,
         percentage: 20,
         maxOdd: 5.5,
@@ -327,6 +329,7 @@ export class SwaggerUpdateCommissionProfile {
         oddSet: true,
       },
       {
+        id: 2,
         event: 2,
         percentage: 20,
         max_odd: 5.5,
@@ -334,6 +337,7 @@ export class SwaggerUpdateCommissionProfile {
         oddSet: true,
       },
       {
+        id: 3,
         event: 3,
         percentage: 20,
         maxOdd: 5.5,
