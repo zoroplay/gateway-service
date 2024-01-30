@@ -9,7 +9,7 @@ service RetailService {
     rpc createBonusGroups(BonusGroups) returns (BonusGroupResponse) {}
 
     // Profiles
-    rpc getCommissionProfiles(Empty) returns (CommissionProfilesResponse) {}
+    rpc getCommissionProfiles(Meta) returns (CommissionProfilesResponse) {}
     rpc createCommissionProfile(CommissionProfile) returns (CommissionProfileResponse) {}
     rpc updateCommissionProfile(CommissionProfile) returns (CommissionProfileResponse) {}
     rpc assignUserCommissionProfile(AssignUserCommissionProfile) returns (CommissionProfileResponse) {}

@@ -91,6 +91,8 @@ export class RetailController {
     try {
       console.log(query);
       return this.retailService.getCommissionProfiles({
+        total: undefined,
+        totalPages: undefined,
         currentPage: Number(query.currentPage) || 1,
         itemsPerPage: Number(query.itemsPerPage) || 10,
       });

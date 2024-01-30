@@ -40,13 +40,12 @@ export class RetailService implements OnModuleInit {
   // Commission Profiles
   getCommissionProfiles(data: Meta) {
     console.log(data);
-    const _newData: Meta = {
+    return this.service.getCommissionProfiles({
       total: undefined,
       totalPages: undefined,
       currentPage: data.currentPage,
       itemsPerPage: data.itemsPerPage,
-    };
-    return this.service.getCommissionProfiles(_newData);
+    });
   }
 
   createCommissionProfile(data: CommissionProfile) {
