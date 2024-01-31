@@ -60,6 +60,7 @@ export class NotificationController {
   @ApiOkResponse({ type: SwaggerSendSMSResponse })
   VerifyOTP(@Body() data: VerifyOtpRequest) {
     try {
+      console.log(data);
       return this.notiService.verifyOTP(data);
     } catch (error) {
       console.error(error);
