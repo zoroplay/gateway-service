@@ -1,16 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import {
   SwaggerUserDetailsRequest,
-  SwaggerUserRequest,
+  SwaggerRegisterRequest,
 } from '../identity/dto';
 
 @Injectable()
 export class UserService {
-  loginUser(createUserDto: SwaggerUserRequest) {
+  loginUser(createUserDto: SwaggerRegisterRequest) {
     return 'This action adds a new user';
   }
 
-  registerUser(createUserDto: SwaggerUserRequest) {
+  registerUser(createUserDto: SwaggerRegisterRequest) {
     return 'This action adds a new user';
   }
 
@@ -19,7 +19,7 @@ export class UserService {
   }
 
   createShopUser(
-    createUserDto: SwaggerUserRequest & SwaggerUserDetailsRequest,
+    createUserDto: SwaggerRegisterRequest & SwaggerUserDetailsRequest,
   ) {
     return 'This action adds a new user';
   }

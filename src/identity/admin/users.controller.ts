@@ -5,7 +5,7 @@ import { ClientGrpc } from '@nestjs/microservices';
 import { SwaggerSaveClientRequest } from '../dto/admin.dto';
 import { SwaggerCommonResponse } from '../dto';
 
-@ApiTags('BackOffice')
+@ApiTags('BackOffice APIs')
 @Controller('admin')
 export class UsersController {
     private svc: IdentityServiceClient;
@@ -29,11 +29,10 @@ export class UsersController {
         return this.svc.createClient(body);
     }
 
-
     @Get('clients')
     @ApiOperation({
-        summary: 'Fetch SMS Settings',
-        description: 'This endpoint is used to fetch sms settings for a particular SBE client',
+        summary: 'Fetch SBE Clients',
+        description: 'This endpoint is used to get lists  of all SBE clients',
     })
     @ApiOkResponse({ type: SwaggerCommonResponse })
     fetchClients() {

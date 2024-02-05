@@ -4,8 +4,10 @@ import {
   Get,
   Inject,
   OnModuleInit,
+  Param,
   Post,
   Put,
+  Req,
 } from '@nestjs/common';
 import { ClientGrpc } from '@nestjs/microservices';
 import { Observable } from 'rxjs';
@@ -13,10 +15,10 @@ import {
   IdentityServiceClient,
   IDENTITY_SERVICE_NAME,
   LoginRequest,
-  LoginResponse, protobufPackage,
+  LoginResponse, protobufPackage, CreateUserRequest,
 } from '../identity.pb';
-import { ApiBody, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { LoginDTO, SwaggerCommonResponse, SwaggerUserRequest  } from '../dto';
+import { ApiBody, ApiOkResponse, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
+import { LoginDTO, SwaggerCommonResponse, SwaggerRegisterRequest  } from '../dto';
 
 @ApiTags('Auth APIs')
 @Controller('auth')
@@ -35,10 +37,10 @@ export class AuthController implements OnModuleInit {
     summary: 'register user',
     description: 'This endpoint registers players from clients web portal',
   })
-  @ApiBody({ type: SwaggerUserRequest })
+  @ApiBody({ type: SwaggerRegisterRequest })
   @ApiOkResponse({ type: SwaggerCommonResponse })
-  registerUser(@Body() body: SwaggerUserRequest) {
-    // return this.svc.sportRegister(body);
+  registerUser(@Body() body: CreateUserRequest) {
+    return this.svc.register(body);
   }
 
   @Post('/login')
@@ -46,19 +48,27 @@ export class AuthController implements OnModuleInit {
     summary: 'login user',
     description: 'This endpoint logs in a user',
   })
-  @ApiBody({ type: SwaggerUserRequest })
+  @ApiBody({ type: LoginDTO })
   @ApiOkResponse({ type: SwaggerCommonResponse })
-  loginUser(@Body() createUserDto: LoginRequest) {
-    return this.svc.login(createUserDto);
+  loginUser(@Body() data: LoginRequest) {
+    return this.svc.login(data);
   }
 
-  @Get('/details')
+  @Get('/details/:client_id')
   @ApiOperation({
     summary: 'get user details',
     description: 'This endpoint retrieves authenticated user details',
   })
+  @ApiParam({
+    name: 'client_id',
+    type: 'number',
+    description: ' Unique ID of the client',
+  })
   @ApiOkResponse({ type: SwaggerCommonResponse })
-  getAuthDetails() {
-    // return this.svc.getDetails();
+  getAuthDetails(
+    @Req() req, 
+    @Param() param
+  ) {
+    return this.svc.getUserDetails({clientId: param.client_id, userId: 0});
   }
 }
