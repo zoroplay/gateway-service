@@ -538,7 +538,7 @@ export class SwaggerNormalDataResponse {
 export class SwaggerNormalResponse {
   success: boolean;
   message: string;
-  data: SwaggerNormalDataResponse | undefined;
+  data: SwaggerNormalDataResponse | any | undefined;
 }
 
 export class SwaggerCommissionRequest {

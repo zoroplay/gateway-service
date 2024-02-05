@@ -75,8 +75,37 @@ export class RetailService implements OnModuleInit {
     return this.service.payOutNormalBonus(data);
   }
 
-  test(data: PayNormalRequest) {
+  async test(data: PayNormalRequest) {
     console.log(data);
-    return this.service.calculateNormalBonus(data);
+    // const resp = this.service.onBetPlaced({
+    //   betId: 1,
+    //   userId: 1,
+    //   clientId: 1,
+    //   selectionCount: 15,
+    //   stake: 500,
+    //   commission: 30,
+    //   winnings: 0,
+    //   weightedStake: 500 * 15,
+    //   odds: 12,
+    // });
+    // const resp = this.service.onBetSettled({
+    //   betId: 1,
+    //   userId: 1,
+    //   clientId: 1,
+    //   selectionCount: 15,
+    //   stake: 500,
+    //   commission: 30,
+    //   winnings: 6000,
+    //   settledDate: new Date(),
+    //   weightedStake: 500 * 15,
+    //   odds: 12,
+    // });
+    const resp = await this.service.createPowerBonus({
+      agentIds: [1],
+      clientId: 1,
+      fromDate: new Date('01-01-2024'),
+      toDate: new Date(),
+    });
+    return resp;
   }
 }

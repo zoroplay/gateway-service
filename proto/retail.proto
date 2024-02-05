@@ -21,6 +21,7 @@ service RetailService {
     rpc onBetSettled(BetData) returns (Response) {}
     rpc onBetCancelled(BetData) returns (Response) {}
 
+    rpc createPowerBonus(PowerRequest) returns (PowerBonusResponse) {}
     rpc getPowerBonus(PowerRequest) returns (PowerBonusResponse) {}
     rpc payOutPowerBonus(PayPowerRequest) returns (PowerResponse) {}
 
@@ -97,8 +98,9 @@ message AssignUserCommissionProfile {
 // Power Bonus
 message PowerRequest {
     repeated int32 agentIds = 1;
-    string fromDate = 2;
-    string toDate = 3;
+    int32 clientId = 2;
+    string fromDate = 3;
+    string toDate = 4;
 }
 
 message BetData {
