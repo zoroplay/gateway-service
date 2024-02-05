@@ -74,4 +74,9 @@ export class RetailService implements OnModuleInit {
     console.log(data);
     return this.service.payOutNormalBonus(data);
   }
+
+  test(data: PayNormalRequest) {
+    console.log(data);
+    return this.service.calculateNormalBonus(data);
+  }
 }

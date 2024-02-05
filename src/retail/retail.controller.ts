@@ -25,6 +25,8 @@ import {
   GetNormalRequest,
   PayNormalRequest,
   Meta,
+  NormalResponse,
+  PayNormalResponse,
 } from './retail.pb';
 import {
   SwaggerAssignUserCommissionProfile,
@@ -34,6 +36,7 @@ import {
   SwaggerCreateCommissionProfile,
   SwaggerNormalDataResponse,
   SwaggerNormalRequest,
+  SwaggerPayNormalRequest,
   SwaggerPayPowerRequest,
   SwaggerPowerBonusResponse,
   SwaggerPowerRequest,
@@ -180,8 +183,8 @@ export class RetailController {
 
   @Get('/normal-bonus')
   @ApiOperation({
-    summary: 'Get Agents Power Bonus List',
-    description: 'These are monthly power bonus records per agent',
+    summary: 'Get Agents Normal Bonus List',
+    description: 'These are monthly normal bonus records per agent',
   })
   @ApiBody({ type: SwaggerNormalRequest })
   @ApiOkResponse({ type: SwaggerNormalDataResponse })
@@ -195,16 +198,34 @@ export class RetailController {
 
   @Post('/normal-bonus/pay')
   @ApiOperation({
-    summary: 'Assign User a Commission Profile',
-    description: 'These are Profiles links a Profile with a user',
+    summary: 'Payout User Normal Commission Bonus',
+    description:
+      'These endpoints initiates the commission bonus to be paid out to the cashier',
   })
-  @ApiBody({ type: SwaggerNormalRequest })
+  @ApiBody({ type: SwaggerPayNormalRequest })
   @ApiOkResponse({ type: SwaggerNormalDataResponse })
   payOutNormalBonus(@Body() data: PayNormalRequest) {
     try {
       return this.retailService.payOutNormalBonus(data);
     } catch (error) {
       console.error(error);
+      throw new Error(error.message);
+    }
+  }
+
+  @Post('/test')
+  @ApiOperation({
+    summary: 'Test Endpoint',
+    description: 'These endpoints calculates the commission',
+  })
+  @ApiBody({ type: SwaggerPayNormalRequest })
+  @ApiOkResponse({ type: SwaggerNormalDataResponse })
+  test(@Body() data: PayNormalRequest) {
+    try {
+      return this.retailService.test(data);
+    } catch (error) {
+      console.error(error);
+      throw new Error(error.message);
     }
   }
 }

@@ -9,7 +9,6 @@ export interface Empty {
 
 /** Bonus */
 export interface BonusGroup {
-  id?: number;
   group: string;
   maxSel: number;
   minSel: number;
@@ -58,7 +57,6 @@ export interface CommissionProfilesResponse {
   success: boolean;
   message: string;
   data: CommissionProfile[];
-  meta?: Meta;
 }
 
 export interface AssignUserCommissionProfile {
@@ -76,15 +74,24 @@ export interface PowerRequest {
 
 export interface BetData {
   id?: number | undefined;
-  date: string;
-  settledBet: number;
+  betId: number;
+  userId: number;
+  clientId: number;
   selectionCount: number;
-  totalStake: number;
-  totalCommission: number;
-  totalWinnings: number;
+  cancelledDate?: string | Date | undefined;
+  settledDate?: string | Date | undefined;
+  stake: number;
+  commission: number;
+  winnings: number;
   weightedStake: number;
+  odds: number;
   createdAt?: string | Date | undefined;
   updatedAt?: string | Date | undefined;
+}
+
+export interface Response {
+  success: boolean;
+  message: string;
 }
 
 export interface PowerBonusData {
@@ -108,8 +115,8 @@ export interface PowerBonusData {
 
 export interface PayPowerRequest {
   agentIds: number[];
-  fromDate: string | Date;
-  toDate: string | Date;
+  fromDate: string;
+  toDate: string;
   provider: string;
 }
 
@@ -133,8 +140,8 @@ export interface PowerBonusResponse {
 
 /** Normal Bonus */
 export interface GetNormalRequest {
-  fromDate:  Date;
-  toDate:  Date;
+  fromDate: string;
+  toDate: string;
   provider: string;
   meta?: Meta | undefined;
 }
@@ -150,7 +157,7 @@ export interface PayNormalRequest {
   profileId?: number | undefined;
   commission?: number | undefined;
   profileGroup: string;
-  isPaid: boolean;
+  isPaid?: boolean | undefined;
 }
 
 export interface CurrentWeekData {
@@ -175,10 +182,10 @@ export interface Meta {
 }
 
 export interface NormalResponse {
-  success: boolean;
-  message: string;
+  success?: boolean | undefined;
+  message?: string | undefined;
   data: NormalPayout[];
-  meta: Meta | undefined;
+  meta?: Meta | undefined;
 }
 
 export interface PayNormalResponse {
@@ -198,8 +205,8 @@ export interface NormalPayout {
   profileGroup: string;
   commission: number;
   isPaid: boolean;
-  createdAt?:  Date | undefined;
-  updatedAt?:  Date | undefined;
+  createdAt?: string | Date | undefined;
+  updatedAt?: string | Date | undefined;
 }
 
 /** Commission Reequest */
@@ -219,8 +226,8 @@ export interface Commission {
   totalWon: number;
   net: number;
   commission: number;
-  startDate: string | Date | Date;
-  endDate: string | Date | Date;
+  startDate: string;
+  endDate: string;
   isPaid: boolean;
   userCommissionProfileId: number;
   createdAt?: string | Date | undefined;
@@ -244,29 +251,35 @@ export const RETAIL_PACKAGE_NAME = "retail";
 export interface RetailServiceClient {
   /** Bonus Groups */
 
-  getBonusGroups(request: Empty): Promise<BonusGroupResponse> | Observable<BonusGroupResponse>;
+  getBonusGroups(request: Empty): Observable<BonusGroupResponse>;
 
-  createBonusGroups(request: BonusGroups): Promise<BonusGroupResponse> | Observable<BonusGroupResponse>;
+  createBonusGroups(request: BonusGroups): Observable<BonusGroupResponse>;
 
   /** Profiles */
 
-  getCommissionProfiles(request: Meta): Promise<CommissionProfilesResponse> | Observable<CommissionProfilesResponse>;
+  getCommissionProfiles(request: Meta): Observable<CommissionProfilesResponse>;
 
-  createCommissionProfile(request: CommissionProfile): Promise<CommissionProfileResponse> | Observable<CommissionProfileResponse>;
+  createCommissionProfile(request: CommissionProfile): Observable<CommissionProfileResponse>;
 
-  updateCommissionProfile(request: CommissionProfile): Promise<CommissionProfileResponse> | Observable<CommissionProfileResponse>;
+  updateCommissionProfile(request: CommissionProfile): Observable<CommissionProfileResponse>;
 
-  assignUserCommissionProfile(request: AssignUserCommissionProfile): Promise<CommissionProfileResponse> | Observable<CommissionProfileResponse>;
+  assignUserCommissionProfile(request: AssignUserCommissionProfile): Observable<CommissionProfileResponse>;
 
-  getPowerBonus(request: PowerRequest): Promise<PowerBonusResponse> | Observable<PowerBonusResponse>;
+  onBetPlaced(request: BetData): Observable<Response>;
 
-  payOutPowerBonus(request: PayPowerRequest): Promise<PowerResponse> | Observable<PowerResponse>;
+  onBetSettled(request: BetData): Observable<Response>;
 
-  getNormalBonus(request: GetNormalRequest): Promise<NormalResponse> | Observable<NormalResponse>;
+  onBetCancelled(request: BetData): Observable<Response>;
 
-  calculateNormalBonus(request: PayNormalRequest): Promise<PayNormalResponse> | Observable<PayNormalResponse>;
+  getPowerBonus(request: PowerRequest): Observable<PowerBonusResponse>;
 
-  payOutNormalBonus(request: PayNormalRequest): Promise<PayNormalResponse> | Observable<PayNormalResponse>;
+  payOutPowerBonus(request: PayPowerRequest): Observable<PowerResponse>;
+
+  getNormalBonus(request: GetNormalRequest): Observable<NormalResponse>;
+
+  calculateNormalBonus(request: PayNormalRequest): Observable<PayNormalResponse>;
+
+  payOutNormalBonus(request: PayNormalRequest): Observable<PayNormalResponse>;
 }
 
 export interface RetailServiceController {
@@ -296,6 +309,12 @@ export interface RetailServiceController {
     request: AssignUserCommissionProfile,
   ): Promise<CommissionProfileResponse> | Observable<CommissionProfileResponse> | CommissionProfileResponse;
 
+  onBetPlaced(request: BetData): Promise<Response> | Observable<Response> | Response;
+
+  onBetSettled(request: BetData): Promise<Response> | Observable<Response> | Response;
+
+  onBetCancelled(request: BetData): Promise<Response> | Observable<Response> | Response;
+
   getPowerBonus(
     request: PowerRequest,
   ): Promise<PowerBonusResponse> | Observable<PowerBonusResponse> | PowerBonusResponse;
@@ -322,6 +341,9 @@ export function RetailServiceControllerMethods() {
       "createCommissionProfile",
       "updateCommissionProfile",
       "assignUserCommissionProfile",
+      "onBetPlaced",
+      "onBetSettled",
+      "onBetCancelled",
       "getPowerBonus",
       "payOutPowerBonus",
       "getNormalBonus",

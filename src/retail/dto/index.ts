@@ -447,17 +447,57 @@ export class SwaggerPowerResponse {
 export class SwaggerNormalRequest {
   @ApiProperty({
     description: 'From Date',
+    example: '01-01-2024',
   })
-  fromDate: string;
+  fromDate: Date;
   @ApiProperty({
     description: 'To Date',
+    example: '03-03-2024',
   })
-  toDate: string;
+  toDate: Date;
   @ApiProperty({
     description: 'Provider type',
     example: 'sports',
   })
   provider: string;
+}
+
+export class SwaggerPayNormalRequest {
+  @ApiProperty({
+    description: 'Bet Id',
+    example: 1,
+  })
+  betId: number;
+  @ApiProperty({
+    description: 'Selections Count',
+    example: 5,
+  })
+  selectionsCount: number;
+  @ApiProperty({
+    description: 'Total  Odds',
+    example: 10.01,
+  })
+  totalOdds: number;
+  @ApiProperty({
+    description: 'Bet Id',
+    example: 100,
+  })
+  stake: number;
+  @ApiProperty({
+    description: 'Client Id',
+    example: 1,
+  })
+  clientId: number;
+  @ApiProperty({
+    description: 'Cashier or User Id',
+    example: 1,
+  })
+  cashierId: number;
+  @ApiProperty({
+    description: 'Profile Group',
+    example: 'sports',
+  })
+  profileGroup: string;
 }
 
 export class SwaggerCurrentWeekData {
