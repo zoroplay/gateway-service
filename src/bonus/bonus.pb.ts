@@ -17,24 +17,6 @@ export interface CreateFirstDepositBonusRequest {
   minimumBettingStake: number;
 }
 
-export interface CreateNewBonusRequest {
-  bonusName: string;
-  bonusCode: string;
-  target: string;
-  bonusCategory: string;
-  bonusType: string;
-  bonusAmount: number;
-  maxValue: number;
-  sportPercentage: number;
-  casinoPercentage: number;
-  virtualPercentage: number;
-  noOfSportRollover: number;
-  noOfCasinoRollover: number;
-  noOfVirtualRollover: number;
-  duration: number;
-  clientId: number;
-}
-
 export interface CreateCashbackBonusRequest {
   clientId: number;
   minimumStake: number;
@@ -51,6 +33,7 @@ export interface CreateCashbackBonusRequest {
   rolloverCount: number;
   name: string;
   minimumBettingStake: number;
+  product: string;
 }
 
 export interface CreateFreebetBonusRequest {
@@ -63,6 +46,7 @@ export interface CreateFreebetBonusRequest {
   maximumWinning: number;
   bonusAmount: number;
   minimumBettingStake: number;
+  product: string;
 }
 
 export interface CreateReferralBonusRequest {
@@ -79,6 +63,7 @@ export interface CreateReferralBonusRequest {
   rolloverCount: number;
   name: string;
   minimumBettingStake: number;
+  product: string;
 }
 
 export interface CreateShareBetBonusRequest {
@@ -95,6 +80,7 @@ export interface CreateShareBetBonusRequest {
   rolloverCount: number;
   name: string;
   minimumBettingStake: number;
+  product: string;
 }
 
 export interface CreateBonusRequest {
@@ -116,12 +102,7 @@ export interface CreateBonusRequest {
   rolloverCount: number;
   name: string;
   minimumBettingStake: number;
-}
-
-export interface CreateNewBonusResponse {
-  bonusId: number;
-  status: number;
-  description: string;
+  product: string;
 }
 
 export interface CreateBonusResponse {
@@ -141,10 +122,6 @@ export interface DeleteBonusRequest {
 
 export interface GetBonusResponse {
   bonus: CreateBonusRequest[];
-}
-
-export interface GetNewBonusResponse {
-  bonus: CreateNewBonusRequest[];
 }
 
 export interface BonusResponse {
@@ -249,7 +226,10 @@ export interface CreateCampaignBonusDto {
   name: string;
   bonusCode: string;
   bonusId: number;
-  expiryDate: string;
+  startDate: string;
+  endDate: string;
+  affiliateIds?: string | undefined;
+  trackierCampaignId?: string | undefined;
 }
 
 export interface UpdateCampaignBonusDto {
@@ -300,11 +280,7 @@ export const BONUS_PACKAGE_NAME = "bonus";
 export interface BonusServiceClient {
   createCashbackBonus(request: CreateBonusRequest): Observable<CreateBonusResponse>;
 
-  createNewBonus(request: CreateNewBonusRequest): Observable<CreateBonusResponse>;
-
-  createBonus(request: CreateNewBonusRequest): Observable<CreateBonusResponse>;
-
-  updateCashbackBonus(request: CreateCashbackBonusRequest): Observable<CreateBonusResponse>;
+  updateCashbackBonus(request: CreateBonusRequest): Observable<CreateBonusResponse>;
 
   createFirstDepositBonus(request: CreateFirstDepositBonusRequest): Observable<CreateBonusResponse>;
 
@@ -347,19 +323,11 @@ export interface BonusServiceClient {
 
 export interface BonusServiceController {
   createCashbackBonus(
-    request: CreateCashbackBonusRequest,
-  ): Promise<CreateBonusResponse> | Observable<CreateBonusResponse> | CreateBonusResponse;
-
-  createNewBonus(
-    request: CreateNewBonusRequest,
-  ): Promise<CreateBonusResponse> | Observable<CreateBonusResponse> | CreateBonusResponse;
-
-  createBonus(
-    request: CreateNewBonusRequest,
+    request: CreateBonusRequest,
   ): Promise<CreateBonusResponse> | Observable<CreateBonusResponse> | CreateBonusResponse;
 
   updateCashbackBonus(
-    request: CreateCashbackBonusRequest,
+    request: CreateBonusRequest,
   ): Promise<CreateBonusResponse> | Observable<CreateBonusResponse> | CreateBonusResponse;
 
   createFirstDepositBonus(
@@ -437,8 +405,6 @@ export function BonusServiceControllerMethods() {
   return function (constructor: Function) {
     const grpcMethods: string[] = [
       "createCashbackBonus",
-      "createNewBonus",
-      "createBonus",
       "updateCashbackBonus",
       "createFirstDepositBonus",
       "updateFirstDepositBonus",
