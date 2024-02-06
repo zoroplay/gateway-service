@@ -22,6 +22,7 @@ import { BonusService } from './bonus.service';
 import {
   AwardBonusRequest,
   BonusStatusRequest,
+  CreateBonusRequest,
   CreateCampaignBonusDto,
   CreateCashbackBonusRequest,
   CreateFirstDepositBonusRequest,
@@ -72,7 +73,7 @@ export class BonusController {
   })
   @ApiBody({ type: SwaggerCreateCashbackBonusRequest })
   @ApiOkResponse({ type: SwaggerCreateBonusResponse })
-  CreateCashbackBonus(@Body() data: CreateCashbackBonusRequest) {
+  CreateCashbackBonus(@Body() data: CreateBonusRequest) {
     try {
       return this.bonusService.CreateCashbackBonus(data);
     } catch (error) {

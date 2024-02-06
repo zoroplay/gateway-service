@@ -35,7 +35,7 @@ export class BonusService implements OnModuleInit {
       this.client.getService<BonusServiceClient>(BONUS_SERVICE_NAME);
   }
 
-  CreateCashbackBonus(data: CreateCashbackBonusRequest) {
+  CreateCashbackBonus(data: CreateBonusRequest) {
     console.log('CreateCashbackBonus ');
     return this.service.createCashbackBonus(data);
   }

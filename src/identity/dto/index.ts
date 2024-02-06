@@ -11,7 +11,10 @@ export class LoginDTO {
     password: string;
 }
 
-export class SwaggerUserRequest {
+export class SwaggerRegisterRequest {
+    @ApiProperty({ description: 'SBE Platform Client ID' })
+    clientId: number;
+
     @ApiProperty({ description: 'Username' })
     username: string;
   

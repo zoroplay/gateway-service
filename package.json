@@ -19,7 +19,7 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "proto:install": "npm i git+https://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:x-oauth-basic@github.com/zoroplay/sbe-service-proto.git",
+    "proto:install": "yarn add git+https://github.com/zoroplay/sbe-service-proto.git",
     "proto:identity": "protoc --plugin=node_modules/.bin/protoc-gen-ts_proto -I=./node_modules/sbe-service-proto/proto --ts_proto_out=src/identity/ node_modules/sbe-service-proto/proto/identity.proto --ts_proto_opt=nestJs=true --ts_proto_opt=fileSuffix=.pb",
     "proto:retail": "protoc --plugin=node_modules/.bin/protoc-gen-ts_proto -I=./node_modules/sbe-service-proto/proto --ts_proto_out=src/retail/ node_modules/sbe-service-proto/proto/retail.proto --ts_proto_opt=nestJs=true --ts_proto_opt=fileSuffix=.pb",
     "proto:gaming": "protoc --plugin=node_modules/.bin/protoc-gen-ts_proto -I=./node_modules/sbe-service-proto/proto --ts_proto_out=src/gaming/ node_modules/sbe-service-proto/proto/gaming.proto --ts_proto_opt=nestJs=true --ts_proto_opt=fileSuffix=.pb",
@@ -27,6 +27,7 @@
     "proto:fixture": "protoc --plugin=node_modules/.bin/protoc-gen-ts_proto -I=./node_modules/sbe-service-proto/proto --ts_proto_out=src/fixture/ node_modules/sbe-service-proto/proto/fixture.proto --ts_proto_opt=nestJs=true --ts_proto_opt=fileSuffix=.pb",
     "proto:bonus": "protoc --plugin=node_modules/.bin/protoc-gen-ts_proto -I=./node_modules/sbe-service-proto/proto --ts_proto_out=src/bonus/ node_modules/sbe-service-proto/proto/bonus.proto --ts_proto_opt=nestJs=true --ts_proto_opt=fileSuffix=.pb",
     "proto:noti": "protoc --plugin=node_modules/.bin/protoc-gen-ts_proto -I=./node_modules/sbe-service-proto/proto --ts_proto_out=src/notification/ node_modules/sbe-service-proto/proto/noti.proto --ts_proto_opt=nestJs=true --ts_proto_opt=fileSuffix=.pb",
+    "proto:wallet": "protoc --plugin=node_modules/.bin/protoc-gen-ts_proto -I=./node_modules/sbe-service-proto/proto --ts_proto_out=src/wallet/ node_modules/sbe-service-proto/proto/wallet.proto --ts_proto_opt=nestJs=true --ts_proto_opt=fileSuffix=.pb",
     "proto:all": "yarn proto:identity && yarn proto:retail && yarn proto:betting && yarn proto:fixture && yarn proto:bonus"
   },
   "dependencies": {
@@ -42,8 +43,8 @@
     "dotenv": "^16.3.1",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
-    "rxjs": "^7.2.0",
-    "sbe-service-proto": "git+https://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:x-oauth-basic@github.com/zoroplay/sbe-service-proto.git",
+    "rxjs": "7.5.2",
+    "sbe-service-proto": "git+https://github.com/zoroplay/sbe-service-proto.git",
     "swagger-ui-express": "^5.0.0"
   },
   "devDependencies": {

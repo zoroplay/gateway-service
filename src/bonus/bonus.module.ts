@@ -16,7 +16,7 @@ import {join} from "path";
         options: {
           url: process.env.BONUS_SERVICE_URL,
           package: BONUS_PACKAGE_NAME,
-          protoPath: join('node_modules/sbe-service-proto/proto/bonus.proto'),
+          protoPath: 'proto/bonus.proto',
         },
       },
     ]),

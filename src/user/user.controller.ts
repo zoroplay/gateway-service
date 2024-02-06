@@ -12,7 +12,7 @@ import { UserService } from './user.service';
 import {
   SwaggerCommonResponse,
   SwaggerUserDetailsRequest,
-  SwaggerUserRequest,
+  SwaggerRegisterRequest,
 } from '../identity/dto';
 import { ApiOperation, ApiBody, ApiOkResponse } from '@nestjs/swagger';
 
@@ -25,9 +25,9 @@ export class UsersController {
     summary: 'register user',
     description: 'This endpoint registers a user',
   })
-  @ApiBody({ type: SwaggerUserRequest })
+  @ApiBody({ type: SwaggerRegisterRequest })
   @ApiOkResponse({ type: SwaggerCommonResponse })
-  registerUser(@Body() createUserDto: SwaggerUserRequest) {
+  registerUser(@Body() createUserDto: SwaggerRegisterRequest) {
     return this.usersService.registerUser(createUserDto);
   }
 
@@ -36,9 +36,9 @@ export class UsersController {
     summary: 'login user',
     description: 'This endpoint logs in a user',
   })
-  @ApiBody({ type: SwaggerUserRequest })
+  @ApiBody({ type: SwaggerRegisterRequest })
   @ApiOkResponse({ type: SwaggerCommonResponse })
-  loginUser(@Body() createUserDto: SwaggerUserRequest) {
+  loginUser(@Body() createUserDto: SwaggerRegisterRequest) {
     return this.usersService.loginUser(createUserDto);
   }
 
@@ -58,10 +58,10 @@ export class UsersController {
     summary: 'create shop user',
     description: 'This endpoint creates a shop user',
   })
-  @ApiBody({ type: SwaggerUserRequest as any & SwaggerUserDetailsRequest })
+  @ApiBody({ type: SwaggerRegisterRequest as any & SwaggerUserDetailsRequest })
   @ApiOkResponse({ type: SwaggerCommonResponse })
   createShopUser(
-    @Body() createUserDto: SwaggerUserRequest & SwaggerUserDetailsRequest,
+    @Body() createUserDto: SwaggerRegisterRequest & SwaggerUserDetailsRequest,
   ) {
     return this.usersService.createShopUser(createUserDto);
   }

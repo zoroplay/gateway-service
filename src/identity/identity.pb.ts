@@ -12,6 +12,7 @@ export interface UserData {
   code?: string | undefined;
   firstName?: string | undefined;
   lastName?: string | undefined;
+  email?: string | undefined;
 }
 
 export interface CreateUserRequest {
@@ -50,6 +51,7 @@ export interface User {
 
 export interface RegisterResponse {
   status: number;
+  success: boolean;
   data: UserData | undefined;
   error?: string | undefined;
 }
@@ -63,9 +65,21 @@ export interface LoginRequest {
 
 export interface LoginResponse {
   status: number;
-  token: string;
+  success: boolean;
   data: UserData | undefined;
   error?: string | undefined;
+}
+
+export interface GetUserDetailsRequest {
+  clientId: number;
+  userId: number;
+}
+
+export interface GetUserDetailsResponse {
+  status: number;
+  success: boolean;
+  message: string;
+  data: UserData | undefined;
 }
 
 /** Validate */
@@ -93,10 +107,6 @@ export interface RemoveClientRequest {
   clientID: string;
 }
 
-export interface RemoveRoleRequest {
-  roleID: string;
-}
-
 export interface RemovePermissionRequest {
   permissionID: string;
 }
@@ -108,10 +118,57 @@ export interface RoleRequest {
   roleID?: string | undefined;
 }
 
+export interface SaveRoleResponse {
+  status: boolean;
+  message: string;
+  data: Role | undefined;
+  errors?: string | undefined;
+}
+
+export interface GetRolesResponse {
+  status: boolean;
+  message: string;
+  data: Role[];
+  errors?: string | undefined;
+}
+
+export interface RemoveRoleRequest {
+  roleID: string;
+}
+
+export interface Role {
+  id: number;
+  name: string;
+  description: string;
+  roleType: string;
+}
+
 export interface PermissionRequest {
   name: string;
   description: string;
   permissionID: string;
+}
+
+export interface GetPaymentDataRequest {
+  clientId: number;
+  userId: number;
+}
+
+export interface GetPaymentDataResponse {
+  username: string;
+  email: string;
+  clientUrl: string;
+}
+
+export interface GetClientRequest {
+  id: number;
+}
+
+export interface GetClientResponse {
+  status: boolean;
+  message: string;
+  data: ClientData | undefined;
+  errors?: string | undefined;
 }
 
 export interface CommonResponse {
@@ -119,6 +176,25 @@ export interface CommonResponse {
   message: string;
   data: string[];
   errors?: string | undefined;
+}
+
+export interface DeleteResponse {
+  status: boolean;
+  message: string;
+}
+
+export interface GetUsersResponse {
+  status: boolean;
+  message: string;
+}
+
+export interface ClientData {
+  name: string;
+  country: string;
+  currency: string;
+  website: string;
+  contactNumber: string;
+  contactEmail: string;
 }
 
 export interface EmptyRequest {
@@ -133,15 +209,17 @@ export interface IdentityServiceClient {
 
   validate(request: ValidateRequest): Observable<ValidateResponse>;
 
+  getUserDetails(request: GetUserDetailsRequest): Observable<GetUserDetailsResponse>;
+
   createClient(request: ClientRequest): Observable<CommonResponse>;
 
   createPermission(request: PermissionRequest): Observable<CommonResponse>;
 
-  saveRole(request: RoleRequest): Observable<CommonResponse>;
+  saveRole(request: RoleRequest): Observable<SaveRoleResponse>;
 
-  getRoles(request: EmptyRequest): Observable<CommonResponse>;
+  getRoles(request: EmptyRequest): Observable<GetRolesResponse>;
 
-  removeRole(request: RemoveRoleRequest): Observable<CommonResponse>;
+  removeRole(request: RemoveRoleRequest): Observable<DeleteResponse>;
 
   findAllPermissions(request: EmptyRequest): Observable<CommonResponse>;
 
@@ -156,6 +234,12 @@ export interface IdentityServiceClient {
   createRetailUser(request: CreateUserRequest): Observable<CommonResponse>;
 
   createAdminUser(request: CreateUserRequest): Observable<CommonResponse>;
+
+  getAdminUsers(request: EmptyRequest): Observable<GetUsersResponse>;
+
+  getClient(request: GetClientRequest): Observable<GetClientResponse>;
+
+  getPaymentData(request: GetPaymentDataRequest): Observable<GetPaymentDataResponse>;
 }
 
 export interface IdentityServiceController {
@@ -165,15 +249,19 @@ export interface IdentityServiceController {
 
   validate(request: ValidateRequest): Promise<ValidateResponse> | Observable<ValidateResponse> | ValidateResponse;
 
+  getUserDetails(
+    request: GetUserDetailsRequest,
+  ): Promise<GetUserDetailsResponse> | Observable<GetUserDetailsResponse> | GetUserDetailsResponse;
+
   createClient(request: ClientRequest): Promise<CommonResponse> | Observable<CommonResponse> | CommonResponse;
 
   createPermission(request: PermissionRequest): Promise<CommonResponse> | Observable<CommonResponse> | CommonResponse;
 
-  saveRole(request: RoleRequest): Promise<CommonResponse> | Observable<CommonResponse> | CommonResponse;
+  saveRole(request: RoleRequest): Promise<SaveRoleResponse> | Observable<SaveRoleResponse> | SaveRoleResponse;
 
-  getRoles(request: EmptyRequest): Promise<CommonResponse> | Observable<CommonResponse> | CommonResponse;
+  getRoles(request: EmptyRequest): Promise<GetRolesResponse> | Observable<GetRolesResponse> | GetRolesResponse;
 
-  removeRole(request: RemoveRoleRequest): Promise<CommonResponse> | Observable<CommonResponse> | CommonResponse;
+  removeRole(request: RemoveRoleRequest): Promise<DeleteResponse> | Observable<DeleteResponse> | DeleteResponse;
 
   findAllPermissions(request: EmptyRequest): Promise<CommonResponse> | Observable<CommonResponse> | CommonResponse;
 
@@ -190,6 +278,14 @@ export interface IdentityServiceController {
   createRetailUser(request: CreateUserRequest): Promise<CommonResponse> | Observable<CommonResponse> | CommonResponse;
 
   createAdminUser(request: CreateUserRequest): Promise<CommonResponse> | Observable<CommonResponse> | CommonResponse;
+
+  getAdminUsers(request: EmptyRequest): Promise<GetUsersResponse> | Observable<GetUsersResponse> | GetUsersResponse;
+
+  getClient(request: GetClientRequest): Promise<GetClientResponse> | Observable<GetClientResponse> | GetClientResponse;
+
+  getPaymentData(
+    request: GetPaymentDataRequest,
+  ): Promise<GetPaymentDataResponse> | Observable<GetPaymentDataResponse> | GetPaymentDataResponse;
 }
 
 export function IdentityServiceControllerMethods() {
@@ -198,6 +294,7 @@ export function IdentityServiceControllerMethods() {
       "register",
       "login",
       "validate",
+      "getUserDetails",
       "createClient",
       "createPermission",
       "saveRole",
@@ -210,6 +307,9 @@ export function IdentityServiceControllerMethods() {
       "updateDetails",
       "createRetailUser",
       "createAdminUser",
+      "getAdminUsers",
+      "getClient",
+      "getPaymentData",
     ];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);

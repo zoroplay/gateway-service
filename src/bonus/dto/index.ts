@@ -56,6 +56,9 @@ export class SwaggerCreateCashbackBonusRequest {
   @ApiProperty({ description: 'ID of the client' })
   clientId: number;
 
+  @ApiProperty({ description: 'Bonus name if any' })
+  name?: string
+
   @ApiProperty({ description: 'This bonus will expire after this number of hours' })
   expiryInHours: number;
 
@@ -85,6 +88,15 @@ export class SwaggerCreateCashbackBonusRequest {
 
   @ApiProperty({ description: 'Bonus amount to award' })
   bonusAmount: number;
+
+  @ApiProperty({ description: 'Bonus amount multiplier to determine winning amount' })
+  bonusAmountMultiplier: number;
+
+  @ApiProperty({ description: 'Total number of times to rollover' })
+  rolloverCount: number;
+
+  @ApiProperty({ description: 'Product type - Sport, casino, virtual' })
+  product: string;
 }
 
 export class SwaggerCreateFirstDepositBonusRequest {
@@ -450,8 +462,17 @@ export class SwaggerCreateCampaignBonus {
   @ApiProperty({ description: 'ID of the bonus to use in the campaign' })
   bonusId: number;
 
+  @ApiProperty({ description: 'Date When the code starts being active, date form should be yyyy-mm-dd e.g 2023-09-08  ' })
+  startDate: string;
+
   @ApiProperty({ description: 'Date When the code expires, date form should be yyyy-mm-dd e.g 2023-09-08  ' })
-  expiryDate: string;
+  endDate: string;
+
+  @ApiProperty({ description: 'Trackier affiliate IDs seperated by commas' })
+  affiliateIds?: string;
+
+  @ApiProperty({ description: 'Trackier Campaign ID' })
+  trackierCampaignId?: string;
 }
 
 export class SwaggerUpdateCampaignBonus {
