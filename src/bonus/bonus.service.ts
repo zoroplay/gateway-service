@@ -14,7 +14,6 @@ import {
   UserBet,
   BonusStatusRequest,
   CreateBonusRequest,
-  CreateNewBonusRequest,
   CreateCampaignBonusDto,
   UpdateCampaignBonusDto,
   DeleteCampaignBonusDto,
@@ -40,12 +39,12 @@ export class BonusService implements OnModuleInit {
     return this.service.createCashbackBonus(data);
   }
 
-  CreateBonus(data: CreateNewBonusRequest) {
+  CreateBonus(data: CreateBonusRequest) {
     console.log('CreateBonus ');
-    return this.service.createBonus(data);
+    // return this.service.createBonus(data);
   }
 
-  UpdateCashbackBonus(data: CreateCashbackBonusRequest) {
+  UpdateCashbackBonus(data: CreateBonusRequest) {
     console.log('UpdateCashbackBonus ');
     return this.service.updateCashbackBonus(data);
   }

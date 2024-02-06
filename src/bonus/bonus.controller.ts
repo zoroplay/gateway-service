@@ -27,7 +27,6 @@ import {
   CreateCashbackBonusRequest,
   CreateFirstDepositBonusRequest,
   CreateFreebetBonusRequest,
-  CreateNewBonusRequest,
   CreateReferralBonusRequest,
   CreateShareBetBonusRequest,
   DeleteCampaignBonusDto,
@@ -88,7 +87,7 @@ export class BonusController {
   })
   @ApiBody({ type: SwaggerCreateBonusRequest })
   @ApiOkResponse({ type: SwaggerCreateBonusResponse })
-  CreateBonus(@Body() data: CreateNewBonusRequest) {
+  CreateBonus(@Body() data: CreateBonusRequest) {
     try {
       return this.bonusService.CreateBonus(data);
     } catch (error) {
@@ -104,7 +103,7 @@ export class BonusController {
   })
   @ApiBody({ type: SwaggerCreateCashbackBonusRequest })
   @ApiOkResponse({ type: SwaggerCreateBonusResponse })
-  UpdateCashbackBonus(@Body() data: CreateCashbackBonusRequest) {
+  UpdateCashbackBonus(@Body() data: CreateBonusRequest) {
     try {
       return this.bonusService.UpdateCashbackBonus(data);
     } catch (error) {
