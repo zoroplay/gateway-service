@@ -12,7 +12,6 @@ import {
   ApiBody,
   ApiOkResponse,
   ApiOperation,
-  ApiParam,
   ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
@@ -25,8 +24,6 @@ import {
   GetNormalRequest,
   PayNormalRequest,
   Meta,
-  NormalResponse,
-  PayNormalResponse,
 } from './retail.pb';
 import {
   SwaggerAssignUserCommissionProfile,

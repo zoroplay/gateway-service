@@ -83,13 +83,15 @@ message CommissionProfilesResponse {
     bool success = 1;
     string message = 2;
     repeated CommissionProfile  data = 3;
+    optional Meta meta = 4;
 }
 
 message AssignUserCommissionProfile {
     int32 profileId = 1;
     int32 userId = 2;
-    optional string createdAt = 3;
-    optional string updatedAt = 4;
+    int32 clientId = 3;
+    optional string createdAt = 4;
+    optional string updatedAt = 5;
 }
 
 // Commissions
@@ -97,7 +99,7 @@ message AssignUserCommissionProfile {
 
 // Power Bonus
 message PowerRequest {
-    repeated int32 agentIds = 1;
+    repeated int32 userIds = 1;
     int32 clientId = 2;
     string fromDate = 3;
     string toDate = 4;
@@ -146,7 +148,7 @@ message PowerBonusData {
 
 message PayPowerRequest {
     int32 clientId = 1;
-    repeated int32 agentIds = 2;
+    repeated int32 userIds = 2;
     string fromDate = 3;
     string toDate = 4;
     string provider = 5;
@@ -229,13 +231,14 @@ message NormalPayout {
     int32 selectionsCount = 3;
     double totalOdds = 4;
     double stake = 5;
-    int32 cashierId = 6;
-    int32 profileId = 7;
-    string profileGroup = 8;
-    double commission = 9;
-    bool isPaid = 10;
-    optional string createdAt = 11;
-    optional string updatedAt = 12;
+    int32 userId = 6;
+    int32 clientId = 7;
+    int32 profileId = 8;
+    string profileGroup = 9;
+    double commission = 10;
+    bool isPaid = 11;
+    optional string createdAt = 12;
+    optional string updatedAt = 13;
 }
 
 
@@ -251,17 +254,18 @@ message ArrayCommissionResponse {
 message Commission {
     optional int32 id = 1;
     int32 userId = 2;
-    int32 totalTickets = 3;
-    double totalSales = 4;
-    double totalWon = 5;
-    double net = 6;
-    double commission = 7;
-    string startDate = 8;
-    string endDate = 9;
-    bool isPaid = 10;
-    int32 userCommissionProfileId = 11;
-    optional string createdAt = 12;
-    optional string updatedAt = 13;
+    int32 clientId = 3;
+    int32 totalTickets = 4;
+    double totalSales = 5;
+    double totalWon = 6;
+    double net = 7;
+    double commission = 8;
+    string startDate = 9;
+    string endDate = 10;
+    bool isPaid = 11;
+    int32 userCommissionProfileId = 12;
+    optional string createdAt = 13;
+    optional string updatedAt = 14;
 }
 
 message CommissionTurnover {

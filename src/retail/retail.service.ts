@@ -2,7 +2,6 @@ import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import {
   AssignUserCommissionProfile,
   BonusGroups,
-  Empty,
   PayPowerRequest,
   PowerRequest,
   protobufPackage,
@@ -14,6 +13,7 @@ import {
   Meta,
 } from './retail.pb';
 import { ClientGrpc } from '@nestjs/microservices';
+import * as dayjs from 'dayjs';
 
 @Injectable()
 export class RetailService implements OnModuleInit {
@@ -99,12 +99,12 @@ export class RetailService implements OnModuleInit {
     //   settledDate: new Date(),
     //   weightedStake: 500 * 15,
     //   odds: 12,
-    // });
+    // });s
     const resp = await this.service.createPowerBonus({
-      agentIds: [1],
+      userIds: [1],
       clientId: 1,
-      fromDate: new Date('01-01-2024'),
-      toDate: new Date(),
+      fromDate: dayjs('01-01-2024').format('YYYY-MM-DD'),
+      toDate: dayjs().format('YYYY-MM-DD'),
     });
     return resp;
   }
