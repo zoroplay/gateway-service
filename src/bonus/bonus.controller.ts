@@ -22,243 +22,26 @@ import { BonusService } from './bonus.service';
 import {
   AwardBonusRequest,
   BonusStatusRequest,
-  CreateBonusRequest,
-  CreateCampaignBonusDto,
-  CreateCashbackBonusRequest,
-  CreateFirstDepositBonusRequest,
-  CreateFreebetBonusRequest,
-  CreateReferralBonusRequest,
-  CreateShareBetBonusRequest,
-  DeleteCampaignBonusDto,
-  GetBonusRequest,
   GetUserBonusRequest,
   RedeemCampaignBonusDto,
-  UpdateCampaignBonusDto,
 } from './bonus.pb';
 import {
-  SwaggerAllCampaignBonus,
   SwaggerAwardBonusRequest,
-  SwaggerBonusResponse,
   SwaggerBonusStatusRequest,
-  SwaggerCreateBonusRequest,
   SwaggerCreateBonusResponse,
-  SwaggerCreateCampaignBonus,
-  SwaggerCreateCashbackBonusRequest,
-  SwaggerCreateFirstDepositBonusRequest,
-  SwaggerCreateFreebetBonusRequest,
-  SwaggerCreateReferralBonusRequest,
-  SwaggerCreateShareBetBonusRequest,
-  SwaggerDeleteCampaignBonusDto,
-  SwaggerGetBonusRequest,
-  SwaggerGetUserBonusRequest,
   SwaggerGetUserBonusResponse,
   SwaggerRedeemCampaignBonusDto,
-  SwaggerUpdateCampaignBonus,
   SwaggerUserBetWithBonus,
 } from './dto';
 import { SwaggerPlaceBetResponse } from '../betting/dto';
 import { UserBetWithBonus } from './bet.interface';
 
 @ApiTags('Bonus APIs')
-@Controller('bonus-service')
+@Controller('bonus')
 export class BonusController {
   constructor(private readonly bonusService: BonusService) {}
 
-  @Post('/cashback/create')
-  @ApiOperation({
-    summary: 'Create Cashback Bonus ',
-    description:
-      'This endpoint creates a new cashback bonus for a particular client, it enables you to create cashback bonus with different settings/terms',
-  })
-  @ApiBody({ type: SwaggerCreateCashbackBonusRequest })
-  @ApiOkResponse({ type: SwaggerCreateBonusResponse })
-  CreateCashbackBonus(@Body() data: CreateBonusRequest) {
-    try {
-      return this.bonusService.CreateCashbackBonus(data);
-    } catch (error) {
-      console.error(error);
-    }
-  }
-  @Post('/bonus/create')
-  @ApiOperation({
-    summary: 'Create Cashback Bonus ',
-    description:
-      'This endpoint creates a new cashback bonus for a particular client, it enables you to create cashback bonus with different settings/terms',
-  })
-  @ApiBody({ type: SwaggerCreateBonusRequest })
-  @ApiOkResponse({ type: SwaggerCreateBonusResponse })
-  CreateBonus(@Body() data: CreateBonusRequest) {
-    try {
-      return this.bonusService.CreateBonus(data);
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
-  @Put('/cashback/update')
-  @ApiOperation({
-    summary: 'Update Cashback Bonus ',
-    description:
-      'This endpoint updates an existing cashback bonus for a particular client, it enables you to update cashback bonus with different settings/terms',
-  })
-  @ApiBody({ type: SwaggerCreateCashbackBonusRequest })
-  @ApiOkResponse({ type: SwaggerCreateBonusResponse })
-  UpdateCashbackBonus(@Body() data: CreateBonusRequest) {
-    try {
-      return this.bonusService.UpdateCashbackBonus(data);
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
-  @Post('/first-deposit/create')
-  @ApiOperation({
-    summary: 'Create First Deposit Bonus ',
-    description:
-      'This endpoint creates a new First Deposit bonus for a particular client, it enables you to create First Deposit bonus with different settings/terms',
-  })
-  @ApiBody({ type: SwaggerCreateFirstDepositBonusRequest })
-  @ApiOkResponse({ type: SwaggerCreateBonusResponse })
-  CreateFirstDepositBonus(@Body() data: CreateFirstDepositBonusRequest) {
-    try {
-      return this.bonusService.CreateFirstDepositBonus(data);
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
-  @Put('/first-deposit/update')
-  @ApiOperation({
-    summary: 'Update First Deposit Bonus ',
-    description:
-      'This endpoint updates an existing First Deposit bonus for a particular client, it enables you to update First Deposit bonus with different settings/terms',
-  })
-  @ApiBody({ type: SwaggerCreateCashbackBonusRequest })
-  @ApiOkResponse({ type: SwaggerCreateBonusResponse })
-  UpdateFirstDepositBonus(@Body() data: CreateFirstDepositBonusRequest) {
-    try {
-      return this.bonusService.UpdateFirstDepositBonus(data);
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
-  @Post('/freebet/create')
-  @ApiOperation({
-    summary: 'Create Freebet Bonus ',
-    description:
-      'This endpoint creates a new Freebet bonus for a particular client, it enables you to create Freebet bonus with different settings/terms',
-  })
-  @ApiBody({ type: SwaggerCreateFreebetBonusRequest })
-  @ApiOkResponse({ type: SwaggerCreateBonusResponse })
-  CreateFreebetBonus(@Body() data: CreateFreebetBonusRequest) {
-    try {
-      return this.bonusService.CreateFreebetBonus(data);
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
-  @Put('/freebet/update')
-  @ApiOperation({
-    summary: 'Update Freebet Bonus ',
-    description:
-      'This endpoint updates an existing Freebet bonus for a particular client, it enables you to update Freebet bonus with different settings/terms',
-  })
-  @ApiBody({ type: SwaggerCreateFreebetBonusRequest })
-  @ApiOkResponse({ type: SwaggerCreateBonusResponse })
-  UpdateFreebetBonus(@Body() data: CreateFreebetBonusRequest) {
-    try {
-      return this.bonusService.UpdateFreebetBonus(data);
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
-  @Post('/referral/create')
-  @ApiOperation({
-    summary: 'Create Referral Bonus ',
-    description:
-      'This endpoint creates a new Referral bonus for a particular client, it enables you to create Referral bonus with different settings/terms',
-  })
-  @ApiBody({ type: SwaggerCreateReferralBonusRequest })
-  @ApiOkResponse({ type: SwaggerCreateBonusResponse })
-  CreateReferralBonus(@Body() data: CreateReferralBonusRequest) {
-    try {
-      return this.bonusService.CreateReferralBonus(data);
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
-  @Put('/referral/update')
-  @ApiOperation({
-    summary: 'Update Referral Bonus ',
-    description:
-      'This endpoint updates an existing Referral bonus for a particular client, it enables you to update Referral bonus with different settings/terms',
-  })
-  @ApiBody({ type: SwaggerCreateReferralBonusRequest })
-  @ApiOkResponse({ type: SwaggerCreateBonusResponse })
-  UpdateReferralBonus(@Body() data: CreateReferralBonusRequest) {
-    try {
-      return this.bonusService.UpdateReferralBonus(data);
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
-  @Post('/sharebet/create')
-  @ApiOperation({
-    summary: 'Create ShareBet Bonus ',
-    description:
-      'This endpoint creates a new ShareBet bonus for a particular client, it enables you to create ShareBet bonus with different settings/terms',
-  })
-  @ApiBody({ type: SwaggerCreateShareBetBonusRequest })
-  @ApiOkResponse({ type: SwaggerCreateBonusResponse })
-  CreateShareBetBonus(@Body() data: CreateShareBetBonusRequest) {
-    try {
-      return this.bonusService.CreateShareBetBonus(data);
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
-  @Put('/sharebet/update')
-  @ApiOperation({
-    summary: 'Update ShareBet Bonus ',
-    description:
-      'This endpoint updates an existing ShareBet bonus for a particular client, it enables you to update ShareBet bonus with different settings/terms',
-  })
-  @ApiBody({ type: SwaggerCreateShareBetBonusRequest })
-  @ApiOkResponse({ type: SwaggerCreateBonusResponse })
-  UpdateShareBetBonus(@Body() data: CreateShareBetBonusRequest) {
-    try {
-      return this.bonusService.UpdateShareBetBonus(data);
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
-  @Get('/client/bonus/view')
-  @ApiOperation({
-    summary: 'Get all bonus types for a client ',
-    description:
-      'This endpoint retrieves all the bonus types for a particular client',
-  })
-  @ApiQuery({ name: 'clientId', description: 'ID of the client' })
-  @ApiOkResponse({ type: SwaggerBonusResponse })
-  GetBonus(@Query() query: any) {
-    try {
-      const data = {} as GetBonusRequest;
-      data.clientId = query.clientId ? parseInt(query.clientId) : -1;
-
-      return this.bonusService.GetBonus(data);
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
-  @Get('/user/bonus/view')
+  @Get('/user/list')
   @ApiOperation({
     summary: 'Get all bonus balance for a user ',
     description:
@@ -285,7 +68,7 @@ export class BonusController {
     }
   }
 
-  @Post('/user/bonus/award')
+  @Post('/user/award')
   @ApiOperation({
     summary: 'Award user a bonus ',
     description:
@@ -301,7 +84,7 @@ export class BonusController {
     }
   }
 
-  @Post('/bonus/bet/create')
+  @Post('/bet/create')
   @ApiOperation({
     summary: 'Place a new bet bet using bonus ',
     description: 'This endpoint will place a new bonus bet',
@@ -316,7 +99,7 @@ export class BonusController {
     }
   }
 
-  @Patch('/bonus/status/update')
+  @Patch('/status/update')
   @ApiOperation({
     summary: 'Activate or Deactivate client bonus type ',
     description: 'Use this endpoint to activate or deactivate a client bonus',
@@ -331,76 +114,8 @@ export class BonusController {
     }
   }
 
-  @Post('/campaign')
-  @ApiOperation({
-    summary: 'Create a new campaign',
-    description: 'This endpoint creates a new promotional campaign ',
-  })
-  @ApiBody({ type: SwaggerCreateCampaignBonus })
-  @ApiOkResponse({ type: SwaggerCreateBonusResponse })
-  CreateCampaignBonus(@Body() data: CreateCampaignBonusDto) {
-    try {
-      return this.bonusService.CreateCampaignBonus(data);
-    } catch (error) {
-      console.error(error);
-    }
-  }
 
-  @Put('/campaign')
-  @ApiOperation({
-    summary: 'Update an existing campaign',
-    description: 'This endpoint updates an existing promotional campaign ',
-  })
-  @ApiBody({ type: SwaggerUpdateCampaignBonus })
-  @ApiOkResponse({ type: SwaggerCreateBonusResponse })
-  UpdateCampaignBonus(@Body() data: UpdateCampaignBonusDto) {
-    try {
-      return this.bonusService.UpdateCampaignBonus(data);
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
-  @Delete('/campaign')
-  @ApiOperation({
-    summary: 'Delete an existing campaign',
-    description: 'This endpoint deletes an existing promotional campaign ',
-  })
-  @ApiBody({ type: SwaggerDeleteCampaignBonusDto })
-  @ApiOkResponse({ type: SwaggerCreateBonusResponse })
-  DeleteCampaignBonus(@Body() data: DeleteCampaignBonusDto) {
-    try {
-      return this.bonusService.DeleteCampaignBonus(data);
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
-  @Get('/campaign/:client_id')
-  @ApiOperation({
-    summary: 'Get all campaigns for a client ',
-    description:
-      'This endpoint retrieves all campaigns for a particular client',
-  })
-  @ApiParam({
-    name: 'client_id',
-    type: 'number',
-    description: ' Unique ID of the client',
-  })
-  @ApiOkResponse({ type: SwaggerAllCampaignBonus })
-  GetCampaignBonus(@Param() params: any) {
-    try {
-      const clientID = parseInt(params.client_id);
-
-      return this.bonusService.GetCampaignBonus({
-        clientId: clientID,
-      });
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
-  @Post('/campaign/redeem-code')
+  @Post('/redeem')
   @ApiOperation({
     summary: 'Redeems a bonus code',
     description: 'This endpoint redeems a bonus code ',

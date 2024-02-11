@@ -34,60 +34,62 @@ export class BonusService implements OnModuleInit {
       this.client.getService<BonusServiceClient>(BONUS_SERVICE_NAME);
   }
 
-  CreateCashbackBonus(data: CreateBonusRequest) {
-    console.log('CreateCashbackBonus ');
-    return this.service.createCashbackBonus(data);
-  }
+  // CreateCashbackBonus(data: CreateBonusRequest) {
+  //   console.log('CreateCashbackBonus ');
+  //   // return this.service.createCashbackBonus(data);
+  // }
 
   CreateBonus(data: CreateBonusRequest) {
     console.log('CreateBonus ');
-    // return this.service.createBonus(data);
+    return this.service.createBonus(data);
+    // return this.service.createCashbackBonus(data);
+
   }
 
-  UpdateCashbackBonus(data: CreateBonusRequest) {
+  UpdateBonus(data: CreateBonusRequest) {
     console.log('UpdateCashbackBonus ');
-    return this.service.updateCashbackBonus(data);
+    return this.service.updateBonus(data);
   }
 
-  CreateFirstDepositBonus(data: CreateFirstDepositBonusRequest) {
-    console.log('CreateFirstDepositBonus ');
-    return this.service.createFirstDepositBonus(data);
-  }
+  // CreateFirstDepositBonus(data: CreateFirstDepositBonusRequest) {
+  //   console.log('CreateFirstDepositBonus ');
+  //   // return this.service.createFirstDepositBonus(data);
+  // }
 
-  UpdateFirstDepositBonus(data: CreateFirstDepositBonusRequest) {
-    console.log('UpdateFirstDepositBonus ');
-    return this.service.updateFirstDepositBonus(data);
-  }
+  // UpdateFirstDepositBonus(data: CreateFirstDepositBonusRequest) {
+  //   console.log('UpdateFirstDepositBonus ');
+  //   // return this.service.updateFirstDepositBonus(data);
+  // }
 
-  CreateFreebetBonus(data: CreateFreebetBonusRequest) {
-    console.log('CreateFreebetBonus ');
-    return this.service.createFreebetBonus(data);
-  }
+  // CreateFreebetBonus(data: CreateFreebetBonusRequest) {
+  //   console.log('CreateFreebetBonus ');
+  //   // return this.service.createFreebetBonus(data);
+  // }
 
-  UpdateFreebetBonus(data: CreateFreebetBonusRequest) {
-    console.log('UpdateFreebetBonus ');
-    return this.service.updateFreebetBonus(data);
-  }
+  // UpdateFreebetBonus(data: CreateFreebetBonusRequest) {
+  //   console.log('UpdateFreebetBonus ');
+  //   // return this.service.updateFreebetBonus(data);
+  // }
 
-  CreateReferralBonus(data: CreateReferralBonusRequest) {
-    console.log('CreateReferralBonus ');
-    return this.service.createReferralBonus(data);
-  }
+  // CreateReferralBonus(data: CreateReferralBonusRequest) {
+  //   console.log('CreateReferralBonus ');
+  //   // return this.service.createReferralBonus(data);
+  // }
 
-  UpdateReferralBonus(data: CreateReferralBonusRequest) {
-    console.log('UpdateReferralBonus ');
-    return this.service.updateReferralBonus(data);
-  }
+  // UpdateReferralBonus(data: CreateReferralBonusRequest) {
+  //   console.log('UpdateReferralBonus ');
+  //   // return this.service.updateReferralBonus(data);
+  // }
 
-  CreateShareBetBonus(data: CreateShareBetBonusRequest) {
-    console.log('CreateShareBetBonus ');
-    return this.service.createShareBetBonus(data);
-  }
+  // CreateShareBetBonus(data: CreateShareBetBonusRequest) {
+  //   console.log('CreateShareBetBonus ');
+  //   // return this.service.createShareBetBonus(data);
+  // }
 
-  UpdateShareBetBonus(data: CreateShareBetBonusRequest) {
-    console.log('UpdateShareBetBonus ');
-    return this.service.updateShareBetBonus(data);
-  }
+  // UpdateShareBetBonus(data: CreateShareBetBonusRequest) {
+  //   console.log('UpdateShareBetBonus ');
+  //   // return this.service.updateShareBetBonus(data);
+  // }
 
   GetBonus(data: GetBonusRequest) {
     console.log('GetBonus ');

@@ -101,6 +101,7 @@ export interface CreateBonusRequest {
   bonusAmountMultiplier: number;
   rolloverCount: number;
   name: string;
+  minimumEntryAmount: number;
   minimumBettingStake: number;
   product: string;
 }
@@ -278,25 +279,9 @@ export interface PlaceBetResponse {
 export const BONUS_PACKAGE_NAME = "bonus";
 
 export interface BonusServiceClient {
-  createCashbackBonus(request: CreateBonusRequest): Observable<CreateBonusResponse>;
+  createBonus(request: CreateBonusRequest): Observable<CreateBonusResponse>;
 
-  updateCashbackBonus(request: CreateBonusRequest): Observable<CreateBonusResponse>;
-
-  createFirstDepositBonus(request: CreateFirstDepositBonusRequest): Observable<CreateBonusResponse>;
-
-  updateFirstDepositBonus(request: CreateFirstDepositBonusRequest): Observable<CreateBonusResponse>;
-
-  createFreebetBonus(request: CreateFreebetBonusRequest): Observable<CreateBonusResponse>;
-
-  updateFreebetBonus(request: CreateFreebetBonusRequest): Observable<CreateBonusResponse>;
-
-  createReferralBonus(request: CreateReferralBonusRequest): Observable<CreateBonusResponse>;
-
-  updateReferralBonus(request: CreateReferralBonusRequest): Observable<CreateBonusResponse>;
-
-  createShareBetBonus(request: CreateShareBetBonusRequest): Observable<CreateBonusResponse>;
-
-  updateShareBetBonus(request: CreateShareBetBonusRequest): Observable<CreateBonusResponse>;
+  updateBonus(request: CreateBonusRequest): Observable<CreateBonusResponse>;
 
   getBonus(request: GetBonusRequest): Observable<GetBonusResponse>;
 
@@ -322,44 +307,12 @@ export interface BonusServiceClient {
 }
 
 export interface BonusServiceController {
-  createCashbackBonus(
+  createBonus(
     request: CreateBonusRequest,
   ): Promise<CreateBonusResponse> | Observable<CreateBonusResponse> | CreateBonusResponse;
 
-  updateCashbackBonus(
+  updateBonus(
     request: CreateBonusRequest,
-  ): Promise<CreateBonusResponse> | Observable<CreateBonusResponse> | CreateBonusResponse;
-
-  createFirstDepositBonus(
-    request: CreateFirstDepositBonusRequest,
-  ): Promise<CreateBonusResponse> | Observable<CreateBonusResponse> | CreateBonusResponse;
-
-  updateFirstDepositBonus(
-    request: CreateFirstDepositBonusRequest,
-  ): Promise<CreateBonusResponse> | Observable<CreateBonusResponse> | CreateBonusResponse;
-
-  createFreebetBonus(
-    request: CreateFreebetBonusRequest,
-  ): Promise<CreateBonusResponse> | Observable<CreateBonusResponse> | CreateBonusResponse;
-
-  updateFreebetBonus(
-    request: CreateFreebetBonusRequest,
-  ): Promise<CreateBonusResponse> | Observable<CreateBonusResponse> | CreateBonusResponse;
-
-  createReferralBonus(
-    request: CreateReferralBonusRequest,
-  ): Promise<CreateBonusResponse> | Observable<CreateBonusResponse> | CreateBonusResponse;
-
-  updateReferralBonus(
-    request: CreateReferralBonusRequest,
-  ): Promise<CreateBonusResponse> | Observable<CreateBonusResponse> | CreateBonusResponse;
-
-  createShareBetBonus(
-    request: CreateShareBetBonusRequest,
-  ): Promise<CreateBonusResponse> | Observable<CreateBonusResponse> | CreateBonusResponse;
-
-  updateShareBetBonus(
-    request: CreateShareBetBonusRequest,
   ): Promise<CreateBonusResponse> | Observable<CreateBonusResponse> | CreateBonusResponse;
 
   getBonus(request: GetBonusRequest): Promise<GetBonusResponse> | Observable<GetBonusResponse> | GetBonusResponse;
@@ -404,16 +357,8 @@ export interface BonusServiceController {
 export function BonusServiceControllerMethods() {
   return function (constructor: Function) {
     const grpcMethods: string[] = [
-      "createCashbackBonus",
-      "updateCashbackBonus",
-      "createFirstDepositBonus",
-      "updateFirstDepositBonus",
-      "createFreebetBonus",
-      "updateFreebetBonus",
-      "createReferralBonus",
-      "updateReferralBonus",
-      "createShareBetBonus",
-      "updateShareBetBonus",
+      "createBonus",
+      "updateBonus",
       "getBonus",
       "deleteBonus",
       "getUserBonus",

@@ -8,11 +8,20 @@ export const protobufPackage = "identity";
 export interface UserData {
   id: number;
   username: string;
-  balance?: string | undefined;
+  balance?: number | undefined;
   code?: string | undefined;
   firstName?: string | undefined;
   lastName?: string | undefined;
   email?: string | undefined;
+  phone?: string | undefined;
+  role?: string | undefined;
+  roleId?: number | undefined;
+  availableBalance?: number | undefined;
+  sportBonusBalance?: number | undefined;
+  casinoBonusBalance?: number | undefined;
+  virtualBonusBalance?: number | undefined;
+  trustBalance?: number | undefined;
+  token: string;
 }
 
 export interface CreateUserRequest {
@@ -33,6 +42,7 @@ export interface CreateUserRequest {
   language?: string | undefined;
   currency?: string | undefined;
   parent?: number | undefined;
+  promoCode?: string | undefined;
 }
 
 /** user */
