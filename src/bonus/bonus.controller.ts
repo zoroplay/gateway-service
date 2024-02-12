@@ -22,6 +22,7 @@ import { BonusService } from './bonus.service';
 import {
   AwardBonusRequest,
   BonusStatusRequest,
+  GetCampaignRequest,
   GetUserBonusRequest,
   RedeemCampaignBonusDto,
 } from './bonus.pb';
@@ -32,6 +33,8 @@ import {
   SwaggerGetUserBonusResponse,
   SwaggerRedeemCampaignBonusDto,
   SwaggerUserBetWithBonus,
+  SwaggerValidateCampaignDTO,
+  SwaggerValidateCampaignResponse,
 } from './dto';
 import { SwaggerPlaceBetResponse } from '../betting/dto';
 import { UserBetWithBonus } from './bet.interface';
@@ -125,6 +128,21 @@ export class BonusController {
   RedeemCampaignBonus(@Body() data: RedeemCampaignBonusDto) {
     try {
       return this.bonusService.RedeemCampaignBonus(data);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  @Post('/validate-code')
+  @ApiOperation({
+    summary: 'Validate or Get Bonus with Promo code',
+    description: 'This endpoint can be used to validate or a get bonus data via promo code ',
+  })
+  @ApiBody({ type: SwaggerValidateCampaignDTO })
+  @ApiOkResponse({ type: SwaggerValidateCampaignResponse })
+  validatePromoCode(@Body() data: GetCampaignRequest) {
+    try {
+      return this.bonusService.GetCampaign(data);
     } catch (error) {
       console.error(error);
     }

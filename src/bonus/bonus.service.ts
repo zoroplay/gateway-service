@@ -19,6 +19,7 @@ import {
   DeleteCampaignBonusDto,
   RedeemCampaignBonusDto,
   GetBonusByClientID,
+  GetCampaignRequest,
 } from './bonus.pb';
 import { ClientGrpc } from '@nestjs/microservices';
 import { UserBetWithBonus } from './bet.interface';
@@ -139,5 +140,10 @@ export class BonusService implements OnModuleInit {
   GetCampaignBonus(data: GetBonusByClientID) {
     console.log('GetCampaignBonus ');
     return this.service.getCampaignBonus(data);
+  }
+
+  GetCampaign(data: GetCampaignRequest) {
+    console.log('GetCampaign ');
+    return this.service.getCampaign(data);
   }
 }

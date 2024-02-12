@@ -23,6 +23,9 @@ export class SwaggerRegisterRequest {
   
     @ApiProperty({ description: 'International phone number format +234123456789'})
     phone?: string;
+
+    @ApiProperty({ description: 'Promo code for bonus'})
+    promoCode?: string;
   }
   
   export class SwaggerUserDetailsRequest {

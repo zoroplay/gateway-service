@@ -564,3 +564,25 @@ export class SwaggerGetUserBonusResponse {
   })
   bonus: SwaggerUserBonus[];
 }
+
+export class SwaggerValidateCampaignDTO {
+  @ApiProperty({ description: 'ID of the client' })
+  clientId: number;
+
+  @ApiProperty({ description: 'Bonus code' })
+  promoCode: string;
+}
+
+export class SwaggerValidateCampaignResponse {
+  @ApiProperty({ description: 'Request status' })
+  success: boolean;
+
+  @ApiProperty({ description: 'Server response message' })
+  message: string;
+
+  @ApiProperty({
+    type: SwaggerCampaignBonusData,
+    description: 'Bonus attached to the campaign',
+  })
+  data: SwaggerCampaignBonusData;
+}

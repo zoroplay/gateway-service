@@ -270,6 +270,17 @@ export interface GetBonusByClientID {
   clientId: number;
 }
 
+export interface GetCampaignRequest {
+  clientId: number;
+  promoCode: string;
+}
+
+export interface GetCampaignResponse {
+  success: boolean;
+  message: string;
+  data: CampaignBonusData | undefined;
+}
+
 export interface PlaceBetResponse {
   betId: number;
   status: number;
@@ -282,6 +293,8 @@ export interface BonusServiceClient {
   createBonus(request: CreateBonusRequest): Observable<CreateBonusResponse>;
 
   updateBonus(request: CreateBonusRequest): Observable<CreateBonusResponse>;
+
+  getCampaign(request: GetCampaignRequest): Observable<GetCampaignResponse>;
 
   getBonus(request: GetBonusRequest): Observable<GetBonusResponse>;
 
@@ -314,6 +327,10 @@ export interface BonusServiceController {
   updateBonus(
     request: CreateBonusRequest,
   ): Promise<CreateBonusResponse> | Observable<CreateBonusResponse> | CreateBonusResponse;
+
+  getCampaign(
+    request: GetCampaignRequest,
+  ): Promise<GetCampaignResponse> | Observable<GetCampaignResponse> | GetCampaignResponse;
 
   getBonus(request: GetBonusRequest): Promise<GetBonusResponse> | Observable<GetBonusResponse> | GetBonusResponse;
 
@@ -359,6 +376,7 @@ export function BonusServiceControllerMethods() {
     const grpcMethods: string[] = [
       "createBonus",
       "updateBonus",
+      "getCampaign",
       "getBonus",
       "deleteBonus",
       "getUserBonus",
