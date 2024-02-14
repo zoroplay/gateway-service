@@ -59,11 +59,13 @@ export class BonusController {
   GetUserBonus(@Query() query: any) {
     try {
       const data = {} as GetUserBonusRequest;
-      data.clientId = query.clientId ? parseInt(query.clientId) : -1;
+      data.clientId = query.clientId ? parseInt(query.clientId) : 1;
       data.userId = query.userId ? parseInt(query.userId) : -1;
-      data.id = query.id ? parseInt(query.id) : 0;
-      data.status = query.status ? parseInt(query.status) : -1;
-      data.bonusType = query.bonus_type ? query.bonus_type : '';
+      if (query.id)
+        data.id = query.id;
+
+      if (query.status)
+        data.status = query.status;
 
       return this.bonusService.GetUserBonus(data);
     } catch (error) {
@@ -87,20 +89,20 @@ export class BonusController {
     }
   }
 
-  @Post('/bet/create')
-  @ApiOperation({
-    summary: 'Place a new bet bet using bonus ',
-    description: 'This endpoint will place a new bonus bet',
-  })
-  @ApiBody({ type: SwaggerUserBetWithBonus })
-  @ApiOkResponse({ type: SwaggerPlaceBetResponse })
-  PlaceBonusBet(@Body() data: UserBetWithBonus) {
-    try {
-      return this.bonusService.PlaceBonusBet(data);
-    } catch (error) {
-      console.error(error);
-    }
-  }
+  // @Post('/bet/create')
+  // @ApiOperation({
+  //   summary: 'Place a new bet bet using bonus ',
+  //   description: 'This endpoint will place a new bonus bet',
+  // })
+  // @ApiBody({ type: SwaggerUserBetWithBonus })
+  // @ApiOkResponse({ type: SwaggerPlaceBetResponse })
+  // PlaceBonusBet(@Body() data: UserBetWithBonus) {
+  //   try {
+  //     return this.bonusService.PlaceBonusBet(data);
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // }
 
   @Patch('/status/update')
   @ApiOperation({

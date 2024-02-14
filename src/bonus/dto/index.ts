@@ -416,9 +416,23 @@ export class SwaggerUserBonus {
 
   @ApiProperty({
     type: [SwaggerUserBetDTO],
-    description: 'Array of Bets placed with bonus',
+    description: 'Array of transactions placed with bonus',
   })
-  bets: SwaggerUserBetDTO[]
+  transactions: SwaggerUserBonusTransaction[]
+}
+
+export class SwaggerUserBonusTransaction {
+  @ApiProperty({ description: 'transaction amount bonus' })
+  amount: number;
+
+  @ApiProperty({ description: ' balance after transaction' })
+  balance: number;
+
+  @ApiProperty({ description: 'Transaction date' })
+  createdAt: string;
+
+  @ApiProperty({ description: 'Transaction description' })
+  description: string;
 }
 
 export class SwaggerHasBonusBetResponse {
@@ -431,6 +445,8 @@ export class SwaggerHasBonusBetResponse {
   @ApiProperty({ description: 'Failure reason' })
   description: string;
 }
+
+
 
 export class SwaggerBonusStatusRequest {
   @ApiProperty({ description: 'ID of the client' })

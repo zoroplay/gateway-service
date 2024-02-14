@@ -2,6 +2,9 @@ import { ApiProperty } from "@nestjs/swagger";
 import { IsNotEmpty } from "class-validator";
 
 export class LoginDTO {
+    @ApiProperty({ description: 'SBE Platform Client ID' })
+    clientId: number;
+
     @ApiProperty({ description: 'Unique username to sign in', example: 'admin' })
     @IsNotEmpty()
     username: string;

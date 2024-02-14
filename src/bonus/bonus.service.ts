@@ -107,10 +107,10 @@ export class BonusService implements OnModuleInit {
     return this.service.awardBonus(data);
   }
 
-  PlaceBonusBet(data: UserBetWithBonus) {
-    console.log('PlaceBonusBet ');
-    return this.service.placeBonusBet(data);
-  }
+  // PlaceBonusBet(data: UserBetWithBonus) {
+  //   console.log('PlaceBonusBet ');
+  //   return this.service.placeBonusBet(data);
+  // }
 
   UpdateBonusStatus(data: BonusStatusRequest) {
     console.log('UpdateBonusStatus ');

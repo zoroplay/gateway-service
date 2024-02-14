@@ -148,6 +148,13 @@ export interface UserBetData {
   created: string;
 }
 
+export interface Transaction {
+  amount: number;
+  balance: number;
+  createdAt: string;
+  desc: string;
+}
+
 export interface GetUserBonusResponse {
   bonus: UserBonus[];
 }
@@ -163,7 +170,8 @@ export interface UserBonus {
   pendingAmount: number;
   totalRolloverCount: number;
   completedRolloverCount: number;
-  bets: UserBetData[];
+  status: number;
+  transactions: Transaction[];
 }
 
 export interface UserBonusResponse {
@@ -176,8 +184,11 @@ export interface AwardBonusRequest {
   clientId: number;
   bonusId: number;
   userId: string;
-  amount: number;
-  baseValue: number;
+  username: string;
+  amount?: number | undefined;
+  baseValue?: number | undefined;
+  promoCode?: string | undefined;
+  status?: number | undefined;
 }
 
 export interface UserBet {
@@ -187,6 +198,7 @@ export interface UserBet {
   stake: number;
   totalOdds: number;
   bonusId: number;
+  betId?: number | undefined;
 }
 
 export interface BetSlip {
@@ -201,6 +213,7 @@ export interface BetSlip {
   outcomeName: string;
   odds: number;
   sportId: number;
+  matchId: number;
 }
 
 export interface DebitBonusRequest {
@@ -282,9 +295,16 @@ export interface GetCampaignResponse {
 }
 
 export interface PlaceBetResponse {
+  success: boolean;
   betId: number;
   status: number;
   statusDescription: string;
+}
+
+export interface ValidateBetResponse {
+  success: boolean;
+  id: number;
+  message: string;
 }
 
 export const BONUS_PACKAGE_NAME = "bonus";
@@ -295,6 +315,8 @@ export interface BonusServiceClient {
   updateBonus(request: CreateBonusRequest): Observable<CreateBonusResponse>;
 
   getCampaign(request: GetCampaignRequest): Observable<GetCampaignResponse>;
+
+  validateBetSelections(request: UserBet): Observable<ValidateBetResponse>;
 
   getBonus(request: GetBonusRequest): Observable<GetBonusResponse>;
 
@@ -331,6 +353,10 @@ export interface BonusServiceController {
   getCampaign(
     request: GetCampaignRequest,
   ): Promise<GetCampaignResponse> | Observable<GetCampaignResponse> | GetCampaignResponse;
+
+  validateBetSelections(
+    request: UserBet,
+  ): Promise<ValidateBetResponse> | Observable<ValidateBetResponse> | ValidateBetResponse;
 
   getBonus(request: GetBonusRequest): Promise<GetBonusResponse> | Observable<GetBonusResponse> | GetBonusResponse;
 
@@ -377,6 +403,7 @@ export function BonusServiceControllerMethods() {
       "createBonus",
       "updateBonus",
       "getCampaign",
+      "validateBetSelections",
       "getBonus",
       "deleteBonus",
       "getUserBonus",
