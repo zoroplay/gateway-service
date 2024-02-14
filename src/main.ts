@@ -1,8 +1,8 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { Logger } from '@nestjs/common';
+import { Logger, ValidationPipe } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
-import { MicroserviceOptions, Transport } from '@nestjs/microservices';
+import { HttpExceptionFilter } from './filter/http-exception.filter';
 
 const logger = new Logger('Main');
 
@@ -19,6 +19,9 @@ async function bootstrap() {
     .build();
 
   app.enableCors();
+
+  // app.useGlobalFilters(new HttpExceptionFilter());
+  // app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
 
   const document = SwaggerModule.createDocument(app, options);
 

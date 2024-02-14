@@ -2,6 +2,9 @@ import { ApiProperty } from "@nestjs/swagger";
 import { IsNotEmpty } from "class-validator";
 
 export class LoginDTO {
+    @ApiProperty({ description: 'SBE Platform Client ID' })
+    clientId: number;
+
     @ApiProperty({ description: 'Unique username to sign in', example: 'admin' })
     @IsNotEmpty()
     username: string;
@@ -23,6 +26,9 @@ export class SwaggerRegisterRequest {
   
     @ApiProperty({ description: 'International phone number format +234123456789'})
     phone?: string;
+
+    @ApiProperty({ description: 'Promo code for bonus'})
+    promoCode?: string;
   }
   
   export class SwaggerUserDetailsRequest {

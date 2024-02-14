@@ -317,6 +317,11 @@ export class SwaggerPlaceBet {
     description: 'IP address of the user e.g 123.456.789.101',
   })
   ipAddress: string;
+
+  @ApiProperty({
+    description: 'True if bet is bonus bet',
+  })
+  isBonus: boolean;
 }
 
 export class SwaggerPlaceBetResponse {
