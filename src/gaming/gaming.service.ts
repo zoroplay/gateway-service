@@ -7,6 +7,12 @@ import {
   SyncGameDto,
   StartGameDto,
   CallbackGameDto,
+  EvoplayCallback,
+  EvolutionCallback,
+  TadaCallback,
+  ShackEvolutionCallback,
+  SmartSoftCallback,
+  CreateProviderDto,
 } from './gaming.pb';
 import { ClientGrpc } from '@nestjs/microservices';
 
@@ -19,6 +25,15 @@ export class GamingService implements OnModuleInit {
   onModuleInit() {
     this.service =
       this.client.getService<GamingServiceClient>(GAMING_SERVICE_NAME);
+  }
+  async createProvider(createDto: CreateProviderDto) {
+    console.log(createDto);
+    return await this.service.createProvider(createDto);
+  }
+
+  async findAllProvider() {
+    console.log('finding all providers');
+    return await this.service.findAllProviders({});
   }
 
   async create(createGameDto: CreateGameDto) {
@@ -33,7 +48,10 @@ export class GamingService implements OnModuleInit {
 
   async sync(syncGameDto: SyncGameDto) {
     console.log('syncing games');
-    return await this.service.syncGames(syncGameDto);
+    const games = await this.service.syncGames(syncGameDto);
+    return {
+      games,
+    };
   }
 
   async startGame(request: StartGameDto) {
@@ -41,6 +59,33 @@ export class GamingService implements OnModuleInit {
   }
 
   async handleGamesCallback(request: CallbackGameDto) {
-    return await this.service.handleGamesCallback(request);
+    switch (request.provider) {
+      case 'tada':
+        const tadaCallbackData: TadaCallback = request.body as any;
+        return this.service.handleTadaCallback(tadaCallbackData);
+        break;
+      case 'shack-evolution':
+        const shackEvolutionCallbackData: ShackEvolutionCallback =
+          request.body as any;
+        return this.service.handleShackEvolutionCallback(
+          shackEvolutionCallbackData,
+        );
+        break;
+      case 'evo-play':
+        const evoplayCallbackData: EvoplayCallback = request.body as any;
+        return this.service.handleEvoplayCallback(evoplayCallbackData);
+        break;
+      case 'evolution':
+        const evolutionCallbackData: EvolutionCallback = request.body as any;
+        return this.service.handleEvolutionCallback(evolutionCallbackData);
+        break;
+      case 'smart-soft':
+        const smartSoftCallbackData: SmartSoftCallback = request.body as any;
+        return this.service.handleSmartSoftCallback(smartSoftCallbackData);
+        break;
+      default:
+        throw new Error('Invalid Provider');
+        break;
+    }
   }
 }
