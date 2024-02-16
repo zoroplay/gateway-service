@@ -69,11 +69,13 @@ export interface CreateGameDto {
 }
 
 export interface StartGameDto {
-  gameId: string;
-  clientId: string;
-  userId: string;
+  gameId: number;
+  clientId: number;
+  userId: number;
+  homeUrl?: string | undefined;
+  depositUrl?: string | undefined;
   providerSlug: string;
-  demo?: string | undefined;
+  demo?: boolean | undefined;
 }
 
 export interface StartGameResponse {

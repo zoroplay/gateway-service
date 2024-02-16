@@ -71,12 +71,11 @@ export class GamingController {
     }
   }
 
-  @Post('/:game_id/start')
-  @ApiParam({ name: 'game_id', type: 'string' })
+  @Post('/start')
   @ApiBody({ type: SwaggerStartGameDto })
+  @ApiOkResponse({ type: SwaggerOKGameArrayResponse })
   constructGameUrl(@Body() startGameDto: StartGameDto) {
     try {
-      console.log(startGameDto);
       const resp = this.gamingService.startGame(startGameDto);
       return resp;
     } catch (error) {
