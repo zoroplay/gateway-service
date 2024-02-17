@@ -8,6 +8,7 @@ import {
   Post,
   Put,
   Req,
+  UseGuards,
 } from '@nestjs/common';
 import { ClientGrpc } from '@nestjs/microservices';
 import { Observable } from 'rxjs';
@@ -19,6 +20,7 @@ import {
 } from '../identity.pb';
 import { ApiBody, ApiOkResponse, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 import { LoginDTO, SwaggerCommonResponse, SwaggerRegisterRequest  } from '../dto';
+import { AuthGuard } from './auth.guard';
 
 @ApiTags('Auth APIs')
 @Controller('auth')
@@ -54,6 +56,7 @@ export class AuthController implements OnModuleInit {
     return this.svc.login(data);
   }
 
+  @UseGuards(AuthGuard)
   @Get('/details/:client_id')
   @ApiOperation({
     summary: 'get user details',
@@ -69,6 +72,6 @@ export class AuthController implements OnModuleInit {
     @Req() req, 
     @Param() param
   ) {
-    return this.svc.getUserDetails({clientId: param.client_id, userId: 0});
+    return this.svc.getUserDetails({clientId: param.client_id, userId: req.user});
   }
 }
