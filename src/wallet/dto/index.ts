@@ -57,15 +57,12 @@ export class SwaggerGetPaymentMethodResponse {
 export class SwaggerInitiateDepositRequest {
     @ApiProperty({ description: 'Client ID of the operator' })
     clientId: number;
-    
-    @ApiProperty({ description: 'Authenticated User ID' })
-    userId: number;
   
     @ApiProperty({ description: 'Deposit Amount' })
     amount: number;
 
     @ApiProperty({ description: 'Payment method selected for deposit' })
-    paymentMethod: string
+    paymentMethod: string;
 }
 
 export class SwaggerDepositReponse {
@@ -77,6 +74,17 @@ export class SwaggerDepositReponse {
   
     @ApiProperty({ description: 'Data object containing deposit link and transaction reference' })
     data?: DepositResponseData
+}
+
+export class SwaggerVerifyDepositReponse {
+    @ApiProperty({ description: 'Message' })
+    message: string;
+  
+    @ApiProperty({ description: 'Request Status (true or false)' })
+    success: boolean;
+  
+    @ApiProperty({ description: 'HTTP Request status' })
+    status?: number
 }
 
 interface DepositResponseData {

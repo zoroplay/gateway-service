@@ -107,7 +107,10 @@ export interface ClientRequest {
   name: string;
   country: string;
   currency: string;
-  website: string;
+  apiUrl: string;
+  webUrl: string;
+  mobileUrl: string;
+  shopUrl: string;
   contactNumber: string;
   contactEmail: string;
   clientID: string;
@@ -162,12 +165,13 @@ export interface PermissionRequest {
 export interface GetPaymentDataRequest {
   clientId: number;
   userId: number;
+  source: string;
 }
 
 export interface GetPaymentDataResponse {
   username: string;
   email: string;
-  clientUrl: string;
+  callbackUrl: string;
 }
 
 export interface GetClientRequest {

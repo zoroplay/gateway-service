@@ -76,7 +76,9 @@ export interface PaymentMethod {
 export interface CreateWalletRequest {
   userId: number;
   clientId: number;
+  username: string;
   amount?: number | undefined;
+  bonus?: number | undefined;
 }
 
 export interface WalletResponse {
@@ -100,6 +102,9 @@ export interface CreditUserRequest {
   source: string;
   description: string;
   username: string;
+  wallet: string;
+  subject: string;
+  channel: string;
 }
 
 /** credit user request payload */
@@ -110,6 +115,9 @@ export interface DebitUserRequest {
   source: string;
   description: string;
   username: string;
+  wallet: string;
+  subject: string;
+  channel: string;
 }
 
 export interface Wallet {

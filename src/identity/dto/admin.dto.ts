@@ -27,8 +27,17 @@ export class SwaggerSaveClientRequest {
     @ApiProperty({ description: 'Default Currency' })
     currency: string;
 
+    @ApiProperty({ description: 'Client api URL' })
+    apiUrl?: string;
+
     @ApiProperty({ description: 'Client website URL' })
-    website?: string;
+    webUrl?: string;
+
+    @ApiProperty({ description: 'Client mobile site URL' })
+    mobileUrl?: string;
+
+    @ApiProperty({ description: 'Client retail site URL' })
+    shopUrl?: string;
 
     @ApiProperty({ description: 'Contact number',  })
     contactNumber?: string;
