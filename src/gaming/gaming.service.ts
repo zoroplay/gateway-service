@@ -15,6 +15,7 @@ import {
   CreateProviderDto,
 } from './gaming.pb';
 import { ClientGrpc } from '@nestjs/microservices';
+import { firstValueFrom, lastValueFrom, map } from 'rxjs';
 
 @Injectable()
 export class GamingService implements OnModuleInit {
@@ -54,8 +55,9 @@ export class GamingService implements OnModuleInit {
     };
   }
 
-  async startGame(request: StartGameDto) {
-    return await this.service.startGame(request);
+  startGame(request: StartGameDto) {
+    const resp = this.service.startGame(request);
+    return resp;
   }
 
   async handleGamesCallback(request: CallbackGameDto) {

@@ -16,6 +16,7 @@ import {
   SwaggerCreateProviderDto,
   SwaggerOKProviderResponse,
   SwaggerStartGameDto,
+  SwaggerStartGameResponseDto,
 } from './dto';
 
 @ApiTags('Gaming APIs')
@@ -73,7 +74,7 @@ export class GamingController {
 
   @Post('/start')
   @ApiBody({ type: SwaggerStartGameDto })
-  @ApiOkResponse({ type: SwaggerOKGameArrayResponse })
+  @ApiOkResponse({ type: SwaggerStartGameResponseDto })
   constructGameUrl(@Body() startGameDto: StartGameDto) {
     try {
       const resp = this.gamingService.startGame(startGameDto);

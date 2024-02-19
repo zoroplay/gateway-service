@@ -46,6 +46,14 @@ export class SwaggerStartGameDto {
   demo: boolean;
 }
 
+export class SwaggerStartGameResponseDto {
+  @ApiProperty({
+    description: 'Url tto Initiate Game',
+    example: 'http://example.com',
+  })
+  url: string;
+}
+
 export class SwaggerOKProviderResponse {
   @ApiProperty({
     description: 'provider identifier',
