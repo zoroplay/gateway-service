@@ -7,9 +7,11 @@ import { BettingService } from '../betting/betting.service';
 import 'dotenv/config'
 import {join} from "path";
 import { AdminBonusController } from './admin/admin-bonus.controller';
+import { IdentityModule } from 'src/identity/identity.module';
 
 @Module({
   imports: [
+    IdentityModule,
     ClientsModule.register([
       {
         name: protobufPackage,

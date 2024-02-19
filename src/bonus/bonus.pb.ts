@@ -4,49 +4,22 @@ import { Observable } from "rxjs";
 
 export const protobufPackage = "bonus";
 
-export interface CreateFirstDepositBonusRequest {
+export interface CheckFirstDepositRequest {
   clientId: number;
-  expiryInHours: number;
-  minimumEvents: number;
-  minimumOddsPerEvent: number;
-  minimumTotalOdds: number;
-  applicableBetType: string;
-  maximumWinning: number;
-  minimumEntryAmount: number;
-  bonusAmount: number;
-  minimumBettingStake: number;
+  userId: number;
 }
 
-export interface CreateCashbackBonusRequest {
-  clientId: number;
-  minimumStake: number;
-  expiryInHours: number;
-  minimumEvents: number;
-  minimumOddsPerEvent: number;
-  minimumTotalOdds: number;
-  applicableBetType: string;
-  maximumWinning: number;
-  minimumSelection: number;
-  minimumLostGames: number;
-  bonusAmount: number;
-  bonusAmountMultiplier: number;
-  rolloverCount: number;
+export interface CheckFirstDepositResponse {
+  success: boolean;
+  value: number;
+  data?: FirstDepositBonus | undefined;
+}
+
+export interface FirstDepositBonus {
+  bonusId: number;
+  value: number;
+  type: string;
   name: string;
-  minimumBettingStake: number;
-  product: string;
-}
-
-export interface CreateFreebetBonusRequest {
-  clientId: number;
-  expiryInHours: number;
-  minimumEvents: number;
-  minimumOddsPerEvent: number;
-  minimumTotalOdds: number;
-  applicableBetType: string;
-  maximumWinning: number;
-  bonusAmount: number;
-  minimumBettingStake: number;
-  product: string;
 }
 
 export interface CreateReferralBonusRequest {
@@ -86,9 +59,9 @@ export interface CreateShareBetBonusRequest {
 export interface CreateBonusRequest {
   clientId: number;
   bonusType: string;
-  minimumStake: number;
-  expiryInHours: number;
-  minimumEvents: number;
+  creditType: string;
+  duration: number;
+  minimumSelection: number;
   minimumOddsPerEvent: number;
   minimumTotalOdds: number;
   applicableBetType: string;
@@ -102,7 +75,7 @@ export interface CreateBonusRequest {
   rolloverCount: number;
   name: string;
   minimumEntryAmount: number;
-  minimumBettingStake: number;
+  maxAmount: number;
   product: string;
 }
 
@@ -184,7 +157,7 @@ export interface AwardBonusRequest {
   clientId: number;
   bonusId: number;
   userId: string;
-  username: string;
+  username?: string | undefined;
   amount?: number | undefined;
   baseValue?: number | undefined;
   promoCode?: string | undefined;
@@ -318,6 +291,8 @@ export interface BonusServiceClient {
 
   validateBetSelections(request: UserBet): Observable<ValidateBetResponse>;
 
+  checkFirstDeposit(request: CheckFirstDepositRequest): Observable<CheckFirstDepositResponse>;
+
   getBonus(request: GetBonusRequest): Observable<GetBonusResponse>;
 
   deleteBonus(request: DeleteBonusRequest): Observable<BonusResponse>;
@@ -357,6 +332,10 @@ export interface BonusServiceController {
   validateBetSelections(
     request: UserBet,
   ): Promise<ValidateBetResponse> | Observable<ValidateBetResponse> | ValidateBetResponse;
+
+  checkFirstDeposit(
+    request: CheckFirstDepositRequest,
+  ): Promise<CheckFirstDepositResponse> | Observable<CheckFirstDepositResponse> | CheckFirstDepositResponse;
 
   getBonus(request: GetBonusRequest): Promise<GetBonusResponse> | Observable<GetBonusResponse> | GetBonusResponse;
 
@@ -404,6 +383,7 @@ export function BonusServiceControllerMethods() {
       "updateBonus",
       "getCampaign",
       "validateBetSelections",
+      "checkFirstDeposit",
       "getBonus",
       "deleteBonus",
       "getUserBonus",
