@@ -5,9 +5,11 @@ import { WalletAdminController } from './admin/wallet-admin.controller';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { WALLET_PACKAGE_NAME, protobufPackage } from './wallet.pb';
 import { join } from 'path';
+import { IdentityModule } from 'src/identity/identity.module';
 
 @Module({
   imports: [
+    IdentityModule,
     ClientsModule.register([
       {
         name: protobufPackage,
