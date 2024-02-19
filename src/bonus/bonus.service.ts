@@ -3,15 +3,9 @@ import {
   protobufPackage,
   BonusServiceClient,
   BONUS_SERVICE_NAME,
-  CreateCashbackBonusRequest,
-  CreateFirstDepositBonusRequest,
-  CreateFreebetBonusRequest,
-  CreateReferralBonusRequest,
-  CreateShareBetBonusRequest,
   GetBonusRequest,
   GetUserBonusRequest,
   AwardBonusRequest,
-  UserBet,
   BonusStatusRequest,
   CreateBonusRequest,
   CreateCampaignBonusDto,
@@ -20,9 +14,9 @@ import {
   RedeemCampaignBonusDto,
   GetBonusByClientID,
   GetCampaignRequest,
+  CheckFirstDepositRequest,
 } from './bonus.pb';
 import { ClientGrpc } from '@nestjs/microservices';
-import { UserBetWithBonus } from './bet.interface';
 
 @Injectable()
 export class BonusService implements OnModuleInit {
@@ -103,14 +97,14 @@ export class BonusService implements OnModuleInit {
   }
 
   AwardBonus(data: AwardBonusRequest) {
-    console.log('AwardBonus ');
+    console.log('AwardBonus ', data);
     return this.service.awardBonus(data);
   }
 
-  // PlaceBonusBet(data: UserBetWithBonus) {
-  //   console.log('PlaceBonusBet ');
-  //   return this.service.placeBonusBet(data);
-  // }
+  CheckFirstDeposit(data: CheckFirstDepositRequest) {
+    console.log('Check first deposit ', data);
+    return this.service.checkFirstDeposit(data);
+  }
 
   UpdateBonusStatus(data: BonusStatusRequest) {
     console.log('UpdateBonusStatus ');

@@ -8,12 +8,13 @@ import {
   Post,
   Put,
   Query,
+  Req,
+  UseGuards,
 } from '@nestjs/common';
 import {
   ApiBody,
   ApiOkResponse,
   ApiOperation,
-  ApiParam,
   ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
@@ -29,17 +30,18 @@ import {
 import {
   SwaggerAwardBonusRequest,
   SwaggerBonusStatusRequest,
+  SwaggerCheckFirstDepoistResponse,
   SwaggerCreateBonusResponse,
   SwaggerGetUserBonusResponse,
   SwaggerRedeemCampaignBonusDto,
-  SwaggerUserBetWithBonus,
   SwaggerValidateCampaignDTO,
   SwaggerValidateCampaignResponse,
 } from './dto';
-import { SwaggerPlaceBetResponse } from '../betting/dto';
-import { UserBetWithBonus } from './bet.interface';
+import { AuthGuard } from 'src/identity/auth/auth.guard';
+import { IAuthorizedRequest } from 'src/interfaces/authorized-request.interface';
 
 @ApiTags('Bonus APIs')
+@UseGuards(AuthGuard)
 @Controller('bonus')
 export class BonusController {
   constructor(private readonly bonusService: BonusService) {}
@@ -50,17 +52,19 @@ export class BonusController {
     description:
       'This endpoint retrieves all the bonus balance for a particular user',
   })
-  @ApiQuery({ name: 'clientId', description: 'ID of the client' })
-  @ApiQuery({ name: 'userId', description: 'ID of the user' })
+  @ApiQuery({ name: 'client_id', description: 'ID of the client' })
   @ApiQuery({ name: 'id', description: 'ID of the bonus to filter' })
   @ApiQuery({ name: 'status', description: 'bonus status' })
   @ApiQuery({ name: 'bonus_type', description: 'filter by bonus type' })
   @ApiOkResponse({ type: SwaggerGetUserBonusResponse })
-  GetUserBonus(@Query() query: any) {
+  GetUserBonus(
+    @Query() query: any,
+    @Req() req: IAuthorizedRequest
+  ) {
     try {
       const data = {} as GetUserBonusRequest;
-      data.clientId = query.clientId ? parseInt(query.clientId) : 1;
-      data.userId = query.userId ? parseInt(query.userId) : -1;
+      data.clientId = query.client_id ? parseInt(query.client_id) : 1;
+      data.userId = req.user
       if (query.id)
         data.id = query.id;
 
@@ -79,30 +83,44 @@ export class BonusController {
     description:
       'This endpoint awards a user a bonus, this endpoint is meant to be used for administrative purposes only',
   })
+  @ApiQuery({ name: 'client_id', description: 'SBE client ID' })
   @ApiBody({ type: SwaggerAwardBonusRequest })
   @ApiOkResponse({ type: SwaggerGetUserBonusResponse })
-  AwardBonus(@Body() data: AwardBonusRequest) {
+  AwardBonus(
+    @Body() data: AwardBonusRequest,
+    @Query() query,
+    @Req() req: IAuthorizedRequest
+  ) {
     try {
+      data.clientId = query.client_id;
+      data.userId = req.user.toString();
       return this.bonusService.AwardBonus(data);
     } catch (error) {
       console.error(error);
     }
   }
 
-  // @Post('/bet/create')
-  // @ApiOperation({
-  //   summary: 'Place a new bet bet using bonus ',
-  //   description: 'This endpoint will place a new bonus bet',
-  // })
-  // @ApiBody({ type: SwaggerUserBetWithBonus })
-  // @ApiOkResponse({ type: SwaggerPlaceBetResponse })
-  // PlaceBonusBet(@Body() data: UserBetWithBonus) {
-  //   try {
-  //     return this.bonusService.PlaceBonusBet(data);
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // }
+  @Get('user/check-first-deposit')
+  @ApiOperation({
+    summary: 'Check if first deposit bonus is available',
+    description: 'This endpoint will check and return success true or false if first deposit is available.',
+  })
+  @ApiQuery({ name: 'clientId', description: 'ID of the client' })
+  @ApiOkResponse({ type: SwaggerCheckFirstDepoistResponse })
+  CheckFirstDeposit(
+    @Req() req: IAuthorizedRequest,
+    @Query() query
+  ) {
+    try {
+      const body = {
+        clientId: query.client_id,
+        userId: req.user
+      }
+      return this.bonusService.CheckFirstDeposit(body);
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
   @Patch('/status/update')
   @ApiOperation({

@@ -305,14 +305,6 @@ export class SwaggerGetUserBonusRequest {
 }
 
 export class SwaggerAwardBonusRequest {
-  @ApiProperty({ description: 'ID of the client', required: true })
-  clientId: number;
-
-  @ApiProperty({ description: 'ID of the user, join multiple userIDs separated by comma e.g 1,2,3,4,5', required: true })
-  userId: string;
-
-  @ApiProperty({ description: 'Bonus type', enum: bonusTypes, required: false })
-  bonusType: string;
 
   @ApiProperty({ description: 'amount of bonus to award', required: false })
   amount: number;
@@ -602,3 +594,45 @@ export class SwaggerValidateCampaignResponse {
   })
   data: SwaggerCampaignBonusData;
 }
+
+export class SwaggerFirstDeposit {
+  @ApiProperty({ 
+    description: 'Bonus ID',
+    name: 'bonusId'
+  })
+  bonusId: number;
+
+  @ApiProperty({ 
+    description: 'Bonus name',
+    name: 'name'
+  })
+  name: string;
+
+  @ApiProperty({ 
+    description: 'Bonus Value',
+    name: 'value'
+  })
+  value: string;
+
+  @ApiProperty({ 
+    description: 'Bonus value type',
+    name: 'type'
+  })
+  type: string;
+}
+
+export class SwaggerCheckFirstDepoistResponse {
+  @ApiProperty({ description: 'Request status' })
+  success: boolean;
+
+  @ApiProperty({ description: 'Server response message' })
+  message: string;
+
+  @ApiProperty({
+    type: SwaggerFirstDeposit,
+    description: 'Bonus attached to the campaign',
+  })
+  data: SwaggerCampaignBonusData;
+}
+
+
