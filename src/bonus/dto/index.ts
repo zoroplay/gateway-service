@@ -524,7 +524,7 @@ export class SwaggerDeleteCampaignBonusDto {
   @ApiProperty({ description: 'ID of the client' })
   clientId: number;
 
-  @ApiProperty({ description: 'ID of the campaign to delete' })
+  @ApiProperty({ description: 'ID of the bonus/campaign to delete' })
   id: number;
 }
 

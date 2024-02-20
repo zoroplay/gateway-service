@@ -10,11 +10,11 @@ import {
   CreateBonusRequest,
   CreateCampaignBonusDto,
   UpdateCampaignBonusDto,
-  DeleteCampaignBonusDto,
   RedeemCampaignBonusDto,
   GetBonusByClientID,
   GetCampaignRequest,
   CheckFirstDepositRequest,
+  DeleteBonusRequest,
 } from './bonus.pb';
 import { ClientGrpc } from '@nestjs/microservices';
 
@@ -111,17 +111,23 @@ export class BonusService implements OnModuleInit {
     return this.service.updateBonusStatus(data);
   }
 
+  DeleteBonus(data: DeleteBonusRequest) {
+    console.log('DeleteBonus ');
+    return this.service.deleteBonus(data);
+  }
+
   CreateCampaignBonus(data: CreateCampaignBonusDto) {
-    console.log('UpdateBonusStatus ');
+    console.log('CreateCampaign ');
     return this.service.createCampaignBonus(data);
   }
+
 
   UpdateCampaignBonus(data: UpdateCampaignBonusDto) {
     console.log('UpdateCampaignBonus ');
     return this.service.updateCampaignBonus(data);
   }
 
-  DeleteCampaignBonus(data: DeleteCampaignBonusDto) {
+  DeleteCampaignBonus(data: DeleteBonusRequest) {
     console.log('DeleteCampaignBonus ');
     return this.service.deleteCampaignBonus(data);
   }
