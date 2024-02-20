@@ -83,6 +83,7 @@ export interface CreateBonusResponse {
   bonusId: number;
   status: number;
   description: string;
+  success: boolean;
 }
 
 export interface GetBonusRequest {
@@ -91,7 +92,7 @@ export interface GetBonusRequest {
 
 export interface DeleteBonusRequest {
   clientId: number;
-  bonusType: string;
+  id: number;
 }
 
 export interface GetBonusResponse {
@@ -101,6 +102,7 @@ export interface GetBonusResponse {
 export interface BonusResponse {
   status: number;
   description: string;
+  success: boolean;
 }
 
 export interface GetUserBonusRequest {
@@ -234,11 +236,6 @@ export interface RedeemCampaignBonusDto {
   userId: number;
 }
 
-export interface DeleteCampaignBonusDto {
-  clientId: number;
-  id: number;
-}
-
 export interface CampaignBonusData {
   id: number;
   clientId: number;
@@ -309,7 +306,7 @@ export interface BonusServiceClient {
 
   updateCampaignBonus(request: UpdateCampaignBonusDto): Observable<CreateBonusResponse>;
 
-  deleteCampaignBonus(request: DeleteCampaignBonusDto): Observable<CreateBonusResponse>;
+  deleteCampaignBonus(request: DeleteBonusRequest): Observable<CreateBonusResponse>;
 
   redeemCampaignBonus(request: RedeemCampaignBonusDto): Observable<CreateBonusResponse>;
 
@@ -364,7 +361,7 @@ export interface BonusServiceController {
   ): Promise<CreateBonusResponse> | Observable<CreateBonusResponse> | CreateBonusResponse;
 
   deleteCampaignBonus(
-    request: DeleteCampaignBonusDto,
+    request: DeleteBonusRequest,
   ): Promise<CreateBonusResponse> | Observable<CreateBonusResponse> | CreateBonusResponse;
 
   redeemCampaignBonus(

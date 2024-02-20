@@ -23,7 +23,7 @@ import {
   BonusStatusRequest,
   CreateBonusRequest,
   CreateCampaignBonusDto,
-  DeleteCampaignBonusDto,
+  DeleteBonusRequest,
   GetBonusRequest,
   UpdateCampaignBonusDto,
 } from '../bonus.pb';
@@ -110,6 +110,29 @@ export class AdminBonusController {
     }
   }
 
+  @Delete('delete-bonus/:id')
+  @ApiOperation({
+    summary: 'Delete an existing campaign',
+    description: 'This endpoint deletes an existing promotional campaign ',
+  })
+  @ApiParam({ name: 'id', description: 'Campaign id to be deleted' })
+  @ApiQuery({ name: 'client_id', description: 'SBE client ID' })
+  @ApiOkResponse({ type: SwaggerCreateBonusResponse })
+  deleeteBonus(
+    @Query() query,
+    @Param() param
+  ) {
+    try {
+      const data = {
+        id: param.id,
+        clientId: query.client_id
+      }
+      return this.bonusService.DeleteBonus(data);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   @Post('create-campaign')
   @ApiOperation({
     summary: 'Create a new campaign',
@@ -140,15 +163,23 @@ export class AdminBonusController {
     }
   }
 
-  @Delete('delete-campaign')
+  @Delete('delete-campaign/:id')
   @ApiOperation({
     summary: 'Delete an existing campaign',
     description: 'This endpoint deletes an existing promotional campaign ',
   })
-  @ApiBody({ type: SwaggerDeleteCampaignBonusDto })
+  @ApiParam({ name: 'id', description: 'Campaign id to be deleted' })
+  @ApiQuery({ name: 'client_id', description: 'SBE client ID' })
   @ApiOkResponse({ type: SwaggerCreateBonusResponse })
-  DeleteCampaignBonus(@Body() data: DeleteCampaignBonusDto) {
+  DeleteCampaignBonus(
+    @Query() query,
+    @Param() param
+  ) {
     try {
+      const data = {
+        id: param.id,
+        clientId: query.client_id
+      }
       return this.bonusService.DeleteCampaignBonus(data);
     } catch (error) {
       console.error(error);

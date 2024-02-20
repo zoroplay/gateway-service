@@ -321,7 +321,7 @@ export class SwaggerPlaceBet {
   @ApiProperty({
     description: 'True if bet is bonus bet',
   })
-  isBonus: boolean;
+  useBonus: boolean;
 }
 
 export class SwaggerPlaceBetResponse {
