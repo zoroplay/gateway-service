@@ -22,6 +22,8 @@ export interface UserData {
   virtualBonusBalance?: number | undefined;
   trustBalance?: number | undefined;
   token: string;
+  registered: string;
+  authCode: string;
 }
 
 export interface CreateUserRequest {
