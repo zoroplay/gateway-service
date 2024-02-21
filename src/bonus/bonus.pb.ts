@@ -167,11 +167,11 @@ export interface AwardBonusRequest {
 }
 
 export interface UserBet {
-  betslip: BetSlip[];
+  selections: BetSlip[];
   clientId: number;
   userId: number;
   stake: number;
-  totalOdds: number;
+  maxOdds: number;
   bonusId: number;
   betId?: number | undefined;
 }
