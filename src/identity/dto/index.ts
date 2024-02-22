@@ -68,7 +68,7 @@ export class SwaggerRegisterRequest {
     message: string;
     @ApiProperty({ description: 'true || false' })
     status: boolean;
-    @ApiProperty({ description: '[]' })
+    @ApiProperty({ description: 'Array of users data' })
     data?: [];
     @ApiProperty({ description: 'error message' })
     error?: string;

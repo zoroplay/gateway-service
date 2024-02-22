@@ -45,6 +45,7 @@ export interface CreateUserRequest {
   currency?: string | undefined;
   parent?: number | undefined;
   promoCode?: string | undefined;
+  trackingToken?: string | undefined;
 }
 
 /** user */
@@ -213,6 +214,38 @@ export interface ClientData {
   contactEmail: string;
 }
 
+export interface SearchPlayerRequest {
+  clientId: number;
+  searchKey: string;
+}
+
+export interface SearchPlayerResponse {
+  success: boolean;
+  message: string;
+  data: Player[];
+}
+
+export interface Player {
+  id: number;
+  code: string;
+  username: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  phoneNumber: string;
+  registered: string;
+  country: string;
+  currency: string;
+  status: number;
+  verified: number;
+  balance: number;
+  bonus: number;
+  lifeTimeDeposit: number;
+  lifeTimeWithdrawal: number;
+  openBets: number;
+  role: string;
+}
+
 export interface EmptyRequest {
 }
 
@@ -256,6 +289,8 @@ export interface IdentityServiceClient {
   getClient(request: GetClientRequest): Observable<GetClientResponse>;
 
   getPaymentData(request: GetPaymentDataRequest): Observable<GetPaymentDataResponse>;
+
+  searchPlayer(request: SearchPlayerRequest): Observable<SearchPlayerResponse>;
 }
 
 export interface IdentityServiceController {
@@ -302,6 +337,10 @@ export interface IdentityServiceController {
   getPaymentData(
     request: GetPaymentDataRequest,
   ): Promise<GetPaymentDataResponse> | Observable<GetPaymentDataResponse> | GetPaymentDataResponse;
+
+  searchPlayer(
+    request: SearchPlayerRequest,
+  ): Promise<SearchPlayerResponse> | Observable<SearchPlayerResponse> | SearchPlayerResponse;
 }
 
 export function IdentityServiceControllerMethods() {
@@ -326,6 +365,7 @@ export function IdentityServiceControllerMethods() {
       "getAdminUsers",
       "getClient",
       "getPaymentData",
+      "searchPlayer",
     ];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
