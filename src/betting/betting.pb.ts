@@ -106,7 +106,7 @@ export interface PlaceBetRequest {
   minBonus: number;
   maxBonus: number;
   minOdds: number;
-  maxOdds: number;
+  totalOdds: number;
   type: string;
   combos: Combo[];
   isBooking: number;
