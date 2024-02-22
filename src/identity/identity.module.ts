@@ -7,6 +7,7 @@ import {join} from "path";
 import { UsersController } from './admin/users.controller';
 import 'dotenv/config'
 import { RolesController } from './admin/roles.controller';
+import { PlayersController } from './admin/players.controller';
 
 @Module({
   imports: [
@@ -22,7 +23,7 @@ import { RolesController } from './admin/roles.controller';
       },
     ]),
   ],
-  controllers: [AuthController, UsersController, RolesController],
+  controllers: [AuthController, PlayersController, UsersController, RolesController],
   providers: [AuthService],
   exports: [AuthService],
 })

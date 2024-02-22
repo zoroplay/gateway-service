@@ -48,3 +48,14 @@ export class SwaggerSaveClientRequest {
     @ApiProperty({ description: 'Client ID incase for editting',  })
     clientID?: number;
 }
+
+
+export class SwaggerSearchPlayerRequest {
+    @ApiProperty({ description: 'Search Key', example: '079323023' })
+    @IsNotEmpty()
+    searchKey: string;
+
+    @ApiProperty({ description: 'SBE Client ID', example: 1 })
+    @IsNotEmpty()
+    clientId: number;
+}
