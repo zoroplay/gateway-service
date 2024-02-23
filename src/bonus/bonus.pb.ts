@@ -71,7 +71,7 @@ export interface CreateBonusRequest {
   created: string;
   updated: string;
   id: number;
-  bonusAmountMultiplier: number;
+  minimumLostGames: number;
   rolloverCount: number;
   name: string;
   minimumEntryAmount: number;
@@ -171,7 +171,7 @@ export interface UserBet {
   clientId: number;
   userId: number;
   stake: number;
-  maxOdds: number;
+  totalOdds: number;
   bonusId: number;
   betId?: number | undefined;
 }
@@ -228,6 +228,8 @@ export interface UpdateCampaignBonusDto {
   bonusId: number;
   expiryDate: string;
   id: number;
+  affiliateIds?: string | undefined;
+  trackierCampaignId?: string | undefined;
 }
 
 export interface RedeemCampaignBonusDto {
