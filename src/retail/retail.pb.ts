@@ -57,7 +57,7 @@ export interface CommissionProfilesResponse {
   success: boolean;
   message: string;
   data: CommissionProfile[];
-  meta? : Meta;
+  meta?: Meta | undefined;
 }
 
 export interface AssignUserCommissionProfile {
@@ -258,37 +258,37 @@ export const RETAIL_PACKAGE_NAME = "retail";
 export interface RetailServiceClient {
   /** Bonus Groups */
 
-  getBonusGroups(request: Empty): Promise<BonusGroupResponse> | Observable<BonusGroupResponse>;
+  getBonusGroups(request: Empty): Observable<BonusGroupResponse>;
 
-  createBonusGroups(request: BonusGroups): Promise<BonusGroupResponse> | Observable<BonusGroupResponse>;
+  createBonusGroups(request: BonusGroups): Observable<BonusGroupResponse>;
 
   /** Profiles */
 
-  getCommissionProfiles(request: Meta): Promise<CommissionProfilesResponse> | Observable<CommissionProfilesResponse>;
+  getCommissionProfiles(request: Meta): Observable<CommissionProfilesResponse>;
 
-  createCommissionProfile(request: CommissionProfile): Promise<CommissionProfileResponse> | Observable<CommissionProfileResponse>;
+  createCommissionProfile(request: CommissionProfile): Observable<CommissionProfileResponse>;
 
-  updateCommissionProfile(request: CommissionProfile): Promise<CommissionProfileResponse> | Observable<CommissionProfileResponse>;
+  updateCommissionProfile(request: CommissionProfile): Observable<CommissionProfileResponse>;
 
-  assignUserCommissionProfile(request: AssignUserCommissionProfile): Promise<CommissionProfileResponse> | Observable<CommissionProfileResponse>;
+  assignUserCommissionProfile(request: AssignUserCommissionProfile): Observable<CommissionProfileResponse>;
 
-  onBetPlaced(request: BetData): Promise<Response> | Observable<Response>;
+  onBetPlaced(request: BetData): Observable<Response>;
 
-  onBetSettled(request: BetData): Promise<Response> | Observable<Response>;
+  onBetSettled(request: BetData): Observable<Response>;
 
-  onBetCancelled(request: BetData): Promise<Response> | Observable<Response>;
+  onBetCancelled(request: BetData): Observable<Response>;
 
-  createPowerBonus(request: PowerRequest): Promise<PowerBonusResponse> | Observable<PowerBonusResponse>;
+  createPowerBonus(request: PowerRequest): Observable<PowerBonusResponse>;
 
-  getPowerBonus(request: PowerRequest): Promise<PowerBonusResponse> | Observable<PowerBonusResponse>;
+  getPowerBonus(request: PowerRequest): Observable<PowerBonusResponse>;
 
-  payOutPowerBonus(request: PayPowerRequest): Promise<PowerResponse> | Observable<PowerResponse>;
+  payOutPowerBonus(request: PayPowerRequest): Observable<PowerResponse>;
 
-  getNormalBonus(request: GetNormalRequest): Promise<NormalResponse> | Observable<NormalResponse>;
+  getNormalBonus(request: GetNormalRequest): Observable<NormalResponse>;
 
-  calculateNormalBonus(request: PayNormalRequest): Promise<PayNormalResponse> | Observable<PayNormalResponse>;
+  calculateNormalBonus(request: PayNormalRequest): Observable<PayNormalResponse>;
 
-  payOutNormalBonus(request: PayNormalRequest): Promise<PayNormalResponse> | Observable<PayNormalResponse>;
+  payOutNormalBonus(request: PayNormalRequest): Observable<PayNormalResponse>;
 }
 
 export interface RetailServiceController {

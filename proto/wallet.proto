@@ -1,0 +1,225 @@
+syntax = "proto3";
+
+package wallet;
+
+service WalletService {
+  rpc CreateWallet (CreateWalletRequest) returns (WalletResponse) {}
+  rpc GetBalance (GetBalanceRequest) returns (WalletResponse) {}
+  rpc CreditUser (CreditUserRequest) returns (WalletResponse) {}
+  rpc DebitUser (DebitUserRequest) returns (WalletResponse) {}
+  rpc InititateDeposit (InitiateDepositRequest) returns (InitiateDepositResponse) {}
+  rpc VerifyDeposit (VerifyDepositRequest) returns (VerifyDepositResponse) {}
+  rpc PaymentWebhook (WebhookRequest) returns (WebhookResponse) {}
+  rpc Withdraw (WithdrawRequest) returns (WithdrawResponse) {}
+  rpc VerifyBankAccount (VerifyBankAccountRequest) returns (VerifyBankAccountResponse) {}
+  rpc GetTransactions (GetTransactionRequest) returns (GetTransactionResponse) {}
+  rpc GetPaymentMethods (GetPaymentMethodRequest) returns (GetPaymentMethodResponse) {}
+  rpc SavePaymentMethod (PaymentMethodRequest) returns (PaymentMethodResponse) {}
+}
+
+message PaymentMethodRequest {
+  int32 clientId = 1;
+  string title = 2;
+  string provider = 3;
+  string secretKey = 4;
+  string publicKey = 5;
+  string merchantId = 6;
+  string baseUrl = 7;
+  int32 status = 8;
+  int32 forDisbursement = 9;
+  int32 id = 10;
+}
+
+message VerifyDepositRequest {
+  int32 clientId = 1;
+  string transactionRef = 2;
+  string paymentChannel = 3;
+}
+
+message VerifyDepositResponse {
+  bool success = 1;
+  int32 status = 2;
+  string message = 3;
+}
+
+message WebhookRequest {
+  int32 clientId = 1;
+  string transactionRef = 2;
+  string paymentChannel = 3;
+  string paymentStatus = 4;
+}
+
+message WebhookResponse {
+  bool success = 1;
+  int32 status = 2;
+  string message = 3;
+}
+
+message GetPaymentMethodRequest {
+  int32 clientId = 1;
+  optional int32 status = 2;
+}
+
+message GetPaymentMethodResponse {
+  bool success = 1;
+  int32 status = 2;
+  string message = 3;
+  repeated PaymentMethod data = 4;
+}
+
+message PaymentMethodResponse {
+  bool success = 1;
+  int32 status = 2;
+  string message = 3;
+  optional PaymentMethod data = 4;
+}
+
+message PaymentMethod {
+  string title = 2;
+  string provider = 3;
+  string secret_key = 4;
+  string public_key = 5;
+  string merchant_id = 6;
+  string base_url = 7;
+  int32 status = 8;
+  int32 for_disbursement = 9;
+  int32 id = 10;
+}
+
+message CreateWalletRequest {
+  int32 userId = 1;
+  int32 clientId = 2;
+  string username = 3;
+  optional float amount = 4;
+  optional float bonus = 5;
+}
+
+message WalletResponse {
+  bool success = 1;
+  int32 status = 2;
+  string message = 3;
+  optional Wallet data = 4;
+}
+
+//get user balance
+message GetBalanceRequest {
+  int32 userId = 1;
+  int32 clientId = 2;
+}
+
+// credit user request payload
+message CreditUserRequest {
+  int32 userId = 1;
+  int32 clientId = 2;
+  int32 amount = 3;
+  string source = 4;
+  string description = 5;
+  string username = 6;
+  string wallet = 7;
+  string subject = 8;
+  string channel = 9;
+}
+
+// credit user request payload
+message DebitUserRequest {
+  int32 userId = 1;
+  int32 clientId = 2;
+  int32 amount = 3;
+  string source = 4;
+  string description = 5;
+  string username = 6;
+  string wallet = 7;
+  string subject = 8;
+  string channel = 9;
+}
+
+message Wallet {
+  int32 userId = 1;
+  double balance = 2;
+  double availableBalance = 3;
+  double trustBalance = 4;
+  double sportBonusBalance = 5;
+  double virtualBonusBalance = 6;
+  double casinoBonusBalance = 7;
+}
+
+message InitiateDepositRequest {
+  int32 userId = 1;
+  int32 clientId = 2;
+  double amount = 3;
+  string paymentMethod = 4;
+  string source = 5;
+  string username = 6;
+}
+
+message InitiateDepositResponse {
+  bool success = 1;
+  string message = 2;
+  message Data {
+    optional string link = 1;
+    optional string transactionRef = 2;
+  }
+  optional Data data = 3;
+}
+
+message Transaction {
+  string username = 1;
+  string transactionNo = 2;
+  double amount = 3;
+  string transactionType = 4;
+  string subject = 5;
+  string description = 6;
+  string source = 7;
+  double balance = 8;
+  int32 status = 9;
+  string createdAt = 10;
+  optional string link = 11;
+}
+
+message VerifyBankAccountRequest {
+  string accountNumber = 1;
+  string bankCode = 2;
+}
+
+message VerifyBankAccountResponse {
+  bool success = 1;
+  int32 status = 2;
+  string message = 3;
+  optional string accountName = 4;
+}
+
+message WithdrawRequest {
+  int32 userId = 1;
+  int32 clientId = 2;
+  double amount = 3;
+}
+
+message WithdrawResponse {
+  bool success = 1;
+  int32 status = 2;
+  string message = 3;
+  optional Withdraw data = 4;
+}
+
+message Withdraw {
+  double balance = 1;
+  string code = 2;
+}
+
+message GetTransactionRequest {
+  int32 userId = 1;
+  int32 clientId = 2;
+  string from = 3;
+  string to = 4;
+  string type = 5;
+  string tranxType = 6;
+  int32 page = 7;
+  int32 limit = 8;
+}
+
+message GetTransactionResponse {
+  bool success = 1;
+  int32 status = 2;
+  string message = 3;
+  repeated Transaction data = 4;
+}

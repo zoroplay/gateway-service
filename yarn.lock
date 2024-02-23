@@ -4527,6 +4527,10 @@ saxes@^5.0.1:
   dependencies:
     xmlchars "^2.2.0"
 
+"sbe-service-proto@git+https://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:x-oauth-basic@github.com/zoroplay/sbe-service-proto.git":
+  version "1.0.0"
+  resolved "git+https://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:x-oauth-basic@github.com/zoroplay/sbe-service-proto.git#bbf64c5641eba12393262291b490f640273f1bfe"
+
 schema-utils@^3.1.0, schema-utils@^3.1.1:
   version "3.3.0"
   resolved "https://registry.npmjs.org/schema-utils/-/schema-utils-3.3.0.tgz"

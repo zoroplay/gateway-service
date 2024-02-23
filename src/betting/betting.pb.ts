@@ -4,6 +4,25 @@ import { Observable } from "rxjs";
 
 export const protobufPackage = "betting";
 
+export interface PlaceCasinoBetRequest {
+  userId: number;
+  clientId: number;
+  roundId: string;
+  transactionId: string;
+  gameId: string;
+  stake: number;
+  winnings?: number | undefined;
+}
+
+export interface CreditCasinoBetRequest {
+  transactionId: string;
+  winnings: number;
+}
+
+export interface RollbackCasinoBetRequest {
+  transactionId: string;
+}
+
 export interface Settings {
   clientID: number;
   taxOnStake: number;
@@ -106,7 +125,7 @@ export interface PlaceBetRequest {
   minBonus: number;
   maxBonus: number;
   minOdds: number;
-  maxOdds: number;
+  totalOdds: number;
   type: string;
   combos: Combo[];
   isBooking: number;
@@ -291,6 +310,12 @@ export interface BettingServiceClient {
 
   placeBet(request: PlaceBetRequest): Observable<PlaceBetResponse>;
 
+  placeCasinoBet(request: PlaceCasinoBetRequest): Observable<PlaceBetResponse>;
+
+  settleCasinoBet(request: CreditCasinoBetRequest): Observable<PlaceBetResponse>;
+
+  cancelCasinoBet(request: RollbackCasinoBetRequest): Observable<PlaceBetResponse>;
+
   betHistory(request: BetHistoryRequest): Observable<BetHistoryResponse>;
 
   findBet(request: FindBetRequest): Observable<FindBetResponse>;
@@ -316,6 +341,18 @@ export interface BettingServiceController {
   cancelBet(request: BetID): Promise<StatusResponse> | Observable<StatusResponse> | StatusResponse;
 
   placeBet(request: PlaceBetRequest): Promise<PlaceBetResponse> | Observable<PlaceBetResponse> | PlaceBetResponse;
+
+  placeCasinoBet(
+    request: PlaceCasinoBetRequest,
+  ): Promise<PlaceBetResponse> | Observable<PlaceBetResponse> | PlaceBetResponse;
+
+  settleCasinoBet(
+    request: CreditCasinoBetRequest,
+  ): Promise<PlaceBetResponse> | Observable<PlaceBetResponse> | PlaceBetResponse;
+
+  cancelCasinoBet(
+    request: RollbackCasinoBetRequest,
+  ): Promise<PlaceBetResponse> | Observable<PlaceBetResponse> | PlaceBetResponse;
 
   betHistory(
     request: BetHistoryRequest,
@@ -343,6 +380,9 @@ export function BettingServiceControllerMethods() {
       "getAllSettings",
       "cancelBet",
       "placeBet",
+      "placeCasinoBet",
+      "settleCasinoBet",
+      "cancelCasinoBet",
       "betHistory",
       "findBet",
       "updateBet",

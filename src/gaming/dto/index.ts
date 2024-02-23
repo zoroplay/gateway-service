@@ -11,7 +11,7 @@ export class SwaggerSyncGameDto {
 export class SwaggerStartGameDto {
   @ApiProperty({
     description: 'Sportsbook Id for the game',
-    example: 2,
+    example: 1,
   })
   gameId: number;
   @ApiProperty({
@@ -26,9 +26,19 @@ export class SwaggerStartGameDto {
   userId: number;
   @ApiProperty({
     description: 'Url to redirect to platform home page',
+    example: 'testUser',
+  })
+  username: string;
+  @ApiProperty({
+    description: 'Url to redirect to deposit page',
+    example: 'testUser@test.com',
+  })
+  email: string;
+  @ApiProperty({
+    description: 'Url to redirect to platform home page',
     example: 'https://example.com',
   })
-  homeUrl: number;
+  homeUrl: string;
   @ApiProperty({
     description: 'Url to redirect to deposit page',
     example: 'https://example.com',
@@ -36,7 +46,7 @@ export class SwaggerStartGameDto {
   depositUrl: string;
   @ApiProperty({
     description: 'Provider Slug of the Game',
-    example: 'tada-games',
+    example: 'smart-soft',
   })
   providerSlug: string;
   @ApiProperty({
@@ -44,6 +54,11 @@ export class SwaggerStartGameDto {
     example: false,
   })
   demo: boolean;
+  @ApiProperty({
+    description: 'It is a mobile device',
+    example: false,
+  })
+  isMobile: boolean;
 }
 
 export class SwaggerStartGameResponseDto {

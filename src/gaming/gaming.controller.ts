@@ -1,7 +1,22 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
-import { ApiBody, ApiOkResponse, ApiParam, ApiTags } from '@nestjs/swagger';
+import {
+  Headers,
+  Param,
+  Body,
+  Controller,
+  Get,
+  Post,
+  Req,
+} from '@nestjs/common';
+import {
+  ApiBody,
+  ApiHeader,
+  ApiOkResponse,
+  ApiParam,
+  ApiTags,
+} from '@nestjs/swagger';
 import { GamingService } from './gaming.service';
 import {
+  CallbackGameDto,
   CreateGameDto,
   CreateProviderDto,
   StartGameDto,
@@ -86,20 +101,141 @@ export class GamingController {
 
   @Get('/:provider_id/callback')
   @ApiParam({ name: 'provider_id', type: 'string' })
-  @ApiOkResponse({ type: SwaggerOKGameArrayResponse })
-  handleCallbackGet(@Body() data: any) {
+  @ApiHeader({ name: 'X-Signature', description: 'Signature' })
+  @ApiHeader({ name: 'X-SessionId', description: 'Session ID' })
+  @ApiHeader({ name: 'X-UserName', description: 'User Name' })
+  @ApiHeader({
+    name: 'X-ClientExternalKey',
+    description: 'Client External Key',
+  })
+  @ApiBody({ type: SwaggerStartGameDto })
+  async handleCallbackGet(
+    @Req() request,
+    @Param('provider_id') provider,
+    @Headers() headers,
+    @Body() data,
+  ) {
     try {
-      console.log(data);
+      console.error('handleCallbackGet');
+      console.error(data);
+      const callbackData: CallbackGameDto = {
+        provider: provider,
+        method: request.method,
+        header: headers as any,
+        body: data as any,
+      };
+      console.error('modified data data');
+      console.error(callbackData);
+      return await this.gamingService.handleGamesCallback(callbackData);
     } catch (error) {
       console.error(error);
     }
   }
+
   @Post('/:provider_id/callback')
   @ApiParam({ name: 'provider_id', type: 'string' })
-  @ApiOkResponse({ type: SwaggerOKGameArrayResponse })
-  handleCallbackPost(@Body() data: any) {
+  @ApiHeader({ name: 'X-Signature', description: 'Signature' })
+  @ApiHeader({ name: 'X-SessionId', description: 'Session ID' })
+  @ApiHeader({ name: 'X-UserName', description: 'User Name' })
+  @ApiHeader({
+    name: 'X-ClientExternalKey',
+    description: 'Client External Key',
+  })
+  @ApiBody({ type: SwaggerStartGameDto })
+  @ApiHeader({
+    name: 'X-ClientExternalKey',
+    description: 'Client External Key',
+  })
+  async handleCallbackPost(
+    @Req() request,
+    @Param('provider_id') provider,
+    @Headers() headers,
+    @Body() data,
+  ) {
     try {
-      console.log(data);
+      console.error('handleCallbackPost');
+      console.error(data);
+      const callbackData: CallbackGameDto = {
+        provider: provider,
+        method: request.method,
+        header: headers,
+        body: data,
+      };
+      console.error('modified data data');
+      console.error(callbackData);
+      return await this.gamingService.handleGamesCallback(callbackData);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  @Get('/:provider_id/callback/:action')
+  @ApiParam({ name: 'provider_id', type: 'string' })
+  @ApiParam({ name: 'action', type: 'string' })
+  @ApiHeader({ name: 'X-Signature', description: 'Signature' })
+  @ApiHeader({ name: 'X-SessionId', description: 'Session ID' })
+  @ApiHeader({ name: 'X-UserName', description: 'User Name' })
+  @ApiHeader({
+    name: 'X-ClientExternalKey',
+    description: 'Client External Key',
+  })
+  @ApiBody({ type: SwaggerStartGameDto })
+  async handleCallbackWithActionGet(
+    @Req() request,
+    @Param('action') action,
+    @Param('provider_id') provider,
+    @Headers() headers,
+    @Body() data,
+  ) {
+    console.error('handleCallbackWithActionGet');
+    console.error(data);
+    try {
+      const callbackData: CallbackGameDto = {
+        provider: provider,
+        action: action,
+        method: request.method,
+        header: headers,
+        body: data,
+      };
+      console.error('modified data data');
+      console.error(callbackData);
+      return await this.gamingService.handleGamesCallback(callbackData);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  @Post('/:provider_id/callback/:action')
+  @ApiParam({ name: 'provider_id', type: 'string' })
+  @ApiParam({ name: 'action', type: 'string' })
+  @ApiHeader({ name: 'X-Signature', description: 'Signature' })
+  @ApiHeader({ name: 'X-SessionId', description: 'Session ID' })
+  @ApiHeader({ name: 'X-UserName', description: 'User Name' })
+  @ApiHeader({
+    name: 'X-ClientExternalKey',
+    description: 'Client External Key',
+  })
+  @ApiBody({ type: SwaggerStartGameDto })
+  async handleCallbackWithActionPost(
+    @Req() request,
+    @Param('action') action,
+    @Param('provider_id') provider,
+    @Headers() headers,
+    @Body() data,
+  ) {
+    try {
+      console.error('handleCallbackWithActionPost');
+      console.error(data);
+      const callbackData: CallbackGameDto = {
+        provider: provider,
+        action: action,
+        method: request.method,
+        header: headers,
+        body: data,
+      };
+      console.error('modified data data');
+      console.error(callbackData);
+      return await this.gamingService.handleGamesCallback(callbackData);
     } catch (error) {
       console.error(error);
     }

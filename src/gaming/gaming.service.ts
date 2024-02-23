@@ -15,7 +15,6 @@ import {
   CreateProviderDto,
 } from './gaming.pb';
 import { ClientGrpc } from '@nestjs/microservices';
-import { firstValueFrom, lastValueFrom, map } from 'rxjs';
 
 @Injectable()
 export class GamingService implements OnModuleInit {
@@ -27,6 +26,7 @@ export class GamingService implements OnModuleInit {
     this.service =
       this.client.getService<GamingServiceClient>(GAMING_SERVICE_NAME);
   }
+
   async createProvider(createDto: CreateProviderDto) {
     console.log(createDto);
     return await this.service.createProvider(createDto);
@@ -55,39 +55,17 @@ export class GamingService implements OnModuleInit {
     };
   }
 
-  startGame(request: StartGameDto) {
-    const resp = this.service.startGame(request);
+  async startGame(request: StartGameDto) {
+    const resp = await this.service.startGame(request);
     return resp;
   }
 
   async handleGamesCallback(request: CallbackGameDto) {
-    switch (request.provider) {
-      case 'tada':
-        const tadaCallbackData: TadaCallback = request.body as any;
-        return this.service.handleTadaCallback(tadaCallbackData);
-        break;
-      case 'shack-evolution':
-        const shackEvolutionCallbackData: ShackEvolutionCallback =
-          request.body as any;
-        return this.service.handleShackEvolutionCallback(
-          shackEvolutionCallbackData,
-        );
-        break;
-      case 'evo-play':
-        const evoplayCallbackData: EvoplayCallback = request.body as any;
-        return this.service.handleEvoplayCallback(evoplayCallbackData);
-        break;
-      case 'evolution':
-        const evolutionCallbackData: EvolutionCallback = request.body as any;
-        return this.service.handleEvolutionCallback(evolutionCallbackData);
-        break;
-      case 'smart-soft':
-        const smartSoftCallbackData: SmartSoftCallback = request.body as any;
-        return this.service.handleSmartSoftCallback(smartSoftCallbackData);
-        break;
-      default:
-        throw new Error('Invalid Provider');
-        break;
-    }
+    console.log('service start');
+    console.log(request);
+    const resp = await this.service.handleCallback(request).toPromise();
+    console.log(resp);
+    console.log('service end');
+    return resp;
   }
 }
