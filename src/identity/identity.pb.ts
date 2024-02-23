@@ -8,9 +8,9 @@ export const protobufPackage = "identity";
 export interface UserData {
   id: number;
   username: string;
-  balance?: number | undefined;
+  balance: number;
   code?: string | undefined;
-  firstName?: string | undefined;
+  firstName: string;
   lastName?: string | undefined;
   email?: string | undefined;
   phone?: string | undefined;
@@ -24,10 +24,39 @@ export interface UserData {
   token: string;
   registered: string;
   authCode: string;
+  country: string;
+  currency: string;
+  city: string;
+  address: string;
+  gender: string;
+  dateOfBirth: string;
 }
 
 export interface CreateUserRequest {
   clientId: number;
+  username: string;
+  password: string;
+  email?: string | undefined;
+  roleId?: number | undefined;
+  firstName?: string | undefined;
+  lastName?: string | undefined;
+  phoneNumber?: string | undefined;
+  gender?: string | undefined;
+  dateOfBirth?: string | undefined;
+  country?: string | undefined;
+  state?: string | undefined;
+  city?: string | undefined;
+  address?: string | undefined;
+  language?: string | undefined;
+  currency?: string | undefined;
+  parent?: number | undefined;
+  promoCode?: string | undefined;
+  trackingToken?: string | undefined;
+}
+
+export interface UpdateUserRequest {
+  clientId: number;
+  userId: number;
   username: string;
   password: string;
   email?: string | undefined;
@@ -93,6 +122,11 @@ export interface GetUserDetailsResponse {
   success: boolean;
   message: string;
   data: UserData | undefined;
+}
+
+export interface UpdateUserResponse {
+  success: boolean;
+  message: string;
 }
 
 /** Validate */
@@ -291,6 +325,8 @@ export interface IdentityServiceClient {
   getPaymentData(request: GetPaymentDataRequest): Observable<GetPaymentDataResponse>;
 
   searchPlayer(request: SearchPlayerRequest): Observable<SearchPlayerResponse>;
+
+  updateUserDetails(request: UpdateUserRequest): Observable<UpdateUserResponse>;
 }
 
 export interface IdentityServiceController {
@@ -341,6 +377,10 @@ export interface IdentityServiceController {
   searchPlayer(
     request: SearchPlayerRequest,
   ): Promise<SearchPlayerResponse> | Observable<SearchPlayerResponse> | SearchPlayerResponse;
+
+  updateUserDetails(
+    request: UpdateUserRequest,
+  ): Promise<UpdateUserResponse> | Observable<UpdateUserResponse> | UpdateUserResponse;
 }
 
 export function IdentityServiceControllerMethods() {
@@ -366,6 +406,7 @@ export function IdentityServiceControllerMethods() {
       "getClient",
       "getPaymentData",
       "searchPlayer",
+      "updateUserDetails",
     ];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);

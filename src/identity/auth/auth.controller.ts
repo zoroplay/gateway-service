@@ -16,11 +16,12 @@ import {
   IdentityServiceClient,
   IDENTITY_SERVICE_NAME,
   LoginRequest,
-  LoginResponse, protobufPackage, CreateUserRequest,
+  LoginResponse, protobufPackage, CreateUserRequest, UpdateUserRequest,
 } from '../identity.pb';
 import { ApiBody, ApiOkResponse, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
-import { LoginDTO, SwaggerCommonResponse, SwaggerRegisterRequest  } from '../dto';
+import { LoginDTO, SwaggerCommonResponse, SwaggerRegisterRequest, SwaggerUserDetailsRequest  } from '../dto';
 import { AuthGuard } from './auth.guard';
+import { IAuthorizedRequest } from 'src/interfaces/authorized-request.interface';
 
 @ApiTags('Auth APIs')
 @Controller('auth')
@@ -48,12 +49,28 @@ export class AuthController implements OnModuleInit {
   @Post('/login')
   @ApiOperation({
     summary: 'login user',
-    description: 'This endpoint logs in a user',
+    description: 'This endpoint authenticates a user',
   })
   @ApiBody({ type: LoginDTO })
   @ApiOkResponse({ type: SwaggerCommonResponse })
   loginUser(@Body() data: LoginRequest) {
     return this.svc.login(data);
+  }
+
+  @UseGuards(AuthGuard)
+  @Put('/update/details')
+  @ApiOperation({
+    summary: 'Update user',
+    description: 'This endpoint logs in a user',
+  })
+  @ApiBody({ type: SwaggerUserDetailsRequest })
+  @ApiOkResponse({ type: SwaggerCommonResponse })
+  updateUser(
+    @Body() data: UpdateUserRequest,
+    @Req() req: IAuthorizedRequest
+  ) {
+    data.userId = req.user;
+    return this.svc.updateUserDetails(data);
   }
 
   @UseGuards(AuthGuard)
