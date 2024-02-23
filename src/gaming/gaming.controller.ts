@@ -116,17 +116,12 @@ export class GamingController {
     @Body() data,
   ) {
     try {
-      console.error('handleCallbackGet');
-      console.error(data);
-      const callbackData: CallbackGameDto = {
+      return await this.gamingService.handleGamesCallback({
         provider: provider,
         method: request.method,
-        header: headers as any,
-        body: data as any,
-      };
-      console.error('modified data data');
-      console.error(callbackData);
-      return await this.gamingService.handleGamesCallback(callbackData);
+        header: headers,
+        body: data,
+      });
     } catch (error) {
       console.error(error);
     }
@@ -153,17 +148,12 @@ export class GamingController {
     @Body() data,
   ) {
     try {
-      console.error('handleCallbackPost');
-      console.error(data);
-      const callbackData: CallbackGameDto = {
+      return await this.gamingService.handleGamesCallback({
         provider: provider,
         method: request.method,
         header: headers,
         body: data,
-      };
-      console.error('modified data data');
-      console.error(callbackData);
-      return await this.gamingService.handleGamesCallback(callbackData);
+      });
     } catch (error) {
       console.error(error);
     }
@@ -187,19 +177,14 @@ export class GamingController {
     @Headers() headers,
     @Body() data,
   ) {
-    console.error('handleCallbackWithActionGet');
-    console.error(data);
     try {
-      const callbackData: CallbackGameDto = {
+      return await this.gamingService.handleGamesCallback({
         provider: provider,
         action: action,
         method: request.method,
         header: headers,
         body: data,
-      };
-      console.error('modified data data');
-      console.error(callbackData);
-      return await this.gamingService.handleGamesCallback(callbackData);
+      });
     } catch (error) {
       console.error(error);
     }
@@ -224,18 +209,13 @@ export class GamingController {
     @Body() data,
   ) {
     try {
-      console.error('handleCallbackWithActionPost');
-      console.error(data);
-      const callbackData: CallbackGameDto = {
+      return await this.gamingService.handleGamesCallback({
         provider: provider,
         action: action,
         method: request.method,
         header: headers,
         body: data,
-      };
-      console.error('modified data data');
-      console.error(callbackData);
-      return await this.gamingService.handleGamesCallback(callbackData);
+      });
     } catch (error) {
       console.error(error);
     }
