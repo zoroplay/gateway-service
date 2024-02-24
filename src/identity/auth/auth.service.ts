@@ -6,6 +6,9 @@ import {
   IDENTITY_SERVICE_NAME,
   ValidateResponse,
   protobufPackage,
+  GetUserByUsernameRequest,
+  GetUserByUsernameResponse,
+  ValidateClientResponse,
 } from '../identity.pb';
 
 @Injectable()
@@ -21,5 +24,13 @@ export class AuthService {
 
   public async validate(token: string): Promise<ValidateResponse> {
     return firstValueFrom(this.svc.validate({ token }));
+  }
+
+  public async validateClient(token: string): Promise<ValidateClientResponse> {
+    return firstValueFrom(this.svc.validateClient({ token }));
+  }
+
+  public async validateUser(data: GetUserByUsernameRequest): Promise<GetUserByUsernameResponse> {
+    return firstValueFrom(this.svc.getUserByUsername(data));
   }
 }

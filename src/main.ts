@@ -20,8 +20,8 @@ async function bootstrap() {
 
   app.enableCors();
 
-  // app.useGlobalFilters(new HttpExceptionFilter());
-  // app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
+  app.useGlobalFilters(new HttpExceptionFilter());
+  app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
 
   const document = SwaggerModule.createDocument(app, options);
 
