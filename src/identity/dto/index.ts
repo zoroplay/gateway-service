@@ -73,5 +73,10 @@ export class SwaggerRegisterRequest {
     @ApiProperty({ description: 'error message' })
     error?: string;
   }
+
+  export class SwaggerGetUserByUsernmae {
+    @ApiProperty({ description: 'UseID from OPay' })
+    UserID: string;
+  }
   
   
