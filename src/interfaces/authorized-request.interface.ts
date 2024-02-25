@@ -1,5 +1,5 @@
-// import { IUser } from './user.interface';
+import { IUser } from './user.interface';
 
 export interface IAuthorizedRequest extends Request {
-  user?: number;
+  user?: IUser;
 }

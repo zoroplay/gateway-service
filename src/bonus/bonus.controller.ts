@@ -64,7 +64,7 @@ export class BonusController {
     try {
       const data = {} as GetUserBonusRequest;
       data.clientId = query.client_id ? parseInt(query.client_id) : 1;
-      data.userId = req.user
+      data.userId = req.user.id
       if (query.id)
         data.id = query.id;
 
@@ -93,7 +93,7 @@ export class BonusController {
   ) {
     try {
       data.clientId = query.client_id;
-      data.userId = req.user.toString();
+      data.userId = req.user.id.toString();
       return this.bonusService.AwardBonus(data);
     } catch (error) {
       console.error(error);
@@ -114,7 +114,7 @@ export class BonusController {
     try {
       const body = {
         clientId: query.client_id,
-        userId: req.user
+        userId: req.user.id
       }
       return this.bonusService.CheckFirstDeposit(body);
     } catch (error) {

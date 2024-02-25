@@ -137,7 +137,12 @@ export interface ValidateRequest {
 export interface ValidateResponse {
   status: number;
   error: string;
-  userId: number;
+  user?: ValidateResponse_User | undefined;
+}
+
+export interface ValidateResponse_User {
+  id: number;
+  username: string;
 }
 
 export interface ValidateClientResponse {
