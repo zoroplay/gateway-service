@@ -65,6 +65,40 @@ export class SwaggerInitiateDepositRequest {
     paymentMethod: string;
 }
 
+export class SwaggerVerifyBankAccountRequest {
+    @ApiProperty({ description: 'Client ID of the operator' })
+    clientId: number;
+  
+    @ApiProperty({ description: 'Deposit Amount' })
+    accountNumber: number;
+
+    @ApiProperty({ description: 'Payment method selected for deposit' })
+    bankCode: string;
+}
+
+export class SwaggerWithdrawalRequest {
+    @ApiProperty({ description: 'Client ID of the operator' })
+    clientId: number;
+  
+    @ApiProperty({ description: 'Account number' })
+    accountNumber: number;
+
+    @ApiProperty({ description: 'Account name' })
+    accountName: string;
+
+    @ApiProperty({ description: 'Withdrawal Amount' })
+    amount: number;
+    
+    @ApiProperty({ description: 'Bank Code' })
+    bankCode?: string;
+
+    @ApiProperty({ description: 'Bank name' })
+    bankName?: string;
+
+    @ApiProperty({ description: 'Withdrawal type' })
+    type?: string;
+}
+
 export class SwaggerDepositReponse {
     @ApiProperty({ description: 'Message' })
     message: string;

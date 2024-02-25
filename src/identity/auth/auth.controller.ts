@@ -69,7 +69,7 @@ export class AuthController implements OnModuleInit {
     @Body() data: UpdateUserRequest,
     @Req() req: IAuthorizedRequest
   ) {
-    data.userId = req.user;
+    data.userId = req.user.id;
     return this.svc.updateUserDetails(data);
   }
 
@@ -89,6 +89,6 @@ export class AuthController implements OnModuleInit {
     @Req() req, 
     @Param() param
   ) {
-    return this.svc.getUserDetails({clientId: param.client_id, userId: req.user});
+    return this.svc.getUserDetails({clientId: param.client_id, userId: req.user.id});
   }
 }

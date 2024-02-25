@@ -23,6 +23,7 @@ import { IdentityModule } from 'src/identity/identity.module';
     ]),
   ],
   controllers: [WalletController, WalletAdminController],
-  providers: [WalletService]
+  providers: [WalletService],
+  exports: [WalletService]
 })
 export class WalletModule {}
