@@ -1,23 +1,17 @@
 import { Body, Controller, Get, Inject, Post, Query, Req, UseGuards } from '@nestjs/common';
 import { ApiBody, ApiOkResponse, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { InitiateDepositRequest, VerifyBankAccountRequest, VerifyDepositRequest, WALLET_SERVICE_NAME, WalletServiceClient, WithdrawRequest, protobufPackage } from './wallet.pb';
-import { ClientGrpc } from '@nestjs/microservices';
 import { SwaggerDepositReponse, SwaggerInitiateDepositRequest, SwaggerVerifyBankAccountRequest, SwaggerVerifyDepositReponse, SwaggerWithdrawalRequest } from './dto';
 import { AuthGuard } from 'src/identity/auth/auth.guard';
 import { IAuthorizedRequest } from 'src/interfaces/authorized-request.interface';
+import { WalletService } from './wallet.service';
 
 @ApiTags('User Account APIs')
 @Controller('user/wallet')
 export class WalletController {
-    private svc: WalletServiceClient;
-
-    @Inject(protobufPackage)
-    private readonly client: ClientGrpc;
-
-    public onModuleInit(): void {
-        this.svc = this.client.getService<WalletServiceClient>(WALLET_SERVICE_NAME);
-    }
-
+    constructor(
+        private walletService: WalletService
+    ) {}
     @UseGuards(AuthGuard)
     @Post('/initiate-deposit')
     @ApiOperation({
@@ -39,7 +33,7 @@ export class WalletController {
     ) {
         body.userId = req.user.id;
         body.source = query.source;
-        return this.svc.inititateDeposit(body);
+        return this.walletService.inititateDeposit(body);
     }
 
     @Get('/verify-payment')
@@ -70,7 +64,7 @@ export class WalletController {
     verifyPayment(
         @Query() query: VerifyDepositRequest
     ) {
-        return this.svc.verifyDeposit(query);
+        return this.walletService.verifyDeposit(query);
     }
 
     @UseGuards(AuthGuard)
@@ -94,7 +88,7 @@ export class WalletController {
     ) {
         body.userId = req.user.id;
         body.source = query.source;
-        return this.svc.verifyBankAccount(body);
+        return this.walletService.verifyBankAccount(body);
     }
 
     @UseGuards(AuthGuard)
@@ -119,6 +113,6 @@ export class WalletController {
         body.userId = req.user.id;
         body.username = req.user.username;
         body.source = query.source;
-        return this.svc.requestWithdrawal(body);
+        return this.walletService.requestWithdrawal(body);
     }
 }

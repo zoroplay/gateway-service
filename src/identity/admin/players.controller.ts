@@ -26,7 +26,7 @@ export class PlayersController {
     @ApiBody({ type: SwaggerSearchPlayerRequest })
     @ApiOkResponse({ type: SwaggerCommonResponse })
     searchPlayer(@Body() body: SearchPlayerRequest) {
-        return this.svc.searchPlayer(body);
+        return this.svc.searchPlayers(body);
     }
 
     @Post('/list')
