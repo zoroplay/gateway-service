@@ -66,12 +66,12 @@ export class AppController {
       token,
     }
     switch (param.action) {
-      case 'validate':
+      case 'user-lookup':
         return this.authService.validateUser(payload)
-      case 'update-notify':
+      case 'payment-update':
         return this.walletService.opayDeposit(payload);
-      case 'requery-lookup':
-        return this.walletService.opayVerification(payload);
+      case 'transaction-lookup':
+        return this.walletService.opayDeposit(payload);
       default:
         break;
     }
