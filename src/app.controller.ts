@@ -71,7 +71,7 @@ export class AppController {
       case 'payment-update':
         return this.walletService.opayDeposit(payload);
       case 'transaction-lookup':
-        return this.walletService.opayDeposit(payload);
+        return this.walletService.opayVerification(payload);
       default:
         break;
     }
