@@ -86,7 +86,7 @@ export class AuthController implements OnModuleInit {
   })
   @ApiOkResponse({ type: SwaggerCommonResponse })
   getAuthDetails(
-    @Req() req, 
+    @Req() req: IAuthorizedRequest, 
     @Param() param
   ) {
     return this.svc.getUserDetails({clientId: param.client_id, userId: req.user.id});

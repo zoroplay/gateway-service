@@ -384,7 +384,7 @@ export interface IdentityServiceClient {
 
   getPaymentData(request: GetPaymentDataRequest): Observable<GetPaymentDataResponse>;
 
-  searchPlayer(request: SearchPlayerRequest): Observable<SearchPlayerResponse>;
+  searchPlayers(request: SearchPlayerRequest): Observable<SearchPlayerResponse>;
 
   updateUserDetails(request: UpdateUserRequest): Observable<UpdateUserResponse>;
 
@@ -444,7 +444,7 @@ export interface IdentityServiceController {
     request: GetPaymentDataRequest,
   ): Promise<GetPaymentDataResponse> | Observable<GetPaymentDataResponse> | GetPaymentDataResponse;
 
-  searchPlayer(
+  searchPlayers(
     request: SearchPlayerRequest,
   ): Promise<SearchPlayerResponse> | Observable<SearchPlayerResponse> | SearchPlayerResponse;
 

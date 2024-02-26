@@ -29,17 +29,16 @@ export interface VerifyDepositResponse {
   message: string;
 }
 
-export interface WebhookRequest {
+export interface PaystackWebhookRequest {
   clientId: number;
-  transactionRef: string;
-  paymentChannel: string;
-  paymentStatus: string;
+  reference: string;
+  event: string;
+  body: string;
+  paystackKey: string;
 }
 
 export interface WebhookResponse {
   success: boolean;
-  status: number;
-  message: string;
 }
 
 export interface GetPaymentMethodRequest {
@@ -186,7 +185,7 @@ export interface WithdrawRequest {
   accountName: string;
   accountNumber: string;
   bankCode?: string | undefined;
-  bankId?: string | undefined;
+  bankName?: string | undefined;
   type?: string | undefined;
   source?: string | undefined;
   username: string;
@@ -225,7 +224,7 @@ export interface GetTransactionResponse {
 export interface OpayWebhookRequest {
   clientId: number;
   username?: string | undefined;
-  transactionNo: string;
+  orderNo: string;
   amount: string;
 }
 
@@ -244,6 +243,34 @@ export interface OpayWebhookResponse_Data {
   TransDate: string;
 }
 
+export interface ListWithdrawalRequests {
+  clientId: number;
+  from: string;
+  to: string;
+  status: number;
+  username: string;
+  transactionId: string;
+}
+
+export interface ListWithdrawalRequestResponse {
+  success: boolean;
+  status: number;
+  message: string;
+  data: WithdrawalRequest[];
+}
+
+export interface WithdrawalRequest {
+  id: number;
+  userId: number;
+  username: string;
+  amount: number;
+  accountNumber: number;
+  accountName: string;
+  bankName: string;
+  updatedBy: string;
+  status: number;
+}
+
 export const WALLET_PACKAGE_NAME = "wallet";
 
 export interface WalletServiceClient {
@@ -259,8 +286,6 @@ export interface WalletServiceClient {
 
   verifyDeposit(request: VerifyDepositRequest): Observable<VerifyDepositResponse>;
 
-  paymentWebhook(request: WebhookRequest): Observable<WebhookResponse>;
-
   requestWithdrawal(request: WithdrawRequest): Observable<WithdrawResponse>;
 
   verifyBankAccount(request: VerifyBankAccountRequest): Observable<VerifyBankAccountResponse>;
@@ -271,9 +296,13 @@ export interface WalletServiceClient {
 
   savePaymentMethod(request: PaymentMethodRequest): Observable<PaymentMethodResponse>;
 
+  paystackWebhook(request: PaystackWebhookRequest): Observable<WebhookResponse>;
+
   opayDepositWebhook(request: OpayWebhookRequest): Observable<OpayWebhookResponse>;
 
   opayLookUpWebhook(request: OpayWebhookRequest): Observable<OpayWebhookResponse>;
+
+  listWithdrawals(request: ListWithdrawalRequests): Observable<ListWithdrawalRequestResponse>;
 }
 
 export interface WalletServiceController {
@@ -292,8 +321,6 @@ export interface WalletServiceController {
   verifyDeposit(
     request: VerifyDepositRequest,
   ): Promise<VerifyDepositResponse> | Observable<VerifyDepositResponse> | VerifyDepositResponse;
-
-  paymentWebhook(request: WebhookRequest): Promise<WebhookResponse> | Observable<WebhookResponse> | WebhookResponse;
 
   requestWithdrawal(
     request: WithdrawRequest,
@@ -315,6 +342,10 @@ export interface WalletServiceController {
     request: PaymentMethodRequest,
   ): Promise<PaymentMethodResponse> | Observable<PaymentMethodResponse> | PaymentMethodResponse;
 
+  paystackWebhook(
+    request: PaystackWebhookRequest,
+  ): Promise<WebhookResponse> | Observable<WebhookResponse> | WebhookResponse;
+
   opayDepositWebhook(
     request: OpayWebhookRequest,
   ): Promise<OpayWebhookResponse> | Observable<OpayWebhookResponse> | OpayWebhookResponse;
@@ -322,6 +353,10 @@ export interface WalletServiceController {
   opayLookUpWebhook(
     request: OpayWebhookRequest,
   ): Promise<OpayWebhookResponse> | Observable<OpayWebhookResponse> | OpayWebhookResponse;
+
+  listWithdrawals(
+    request: ListWithdrawalRequests,
+  ): Promise<ListWithdrawalRequestResponse> | Observable<ListWithdrawalRequestResponse> | ListWithdrawalRequestResponse;
 }
 
 export function WalletServiceControllerMethods() {
@@ -333,14 +368,15 @@ export function WalletServiceControllerMethods() {
       "debitUser",
       "inititateDeposit",
       "verifyDeposit",
-      "paymentWebhook",
       "requestWithdrawal",
       "verifyBankAccount",
       "getTransactions",
       "getPaymentMethods",
       "savePaymentMethod",
+      "paystackWebhook",
       "opayDepositWebhook",
       "opayLookUpWebhook",
+      "listWithdrawals",
     ];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
