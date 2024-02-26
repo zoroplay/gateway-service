@@ -248,8 +248,7 @@ export interface ListWithdrawalRequests {
   from: string;
   to: string;
   status: number;
-  username: string;
-  transactionId: string;
+  userId: number;
 }
 
 export interface ListWithdrawalRequestResponse {
@@ -268,6 +267,32 @@ export interface WithdrawalRequest {
   accountName: string;
   bankName: string;
   updatedBy: string;
+  status: number;
+}
+
+export interface UserTransactionRequest {
+  clientId: number;
+  userId: number;
+  startDate: string;
+  endDate: string;
+}
+
+export interface UserTransactionResponse {
+  success: boolean;
+  message: string;
+  data: TransactionData[];
+}
+
+export interface TransactionData {
+  id: number;
+  referenceNo: string;
+  amount: number;
+  balance: number;
+  subject: string;
+  type: string;
+  description: string;
+  transactionDate: string;
+  channel: string;
   status: number;
 }
 
@@ -303,6 +328,8 @@ export interface WalletServiceClient {
   opayLookUpWebhook(request: OpayWebhookRequest): Observable<OpayWebhookResponse>;
 
   listWithdrawals(request: ListWithdrawalRequests): Observable<ListWithdrawalRequestResponse>;
+
+  userTransactions(request: UserTransactionRequest): Observable<UserTransactionResponse>;
 }
 
 export interface WalletServiceController {
@@ -357,6 +384,10 @@ export interface WalletServiceController {
   listWithdrawals(
     request: ListWithdrawalRequests,
   ): Promise<ListWithdrawalRequestResponse> | Observable<ListWithdrawalRequestResponse> | ListWithdrawalRequestResponse;
+
+  userTransactions(
+    request: UserTransactionRequest,
+  ): Promise<UserTransactionResponse> | Observable<UserTransactionResponse> | UserTransactionResponse;
 }
 
 export function WalletServiceControllerMethods() {
@@ -377,6 +408,7 @@ export function WalletServiceControllerMethods() {
       "opayDepositWebhook",
       "opayLookUpWebhook",
       "listWithdrawals",
+      "userTransactions",
     ];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);

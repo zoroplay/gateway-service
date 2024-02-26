@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Inject, Post, Query, Req, UseGuards } from '@nestjs/common';
 import { ApiBody, ApiOkResponse, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
-import { InitiateDepositRequest, VerifyBankAccountRequest, VerifyDepositRequest, WALLET_SERVICE_NAME, WalletServiceClient, WithdrawRequest, protobufPackage } from './wallet.pb';
-import { SwaggerDepositReponse, SwaggerInitiateDepositRequest, SwaggerVerifyBankAccountRequest, SwaggerVerifyDepositReponse, SwaggerWithdrawalRequest } from './dto';
+import { InitiateDepositRequest, UserTransactionRequest, VerifyBankAccountRequest, VerifyDepositRequest, WALLET_SERVICE_NAME, WalletServiceClient, WithdrawRequest, protobufPackage } from './wallet.pb';
+import { SwaggerDepositReponse, SwaggerInitiateDepositRequest, SwaggerListTransactionResponse, SwaggerListTransactions, SwaggerVerifyBankAccountRequest, SwaggerVerifyDepositReponse, SwaggerWithdrawalRequest } from './dto';
 import { AuthGuard } from 'src/identity/auth/auth.guard';
 import { IAuthorizedRequest } from 'src/interfaces/authorized-request.interface';
 import { WalletService } from './wallet.service';
@@ -114,5 +114,28 @@ export class WalletController {
         body.username = req.user.username;
         body.source = query.source;
         return this.walletService.requestWithdrawal(body);
+    }
+
+    @UseGuards(AuthGuard)
+    @Post('/transactions')
+    @ApiOperation({
+        summary: 'List Transactions',
+        description: 'This endpoint fetches authenticated user transactions',
+    })
+    @ApiQuery({
+        name: 'source',
+        type: 'string',
+        description: 'SBE platform used to initiate the request',
+        example: 'mobile'
+    })
+    @ApiBody({ type: SwaggerListTransactions })
+    @ApiOkResponse({ type: SwaggerListTransactionResponse })
+    listTransactions(
+        @Body() body: UserTransactionRequest,
+        @Query() query: any,
+        @Req() req: IAuthorizedRequest
+    ) {
+        body.userId = req.user.id;
+        return this.walletService.getUserTransactions(body);
     }
 }

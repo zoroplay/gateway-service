@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { InitiateDepositRequest, InitiateDepositResponse, OpayWebhookRequest, OpayWebhookResponse, PaystackWebhookRequest, VerifyBankAccountRequest, VerifyBankAccountResponse, VerifyDepositRequest, VerifyDepositResponse, WALLET_SERVICE_NAME, WalletServiceClient, WebhookResponse, WithdrawRequest, WithdrawResponse, protobufPackage } from './wallet.pb';
+import { InitiateDepositRequest, InitiateDepositResponse, OpayWebhookRequest, OpayWebhookResponse, PaystackWebhookRequest, UserTransactionRequest, UserTransactionResponse, VerifyBankAccountRequest, VerifyBankAccountResponse, VerifyDepositRequest, VerifyDepositResponse, WALLET_SERVICE_NAME, WalletServiceClient, WebhookResponse, WithdrawRequest, WithdrawResponse, protobufPackage } from './wallet.pb';
 import { ClientGrpc } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
 
@@ -40,5 +40,9 @@ export class WalletService {
 
     opayVerification(data: OpayWebhookRequest): Promise<OpayWebhookResponse> {
         return firstValueFrom(this.svc.opayLookUpWebhook(data));
+    }
+
+    getUserTransactions(data: UserTransactionRequest): Promise<UserTransactionResponse> {
+        return firstValueFrom(this.svc.userTransactions(data));
     }
 }

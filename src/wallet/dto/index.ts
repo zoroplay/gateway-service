@@ -121,6 +121,38 @@ export class SwaggerVerifyDepositReponse {
     status?: number
 }
 
+
+export class SwaggerListTransactions {
+    @ApiProperty({ description: 'Client ID of the operator' })
+    clientId: number;
+  
+    @ApiProperty({ description: 'Account number' })
+    userId: number;
+
+    @ApiProperty({ description: 'Transaction Start date' })
+    startDate: string;
+
+    @ApiProperty({ description: 'Transaction End date' })
+    endDate: number;
+    
+    @ApiProperty({ description: 'Bank Code' })
+    page?: string;
+
+    @ApiProperty({ description: 'Bank name' })
+    perPage?: string;
+}
+
+export class SwaggerListTransactionResponse {
+    @ApiProperty({ description: 'Message' })
+    message: string;
+  
+    @ApiProperty({ description: 'Request Status (true or false)' })
+    success: boolean;
+  
+    @ApiProperty({ description: 'data' })
+    data?: any
+}
+
 interface DepositResponseData {
     link: string;
     transactionRef: string;
