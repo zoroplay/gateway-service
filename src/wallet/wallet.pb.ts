@@ -268,6 +268,7 @@ export interface WithdrawalRequest {
   bankName: string;
   updatedBy: string;
   status: number;
+  created: string;
 }
 
 export interface UserTransactionRequest {

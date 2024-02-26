@@ -153,6 +153,19 @@ export class SwaggerListTransactionResponse {
     data?: any
 }
 
+export class SwaggerListWithdrawalRequests {
+    @ApiProperty({ description: 'SBE Client ID' })
+    clientId: number;
+    @ApiProperty({ description: 'Start date' })
+    from: string;
+    @ApiProperty({ description: 'End Date' })
+    to: string;
+    @ApiProperty({ description: 'Status' })
+    status?: number;
+    @ApiProperty({ description: 'Username' })
+    userId?: number;
+  }
+
 interface DepositResponseData {
     link: string;
     transactionRef: string;
