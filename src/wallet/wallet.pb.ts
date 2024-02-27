@@ -263,7 +263,7 @@ export interface WithdrawalRequest {
   userId: number;
   username: string;
   amount: number;
-  accountNumber: number;
+  accountNumber: string;
   accountName: string;
   bankName: string;
   updatedBy: string;
