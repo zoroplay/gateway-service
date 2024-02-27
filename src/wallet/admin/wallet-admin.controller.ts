@@ -1,8 +1,8 @@
-import { Body, Controller, Get, Inject, Param, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, Inject, Param, Post, Put, Query, Req } from '@nestjs/common';
 import { ApiBody, ApiOkResponse, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 import { ClientGrpc } from '@nestjs/microservices';
-import { ListWithdrawalRequests, PaymentMethodRequest, WALLET_SERVICE_NAME, WalletServiceClient, protobufPackage } from '../wallet.pb';
-import { SwaggerGetPaymentMethodResponse, SwaggerListWithdrawalRequests, SwaggerPaymentMethodRequest, SwaggerPaymentMethodResponse } from '../dto';
+import { ListWithdrawalRequests, PaymentMethodRequest, UpdateWithdrawalRequest, WALLET_SERVICE_NAME, WalletServiceClient, protobufPackage } from '../wallet.pb';
+import { SwaggerGetPaymentMethodResponse, SwaggerListWithdrawalRequests, SwaggerPaymentMethodRequest, SwaggerPaymentMethodResponse, SwaggerUpdateWithdrawalRequest } from '../dto';
 
 @ApiTags('BackOffice APIs')
 @Controller('admin/wallet')
@@ -74,6 +74,29 @@ export class WalletAdminController {
             to: param.to,
             status: query.status,
             userId: param.userId
+        });
+    }
+
+    
+    @Put('withdrawals/update')
+    @ApiOperation({
+        summary: 'Update Withdrawal Requests',
+        description: 'This endpoint is used to update a withdrawal requests (approve|reject)',
+    })
+    @ApiBody({type: SwaggerUpdateWithdrawalRequest})
+    @ApiOkResponse({ type: SwaggerPaymentMethodResponse })
+    updateWithdrawals(
+        @Body() body: UpdateWithdrawalRequest,
+        @Query() query,
+        @Req() req,
+    ) {
+
+        return this.svc.updateWithdrawal({
+            clientId: body.clientId, 
+            withdrawalId: body.withdrawalId,
+            action: body.action,
+            comment: body.action,
+            updatedBy: ''
         });
     }
 
