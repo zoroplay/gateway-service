@@ -297,6 +297,20 @@ export interface TransactionData {
   status: number;
 }
 
+export interface UpdateWithdrawalRequest {
+  clientId: number;
+  withdrawalId: number;
+  action: string;
+  comment: string;
+  updatedBy: string;
+}
+
+export interface UpdateWithdrawalResponse {
+  success: boolean;
+  message: string;
+  status: number;
+}
+
 export const WALLET_PACKAGE_NAME = "wallet";
 
 export interface WalletServiceClient {
@@ -331,6 +345,8 @@ export interface WalletServiceClient {
   listWithdrawals(request: ListWithdrawalRequests): Observable<ListWithdrawalRequestResponse>;
 
   userTransactions(request: UserTransactionRequest): Observable<UserTransactionResponse>;
+
+  updateWithdrawal(request: UpdateWithdrawalRequest): Observable<UpdateWithdrawalResponse>;
 }
 
 export interface WalletServiceController {
@@ -389,6 +405,10 @@ export interface WalletServiceController {
   userTransactions(
     request: UserTransactionRequest,
   ): Promise<UserTransactionResponse> | Observable<UserTransactionResponse> | UserTransactionResponse;
+
+  updateWithdrawal(
+    request: UpdateWithdrawalRequest,
+  ): Promise<UpdateWithdrawalResponse> | Observable<UpdateWithdrawalResponse> | UpdateWithdrawalResponse;
 }
 
 export function WalletServiceControllerMethods() {
@@ -410,6 +430,7 @@ export function WalletServiceControllerMethods() {
       "opayLookUpWebhook",
       "listWithdrawals",
       "userTransactions",
+      "updateWithdrawal",
     ];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);

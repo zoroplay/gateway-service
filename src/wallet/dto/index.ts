@@ -164,7 +164,18 @@ export class SwaggerListWithdrawalRequests {
     status?: number;
     @ApiProperty({ description: 'Username' })
     userId?: number;
-  }
+}
+
+export class SwaggerUpdateWithdrawalRequest {
+    @ApiProperty({ description: 'SBE Client ID' })
+    clientId: number;
+    @ApiProperty({ description: 'Withdrawal Request ID' })
+    withdrawalId: number;
+    @ApiProperty({ description: 'Update action' })
+    action: string;
+    @ApiProperty({ description: 'Comment if rejected' })
+    comment: string;
+}
 
 interface DepositResponseData {
     link: string;
