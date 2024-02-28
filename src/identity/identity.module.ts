@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { AuthController } from './auth/auth.controller';
 import { AuthService } from './auth/auth.service';
 import { ClientsModule, Transport } from '@nestjs/microservices';
@@ -8,9 +8,11 @@ import { UsersController } from './admin/users.controller';
 import 'dotenv/config'
 import { RolesController } from './admin/roles.controller';
 import { PlayersController } from './admin/players.controller';
+import { WalletModule } from 'src/wallet/wallet.module';
 
 @Module({
   imports: [
+    forwardRef(() => WalletModule),
     ClientsModule.register([
       {
         name: protobufPackage,

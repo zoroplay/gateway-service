@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { WalletController } from './wallet.controller';
 import { WalletService } from './wallet.service';
 import { WalletAdminController } from './admin/wallet-admin.controller';
@@ -9,7 +9,7 @@ import { IdentityModule } from 'src/identity/identity.module';
 
 @Module({
   imports: [
-    IdentityModule,
+    forwardRef(() => IdentityModule),
     ClientsModule.register([
       {
         name: protobufPackage,
