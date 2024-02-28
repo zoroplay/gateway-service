@@ -311,6 +311,23 @@ export interface UpdateWithdrawalResponse {
   status: number;
 }
 
+export interface PlayerWalletData {
+  sportBalance: number;
+  totalDeposits: number;
+  sportBonusBalance: number;
+  totalWithdrawals: number;
+  pendingWithdrawals: number;
+  avgWithdrawals: number;
+  lastDepositDate: string;
+  lastWithdrawalDate: string;
+  lastDepositAmount: number;
+  lastWithdrawalAmount: number;
+  firstActivityDate: string;
+  lastActivityDate: string;
+  noOfDeposits: number;
+  noOfWithdrawals: number;
+}
+
 export const WALLET_PACKAGE_NAME = "wallet";
 
 export interface WalletServiceClient {
@@ -347,6 +364,8 @@ export interface WalletServiceClient {
   userTransactions(request: UserTransactionRequest): Observable<UserTransactionResponse>;
 
   updateWithdrawal(request: UpdateWithdrawalRequest): Observable<UpdateWithdrawalResponse>;
+
+  getPlayerWalletData(request: GetBalanceRequest): Observable<PlayerWalletData>;
 }
 
 export interface WalletServiceController {
@@ -409,6 +428,10 @@ export interface WalletServiceController {
   updateWithdrawal(
     request: UpdateWithdrawalRequest,
   ): Promise<UpdateWithdrawalResponse> | Observable<UpdateWithdrawalResponse> | UpdateWithdrawalResponse;
+
+  getPlayerWalletData(
+    request: GetBalanceRequest,
+  ): Promise<PlayerWalletData> | Observable<PlayerWalletData> | PlayerWalletData;
 }
 
 export function WalletServiceControllerMethods() {
@@ -431,6 +454,7 @@ export function WalletServiceControllerMethods() {
       "listWithdrawals",
       "userTransactions",
       "updateWithdrawal",
+      "getPlayerWalletData",
     ];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
