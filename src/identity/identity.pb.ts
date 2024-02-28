@@ -338,6 +338,42 @@ export interface PlayersListResponse {
   data: Player[];
 }
 
+export interface GetPlayerDataRequest {
+  clientId: number;
+  userId: number;
+}
+
+export interface GetPlayerDataResponse {
+  success: boolean;
+  message: string;
+  data?: GetPlayerDataResponse_PlayerData | undefined;
+}
+
+export interface GetPlayerDataResponse_PlayerData {
+  user: Player | undefined;
+  wallet: PlayerWalletData | undefined;
+  bonus: PlayerBonusData | undefined;
+}
+
+export interface PlayerWalletData {
+  deposits: number;
+  totalDeposits: number;
+  withdrawals: number;
+  totalWithdrawals: number;
+  pendingWithdrawals: number;
+  avgWithdrawals: number;
+  lasitDeposit: PlayerWalletData_LastDepositWithdrawal | undefined;
+  lastWithdrawal: PlayerWalletData_LastDepositWithdrawal | undefined;
+}
+
+export interface PlayerWalletData_LastDepositWithdrawal {
+  data: string;
+  amount: number;
+}
+
+export interface PlayerBonusData {
+}
+
 export interface EmptyRequest {
 }
 
@@ -393,6 +429,8 @@ export interface IdentityServiceClient {
   onlinePlayersReport(request: OnlinePlayersRequest): Observable<PlayersListResponse>;
 
   registrationReport(request: RegistrationReportRequest): Observable<PlayersListResponse>;
+
+  getPlayerData(request: GetPlayerDataRequest): Observable<GetPlayerDataResponse>;
 }
 
 export interface IdentityServiceController {
@@ -463,6 +501,10 @@ export interface IdentityServiceController {
   registrationReport(
     request: RegistrationReportRequest,
   ): Promise<PlayersListResponse> | Observable<PlayersListResponse> | PlayersListResponse;
+
+  getPlayerData(
+    request: GetPlayerDataRequest,
+  ): Promise<GetPlayerDataResponse> | Observable<GetPlayerDataResponse> | GetPlayerDataResponse;
 }
 
 export function IdentityServiceControllerMethods() {
@@ -488,11 +530,12 @@ export function IdentityServiceControllerMethods() {
       "getAdminUsers",
       "getClient",
       "getPaymentData",
-      "searchPlayer",
+      "searchPlayers",
       "updateUserDetails",
       "getUserByUsername",
       "onlinePlayersReport",
       "registrationReport",
+      "getPlayerData",
     ];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);

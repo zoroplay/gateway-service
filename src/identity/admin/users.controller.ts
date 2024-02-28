@@ -17,7 +17,6 @@ export class UsersController {
         this.svc = this.client.getService<IdentityServiceClient>(IDENTITY_SERVICE_NAME);
     }
 
-
     @Post('/clients')
     @ApiOperation({
         summary: 'Save SBE Client info',
