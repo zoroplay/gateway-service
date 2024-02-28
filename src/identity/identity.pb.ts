@@ -356,19 +356,20 @@ export interface GetPlayerDataResponse_PlayerData {
 }
 
 export interface PlayerWalletData {
-  deposits: number;
+  sportBalance: number;
   totalDeposits: number;
-  withdrawals: number;
+  sportBonusBalance: number;
   totalWithdrawals: number;
   pendingWithdrawals: number;
   avgWithdrawals: number;
-  lasitDeposit: PlayerWalletData_LastDepositWithdrawal | undefined;
-  lastWithdrawal: PlayerWalletData_LastDepositWithdrawal | undefined;
-}
-
-export interface PlayerWalletData_LastDepositWithdrawal {
-  data: string;
-  amount: number;
+  lastDepositDate: string;
+  lastWithdrawalDate: string;
+  lastDepositAmount: number;
+  lastWithdrawalAmount: number;
+  firstActivityDate: string;
+  lastActivityDate: string;
+  noOfDeposits: number;
+  noOfWithdrawals: number;
 }
 
 export interface PlayerBonusData {
