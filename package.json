@@ -27,7 +27,7 @@
     "proto:fixture": "protoc --plugin=node_modules/.bin/protoc-gen-ts_proto -I=./node_modules/sbe-service-proto/proto --ts_proto_out=src/fixture/ node_modules/sbe-service-proto/proto/fixture.proto --ts_proto_opt=nestJs=true --ts_proto_opt=fileSuffix=.pb",
     "proto:bonus": "protoc --plugin=node_modules/.bin/protoc-gen-ts_proto -I=./node_modules/sbe-service-proto/proto --ts_proto_out=src/bonus/ node_modules/sbe-service-proto/proto/bonus.proto --ts_proto_opt=nestJs=true --ts_proto_opt=fileSuffix=.pb",
     "proto:noti": "protoc --plugin=node_modules/.bin/protoc-gen-ts_proto -I=./node_modules/sbe-service-proto/proto --ts_proto_out=src/notification/ node_modules/sbe-service-proto/proto/noti.proto --ts_proto_opt=nestJs=true --ts_proto_opt=fileSuffix=.pb",
-    "proto:wallet": "protoc --plugin=node_modules/.bin/protoc-gen-ts_proto -I=./node_modules/sbe-service-proto/proto --ts_proto_out=src/wallet/ node_modules/sbe-service-proto/proto/wallet.proto --ts_proto_opt=nestJs=true --ts_proto_opt=fileSuffix=.pb",
+    "proto:wallet": "protoc --plugin=node_modules/.bin/protoc-gen-ts_proto.cmd -I=./node_modules/sbe-service-proto/proto --ts_proto_out=src/wallet/ node_modules/sbe-service-proto/proto/wallet.proto --ts_proto_opt=nestJs=true --ts_proto_opt=fileSuffix=.pb",
     "proto:all": "yarn proto:identity && yarn proto:retail && yarn proto:betting && yarn proto:fixture && yarn proto:bonus"
   },
   "dependencies": {
@@ -44,8 +44,8 @@
     "dotenv": "^16.3.1",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
-    "rxjs": "7.5.2",
-    "sbe-service-proto": "git+https://github.com/zoroplay/sbe-service-proto.git",
+    "rxjs": "^7.8.1",
+    "sbe-service-proto": "github:zoroplay/sbe-service-proto",
     "swagger-ui-express": "^5.0.0"
   },
   "devDependencies": {
