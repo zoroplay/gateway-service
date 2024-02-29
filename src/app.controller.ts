@@ -87,7 +87,6 @@ export class AppController {
     @Res() res,
     @Req() req
   ) {
-    body.clientId = param.client;
     if (!param.provider) return res.sendStatus(404);
 
     switch (param.provider) {
