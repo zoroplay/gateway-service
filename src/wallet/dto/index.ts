@@ -54,6 +54,29 @@ export class SwaggerGetPaymentMethodResponse {
     data?: PaymentMethod[];
 }
 
+export class SwaggerListDepositRequest {
+    @ApiProperty({ description: 'SBE Client ID of the operator' })
+    clientId: number;
+
+    @ApiProperty({ description: 'Start Date to query' })
+    startDate: string;
+
+    @ApiProperty({ description: 'End date to query' })
+    endDate: string;
+
+    @ApiProperty({ description: 'Payment method type to fetch (paystack, opay, flutterwave, monnify)' })
+    paymentMethod: string;
+
+    @ApiProperty({ description: 'Transaction status (1 - Completed, 0 - Pending, 2 - Failed' })
+    status: number;
+
+    @ApiProperty({ description: 'Filter transactions by username' })
+    username: string;
+
+    @ApiProperty({ description: 'Filter transactions by transaction ID' })
+    transactionId: string;
+}
+
 export class SwaggerInitiateDepositRequest {
     @ApiProperty({ description: 'Client ID of the operator' })
     clientId: number;

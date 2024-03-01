@@ -1,8 +1,8 @@
 import { Body, Controller, Get, Inject, Param, Post, Put, Query, Req } from '@nestjs/common';
 import { ApiBody, ApiOkResponse, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 import { ClientGrpc } from '@nestjs/microservices';
-import { ListWithdrawalRequests, PaymentMethodRequest, UpdateWithdrawalRequest, WALLET_SERVICE_NAME, WalletServiceClient, protobufPackage } from '../wallet.pb';
-import { SwaggerGetPaymentMethodResponse, SwaggerListWithdrawalRequests, SwaggerPaymentMethodRequest, SwaggerPaymentMethodResponse, SwaggerUpdateWithdrawalRequest } from '../dto';
+import { ListDepositRequests, ListWithdrawalRequests, PaymentMethodRequest, UpdateWithdrawalRequest, WALLET_SERVICE_NAME, WalletServiceClient, protobufPackage } from '../wallet.pb';
+import { SwaggerGetPaymentMethodResponse, SwaggerListDepositRequest, SwaggerListWithdrawalRequests, SwaggerPaymentMethodRequest, SwaggerPaymentMethodResponse, SwaggerUpdateWithdrawalRequest } from '../dto';
 
 @ApiTags('BackOffice APIs')
 @Controller('admin/wallet')
@@ -75,6 +75,21 @@ export class WalletAdminController {
             status: query.status,
             userId: param.userId
         });
+    }
+
+    @Post('deposits')
+    @ApiOperation({
+        summary: 'Fetch Deposit Transactions',
+        description: 'This endpoint is used to fetch deposit transactions for a period',
+    })
+    @ApiBody({type: SwaggerListWithdrawalRequests})
+    @ApiOkResponse({ type: SwaggerListDepositRequest })
+    deposits(
+        @Body() body: ListDepositRequests,
+        @Query('page') page: number = 1
+    ) {
+        body.page = page;
+        return this.svc.listDeposits(body);
     }
 
     
