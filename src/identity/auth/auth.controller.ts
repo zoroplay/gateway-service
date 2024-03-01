@@ -5,6 +5,7 @@ import {
   Inject,
   OnModuleInit,
   Param,
+  Patch,
   Post,
   Put,
   Req,
@@ -16,10 +17,10 @@ import {
   IdentityServiceClient,
   IDENTITY_SERVICE_NAME,
   LoginRequest,
-  LoginResponse, protobufPackage, CreateUserRequest, UpdateUserRequest,
+  LoginResponse, protobufPackage, CreateUserRequest, UpdateUserRequest, ChangePasswordRequest, ResetPasswordRequest,
 } from '../identity.pb';
 import { ApiBody, ApiOkResponse, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
-import { LoginDTO, SwaggerCommonResponse, SwaggerRegisterRequest, SwaggerUserDetailsRequest  } from '../dto';
+import { LoginDTO, SwaggerChangePasswordRequest, SwaggerCommonResponse, SwaggerRegisterRequest, SwaggerResetPasswordRequest, SwaggerUserDetailsRequest  } from '../dto';
 import { AuthGuard } from './auth.guard';
 import { IAuthorizedRequest } from 'src/interfaces/authorized-request.interface';
 
@@ -90,5 +91,35 @@ export class AuthController implements OnModuleInit {
     @Param() param
   ) {
     return this.svc.getUserDetails({clientId: param.client_id, userId: req.user.id});
+  }
+
+  @UseGuards(AuthGuard)
+  @Put('/update/password')
+  @ApiOperation({
+    summary: 'Update User Password',
+    description: 'This endpoint lets you update/change user password',
+  })
+  @ApiBody({ type: SwaggerChangePasswordRequest })
+  @ApiOkResponse({ type: SwaggerCommonResponse })
+  updatePassword(
+    @Body() data: ChangePasswordRequest,
+    @Req() req: IAuthorizedRequest
+  ) {
+    data.userId = req.user.id;
+    return this.svc.changePassword(data);
+  }
+
+
+  @Patch('/update/reset-password')
+  @ApiOperation({
+    summary: 'Reset User Password',
+    description: 'This endpoint lets you reset user password',
+  })
+  @ApiBody({ type: SwaggerResetPasswordRequest })
+  @ApiOkResponse({ type: SwaggerCommonResponse })
+  resetPassword(
+    @Body() data: ResetPasswordRequest,
+  ) {
+    return this.svc.resetPassword(data);
   }
 }
