@@ -33,6 +33,7 @@ import {
   SwaggerPaymentMethodResponse,
   SwaggerUpdateWithdrawalRequest,
 } from '../dto';
+import { BonusServiceClient } from 'src/bonus/bonus.pb';
 
 @ApiTags('BackOffice APIs')
 @Controller('admin/wallet')
@@ -58,35 +59,6 @@ export class WalletAdminController {
     return this.svc.savePaymentMethod(body);
   }
 
-  @Get('bonus')
-  @ApiOperation({
-    summary: 'Fetch user bonus',
-    description:
-      'This endpoint is used to fetch user-bonus for a particular SBE client',
-  })
-  @ApiQuery({
-    name: 'bonusType',
-    type: 'string',
-    description: 'bonus type',
-  })
-  @ApiQuery({
-    name: 'from',
-    type: 'string',
-    description: 'Date-From',
-  })
-  @ApiQuery({
-    name: 'to',
-    type: 'string',
-    description: 'Date-to',
-  })
-  @ApiOkResponse({ type: SwaggerGetPaymentMethodResponse })
-  fetchBonus(@Param() param: any, @Query() query) {
-    return this.svc.fetchBonusReport({
-      bonusType: param.bonusType,
-      from: param.from,
-      to: param.to,
-    });
-  }
   @Get('payment-methods/:client_id')
   @ApiOperation({
     summary: 'Fetch SMS Settings',

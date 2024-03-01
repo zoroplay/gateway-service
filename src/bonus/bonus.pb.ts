@@ -279,9 +279,23 @@ export interface ValidateBetResponse {
   message: string;
 }
 
+export interface FetchReportRequest {
+  bonusType: string;
+  from: string;
+  to: string;
+}
+
+export interface FetchReportResponse {
+  message: string;
+  status: boolean;
+  data: UserBonus[];
+}
+
 export const BONUS_PACKAGE_NAME = "bonus";
 
 export interface BonusServiceClient {
+  fetchBonusReport(request: FetchReportRequest): Observable<FetchReportResponse>;
+
   createBonus(request: CreateBonusRequest): Observable<CreateBonusResponse>;
 
   updateBonus(request: CreateBonusRequest): Observable<CreateBonusResponse>;
@@ -316,6 +330,10 @@ export interface BonusServiceClient {
 }
 
 export interface BonusServiceController {
+  fetchBonusReport(
+    request: FetchReportRequest,
+  ): Promise<FetchReportResponse> | Observable<FetchReportResponse> | FetchReportResponse;
+
   createBonus(
     request: CreateBonusRequest,
   ): Promise<CreateBonusResponse> | Observable<CreateBonusResponse> | CreateBonusResponse;
@@ -378,6 +396,7 @@ export interface BonusServiceController {
 export function BonusServiceControllerMethods() {
   return function (constructor: Function) {
     const grpcMethods: string[] = [
+      "fetchBonusReport",
       "createBonus",
       "updateBonus",
       "getCampaign",
