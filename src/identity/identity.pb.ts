@@ -375,6 +375,19 @@ export interface PlayerWalletData {
 export interface PlayerBonusData {
 }
 
+export interface ChangePasswordRequest {
+  clientId: number;
+  userId: number;
+  oldPassword: string;
+  password: string;
+}
+
+export interface ResetPasswordRequest {
+  clientId: number;
+  username: string;
+  password: string;
+}
+
 export interface EmptyRequest {
 }
 
@@ -432,6 +445,10 @@ export interface IdentityServiceClient {
   registrationReport(request: RegistrationReportRequest): Observable<PlayersListResponse>;
 
   getPlayerData(request: GetPlayerDataRequest): Observable<GetPlayerDataResponse>;
+
+  changePassword(request: ChangePasswordRequest): Observable<UpdateUserResponse>;
+
+  resetPassword(request: ResetPasswordRequest): Observable<UpdateUserResponse>;
 }
 
 export interface IdentityServiceController {
@@ -506,6 +523,14 @@ export interface IdentityServiceController {
   getPlayerData(
     request: GetPlayerDataRequest,
   ): Promise<GetPlayerDataResponse> | Observable<GetPlayerDataResponse> | GetPlayerDataResponse;
+
+  changePassword(
+    request: ChangePasswordRequest,
+  ): Promise<UpdateUserResponse> | Observable<UpdateUserResponse> | UpdateUserResponse;
+
+  resetPassword(
+    request: ResetPasswordRequest,
+  ): Promise<UpdateUserResponse> | Observable<UpdateUserResponse> | UpdateUserResponse;
 }
 
 export function IdentityServiceControllerMethods() {
@@ -537,6 +562,8 @@ export function IdentityServiceControllerMethods() {
       "onlinePlayersReport",
       "registrationReport",
       "getPlayerData",
+      "changePassword",
+      "resetPassword",
     ];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
