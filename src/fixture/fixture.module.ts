@@ -5,6 +5,7 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
 import { FIXTURE_PACKAGE_NAME, protobufPackage } from './fixture.pb';
 import 'dotenv/config';
 import { join } from 'path';
+import { AdminFixtureController } from './admin/admin-fixture.controller';
 
 @Module({
   imports: [
@@ -20,7 +21,7 @@ import { join } from 'path';
       },
     ]),
   ],
-  controllers: [FixtureController],
+  controllers: [FixtureController, AdminFixtureController],
   providers: [FixtureService],
   exports: [FixtureService],
 })
