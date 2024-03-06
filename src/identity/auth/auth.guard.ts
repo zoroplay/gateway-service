@@ -19,6 +19,8 @@ export class AuthGuard implements CanActivate {
     const req: Request = ctx.switchToHttp().getRequest();
     const authorization: string = req.headers['authorization'];
 
+    console.log('can activate user')
+
     if (!authorization) {
       throw new UnauthorizedException();
     }

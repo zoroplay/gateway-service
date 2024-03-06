@@ -70,6 +70,7 @@ export class AuthController implements OnModuleInit {
     @Body() data: UpdateUserRequest,
     @Req() req: IAuthorizedRequest
   ) {
+    console.log('get auth details')
     data.userId = req.user.id;
     return this.svc.updateUserDetails(data);
   }
