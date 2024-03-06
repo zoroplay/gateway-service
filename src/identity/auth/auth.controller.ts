@@ -90,7 +90,7 @@ export class AuthController implements OnModuleInit {
     @Req() req: IAuthorizedRequest, 
     @Param() param
   ) {
-    console.log('get auth details')
+    console.log('get auth details', req.user)
 
     return this.svc.getUserDetails({clientId: param.client_id, userId: req.user.id});
   }
