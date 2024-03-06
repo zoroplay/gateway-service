@@ -70,7 +70,6 @@ export class AuthController implements OnModuleInit {
     @Body() data: UpdateUserRequest,
     @Req() req: IAuthorizedRequest
   ) {
-    console.log('get auth details')
     data.userId = req.user.id;
     return this.svc.updateUserDetails(data);
   }
@@ -91,6 +90,24 @@ export class AuthController implements OnModuleInit {
     @Req() req: IAuthorizedRequest, 
     @Param() param
   ) {
+    console.log('get auth details')
+
+    return this.svc.getUserDetails({clientId: param.client_id, userId: req.user.id});
+  }
+
+  @UseGuards(AuthGuard)
+  @Get('/details')
+  @ApiOperation({
+    summary: 'get user details',
+    description: 'This endpoint retrieves authenticated user details',
+  })
+  @ApiOkResponse({ type: SwaggerCommonResponse })
+  getAuth(
+    @Req() req: IAuthorizedRequest, 
+    @Param() param
+  ) {
+    console.log('get auth details')
+
     return this.svc.getUserDetails({clientId: param.client_id, userId: req.user.id});
   }
 
