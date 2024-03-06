@@ -23,12 +23,12 @@ export class WalletService {
     }
 
     async listWithdrawals(request: ListWithdrawalRequests): Promise<ListWithdrawalRequestResponse> {
-        console.log('list withdrawals', request);
+        console.log('list withdrawals');
         return await firstValueFrom(this.svc.listWithdrawals(request))
     }
 
     async listDeposits(request: ListDepositRequests): Promise<PaginationResponse> {
-        console.log('list deposits', request);
+        console.log('list deposits');
         return await firstValueFrom(this.svc.listDeposits(request))
     }
 
