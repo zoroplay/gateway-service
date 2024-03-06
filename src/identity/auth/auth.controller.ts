@@ -33,7 +33,7 @@ export class AuthController implements OnModuleInit {
   @Inject(protobufPackage)
   private readonly client: ClientGrpc;
 
-  private authService: AuthService;
+  constructor(private readonly authService: AuthService) {}
 
   public onModuleInit(): void {
     this.svc = this.client.getService<IdentityServiceClient>(IDENTITY_SERVICE_NAME);
