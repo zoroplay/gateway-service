@@ -328,42 +328,6 @@ export interface PlayerWalletData {
   noOfWithdrawals: number;
 }
 
-export interface FetchReportRequest {
-  bonusType: string;
-  from: string;
-  to: string;
-}
-
-export interface UserBetData {
-  betId: number;
-  stake: number;
-  rolloverCount: number;
-  status: number;
-  rolledAmount: number;
-  pendingAmount: number;
-  created: string;
-}
-
-export interface UserBonus {
-  bonusType: string;
-  amount: number;
-  expiryDateInTimestamp: number;
-  created: string;
-  id: number;
-  name: string;
-  rolledAmount: number;
-  pendingAmount: number;
-  totalRolloverCount: number;
-  completedRolloverCount: number;
-  bets: UserBetData[];
-}
-
-export interface FetchReportResponse {
-  message: string;
-  status: boolean;
-  data: UserBonus[];
-}
-
 export interface ListDepositRequests {
   clientId: number;
   startDate: string;
@@ -388,8 +352,6 @@ export interface PaginationResponse {
 export const WALLET_PACKAGE_NAME = "wallet";
 
 export interface WalletServiceClient {
-  fetchBonusReport(request: FetchReportRequest): Observable<FetchReportResponse>;
-
   createWallet(request: CreateWalletRequest): Observable<WalletResponse>;
 
   getBalance(request: GetBalanceRequest): Observable<WalletResponse>;
@@ -430,10 +392,6 @@ export interface WalletServiceClient {
 }
 
 export interface WalletServiceController {
-  fetchBonusReport(
-    request: FetchReportRequest,
-  ): Promise<FetchReportResponse> | Observable<FetchReportResponse> | FetchReportResponse;
-
   createWallet(request: CreateWalletRequest): Promise<WalletResponse> | Observable<WalletResponse> | WalletResponse;
 
   getBalance(request: GetBalanceRequest): Promise<WalletResponse> | Observable<WalletResponse> | WalletResponse;
@@ -506,7 +464,6 @@ export interface WalletServiceController {
 export function WalletServiceControllerMethods() {
   return function (constructor: Function) {
     const grpcMethods: string[] = [
-      "fetchBonusReport",
       "createWallet",
       "getBalance",
       "creditUser",
