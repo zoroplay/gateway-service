@@ -14,55 +14,56 @@ export class WalletService {
         this.svc = this.client.getService<WalletServiceClient>(WALLET_SERVICE_NAME);
     }
 
-    savePaymentMethod(request: PaymentMethodRequest): Promise<PaymentMethodResponse> {
-        return firstValueFrom(this.svc.savePaymentMethod(request))
+    async savePaymentMethod(request: PaymentMethodRequest): Promise<PaymentMethodResponse> {
+        return await firstValueFrom(this.svc.savePaymentMethod(request))
     }
 
-    getPaymentMethods(request: GetPaymentMethodRequest): Promise<GetPaymentMethodResponse> {
-        return firstValueFrom(this.svc.getPaymentMethods(request))
+    async getPaymentMethods(request: GetPaymentMethodRequest): Promise<GetPaymentMethodResponse> {
+        return await firstValueFrom(this.svc.getPaymentMethods(request))
     }
 
-    listWithdrawals(request: ListWithdrawalRequests): Promise<ListWithdrawalRequestResponse> {
-        return firstValueFrom(this.svc.listWithdrawals(request))
+    async listWithdrawals(request: ListWithdrawalRequests): Promise<ListWithdrawalRequestResponse> {
+        console.log('list withdrawals', request);
+        return await firstValueFrom(this.svc.listWithdrawals(request))
     }
 
-    listDeposits(request: ListDepositRequests): Promise<PaginationResponse> {
-        return firstValueFrom(this.svc.listDeposits(request))
+    async listDeposits(request: ListDepositRequests): Promise<PaginationResponse> {
+        return await firstValueFrom(this.svc.listDeposits(request))
     }
 
-    updateWithdrawal(request: UpdateWithdrawalRequest): Promise<UpdateWithdrawalResponse> {
-        return firstValueFrom(this.svc.updateWithdrawal(request))
+    async updateWithdrawal(request: UpdateWithdrawalRequest): Promise<UpdateWithdrawalResponse> {
+        return await firstValueFrom(this.svc.updateWithdrawal(request))
     }
 
-    inititateDeposit(data: InitiateDepositRequest): Promise<InitiateDepositResponse> {
-        return firstValueFrom(this.svc.inititateDeposit(data));
+    async inititateDeposit(data: InitiateDepositRequest): Promise<InitiateDepositResponse> {
+        return await firstValueFrom(this.svc.inititateDeposit(data));
     }
 
-    verifyDeposit(data: VerifyDepositRequest): Promise<VerifyDepositResponse> {
-        return firstValueFrom(this.svc.verifyDeposit(data));
+    async verifyDeposit(data: VerifyDepositRequest): Promise<VerifyDepositResponse> {
+        return await firstValueFrom(this.svc.verifyDeposit(data));
     }
 
-    verifyBankAccount(data: VerifyBankAccountRequest): Promise<VerifyBankAccountResponse> {
-        return firstValueFrom(this.svc.verifyBankAccount(data));
+    async verifyBankAccount(data: VerifyBankAccountRequest): Promise<VerifyBankAccountResponse> {
+        return await firstValueFrom(this.svc.verifyBankAccount(data));
     }
 
-    requestWithdrawal(data: WithdrawRequest): Promise<WithdrawResponse> {
-        return firstValueFrom(this.svc.requestWithdrawal(data));
+    async requestWithdrawal(data: WithdrawRequest): Promise<WithdrawResponse> {
+        return await firstValueFrom(this.svc.requestWithdrawal(data));
     }
 
-    paystackWebhook(data: PaystackWebhookRequest): Promise<WebhookResponse> {
-        return firstValueFrom(this.svc.paystackWebhook(data));
+    async paystackWebhook(data: PaystackWebhookRequest): Promise<WebhookResponse> {
+        return await firstValueFrom(this.svc.paystackWebhook(data));
     }
 
-    opayDeposit(data: OpayWebhookRequest): Promise<OpayWebhookResponse> {
-        return firstValueFrom(this.svc.opayDepositWebhook(data));
+    async opayDeposit(data: OpayWebhookRequest): Promise<OpayWebhookResponse> {
+        return await firstValueFrom(this.svc.opayDepositWebhook(data));
     }
 
-    opayVerification(data: OpayWebhookRequest): Promise<OpayWebhookResponse> {
-        return firstValueFrom(this.svc.opayLookUpWebhook(data));
+    async opayVerification(data: OpayWebhookRequest): Promise<OpayWebhookResponse> {
+        return await firstValueFrom(this.svc.opayLookUpWebhook(data));
     }
 
-    getUserTransactions(data: UserTransactionRequest): Promise<UserTransactionResponse> {
-        return firstValueFrom(this.svc.userTransactions(data));
+    async getUserTransactions(data: UserTransactionRequest): Promise<UserTransactionResponse> {
+        return await firstValueFrom(this.svc.userTransactions(data));
     }
 }
