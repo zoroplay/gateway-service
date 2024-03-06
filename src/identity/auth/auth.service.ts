@@ -9,6 +9,10 @@ import {
   GetUserByUsernameRequest,
   GetUserByUsernameResponse,
   ValidateClientResponse,
+  GetUserDetailsRequest,
+  GetUserDetailsResponse,
+  CreateUserRequest,
+  RegisterResponse,
 } from '../identity.pb';
 
 @Injectable()
@@ -22,12 +26,20 @@ export class AuthService {
     this.svc = this.client.getService<IdentityServiceClient>(IDENTITY_SERVICE_NAME);
   }
 
+  public async doRegister(data: CreateUserRequest): Promise<RegisterResponse> {
+    return firstValueFrom(this.svc.register(data));
+  }
+
   public async validate(token: string): Promise<ValidateResponse> {
     return firstValueFrom(this.svc.validate({ token }));
   }
 
   public async validateClient(token: string): Promise<ValidateClientResponse> {
     return firstValueFrom(this.svc.validateClient({ token }));
+  }
+
+  public async getUserDetails(data: GetUserDetailsRequest): Promise<GetUserDetailsResponse> {
+    return firstValueFrom(this.svc.getUserDetails(data));
   }
 
   public async validateUser(data: GetUserByUsernameRequest): Promise<GetUserByUsernameResponse> {

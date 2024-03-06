@@ -355,6 +355,22 @@ export interface GetPlayerDataResponse_PlayerData {
   bonus: PlayerBonusData | undefined;
 }
 
+export interface UpdatePlayerDataRequest {
+  clientId: number;
+  userId: number;
+  username: string;
+  country: string;
+  state: string;
+  address: string;
+  email: string;
+  dateOfBirth: string;
+  phoneNumber: string;
+  currency: string;
+  language: string;
+  firstName: string;
+  lastName: string;
+}
+
 export interface PlayerWalletData {
   sportBalance: number;
   totalDeposits: number;
@@ -446,6 +462,8 @@ export interface IdentityServiceClient {
 
   getPlayerData(request: GetPlayerDataRequest): Observable<GetPlayerDataResponse>;
 
+  updatePlayerData(request: UpdatePlayerDataRequest): Observable<UpdateUserResponse>;
+
   changePassword(request: ChangePasswordRequest): Observable<UpdateUserResponse>;
 
   resetPassword(request: ResetPasswordRequest): Observable<UpdateUserResponse>;
@@ -524,6 +542,10 @@ export interface IdentityServiceController {
     request: GetPlayerDataRequest,
   ): Promise<GetPlayerDataResponse> | Observable<GetPlayerDataResponse> | GetPlayerDataResponse;
 
+  updatePlayerData(
+    request: UpdatePlayerDataRequest,
+  ): Promise<UpdateUserResponse> | Observable<UpdateUserResponse> | UpdateUserResponse;
+
   changePassword(
     request: ChangePasswordRequest,
   ): Promise<UpdateUserResponse> | Observable<UpdateUserResponse> | UpdateUserResponse;
@@ -562,6 +584,7 @@ export function IdentityServiceControllerMethods() {
       "onlinePlayersReport",
       "registrationReport",
       "getPlayerData",
+      "updatePlayerData",
       "changePassword",
       "resetPassword",
     ];
