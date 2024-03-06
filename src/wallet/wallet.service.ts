@@ -28,6 +28,7 @@ export class WalletService {
     }
 
     async listDeposits(request: ListDepositRequests): Promise<PaginationResponse> {
+        console.log('list deposits', request);
         return await firstValueFrom(this.svc.listDeposits(request))
     }
 
