@@ -23,6 +23,7 @@ import { ApiBody, ApiOkResponse, ApiOperation, ApiParam, ApiTags } from '@nestjs
 import { LoginDTO, SwaggerChangePasswordRequest, SwaggerCommonResponse, SwaggerRegisterRequest, SwaggerResetPasswordRequest, SwaggerUserDetailsRequest  } from '../dto';
 import { AuthGuard } from './auth.guard';
 import { IAuthorizedRequest } from 'src/interfaces/authorized-request.interface';
+import { AuthService } from './auth.service';
 
 @ApiTags('Auth APIs')
 @Controller('auth')
@@ -31,6 +32,8 @@ export class AuthController implements OnModuleInit {
 
   @Inject(protobufPackage)
   private readonly client: ClientGrpc;
+
+  private authService: AuthService;
 
   public onModuleInit(): void {
     this.svc = this.client.getService<IdentityServiceClient>(IDENTITY_SERVICE_NAME);
@@ -44,7 +47,7 @@ export class AuthController implements OnModuleInit {
   @ApiBody({ type: SwaggerRegisterRequest })
   @ApiOkResponse({ type: SwaggerCommonResponse })
   registerUser(@Body() body: CreateUserRequest) {
-    return this.svc.register(body);
+    return this.authService.doRegister(body);
   }
 
   @Post('/login')
@@ -92,7 +95,7 @@ export class AuthController implements OnModuleInit {
   ) {
     console.log('get auth details', req.user)
 
-    return this.svc.getUserDetails({clientId: param.client_id, userId: req.user.id});
+    return this.authService.getUserDetails({clientId: param.client_id, userId: req.user.id});
   }
 
   @UseGuards(AuthGuard)
