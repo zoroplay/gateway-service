@@ -13,6 +13,12 @@ import {
   GetUserDetailsResponse,
   CreateUserRequest,
   RegisterResponse,
+  LoginRequest,
+  LoginResponse,
+  UpdateUserRequest,
+  UpdateUserResponse,
+  ChangePasswordRequest,
+  ResetPasswordRequest,
 } from '../identity.pb';
 
 @Injectable()
@@ -30,6 +36,14 @@ export class AuthService {
     return firstValueFrom(this.svc.register(data));
   }
 
+  public async doLogin(data: LoginRequest): Promise<LoginResponse> {
+    return firstValueFrom(this.svc.login(data));
+  }
+
+  public async updateUser(data: UpdateUserRequest): Promise<UpdateUserResponse> {
+    return firstValueFrom(this.svc.updateUserDetails(data));
+  }
+
   public async validate(token: string): Promise<ValidateResponse> {
     return firstValueFrom(this.svc.validate({ token }));
   }
@@ -44,5 +58,13 @@ export class AuthService {
 
   public async validateUser(data: GetUserByUsernameRequest): Promise<GetUserByUsernameResponse> {
     return firstValueFrom(this.svc.getUserByUsername(data));
+  }
+
+  public async changePassword(data: ChangePasswordRequest): Promise<UpdateUserResponse> {
+    return firstValueFrom(this.svc.changePassword(data));
+  }
+
+  public async resetPassword(data: ResetPasswordRequest): Promise<UpdateUserResponse> {
+    return firstValueFrom(this.svc.resetPassword(data));
   }
 }

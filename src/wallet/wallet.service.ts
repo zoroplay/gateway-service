@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { InitiateDepositRequest, InitiateDepositResponse, OpayWebhookRequest, OpayWebhookResponse, PaystackWebhookRequest, UserTransactionRequest, UserTransactionResponse, VerifyBankAccountRequest, VerifyBankAccountResponse, VerifyDepositRequest, VerifyDepositResponse, WALLET_SERVICE_NAME, WalletServiceClient, WebhookResponse, WithdrawRequest, WithdrawResponse, protobufPackage } from './wallet.pb';
+import { GetPaymentMethodRequest, GetPaymentMethodResponse, InitiateDepositRequest, InitiateDepositResponse, ListDepositRequests, ListWithdrawalRequestResponse, ListWithdrawalRequests, OpayWebhookRequest, OpayWebhookResponse, PaginationResponse, PaymentMethodRequest, PaymentMethodResponse, PaystackWebhookRequest, UpdateWithdrawalRequest, UpdateWithdrawalResponse, UserTransactionRequest, UserTransactionResponse, VerifyBankAccountRequest, VerifyBankAccountResponse, VerifyDepositRequest, VerifyDepositResponse, WALLET_SERVICE_NAME, WalletServiceClient, WebhookResponse, WithdrawRequest, WithdrawResponse, protobufPackage } from './wallet.pb';
 import { ClientGrpc } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
 
@@ -12,6 +12,26 @@ export class WalletService {
 
     public onModuleInit(): void {
         this.svc = this.client.getService<WalletServiceClient>(WALLET_SERVICE_NAME);
+    }
+
+    savePaymentMethod(request: PaymentMethodRequest): Promise<PaymentMethodResponse> {
+        return firstValueFrom(this.svc.savePaymentMethod(request))
+    }
+
+    getPaymentMethods(request: GetPaymentMethodRequest): Promise<GetPaymentMethodResponse> {
+        return firstValueFrom(this.svc.getPaymentMethods(request))
+    }
+
+    listWithdrawals(request: ListWithdrawalRequests): Promise<ListWithdrawalRequestResponse> {
+        return firstValueFrom(this.svc.listWithdrawals(request))
+    }
+
+    listDeposits(request: ListDepositRequests): Promise<PaginationResponse> {
+        return firstValueFrom(this.svc.listDeposits(request))
+    }
+
+    updateWithdrawal(request: UpdateWithdrawalRequest): Promise<UpdateWithdrawalResponse> {
+        return firstValueFrom(this.svc.updateWithdrawal(request))
     }
 
     inititateDeposit(data: InitiateDepositRequest): Promise<InitiateDepositResponse> {

@@ -1,20 +1,14 @@
-import { Body, Controller, Get, Inject, Param, Post, Put, Query, Req } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put, Query, Req } from '@nestjs/common';
 import { ApiBody, ApiOkResponse, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
-import { ClientGrpc } from '@nestjs/microservices';
-import { ListDepositRequests, ListWithdrawalRequests, PaymentMethodRequest, UpdateWithdrawalRequest, WALLET_SERVICE_NAME, WalletServiceClient, protobufPackage } from '../wallet.pb';
+import { ListDepositRequests, ListWithdrawalRequests, PaymentMethodRequest, UpdateWithdrawalRequest } from '../wallet.pb';
 import { SwaggerGetPaymentMethodResponse, SwaggerListDepositRequest, SwaggerListWithdrawalRequests, SwaggerPaymentMethodRequest, SwaggerPaymentMethodResponse, SwaggerUpdateWithdrawalRequest } from '../dto';
+import { WalletService } from '../wallet.service';
 
 @ApiTags('BackOffice APIs')
 @Controller('admin/wallet')
 export class WalletAdminController {
-    private svc: WalletServiceClient;
 
-    @Inject(protobufPackage)
-    private readonly client: ClientGrpc;
-
-    public onModuleInit(): void {
-        this.svc = this.client.getService<WalletServiceClient>(WALLET_SERVICE_NAME);
-    }
+    constructor(private readonly walletService: WalletService) {}
 
     @Post('/payment-methods')
     @ApiOperation({
@@ -24,7 +18,7 @@ export class WalletAdminController {
     @ApiBody({ type: SwaggerPaymentMethodRequest })
     @ApiOkResponse({ type: SwaggerPaymentMethodResponse })
     savePaymentMethod(@Body() body: PaymentMethodRequest) {
-        return this.svc.savePaymentMethod(body);
+        return this.walletService.savePaymentMethod(body);
     }
 
     @Get('payment-methods/:client_id')
@@ -42,19 +36,9 @@ export class WalletAdminController {
         @Param() param: any,
         @Query() query 
     ) {
-        return this.svc.getPaymentMethods({clientId: param.client_id, status: query.status});
+        return this.walletService.getPaymentMethods({clientId: param.client_id, status: query.status});
     }
 
-    @Post('/payment-methods')
-    @ApiOperation({
-        summary: 'Save Payment Methods',
-        description: 'This endpoint is used to save or update payment methods for client',
-    })
-    @ApiBody({ type: SwaggerPaymentMethodRequest })
-    @ApiOkResponse({ type: SwaggerPaymentMethodResponse })
-    saveRole(@Body() body: PaymentMethodRequest) {
-        return this.svc.savePaymentMethod(body);
-    }
 
     @Post('withdrawals')
     @ApiOperation({
@@ -68,7 +52,7 @@ export class WalletAdminController {
         @Query() query 
     ) {
 
-        return this.svc.listWithdrawals({
+        return this.walletService.listWithdrawals({
             clientId: param.clientId, 
             from: param.from,
             to: param.to,
@@ -89,7 +73,7 @@ export class WalletAdminController {
         @Query('page') page: number = 1
     ) {
         body.page = page;
-        return this.svc.listDeposits(body);
+        return this.walletService.listDeposits(body);
     }
 
     
@@ -106,7 +90,7 @@ export class WalletAdminController {
         @Req() req,
     ) {
 
-        return this.svc.updateWithdrawal({
+        return this.walletService.updateWithdrawal({
             clientId: body.clientId, 
             withdrawalId: body.withdrawalId,
             action: body.action,

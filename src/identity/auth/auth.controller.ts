@@ -2,8 +2,6 @@ import {
   Body,
   Controller,
   Get,
-  Inject,
-  OnModuleInit,
   Param,
   Patch,
   Post,
@@ -11,13 +9,8 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { ClientGrpc } from '@nestjs/microservices';
-import { Observable } from 'rxjs';
 import {
-  IdentityServiceClient,
-  IDENTITY_SERVICE_NAME,
-  LoginRequest,
-  LoginResponse, protobufPackage, CreateUserRequest, UpdateUserRequest, ChangePasswordRequest, ResetPasswordRequest,
+  LoginRequest, CreateUserRequest, UpdateUserRequest, ChangePasswordRequest, ResetPasswordRequest,
 } from '../identity.pb';
 import { ApiBody, ApiOkResponse, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 import { LoginDTO, SwaggerChangePasswordRequest, SwaggerCommonResponse, SwaggerRegisterRequest, SwaggerResetPasswordRequest, SwaggerUserDetailsRequest  } from '../dto';
@@ -27,17 +20,9 @@ import { AuthService } from './auth.service';
 
 @ApiTags('Auth APIs')
 @Controller('auth')
-export class AuthController implements OnModuleInit {
-  private svc: IdentityServiceClient;
-
-  @Inject(protobufPackage)
-  private readonly client: ClientGrpc;
+export class AuthController {
 
   constructor(private readonly authService: AuthService) {}
-
-  public onModuleInit(): void {
-    this.svc = this.client.getService<IdentityServiceClient>(IDENTITY_SERVICE_NAME);
-  }
 
   @Post('/register')
   @ApiOperation({
@@ -58,7 +43,7 @@ export class AuthController implements OnModuleInit {
   @ApiBody({ type: LoginDTO })
   @ApiOkResponse({ type: SwaggerCommonResponse })
   loginUser(@Body() data: LoginRequest) {
-    return this.svc.login(data);
+    return this.authService.doLogin(data);
   }
 
   @UseGuards(AuthGuard)
@@ -74,7 +59,7 @@ export class AuthController implements OnModuleInit {
     @Req() req: IAuthorizedRequest
   ) {
     data.userId = req.user.id;
-    return this.svc.updateUserDetails(data);
+    return this.authService.updateUser(data);
   }
 
   @UseGuards(AuthGuard)
@@ -93,26 +78,9 @@ export class AuthController implements OnModuleInit {
     @Req() req: IAuthorizedRequest, 
     @Param() param
   ) {
-    console.log('get auth details', req.user)
-
     return this.authService.getUserDetails({clientId: param.client_id, userId: req.user.id});
   }
 
-  @UseGuards(AuthGuard)
-  @Get('/details')
-  @ApiOperation({
-    summary: 'get user details',
-    description: 'This endpoint retrieves authenticated user details',
-  })
-  @ApiOkResponse({ type: SwaggerCommonResponse })
-  getAuth(
-    @Req() req: IAuthorizedRequest, 
-    @Param() param
-  ) {
-    console.log('get auth details')
-
-    return this.svc.getUserDetails({clientId: param.client_id, userId: req.user.id});
-  }
 
   @UseGuards(AuthGuard)
   @Put('/update/password')
@@ -127,7 +95,7 @@ export class AuthController implements OnModuleInit {
     @Req() req: IAuthorizedRequest
   ) {
     data.userId = req.user.id;
-    return this.svc.changePassword(data);
+    return this.authService.changePassword(data);
   }
 
 
@@ -141,6 +109,6 @@ export class AuthController implements OnModuleInit {
   resetPassword(
     @Body() data: ResetPasswordRequest,
   ) {
-    return this.svc.resetPassword(data);
+    return this.authService.resetPassword(data);
   }
 }
