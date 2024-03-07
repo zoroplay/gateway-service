@@ -355,6 +355,22 @@ export interface GetPlayerDataResponse_PlayerData {
   bonus: PlayerBonusData | undefined;
 }
 
+export interface UpdatePlayerDataRequest {
+  clientId: number;
+  userId: number;
+  username: string;
+  country: string;
+  state: string;
+  address: string;
+  email: string;
+  dateOfBirth: string;
+  phoneNumber: string;
+  currency: string;
+  language: string;
+  firstName: string;
+  lastName: string;
+}
+
 export interface PlayerWalletData {
   sportBalance: number;
   totalDeposits: number;
@@ -373,6 +389,19 @@ export interface PlayerWalletData {
 }
 
 export interface PlayerBonusData {
+}
+
+export interface ChangePasswordRequest {
+  clientId: number;
+  userId: number;
+  oldPassword: string;
+  password: string;
+}
+
+export interface ResetPasswordRequest {
+  clientId: number;
+  username: string;
+  password: string;
 }
 
 export interface EmptyRequest {
@@ -432,6 +461,12 @@ export interface IdentityServiceClient {
   registrationReport(request: RegistrationReportRequest): Observable<PlayersListResponse>;
 
   getPlayerData(request: GetPlayerDataRequest): Observable<GetPlayerDataResponse>;
+
+  updatePlayerData(request: UpdatePlayerDataRequest): Observable<UpdateUserResponse>;
+
+  changePassword(request: ChangePasswordRequest): Observable<UpdateUserResponse>;
+
+  resetPassword(request: ResetPasswordRequest): Observable<UpdateUserResponse>;
 }
 
 export interface IdentityServiceController {
@@ -506,6 +541,18 @@ export interface IdentityServiceController {
   getPlayerData(
     request: GetPlayerDataRequest,
   ): Promise<GetPlayerDataResponse> | Observable<GetPlayerDataResponse> | GetPlayerDataResponse;
+
+  updatePlayerData(
+    request: UpdatePlayerDataRequest,
+  ): Promise<UpdateUserResponse> | Observable<UpdateUserResponse> | UpdateUserResponse;
+
+  changePassword(
+    request: ChangePasswordRequest,
+  ): Promise<UpdateUserResponse> | Observable<UpdateUserResponse> | UpdateUserResponse;
+
+  resetPassword(
+    request: ResetPasswordRequest,
+  ): Promise<UpdateUserResponse> | Observable<UpdateUserResponse> | UpdateUserResponse;
 }
 
 export function IdentityServiceControllerMethods() {
@@ -537,6 +584,9 @@ export function IdentityServiceControllerMethods() {
       "onlinePlayersReport",
       "registrationReport",
       "getPlayerData",
+      "updatePlayerData",
+      "changePassword",
+      "resetPassword",
     ];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);

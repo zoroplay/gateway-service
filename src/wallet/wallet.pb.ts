@@ -328,47 +328,30 @@ export interface PlayerWalletData {
   noOfWithdrawals: number;
 }
 
-export interface FetchReportRequest {
-  bonusType: string;
-  from: string;
-  to: string;
-}
-
-export interface UserBetData {
-  betId: number;
-  stake: number;
-  rolloverCount: number;
+export interface ListDepositRequests {
+  clientId: number;
+  startDate: string;
+  endDate: string;
+  paymentMethod: string;
   status: number;
-  rolledAmount: number;
-  pendingAmount: number;
-  created: string;
+  username: string;
+  transactionId: string;
+  page: number;
 }
 
-export interface UserBonus {
-  bonusType: string;
-  amount: number;
-  expiryDateInTimestamp: number;
-  created: string;
-  id: number;
-  name: string;
-  rolledAmount: number;
-  pendingAmount: number;
-  totalRolloverCount: number;
-  completedRolloverCount: number;
-  bets: UserBetData[];
-}
-
-export interface FetchReportResponse {
+export interface PaginationResponse {
   message: string;
-  status: boolean;
-  data: UserBonus[];
+  count: number;
+  currentPage: number;
+  nextPage: number;
+  prevPage: number;
+  lastPage: number;
+  data: string;
 }
 
 export const WALLET_PACKAGE_NAME = "wallet";
 
 export interface WalletServiceClient {
-  fetchBonusReport(request: FetchReportRequest): Observable<FetchReportResponse>;
-
   createWallet(request: CreateWalletRequest): Observable<WalletResponse>;
 
   getBalance(request: GetBalanceRequest): Observable<WalletResponse>;
@@ -399,6 +382,8 @@ export interface WalletServiceClient {
 
   listWithdrawals(request: ListWithdrawalRequests): Observable<ListWithdrawalRequestResponse>;
 
+  listDeposits(request: ListDepositRequests): Observable<PaginationResponse>;
+
   userTransactions(request: UserTransactionRequest): Observable<UserTransactionResponse>;
 
   updateWithdrawal(request: UpdateWithdrawalRequest): Observable<UpdateWithdrawalResponse>;
@@ -407,10 +392,6 @@ export interface WalletServiceClient {
 }
 
 export interface WalletServiceController {
-  fetchBonusReport(
-    request: FetchReportRequest,
-  ): Promise<FetchReportResponse> | Observable<FetchReportResponse> | FetchReportResponse;
-
   createWallet(request: CreateWalletRequest): Promise<WalletResponse> | Observable<WalletResponse> | WalletResponse;
 
   getBalance(request: GetBalanceRequest): Promise<WalletResponse> | Observable<WalletResponse> | WalletResponse;
@@ -463,6 +444,10 @@ export interface WalletServiceController {
     request: ListWithdrawalRequests,
   ): Promise<ListWithdrawalRequestResponse> | Observable<ListWithdrawalRequestResponse> | ListWithdrawalRequestResponse;
 
+  listDeposits(
+    request: ListDepositRequests,
+  ): Promise<PaginationResponse> | Observable<PaginationResponse> | PaginationResponse;
+
   userTransactions(
     request: UserTransactionRequest,
   ): Promise<UserTransactionResponse> | Observable<UserTransactionResponse> | UserTransactionResponse;
@@ -479,7 +464,6 @@ export interface WalletServiceController {
 export function WalletServiceControllerMethods() {
   return function (constructor: Function) {
     const grpcMethods: string[] = [
-      "fetchBonusReport",
       "createWallet",
       "getBalance",
       "creditUser",
@@ -495,6 +479,7 @@ export function WalletServiceControllerMethods() {
       "opayDepositWebhook",
       "opayLookUpWebhook",
       "listWithdrawals",
+      "listDeposits",
       "userTransactions",
       "updateWithdrawal",
       "getPlayerWalletData",

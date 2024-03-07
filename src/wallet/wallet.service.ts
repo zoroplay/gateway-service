@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { InitiateDepositRequest, InitiateDepositResponse, OpayWebhookRequest, OpayWebhookResponse, PaystackWebhookRequest, UserTransactionRequest, UserTransactionResponse, VerifyBankAccountRequest, VerifyBankAccountResponse, VerifyDepositRequest, VerifyDepositResponse, WALLET_SERVICE_NAME, WalletServiceClient, WebhookResponse, WithdrawRequest, WithdrawResponse, protobufPackage } from './wallet.pb';
+import { GetPaymentMethodRequest, GetPaymentMethodResponse, InitiateDepositRequest, InitiateDepositResponse, ListDepositRequests, ListWithdrawalRequestResponse, ListWithdrawalRequests, OpayWebhookRequest, OpayWebhookResponse, PaginationResponse, PaymentMethodRequest, PaymentMethodResponse, PaystackWebhookRequest, UpdateWithdrawalRequest, UpdateWithdrawalResponse, UserTransactionRequest, UserTransactionResponse, VerifyBankAccountRequest, VerifyBankAccountResponse, VerifyDepositRequest, VerifyDepositResponse, WALLET_SERVICE_NAME, WalletServiceClient, WebhookResponse, WithdrawRequest, WithdrawResponse, protobufPackage } from './wallet.pb';
 import { ClientGrpc } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
 
@@ -14,35 +14,57 @@ export class WalletService {
         this.svc = this.client.getService<WalletServiceClient>(WALLET_SERVICE_NAME);
     }
 
-    inititateDeposit(data: InitiateDepositRequest): Promise<InitiateDepositResponse> {
-        return firstValueFrom(this.svc.inititateDeposit(data));
+    async savePaymentMethod(request: PaymentMethodRequest): Promise<PaymentMethodResponse> {
+        return await firstValueFrom(this.svc.savePaymentMethod(request))
     }
 
-    verifyDeposit(data: VerifyDepositRequest): Promise<VerifyDepositResponse> {
-        return firstValueFrom(this.svc.verifyDeposit(data));
+    async getPaymentMethods(request: GetPaymentMethodRequest): Promise<GetPaymentMethodResponse> {
+        return await firstValueFrom(this.svc.getPaymentMethods(request))
     }
 
-    verifyBankAccount(data: VerifyBankAccountRequest): Promise<VerifyBankAccountResponse> {
-        return firstValueFrom(this.svc.verifyBankAccount(data));
+    async listWithdrawals(request: ListWithdrawalRequests): Promise<ListWithdrawalRequestResponse> {
+        console.log('list withdrawals');
+        return await firstValueFrom(this.svc.listWithdrawals(request))
     }
 
-    requestWithdrawal(data: WithdrawRequest): Promise<WithdrawResponse> {
-        return firstValueFrom(this.svc.requestWithdrawal(data));
+    async listDeposits(request: ListDepositRequests): Promise<PaginationResponse> {
+        console.log('list deposits');
+        return await firstValueFrom(this.svc.listDeposits(request))
     }
 
-    paystackWebhook(data: PaystackWebhookRequest): Promise<WebhookResponse> {
-        return firstValueFrom(this.svc.paystackWebhook(data));
+    async updateWithdrawal(request: UpdateWithdrawalRequest): Promise<UpdateWithdrawalResponse> {
+        return await firstValueFrom(this.svc.updateWithdrawal(request))
     }
 
-    opayDeposit(data: OpayWebhookRequest): Promise<OpayWebhookResponse> {
-        return firstValueFrom(this.svc.opayDepositWebhook(data));
+    async inititateDeposit(data: InitiateDepositRequest): Promise<InitiateDepositResponse> {
+        return await firstValueFrom(this.svc.inititateDeposit(data));
     }
 
-    opayVerification(data: OpayWebhookRequest): Promise<OpayWebhookResponse> {
-        return firstValueFrom(this.svc.opayLookUpWebhook(data));
+    async verifyDeposit(data: VerifyDepositRequest): Promise<VerifyDepositResponse> {
+        return await firstValueFrom(this.svc.verifyDeposit(data));
     }
 
-    getUserTransactions(data: UserTransactionRequest): Promise<UserTransactionResponse> {
-        return firstValueFrom(this.svc.userTransactions(data));
+    async verifyBankAccount(data: VerifyBankAccountRequest): Promise<VerifyBankAccountResponse> {
+        return await firstValueFrom(this.svc.verifyBankAccount(data));
+    }
+
+    async requestWithdrawal(data: WithdrawRequest): Promise<WithdrawResponse> {
+        return await firstValueFrom(this.svc.requestWithdrawal(data));
+    }
+
+    async paystackWebhook(data: PaystackWebhookRequest): Promise<WebhookResponse> {
+        return await firstValueFrom(this.svc.paystackWebhook(data));
+    }
+
+    async opayDeposit(data: OpayWebhookRequest): Promise<OpayWebhookResponse> {
+        return await firstValueFrom(this.svc.opayDepositWebhook(data));
+    }
+
+    async opayVerification(data: OpayWebhookRequest): Promise<OpayWebhookResponse> {
+        return await firstValueFrom(this.svc.opayLookUpWebhook(data));
+    }
+
+    async getUserTransactions(data: UserTransactionRequest): Promise<UserTransactionResponse> {
+        return await firstValueFrom(this.svc.userTransactions(data));
     }
 }

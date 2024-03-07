@@ -34,7 +34,6 @@ import {
   SwaggerCreateBonusRequest,
   SwaggerCreateBonusResponse,
   SwaggerCreateCampaignBonus,
-  SwaggerDeleteCampaignBonusDto,
   SwaggerUpdateCampaignBonus,
 } from '../dto';
 import { SwaggerGetPaymentMethodResponse } from 'src/wallet/dto';

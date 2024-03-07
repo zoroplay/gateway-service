@@ -74,6 +74,27 @@ export class SwaggerRegisterRequest {
     error?: string;
   }
 
+
+  export class SwaggerChangePasswordRequest {
+    @ApiProperty({ description: 'SBE Client ID' })
+    clientId: number;
+    @ApiProperty({ description: 'User current password' })
+    oldPassword: string;
+    @ApiProperty({ description: 'New password to be updated' })
+    password: string;
+  }
+
+  export class SwaggerResetPasswordRequest {
+    @ApiProperty({ description: 'SBE Client ID' })
+    clientId: number;
+    @ApiProperty({ description: 'User name' })
+    username: string;
+    @ApiProperty({ description: 'New password to be updated' })
+    password: string;
+  }
+
+
+
   export class SwaggerGetUserByUsernmae {
     @ApiProperty({ description: 'UseID from OPay' })
     UserID: string;

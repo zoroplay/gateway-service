@@ -142,6 +142,14 @@ export interface SportMenuResponse {
   categories: Category[];
 }
 
+export interface CategoryMenuResponse {
+  sports: Category[];
+}
+
+export interface TournamentMenuResponse {
+  sports: Tournament[];
+}
+
 /** Object used to hold array of sports */
 export interface AllSportResponse {
   sports: SportResponse[];
@@ -160,6 +168,8 @@ export interface GetSportMenuRequest {
   /** end date */
   end: string;
   timeoffset: number;
+  sportId?: number | undefined;
+  categoryId?: number | undefined;
 }
 
 export interface GetHighlightsRequest {
@@ -503,6 +513,14 @@ export interface FixtureServiceClient {
 
   getSportsMenu(request: GetSportMenuRequest): Observable<AvailableSportMenuResponse>;
 
+  /** Gets a list of sports, categories, tournaments based on upcoming fixtures for a period */
+
+  getCategoriesMenu(request: GetSportMenuRequest): Observable<CategoryMenuResponse>;
+
+  /** Gets a list of sports, categories, tournaments based on upcoming fixtures for a period */
+
+  getTournamentsMenu(request: GetSportMenuRequest): Observable<TournamentMenuResponse>;
+
   /** Gets a list of available markets, markets are pulled peridocally from betradr API */
 
   getMarkets(request: FilterBySportID): Observable<AllMarketResponse>;
@@ -578,6 +596,18 @@ export interface FixtureServiceController {
   getSportsMenu(
     request: GetSportMenuRequest,
   ): Promise<AvailableSportMenuResponse> | Observable<AvailableSportMenuResponse> | AvailableSportMenuResponse;
+
+  /** Gets a list of sports, categories, tournaments based on upcoming fixtures for a period */
+
+  getCategoriesMenu(
+    request: GetSportMenuRequest,
+  ): Promise<CategoryMenuResponse> | Observable<CategoryMenuResponse> | CategoryMenuResponse;
+
+  /** Gets a list of sports, categories, tournaments based on upcoming fixtures for a period */
+
+  getTournamentsMenu(
+    request: GetSportMenuRequest,
+  ): Promise<TournamentMenuResponse> | Observable<TournamentMenuResponse> | TournamentMenuResponse;
 
   /** Gets a list of available markets, markets are pulled peridocally from betradr API */
 
@@ -692,6 +722,8 @@ export function FixtureServiceControllerMethods() {
   return function (constructor: Function) {
     const grpcMethods: string[] = [
       "getSportsMenu",
+      "getCategoriesMenu",
+      "getTournamentsMenu",
       "getMarkets",
       "getTournaments",
       "getSports",
