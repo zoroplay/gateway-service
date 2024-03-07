@@ -36,12 +36,45 @@ import {
   SwaggerCreateCampaignBonus,
   SwaggerUpdateCampaignBonus,
 } from '../dto';
+import { SwaggerGetPaymentMethodResponse } from 'src/wallet/dto';
+import { BonusServiceClient } from '../bonus.pb';
 
 @ApiTags('BackOffice APIs')
 @Controller('admin/bonus')
 export class AdminBonusController {
   constructor(private readonly bonusService: BonusService) {}
 
+  @Get('player-bonus')
+  @ApiOperation({
+    summary: 'Fetch user bonus',
+    description:
+      'This endpoint is used to fetch user-bonus for a particular SBE client',
+  })
+  @ApiQuery({
+    name: 'bonusType',
+    type: 'string',
+    description: 'bonus type',
+  })
+  @ApiQuery({
+    name: 'from',
+    type: 'string',
+    description: 'Date-From',
+  })
+  @ApiQuery({
+    name: 'to',
+    type: 'string',
+    description: 'Date-to',
+  })
+  @ApiOkResponse({ type: SwaggerGetPaymentMethodResponse })
+  fetchBonus(@Param() param: any, @Query() query) {
+    console.log('Fetch Bonus');
+
+    return this.bonusService.fetchBonusReport({
+      bonusType: query.bonusType,
+      from: query.from,
+      to: query.to,
+    });
+  }
 
   @Post('create')
   @ApiOperation({
@@ -117,15 +150,12 @@ export class AdminBonusController {
   @ApiParam({ name: 'id', description: 'Campaign id to be deleted' })
   @ApiQuery({ name: 'client_id', description: 'SBE client ID' })
   @ApiOkResponse({ type: SwaggerCreateBonusResponse })
-  deleeteBonus(
-    @Query() query,
-    @Param() param
-  ) {
+  deleeteBonus(@Query() query, @Param() param) {
     try {
       const data = {
         id: param.id,
-        clientId: query.client_id
-      }
+        clientId: query.client_id,
+      };
       return this.bonusService.DeleteBonus(data);
     } catch (error) {
       console.error(error);
@@ -170,15 +200,12 @@ export class AdminBonusController {
   @ApiParam({ name: 'id', description: 'Campaign id to be deleted' })
   @ApiQuery({ name: 'client_id', description: 'SBE client ID' })
   @ApiOkResponse({ type: SwaggerCreateBonusResponse })
-  DeleteCampaignBonus(
-    @Query() query,
-    @Param() param
-  ) {
+  DeleteCampaignBonus(@Query() query, @Param() param) {
     try {
       const data = {
         id: param.id,
-        clientId: query.client_id
-      }
+        clientId: query.client_id,
+      };
       return this.bonusService.DeleteCampaignBonus(data);
     } catch (error) {
       console.error(error);
