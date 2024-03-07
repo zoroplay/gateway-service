@@ -49,7 +49,6 @@ export class SwaggerSaveClientRequest {
     clientID?: number;
 }
 
-
 export class SwaggerSearchPlayerRequest {
     @ApiProperty({ description: 'Search Key', example: '079323023' })
     @IsNotEmpty()
@@ -128,6 +127,43 @@ export class SwaggerOnlinePlayersResponse {
     data: Player [];
 }
 
+export class SwaggerUpdatePlayerRequest {
+    @ApiProperty({ description: 'SBE Client ID', example: 1 })
+    clientId: number;
+    @ApiProperty({ description: 'User ID', example: 1 })
+    userId: number;
+    @ApiProperty({ description: 'Username', example: '7035725990' })
+    username: string;
+    @ApiProperty({ description: 'User country', example: 'Nigeria' })
+    country: string;
+    @ApiProperty({ description: 'User state', example: 'Lagos' })
+    state: string;
+    @ApiProperty({ description: 'User address', example: '' })
+    address: string;
+    @ApiProperty({ description: 'User email', example: 'useer@gmail.com' })
+    email: string;
+    @ApiProperty({ description: 'User date of birth', example: '2011-01-01' })
+    dateOfBirth: string;
+    @ApiProperty({ description: 'User phone number', example: '234704568394043' })
+    phoneNumber: string;
+    @ApiProperty({ description: 'User currency', example: 'NGN' })
+    currency: string;
+    @ApiProperty({ description: 'User Language', example: 'EN' })
+    language: string;
+    @ApiProperty({ description: 'User first name', example: 'Same' })
+    firstName: string;
+    @ApiProperty({ description: 'User country', example: 'Smith' })
+    lastName: string;
+    
+}
+
+export class SwaggerAdminCommonResponse {
+    @ApiProperty({ description: 'Request Message' })
+    message: string;
+    @ApiProperty({ description: 'true || false' })
+    success: boolean;
+}
+
 interface Player {
     id: number;
     code: string;
@@ -147,4 +183,4 @@ interface Player {
     lifeTimeWithdrawal: number;
     openBets: number;
     role: string;
-  }
+}
