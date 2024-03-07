@@ -1,8 +1,8 @@
-import { Body, Controller, Get, Inject, Param, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, Inject, Param, Post, Put, Query } from '@nestjs/common';
 import { ApiBody, ApiOkResponse, ApiOperation, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
-import { IDENTITY_SERVICE_NAME, IdentityServiceClient, OnlinePlayersRequest, RegistrationReportRequest, SearchPlayerRequest, protobufPackage } from '../identity.pb';
+import { IDENTITY_SERVICE_NAME, IdentityServiceClient, OnlinePlayersRequest, RegistrationReportRequest, SearchPlayerRequest, UpdatePlayerDataRequest, protobufPackage } from '../identity.pb';
 import { ClientGrpc } from '@nestjs/microservices';
-import { SwaggerOnlinePlayersRequest, SwaggerOnlinePlayersResponse, SwaggerRegistrationReportRequest, SwaggerSaveClientRequest, SwaggerSearchPlayerRequest } from '../dto/admin.dto';
+import { SwaggerAdminCommonResponse, SwaggerOnlinePlayersRequest, SwaggerOnlinePlayersResponse, SwaggerRegistrationReportRequest, SwaggerSaveClientRequest, SwaggerSearchPlayerRequest, SwaggerUpdatePlayerRequest } from '../dto/admin.dto';
 import { SwaggerCommonResponse } from '../dto';
 import { SwaggerListTransactionResponse } from 'src/wallet/dto';
 import { WalletService } from 'src/wallet/wallet.service';
@@ -64,6 +64,24 @@ export class PlayersController {
             clientId: req.clientId
         }
         return this.svc.getPlayerData(payload);
+    }
+
+    @Put('/:id/update-details')
+    @ApiOperation({
+        summary: 'Update Player Details',
+        description: 'This endpoint is used to update players details',
+    })
+    @ApiParam({ name: 'id', 'description': 'Player ID', example: 3, })
+    @ApiBody({ type:  SwaggerUpdatePlayerRequest })
+    @ApiOkResponse({ type: SwaggerAdminCommonResponse })
+    updatePlayerData(
+        @Param() param,
+        @Body() body: UpdatePlayerDataRequest,
+    ) {
+        
+        body.userId = param.id;
+
+        return this.svc.updatePlayerData(body);
     }
 
     @Get(':id/transactions')
