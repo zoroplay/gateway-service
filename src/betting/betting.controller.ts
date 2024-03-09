@@ -18,9 +18,11 @@ import {
 } from '@nestjs/swagger';
 import { BettingService } from './betting.service';
 import {
+  FindBetDTO,
   SwaggerAllSettings,
   SwaggerBetHistoryRequest,
   SwaggerBetHistoryResponse,
+  SwaggerFindBetResponse,
   SwaggerPlaceBet,
   SwaggerPlaceBetResponse,
   SwaggerProbability,
@@ -31,6 +33,7 @@ import {
 } from './dto';
 import {
   BetHistoryRequest,
+  GamingActivityRequest,
   PlaceBetRequest,
   Settings,
   UpdateBetRequest,
@@ -119,8 +122,8 @@ export class BettingController {
     try {
       data.clientId = param.client_id;
       data.ipAddress = ip;
-      data.betType = data.betType;
-      data.type = data.type;
+      data.betType = data.bet_type;
+      data.type = data.event_type
 
       // console.log(data);
       return this.bettingService.PlaceBet(data);
@@ -150,24 +153,27 @@ export class BettingController {
     }
   }
 
-  // @Post('/book-bet/:client_id')
-  // @ApiOperation({
-  //   summary: 'Book a bet request',
-  //   description:
-  //     'Receives a booking request with all the required detailed, upon successful a booking code is turned',
-  // })
-  // @ApiParam({ name: 'client_id', type: 'number' })
-  // @ApiBody({ type: SwaggerPlaceBet })
-  // @ApiOkResponse({ type: SwaggerPlaceBetResponse })
-  // BookBet(@Body() data: PlaceBetRequest, @Param() param: any, @Ip() ip: any) {
-  //   try {
-  //     data.clientId = param.client_id;
-  //     data.ipAddress = ip;
-  //     return this.bettingService.BookBet(data);
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // }
+  @Post('/find-coupon')
+  @ApiOperation({
+    summary: 'Find bet by betslip ID',
+    description:
+        'This endpoints retrieves a bet if found',
+  })
+  @ApiOkResponse({ type: SwaggerFindBetResponse })
+  FindCoupon(
+    @Body() body: FindBetDTO,
+  ) {
+
+    try {
+
+      return this.bettingService.GetCoupon(body);
+
+    } catch (error) {
+
+      console.error(error);
+
+    }
+  }
 
   @Post('/history')
   @ApiOperation({
@@ -227,6 +233,29 @@ export class BettingController {
       });
     } catch (error) {
       console.error(error);
+    }
+  }
+
+  @Post('/reporting/gaming-activity')
+  @ApiOperation({
+    summary: 'Get client Gaming activity for a period',
+    description:
+        'This endpoints retrieves a summary of bets placed for either sports, virtual or casino',
+  })
+  @ApiBody({ type: SwaggerBetHistoryRequest })
+  @ApiOkResponse({ type:  SwaggerFindBetResponse})
+  GamingActivity(
+    @Body() body: GamingActivityRequest,
+  ) {
+
+    try {
+
+      return this.bettingService.getGamingActivity(body);
+
+    } catch (error) {
+
+      console.error(error);
+
     }
   }
 }

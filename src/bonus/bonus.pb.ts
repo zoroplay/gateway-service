@@ -4,65 +4,22 @@ import { Observable } from "rxjs";
 
 export const protobufPackage = "bonus";
 
-export interface CreateFirstDepositBonusRequest {
+export interface CheckFirstDepositRequest {
   clientId: number;
-  expiryInHours: number;
-  minimumEvents: number;
-  minimumOddsPerEvent: number;
-  minimumTotalOdds: number;
-  applicableBetType: string;
-  maximumWinning: number;
-  minimumEntryAmount: number;
-  bonusAmount: number;
-  minimumBettingStake: number;
+  userId: number;
 }
 
-export interface CreateNewBonusRequest {
-  bonusName: string;
-  bonusCode: string;
-  target: string;
-  bonusCategory: string;
-  bonusType: string;
-  bonusAmount: number;
-  maxValue: number;
-  sportPercentage: number;
-  casinoPercentage: number;
-  virtualPercentage: number;
-  noOfSportRollover: number;
-  noOfCasinoRollover: number;
-  noOfVirtualRollover: number;
-  duration: number;
-  clientId: number;
+export interface CheckFirstDepositResponse {
+  success: boolean;
+  value: number;
+  data?: FirstDepositBonus | undefined;
 }
 
-export interface CreateCashbackBonusRequest {
-  clientId: number;
-  minimumStake: number;
-  expiryInHours: number;
-  minimumEvents: number;
-  minimumOddsPerEvent: number;
-  minimumTotalOdds: number;
-  applicableBetType: string;
-  maximumWinning: number;
-  minimumSelection: number;
-  minimumLostGames: number;
-  bonusAmount: number;
-  bonusAmountMultiplier: number;
-  rolloverCount: number;
+export interface FirstDepositBonus {
+  bonusId: number;
+  value: number;
+  type: string;
   name: string;
-  minimumBettingStake: number;
-}
-
-export interface CreateFreebetBonusRequest {
-  clientId: number;
-  expiryInHours: number;
-  minimumEvents: number;
-  minimumOddsPerEvent: number;
-  minimumTotalOdds: number;
-  applicableBetType: string;
-  maximumWinning: number;
-  bonusAmount: number;
-  minimumBettingStake: number;
 }
 
 export interface CreateReferralBonusRequest {
@@ -79,6 +36,7 @@ export interface CreateReferralBonusRequest {
   rolloverCount: number;
   name: string;
   minimumBettingStake: number;
+  product: string;
 }
 
 export interface CreateShareBetBonusRequest {
@@ -95,14 +53,15 @@ export interface CreateShareBetBonusRequest {
   rolloverCount: number;
   name: string;
   minimumBettingStake: number;
+  product: string;
 }
 
 export interface CreateBonusRequest {
   clientId: number;
   bonusType: string;
-  minimumStake: number;
-  expiryInHours: number;
-  minimumEvents: number;
+  creditType: string;
+  duration: number;
+  minimumSelection: number;
   minimumOddsPerEvent: number;
   minimumTotalOdds: number;
   applicableBetType: string;
@@ -112,22 +71,19 @@ export interface CreateBonusRequest {
   created: string;
   updated: string;
   id: number;
-  bonusAmountMultiplier: number;
+  minimumLostGames: number;
   rolloverCount: number;
   name: string;
-  minimumBettingStake: number;
-}
-
-export interface CreateNewBonusResponse {
-  bonusId: number;
-  status: number;
-  description: string;
+  minimumEntryAmount: number;
+  maxAmount: number;
+  product: string;
 }
 
 export interface CreateBonusResponse {
   bonusId: number;
   status: number;
   description: string;
+  success: boolean;
 }
 
 export interface GetBonusRequest {
@@ -136,20 +92,17 @@ export interface GetBonusRequest {
 
 export interface DeleteBonusRequest {
   clientId: number;
-  bonusType: string;
+  id: number;
 }
 
 export interface GetBonusResponse {
   bonus: CreateBonusRequest[];
 }
 
-export interface GetNewBonusResponse {
-  bonus: CreateNewBonusRequest[];
-}
-
 export interface BonusResponse {
   status: number;
   description: string;
+  success: boolean;
 }
 
 export interface GetUserBonusRequest {
@@ -170,6 +123,13 @@ export interface UserBetData {
   created: string;
 }
 
+export interface Transaction {
+  amount: number;
+  balance: number;
+  createdAt: string;
+  desc: string;
+}
+
 export interface GetUserBonusResponse {
   bonus: UserBonus[];
 }
@@ -185,7 +145,8 @@ export interface UserBonus {
   pendingAmount: number;
   totalRolloverCount: number;
   completedRolloverCount: number;
-  bets: UserBetData[];
+  status: number;
+  transactions: Transaction[];
 }
 
 export interface UserBonusResponse {
@@ -198,17 +159,21 @@ export interface AwardBonusRequest {
   clientId: number;
   bonusId: number;
   userId: string;
-  amount: number;
-  baseValue: number;
+  username?: string | undefined;
+  amount?: number | undefined;
+  baseValue?: number | undefined;
+  promoCode?: string | undefined;
+  status?: number | undefined;
 }
 
 export interface UserBet {
-  betslip: BetSlip[];
+  selections: BetSlip[];
   clientId: number;
   userId: number;
   stake: number;
   totalOdds: number;
   bonusId: number;
+  betId?: number | undefined;
 }
 
 export interface BetSlip {
@@ -223,6 +188,7 @@ export interface BetSlip {
   outcomeName: string;
   odds: number;
   sportId: number;
+  matchId: number;
 }
 
 export interface DebitBonusRequest {
@@ -249,7 +215,10 @@ export interface CreateCampaignBonusDto {
   name: string;
   bonusCode: string;
   bonusId: number;
-  expiryDate: string;
+  startDate: string;
+  endDate: string;
+  affiliateIds?: string | undefined;
+  trackierCampaignId?: string | undefined;
 }
 
 export interface UpdateCampaignBonusDto {
@@ -259,17 +228,14 @@ export interface UpdateCampaignBonusDto {
   bonusId: number;
   expiryDate: string;
   id: number;
+  affiliateIds?: string | undefined;
+  trackierCampaignId?: string | undefined;
 }
 
 export interface RedeemCampaignBonusDto {
   clientId: number;
   bonusCode: string;
   userId: number;
-}
-
-export interface DeleteCampaignBonusDto {
-  clientId: number;
-  id: number;
 }
 
 export interface CampaignBonusData {
@@ -289,38 +255,56 @@ export interface GetBonusByClientID {
   clientId: number;
 }
 
+export interface GetCampaignRequest {
+  clientId: number;
+  promoCode: string;
+}
+
+export interface GetCampaignResponse {
+  success: boolean;
+  message: string;
+  data: CampaignBonusData | undefined;
+}
+
 export interface PlaceBetResponse {
+  success: boolean;
   betId: number;
   status: number;
   statusDescription: string;
 }
 
+export interface ValidateBetResponse {
+  success: boolean;
+  id: number;
+  message: string;
+}
+
+export interface FetchReportRequest {
+  bonusType: string;
+  from: string;
+  to: string;
+}
+
+export interface FetchReportResponse {
+  message: string;
+  status: boolean;
+  data: UserBonus[];
+}
+
 export const BONUS_PACKAGE_NAME = "bonus";
 
 export interface BonusServiceClient {
-  createCashbackBonus(request: CreateCashbackBonusRequest): Observable<CreateBonusResponse>;
+  fetchBonusReport(request: FetchReportRequest): Observable<FetchReportResponse>;
 
-  createNewBonus(request: CreateNewBonusRequest): Observable<CreateBonusResponse>;
+  createBonus(request: CreateBonusRequest): Observable<CreateBonusResponse>;
 
-  createBonus(request: CreateNewBonusRequest): Observable<CreateBonusResponse>;
+  updateBonus(request: CreateBonusRequest): Observable<CreateBonusResponse>;
 
-  updateCashbackBonus(request: CreateCashbackBonusRequest): Observable<CreateBonusResponse>;
+  getCampaign(request: GetCampaignRequest): Observable<GetCampaignResponse>;
 
-  createFirstDepositBonus(request: CreateFirstDepositBonusRequest): Observable<CreateBonusResponse>;
+  validateBetSelections(request: UserBet): Observable<ValidateBetResponse>;
 
-  updateFirstDepositBonus(request: CreateFirstDepositBonusRequest): Observable<CreateBonusResponse>;
-
-  createFreebetBonus(request: CreateFreebetBonusRequest): Observable<CreateBonusResponse>;
-
-  updateFreebetBonus(request: CreateFreebetBonusRequest): Observable<CreateBonusResponse>;
-
-  createReferralBonus(request: CreateReferralBonusRequest): Observable<CreateBonusResponse>;
-
-  updateReferralBonus(request: CreateReferralBonusRequest): Observable<CreateBonusResponse>;
-
-  createShareBetBonus(request: CreateShareBetBonusRequest): Observable<CreateBonusResponse>;
-
-  updateShareBetBonus(request: CreateShareBetBonusRequest): Observable<CreateBonusResponse>;
+  checkFirstDeposit(request: CheckFirstDepositRequest): Observable<CheckFirstDepositResponse>;
 
   getBonus(request: GetBonusRequest): Observable<GetBonusResponse>;
 
@@ -338,7 +322,7 @@ export interface BonusServiceClient {
 
   updateCampaignBonus(request: UpdateCampaignBonusDto): Observable<CreateBonusResponse>;
 
-  deleteCampaignBonus(request: DeleteCampaignBonusDto): Observable<CreateBonusResponse>;
+  deleteCampaignBonus(request: DeleteBonusRequest): Observable<CreateBonusResponse>;
 
   redeemCampaignBonus(request: RedeemCampaignBonusDto): Observable<CreateBonusResponse>;
 
@@ -346,53 +330,29 @@ export interface BonusServiceClient {
 }
 
 export interface BonusServiceController {
-  createCashbackBonus(
-    request: CreateCashbackBonusRequest,
-  ): Promise<CreateBonusResponse> | Observable<CreateBonusResponse> | CreateBonusResponse;
-
-  createNewBonus(
-    request: CreateNewBonusRequest,
-  ): Promise<CreateBonusResponse> | Observable<CreateBonusResponse> | CreateBonusResponse;
+  fetchBonusReport(
+    request: FetchReportRequest,
+  ): Promise<FetchReportResponse> | Observable<FetchReportResponse> | FetchReportResponse;
 
   createBonus(
-    request: CreateNewBonusRequest,
+    request: CreateBonusRequest,
   ): Promise<CreateBonusResponse> | Observable<CreateBonusResponse> | CreateBonusResponse;
 
-  updateCashbackBonus(
-    request: CreateCashbackBonusRequest,
+  updateBonus(
+    request: CreateBonusRequest,
   ): Promise<CreateBonusResponse> | Observable<CreateBonusResponse> | CreateBonusResponse;
 
-  createFirstDepositBonus(
-    request: CreateFirstDepositBonusRequest,
-  ): Promise<CreateBonusResponse> | Observable<CreateBonusResponse> | CreateBonusResponse;
+  getCampaign(
+    request: GetCampaignRequest,
+  ): Promise<GetCampaignResponse> | Observable<GetCampaignResponse> | GetCampaignResponse;
 
-  updateFirstDepositBonus(
-    request: CreateFirstDepositBonusRequest,
-  ): Promise<CreateBonusResponse> | Observable<CreateBonusResponse> | CreateBonusResponse;
+  validateBetSelections(
+    request: UserBet,
+  ): Promise<ValidateBetResponse> | Observable<ValidateBetResponse> | ValidateBetResponse;
 
-  createFreebetBonus(
-    request: CreateFreebetBonusRequest,
-  ): Promise<CreateBonusResponse> | Observable<CreateBonusResponse> | CreateBonusResponse;
-
-  updateFreebetBonus(
-    request: CreateFreebetBonusRequest,
-  ): Promise<CreateBonusResponse> | Observable<CreateBonusResponse> | CreateBonusResponse;
-
-  createReferralBonus(
-    request: CreateReferralBonusRequest,
-  ): Promise<CreateBonusResponse> | Observable<CreateBonusResponse> | CreateBonusResponse;
-
-  updateReferralBonus(
-    request: CreateReferralBonusRequest,
-  ): Promise<CreateBonusResponse> | Observable<CreateBonusResponse> | CreateBonusResponse;
-
-  createShareBetBonus(
-    request: CreateShareBetBonusRequest,
-  ): Promise<CreateBonusResponse> | Observable<CreateBonusResponse> | CreateBonusResponse;
-
-  updateShareBetBonus(
-    request: CreateShareBetBonusRequest,
-  ): Promise<CreateBonusResponse> | Observable<CreateBonusResponse> | CreateBonusResponse;
+  checkFirstDeposit(
+    request: CheckFirstDepositRequest,
+  ): Promise<CheckFirstDepositResponse> | Observable<CheckFirstDepositResponse> | CheckFirstDepositResponse;
 
   getBonus(request: GetBonusRequest): Promise<GetBonusResponse> | Observable<GetBonusResponse> | GetBonusResponse;
 
@@ -421,7 +381,7 @@ export interface BonusServiceController {
   ): Promise<CreateBonusResponse> | Observable<CreateBonusResponse> | CreateBonusResponse;
 
   deleteCampaignBonus(
-    request: DeleteCampaignBonusDto,
+    request: DeleteBonusRequest,
   ): Promise<CreateBonusResponse> | Observable<CreateBonusResponse> | CreateBonusResponse;
 
   redeemCampaignBonus(
@@ -436,18 +396,12 @@ export interface BonusServiceController {
 export function BonusServiceControllerMethods() {
   return function (constructor: Function) {
     const grpcMethods: string[] = [
-      "createCashbackBonus",
-      "createNewBonus",
+      "fetchBonusReport",
       "createBonus",
-      "updateCashbackBonus",
-      "createFirstDepositBonus",
-      "updateFirstDepositBonus",
-      "createFreebetBonus",
-      "updateFreebetBonus",
-      "createReferralBonus",
-      "updateReferralBonus",
-      "createShareBetBonus",
-      "updateShareBetBonus",
+      "updateBonus",
+      "getCampaign",
+      "validateBetSelections",
+      "checkFirstDeposit",
       "getBonus",
       "deleteBonus",
       "getUserBonus",

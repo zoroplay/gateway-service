@@ -5,59 +5,65 @@ export class SwaggerFilterBySportID {
   sportID: number;
 }
 
+// export class SwaggerCreateBonusRequest {
+//   @ApiProperty({ description: 'ID of the client' })
+//   clientId: number;
+
+//   @ApiProperty({ description: 'Bonus amount to award' })
+//   bonusAmount: number;
+
+//   @ApiProperty({ description: 'Bonus value' })
+//   maxValue: number;
+
+//   @ApiProperty({ description: 'Name of Bonus' })
+//   bonusName: string;
+
+//   @ApiProperty({ description: 'Bonus Code' })
+//   bonusCode: string;
+
+//   @ApiProperty({ description: 'Target' })
+//   target: string;
+
+//   @ApiProperty({ description: 'The expectedcategory of bonus, (first_deposit, referral, freebet)' })
+//   bonusCategory: string;
+
+//   @ApiProperty({ description: 'The expected bonus type, (All, sport, casino, virtual)' })
+//   bonusType: string;
+
+//   @ApiProperty({ description: 'The sport percentage' })
+//   sportPercentage: number;
+
+//   @ApiProperty({ description: 'The casino percentage' })
+//   casinoPercentage: number;
+
+//   @ApiProperty({ description: 'The virtual percentage' })
+//   virtualPercentage: number;
+
+//   @ApiProperty({ description: 'Number of sports rollover' })
+//   noOfSportRollover: number;
+
+//   @ApiProperty({ description: 'Number of casino rollover' })
+//   noOfCasinoRollover: number;
+
+//   @ApiProperty({ description: 'Number of virtual rollover' })
+//   noOfVirtualRollover: number;
+
+//   @ApiProperty({ description: 'The duration' })
+//   duration: number;
+// }
+
 export class SwaggerCreateBonusRequest {
   @ApiProperty({ description: 'ID of the client' })
   clientId: number;
 
-  @ApiProperty({ description: 'Bonus amount to award' })
-  bonusAmount: number;
+  @ApiProperty({ description: 'Bonus name if any' })
+  name?: string
 
-  @ApiProperty({ description: 'Bonus value' })
-  maxValue: number;
-
-  @ApiProperty({ description: 'Name of Bonus' })
-  bonusName: string;
-
-  @ApiProperty({ description: 'Bonus Code' })
-  bonusCode: string;
-
-  @ApiProperty({ description: 'Target' })
-  target: string;
-
-  @ApiProperty({ description: 'The expectedcategory of bonus, (first_deposit, referral, freebet)' })
-  bonusCategory: string;
-
-  @ApiProperty({ description: 'The expected bonus type, (All, sport, casino, virtual)' })
+  @ApiProperty({ 
+    description: 'This bonus will expire after this number of hours',
+    example: 'cashback|first_deposit|registration|free_bet|share_bet|referral' 
+  })
   bonusType: string;
-
-  @ApiProperty({ description: 'The sport percentage' })
-  sportPercentage: number;
-
-  @ApiProperty({ description: 'The casino percentage' })
-  casinoPercentage: number;
-
-  @ApiProperty({ description: 'The virtual percentage' })
-  virtualPercentage: number;
-
-  @ApiProperty({ description: 'Number of sports rollover' })
-  noOfSportRollover: number;
-
-  @ApiProperty({ description: 'Number of casino rollover' })
-  noOfCasinoRollover: number;
-
-  @ApiProperty({ description: 'Number of virtual rollover' })
-  noOfVirtualRollover: number;
-
-  @ApiProperty({ description: 'The duration' })
-  duration: number;
-}
-
-export class SwaggerCreateCashbackBonusRequest {
-  @ApiProperty({ description: 'ID of the client' })
-  clientId: number;
-
-  @ApiProperty({ description: 'This bonus will expire after this number of hours' })
-  expiryInHours: number;
 
   @ApiProperty({ description: 'This bonus can only be used when a punter has atleast this number of selection in their betslip' })
   minimumEvents: number;
@@ -80,11 +86,23 @@ export class SwaggerCreateCashbackBonusRequest {
   @ApiProperty({ description: 'Minimum number of games for a punter to qualify for this bonus' })
   minimumSelection: number;
 
-  @ApiProperty({ description: 'Minimum stake to qualify for this bonus' })
+  @ApiProperty({ description: 'Minimum entry amount to qualify for this bonus' })
   minimumEntryAmount: number;
+
+  @ApiProperty({ description: 'Minimum stake to qualify for this bonus' })
+  minimumBettingStake: number;
 
   @ApiProperty({ description: 'Bonus amount to award' })
   bonusAmount: number;
+
+  @ApiProperty({ description: 'Bonus amount multiplier to determine winning amount' })
+  bonusAmountMultiplier: number;
+
+  @ApiProperty({ description: 'Total number of times to rollover' })
+  rolloverCount: number;
+
+  @ApiProperty({ description: 'Product type - Sport, casino, virtual' })
+  product: string;
 }
 
 export class SwaggerCreateFirstDepositBonusRequest {
@@ -287,14 +305,6 @@ export class SwaggerGetUserBonusRequest {
 }
 
 export class SwaggerAwardBonusRequest {
-  @ApiProperty({ description: 'ID of the client', required: true })
-  clientId: number;
-
-  @ApiProperty({ description: 'ID of the user, join multiple userIDs separated by comma e.g 1,2,3,4,5', required: true })
-  userId: string;
-
-  @ApiProperty({ description: 'Bonus type', enum: bonusTypes, required: false })
-  bonusType: string;
 
   @ApiProperty({ description: 'amount of bonus to award', required: false })
   amount: number;
@@ -398,9 +408,23 @@ export class SwaggerUserBonus {
 
   @ApiProperty({
     type: [SwaggerUserBetDTO],
-    description: 'Array of Bets placed with bonus',
+    description: 'Array of transactions placed with bonus',
   })
-  bets: SwaggerUserBetDTO[]
+  transactions: SwaggerUserBonusTransaction[]
+}
+
+export class SwaggerUserBonusTransaction {
+  @ApiProperty({ description: 'transaction amount bonus' })
+  amount: number;
+
+  @ApiProperty({ description: ' balance after transaction' })
+  balance: number;
+
+  @ApiProperty({ description: 'Transaction date' })
+  createdAt: string;
+
+  @ApiProperty({ description: 'Transaction description' })
+  description: string;
 }
 
 export class SwaggerHasBonusBetResponse {
@@ -413,6 +437,8 @@ export class SwaggerHasBonusBetResponse {
   @ApiProperty({ description: 'Failure reason' })
   description: string;
 }
+
+
 
 export class SwaggerBonusStatusRequest {
   @ApiProperty({ description: 'ID of the client' })
@@ -450,8 +476,17 @@ export class SwaggerCreateCampaignBonus {
   @ApiProperty({ description: 'ID of the bonus to use in the campaign' })
   bonusId: number;
 
+  @ApiProperty({ description: 'Date When the code starts being active, date form should be yyyy-mm-dd e.g 2023-09-08  ' })
+  startDate: string;
+
   @ApiProperty({ description: 'Date When the code expires, date form should be yyyy-mm-dd e.g 2023-09-08  ' })
-  expiryDate: string;
+  endDate: string;
+
+  @ApiProperty({ description: 'Trackier affiliate IDs seperated by commas' })
+  affiliateIds?: string;
+
+  @ApiProperty({ description: 'Trackier Campaign ID' })
+  trackierCampaignId?: string;
 }
 
 export class SwaggerUpdateCampaignBonus {
@@ -489,7 +524,7 @@ export class SwaggerDeleteCampaignBonusDto {
   @ApiProperty({ description: 'ID of the client' })
   clientId: number;
 
-  @ApiProperty({ description: 'ID of the campaign to delete' })
+  @ApiProperty({ description: 'ID of the bonus/campaign to delete' })
   id: number;
 }
 
@@ -537,3 +572,67 @@ export class SwaggerGetUserBonusResponse {
   })
   bonus: SwaggerUserBonus[];
 }
+
+export class SwaggerValidateCampaignDTO {
+  @ApiProperty({ description: 'ID of the client' })
+  clientId: number;
+
+  @ApiProperty({ description: 'Bonus code' })
+  promoCode: string;
+}
+
+export class SwaggerValidateCampaignResponse {
+  @ApiProperty({ description: 'Request status' })
+  success: boolean;
+
+  @ApiProperty({ description: 'Server response message' })
+  message: string;
+
+  @ApiProperty({
+    type: SwaggerCampaignBonusData,
+    description: 'Bonus attached to the campaign',
+  })
+  data: SwaggerCampaignBonusData;
+}
+
+export class SwaggerFirstDeposit {
+  @ApiProperty({ 
+    description: 'Bonus ID',
+    name: 'bonusId'
+  })
+  bonusId: number;
+
+  @ApiProperty({ 
+    description: 'Bonus name',
+    name: 'name'
+  })
+  name: string;
+
+  @ApiProperty({ 
+    description: 'Bonus Value',
+    name: 'value'
+  })
+  value: string;
+
+  @ApiProperty({ 
+    description: 'Bonus value type',
+    name: 'type'
+  })
+  type: string;
+}
+
+export class SwaggerCheckFirstDepoistResponse {
+  @ApiProperty({ description: 'Request status' })
+  success: boolean;
+
+  @ApiProperty({ description: 'Server response message' })
+  message: string;
+
+  @ApiProperty({
+    type: SwaggerFirstDeposit,
+    description: 'Bonus attached to the campaign',
+  })
+  data: SwaggerCampaignBonusData;
+}
+
+

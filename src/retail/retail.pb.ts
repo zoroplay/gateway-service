@@ -57,20 +57,18 @@ export interface CommissionProfilesResponse {
   success: boolean;
   message: string;
   data: CommissionProfile[];
-  meta?: Meta | undefined;
 }
 
 export interface AssignUserCommissionProfile {
   profileId: number;
   userId: number;
-  clientId: number;
   createdAt?: string | undefined;
   updatedAt?: string | undefined;
 }
 
 /** Power Bonus */
 export interface PowerRequest {
-  userIds: number[];
+  agentIds: number[];
   clientId: number;
   fromDate: string;
   toDate: string;
@@ -119,7 +117,7 @@ export interface PowerBonusData {
 
 export interface PayPowerRequest {
   clientId: number;
-  userIds: number[];
+  agentIds: number[];
   fromDate: string;
   toDate: string;
   provider: string;
@@ -205,8 +203,7 @@ export interface NormalPayout {
   selectionsCount: number;
   totalOdds: number;
   stake: number;
-  userId: number;
-  clientId: number;
+  cashierId: number;
   profileId: number;
   profileGroup: string;
   commission: number;
@@ -227,7 +224,6 @@ export interface ArrayCommissionResponse {
 export interface Commission {
   id?: number | undefined;
   userId: number;
-  clientId: number;
   totalTickets: number;
   totalSales: number;
   totalWon: number;

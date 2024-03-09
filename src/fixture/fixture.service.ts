@@ -51,6 +51,16 @@ export class FixtureService implements OnModuleInit {
     return this.service.getSportsMenu(data);
   }
 
+  GetCategoryMenu(data: GetSportMenuRequest) {
+    console.log('GetCategoryMenu');
+    return this.service.getCategoriesMenu(data);
+  }
+
+  GetTournamentMenu(data: GetSportMenuRequest) {
+    console.log('GetTournamentMenu');
+    return this.service.getTournamentsMenu(data);
+  }
+
   GetLiveGamesCount(sportID: number) {
 
     console.log('GetLiveGamesCount ');
@@ -70,7 +80,7 @@ export class FixtureService implements OnModuleInit {
   }
 
   GetFixtures(data: GetFixturesRequest) {
-    console.log('GetFixturesByTournament');
+    console.log('GetFixturesByTournamentOrCategory');
     return this.service.getFixtures(data);
   }
 

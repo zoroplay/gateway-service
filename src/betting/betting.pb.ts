@@ -129,6 +129,8 @@ export interface PlaceBetRequest {
   type: string;
   combos: Combo[];
   isBooking: number;
+  bonusId?: number | undefined;
+  useBonus?: boolean | undefined;
 }
 
 export interface BetSlip {
@@ -154,6 +156,7 @@ export interface BetSlip {
   selectionId: string;
   eventDate: string;
   eventPrefix: string;
+  isBonus?: boolean | undefined;
 }
 
 export interface Combo {

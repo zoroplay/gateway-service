@@ -4,6 +4,8 @@ import { FixtureService } from './fixture.service';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { FIXTURE_PACKAGE_NAME, protobufPackage } from './fixture.pb';
 import 'dotenv/config';
+import { join } from 'path';
+import { AdminFixtureController } from './admin/admin-fixture.controller';
 
 @Module({
   imports: [
@@ -14,12 +16,12 @@ import 'dotenv/config';
         options: {
           url: process.env.FIXTURE_SERVICE_URL,
           package: FIXTURE_PACKAGE_NAME,
-          protoPath: 'proto/fixture.proto',
+          protoPath: join('node_modules/sbe-service-proto/proto/fixture.proto'),
         },
       },
     ]),
   ],
-  controllers: [FixtureController],
+  controllers: [FixtureController, AdminFixtureController],
   providers: [FixtureService],
   exports: [FixtureService],
 })
