@@ -57,19 +57,14 @@ export class BonusController {
   @ApiQuery({ name: 'status', description: 'bonus status' })
   @ApiQuery({ name: 'bonus_type', description: 'filter by bonus type' })
   @ApiOkResponse({ type: SwaggerGetUserBonusResponse })
-  GetUserBonus(
-    @Query() query: any,
-    @Req() req: IAuthorizedRequest
-  ) {
+  GetUserBonus(@Query() query: any, @Req() req: IAuthorizedRequest) {
     try {
       const data = {} as GetUserBonusRequest;
       data.clientId = query.client_id ? parseInt(query.client_id) : 1;
-      data.userId = req.user.id
-      if (query.id)
-        data.id = query.id;
+      data.userId = req.user.id;
+      if (query.id) data.id = query.id;
 
-      if (query.status)
-        data.status = query.status;
+      if (query.status) data.status = query.status;
 
       return this.bonusService.GetUserBonus(data);
     } catch (error) {
@@ -89,7 +84,7 @@ export class BonusController {
   AwardBonus(
     @Body() data: AwardBonusRequest,
     @Query() query,
-    @Req() req: IAuthorizedRequest
+    @Req() req: IAuthorizedRequest,
   ) {
     try {
       data.clientId = query.client_id;
@@ -107,15 +102,12 @@ export class BonusController {
   })
   @ApiQuery({ name: 'clientId', description: 'ID of the client' })
   @ApiOkResponse({ type: SwaggerCheckFirstDepoistResponse })
-  CheckFirstDeposit(
-    @Req() req: IAuthorizedRequest,
-    @Query() query
-  ) {
+  CheckFirstDeposit(@Req() req: IAuthorizedRequest, @Query() query) {
     try {
       const body = {
         clientId: query.client_id,
-        userId: req.user.id
-      }
+        userId: req.user.id,
+      };
       return this.bonusService.CheckFirstDeposit(body);
     } catch (error) {
       console.error(error);
@@ -137,7 +129,6 @@ export class BonusController {
     }
   }
 
-
   @Post('/redeem')
   @ApiOperation({
     summary: 'Redeems a bonus code',
@@ -156,7 +147,8 @@ export class BonusController {
   @Post('/validate-code')
   @ApiOperation({
     summary: 'Validate or Get Bonus with Promo code',
-    description: 'This endpoint can be used to validate or a get bonus data via promo code ',
+    description:
+      'This endpoint can be used to validate or a get bonus data via promo code ',
   })
   @ApiBody({ type: SwaggerValidateCampaignDTO })
   @ApiOkResponse({ type: SwaggerValidateCampaignResponse })
