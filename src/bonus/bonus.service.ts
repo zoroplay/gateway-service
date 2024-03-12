@@ -13,8 +13,8 @@ import {
   RedeemCampaignBonusDto,
   GetBonusByClientID,
   GetCampaignRequest,
-  CheckFirstDepositRequest,
   DeleteBonusRequest,
+  CheckDepositBonusRequest,
 } from './bonus.pb';
 import { ClientGrpc } from '@nestjs/microservices';
 
@@ -101,9 +101,9 @@ export class BonusService implements OnModuleInit {
     return this.service.awardBonus(data);
   }
 
-  CheckFirstDeposit(data: CheckFirstDepositRequest) {
-    console.log('Check first deposit ', data);
-    return this.service.checkFirstDeposit(data);
+  CheckFirstDeposit(data: CheckDepositBonusRequest) {
+    console.log('Check deposit bonus', data);
+    return this.service.checkDepositBonus(data);
   }
 
   UpdateBonusStatus(data: BonusStatusRequest) {
