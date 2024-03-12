@@ -285,10 +285,32 @@ export interface FetchReportRequest {
   to: string;
 }
 
+export interface PlayerBonusData {
+  id: number;
+  userId: number;
+  clientId: number;
+  username: string;
+  wageringRequirement: number;
+  bonusId: string;
+  bonusType: string;
+  name: string;
+  expiryDate: string;
+  status: number;
+  amount: number;
+  balance: number;
+  usedAmount: number;
+  rolledAmount: number;
+  wageringRequirementRemaining: number;
+  wageringRequirementAchieved: number;
+  promoCode: string;
+  created: string;
+  updated: string;
+}
+
 export interface FetchReportResponse {
   message: string;
   status: boolean;
-  data: UserBonus[];
+  data: PlayerBonusData[];
 }
 
 export const BONUS_PACKAGE_NAME = "bonus";

@@ -24,6 +24,7 @@ import {
   CreateBonusRequest,
   CreateCampaignBonusDto,
   DeleteBonusRequest,
+  FetchReportRequest,
   GetBonusRequest,
   UpdateCampaignBonusDto,
 } from '../bonus.pb';
@@ -36,7 +37,10 @@ import {
   SwaggerCreateCampaignBonus,
   SwaggerUpdateCampaignBonus,
 } from '../dto';
-import { SwaggerGetPaymentMethodResponse } from 'src/wallet/dto';
+import {
+  SwaggerFetchReportResponse,
+  SwaggerGetPaymentMethodResponse,
+} from 'src/wallet/dto';
 import { BonusServiceClient } from '../bonus.pb';
 
 @ApiTags('BackOffice APIs')
@@ -65,8 +69,8 @@ export class AdminBonusController {
     type: 'string',
     description: 'Date-to',
   })
-  @ApiOkResponse({ type: SwaggerGetPaymentMethodResponse })
-  fetchBonus(@Param() param: any, @Query() query) {
+  @ApiOkResponse({ type: SwaggerFetchReportResponse })
+  fetchBonus(@Query() query: FetchReportRequest) {
     console.log('Fetch Bonus');
 
     return this.bonusService.fetchBonusReport({
