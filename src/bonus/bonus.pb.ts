@@ -4,12 +4,12 @@ import { Observable } from "rxjs";
 
 export const protobufPackage = "bonus";
 
-export interface CheckFirstDepositRequest {
+export interface CheckDepositBonusRequest {
   clientId: number;
   userId: number;
 }
 
-export interface CheckFirstDepositResponse {
+export interface CheckDepositBonusResponse {
   success: boolean;
   value: number;
   data?: FirstDepositBonus | undefined;
@@ -285,10 +285,32 @@ export interface FetchReportRequest {
   to: string;
 }
 
+export interface PlayerBonusData {
+  id: number;
+  userId: number;
+  clientId: number;
+  username: string;
+  wageringRequirement: number;
+  bonusId: string;
+  bonusType: string;
+  name: string;
+  expiryDate: string;
+  status: number;
+  amount: number;
+  balance: number;
+  usedAmount: number;
+  rolledAmount: number;
+  wageringRequirementRemaining: number;
+  wageringRequirementAchieved: number;
+  promoCode: string;
+  created: string;
+  updated: string;
+}
+
 export interface FetchReportResponse {
   message: string;
   status: boolean;
-  data: UserBonus[];
+  data: PlayerBonusData[];
 }
 
 export const BONUS_PACKAGE_NAME = "bonus";
@@ -304,7 +326,7 @@ export interface BonusServiceClient {
 
   validateBetSelections(request: UserBet): Observable<ValidateBetResponse>;
 
-  checkFirstDeposit(request: CheckFirstDepositRequest): Observable<CheckFirstDepositResponse>;
+  checkDepositBonus(request: CheckDepositBonusRequest): Observable<CheckDepositBonusResponse>;
 
   getBonus(request: GetBonusRequest): Observable<GetBonusResponse>;
 
@@ -350,9 +372,9 @@ export interface BonusServiceController {
     request: UserBet,
   ): Promise<ValidateBetResponse> | Observable<ValidateBetResponse> | ValidateBetResponse;
 
-  checkFirstDeposit(
-    request: CheckFirstDepositRequest,
-  ): Promise<CheckFirstDepositResponse> | Observable<CheckFirstDepositResponse> | CheckFirstDepositResponse;
+  checkDepositBonus(
+    request: CheckDepositBonusRequest,
+  ): Promise<CheckDepositBonusResponse> | Observable<CheckDepositBonusResponse> | CheckDepositBonusResponse;
 
   getBonus(request: GetBonusRequest): Promise<GetBonusResponse> | Observable<GetBonusResponse> | GetBonusResponse;
 
@@ -401,7 +423,7 @@ export function BonusServiceControllerMethods() {
       "updateBonus",
       "getCampaign",
       "validateBetSelections",
-      "checkFirstDeposit",
+      "checkDepositBonus",
       "getBonus",
       "deleteBonus",
       "getUserBonus",
