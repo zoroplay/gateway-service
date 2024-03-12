@@ -154,24 +154,6 @@ export class PlayersController {
   @ApiQuery({ name: 'maxAmount', description: 'Maximum deposit amount' })
   @ApiQuery({ name: 'depositCount', description: 'Number of Deposit made' })
   async registeredNotDeposited(@Query() segmentFilteDto) {
-    console.log(1456);
-    switch (Number(segmentFilteDto.filterType)) {
-      case 1:
-        console.log(134);
-        return this.svc.fetchRegisteredPlayers(segmentFilteDto);
-      case 2:
-        return this.svc.fetchDepositRange(segmentFilteDto);
-      case 3:
-        console.log('count');
-        return this.svc.fetchDepositCount(segmentFilteDto);
-      case 4:
-        console.log(4389543);
-        return this.svc.fetchBetRange(segmentFilteDto);
-      case 5:
-        break;
-      default:
-        return new BadRequestException('Invalid filter');
-    }
-    // return this.playerService.registeredNotDeposited(createPlayerDto);
+    return this.svc.fetchPlayerFilters(segmentFilteDto);
   }
 }

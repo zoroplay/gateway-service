@@ -4,13 +4,17 @@ import { Observable } from "rxjs";
 
 export const protobufPackage = "identity";
 
-export interface FetchPlayerDepositRequest {
+export interface FetchPlayerFilterRequest {
   clientId: number;
   startDate: string;
   endDate: string;
+  minAmount: number;
+  maxAmount: number;
+  depositCount: number;
+  filterType: number;
 }
 
-export interface FetchPlayerDepositResponse {
+export interface FetchPlayerFilterResponse {
   status: number;
   success: boolean;
   data: UserInfo[];
@@ -33,72 +37,6 @@ export interface TransactionEntity {
   status: number;
   createdAt: string;
   updatedAt: string;
-}
-
-export interface FetchBetRangeRequest {
-  minAmount: number;
-  maxAmount: number;
-  startDate: string;
-  endDate: string;
-}
-
-export interface FetchBetRangeResponse {
-  status: number;
-  success: boolean;
-  data: UserInfo[];
-  error?: string | undefined;
-}
-
-export interface FetchDepositRangeRequest {
-  minAmount: number;
-  maxAmount: number;
-  startDate: string;
-  endDate: string;
-}
-
-export interface FetchDepositCountRequest {
-  depositCount: number;
-  startDate: string;
-  endDate: string;
-}
-
-export interface FetchDepositCountResponse {
-  status: number;
-  success: boolean;
-  data: UserInfo[];
-  error?: string | undefined;
-}
-
-export interface FetchDepositRangeResponse {
-  status: number;
-  success: boolean;
-  data: UserInfo[];
-  error?: string | undefined;
-}
-
-/** user */
-export interface FetchPlayerRequest {
-  clientId: number;
-}
-
-export interface FetchPlayerResponse {
-  status: number;
-  success: boolean;
-  data: UserData | undefined;
-  error?: string | undefined;
-}
-
-/** user */
-export interface FetchPlayersRequest {
-  startDate: string;
-  endDate: string;
-}
-
-export interface FetchPlayersResponse {
-  status: number;
-  success: boolean;
-  data: UserInfo[];
-  error?: string | undefined;
 }
 
 export interface UserInfo {
@@ -524,15 +462,7 @@ export interface EmptyRequest {
 export const IDENTITY_PACKAGE_NAME = "identity";
 
 export interface IdentityServiceClient {
-  fetchRegisteredPlayers(request: FetchPlayersRequest): Observable<FetchPlayersResponse>;
-
-  fetchDepositRange(request: FetchDepositRangeRequest): Observable<FetchDepositRangeResponse>;
-
-  fetchDepositCount(request: FetchDepositCountRequest): Observable<FetchDepositCountResponse>;
-
-  fetchBetRange(request: FetchBetRangeRequest): Observable<FetchBetRangeResponse>;
-
-  fetchPlayerDeposit(request: FetchPlayerDepositRequest): Observable<FetchPlayerDepositResponse>;
+  fetchPlayerFilters(request: FetchPlayerFilterRequest): Observable<FetchPlayerFilterResponse>;
 
   register(request: CreateUserRequest): Observable<RegisterResponse>;
 
@@ -594,25 +524,9 @@ export interface IdentityServiceClient {
 }
 
 export interface IdentityServiceController {
-  fetchRegisteredPlayers(
-    request: FetchPlayersRequest,
-  ): Promise<FetchPlayersResponse> | Observable<FetchPlayersResponse> | FetchPlayersResponse;
-
-  fetchDepositRange(
-    request: FetchDepositRangeRequest,
-  ): Promise<FetchDepositRangeResponse> | Observable<FetchDepositRangeResponse> | FetchDepositRangeResponse;
-
-  fetchDepositCount(
-    request: FetchDepositCountRequest,
-  ): Promise<FetchDepositCountResponse> | Observable<FetchDepositCountResponse> | FetchDepositCountResponse;
-
-  fetchBetRange(
-    request: FetchBetRangeRequest,
-  ): Promise<FetchBetRangeResponse> | Observable<FetchBetRangeResponse> | FetchBetRangeResponse;
-
-  fetchPlayerDeposit(
-    request: FetchPlayerDepositRequest,
-  ): Promise<FetchPlayerDepositResponse> | Observable<FetchPlayerDepositResponse> | FetchPlayerDepositResponse;
+  fetchPlayerFilters(
+    request: FetchPlayerFilterRequest,
+  ): Promise<FetchPlayerFilterResponse> | Observable<FetchPlayerFilterResponse> | FetchPlayerFilterResponse;
 
   register(request: CreateUserRequest): Promise<RegisterResponse> | Observable<RegisterResponse> | RegisterResponse;
 
@@ -702,11 +616,7 @@ export interface IdentityServiceController {
 export function IdentityServiceControllerMethods() {
   return function (constructor: Function) {
     const grpcMethods: string[] = [
-      "fetchRegisteredPlayers",
-      "fetchDepositRange",
-      "fetchDepositCount",
-      "fetchBetRange",
-      "fetchPlayerDeposit",
+      "fetchPlayerFilters",
       "register",
       "login",
       "validate",
