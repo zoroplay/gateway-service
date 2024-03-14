@@ -14,6 +14,7 @@ import {
   GetBonusByClientID,
   GetCampaignRequest,
   DeleteBonusRequest,
+  FetchReportRequest,
   CheckDepositBonusRequest,
 } from './bonus.pb';
 import { ClientGrpc } from '@nestjs/microservices';
@@ -44,7 +45,7 @@ export class BonusService implements OnModuleInit {
     console.log('UpdateCashbackBonus ');
     return this.service.updateBonus(data);
   }
-  fetchBonusReport(data) {
+  fetchBonusReport(data: FetchReportRequest) {
     console.log('FetchBonusReport');
     return this.service.fetchBonusReport(data);
   }

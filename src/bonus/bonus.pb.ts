@@ -283,6 +283,7 @@ export interface FetchReportRequest {
   bonusType: string;
   from: string;
   to: string;
+  clientId: number;
 }
 
 export interface PlayerBonusData {
@@ -313,6 +314,16 @@ export interface FetchReportResponse {
   data: PlayerBonusData[];
 }
 
+export interface SettleBetRequest {
+  clientId: number;
+  betId: number;
+  status: number;
+  amount?: number | undefined;
+}
+
+export interface EmptyResponse {
+}
+
 export const BONUS_PACKAGE_NAME = "bonus";
 
 export interface BonusServiceClient {
@@ -327,6 +338,8 @@ export interface BonusServiceClient {
   validateBetSelections(request: UserBet): Observable<ValidateBetResponse>;
 
   checkDepositBonus(request: CheckDepositBonusRequest): Observable<CheckDepositBonusResponse>;
+
+  settleBet(request: SettleBetRequest): Observable<EmptyResponse>;
 
   getBonus(request: GetBonusRequest): Observable<GetBonusResponse>;
 
@@ -376,6 +389,8 @@ export interface BonusServiceController {
     request: CheckDepositBonusRequest,
   ): Promise<CheckDepositBonusResponse> | Observable<CheckDepositBonusResponse> | CheckDepositBonusResponse;
 
+  settleBet(request: SettleBetRequest): Promise<EmptyResponse> | Observable<EmptyResponse> | EmptyResponse;
+
   getBonus(request: GetBonusRequest): Promise<GetBonusResponse> | Observable<GetBonusResponse> | GetBonusResponse;
 
   deleteBonus(request: DeleteBonusRequest): Promise<BonusResponse> | Observable<BonusResponse> | BonusResponse;
@@ -424,6 +439,7 @@ export function BonusServiceControllerMethods() {
       "getCampaign",
       "validateBetSelections",
       "checkDepositBonus",
+      "settleBet",
       "getBonus",
       "deleteBonus",
       "getUserBonus",
