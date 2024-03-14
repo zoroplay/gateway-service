@@ -283,6 +283,7 @@ export interface FetchReportRequest {
   bonusType: string;
   from: string;
   to: string;
+  clientId: number;
 }
 
 export interface PlayerBonusData {

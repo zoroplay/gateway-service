@@ -69,6 +69,11 @@ export class AdminBonusController {
     type: 'string',
     description: 'Date-to',
   })
+  @ApiQuery({
+    name: 'clientId',
+    type: 'string',
+    description: 'SBE Client ID',
+  })
   @ApiOkResponse({ type: SwaggerFetchReportResponse })
   fetchBonus(@Query() query: FetchReportRequest) {
     console.log('Fetch Bonus');
@@ -77,6 +82,7 @@ export class AdminBonusController {
       bonusType: query.bonusType,
       from: query.from,
       to: query.to,
+      clientId: query.clientId
     });
   }
 
