@@ -26,7 +26,7 @@ export interface FetchDepositRangeRequest {
 }
 
 export interface FetchDepositCountRequest {
-  depositCount: number;
+  clientId: number;
   startDate: string;
   endDate: string;
 }
@@ -34,7 +34,7 @@ export interface FetchDepositCountRequest {
 export interface FetchDepositCountResponse {
   status: number;
   success: boolean;
-  data: number[];
+  data: TransactionEntity[];
   error?: string | undefined;
 }
 
@@ -46,16 +46,9 @@ export interface FetchDepositRangeResponse {
 }
 
 export interface FetchPlayerDepositRequest {
-  clientId: number;
+  userId: number;
   startDate: string;
   endDate: string;
-}
-
-export interface FetchPlayerDepositResponse {
-  status: number;
-  success: boolean;
-  data: TransactionEntity[];
-  error?: string | undefined;
 }
 
 export interface TransactionEntity {
@@ -430,7 +423,7 @@ export interface WalletServiceClient {
 
   fetchBetRange(request: FetchBetRangeRequest): Observable<FetchBetRangeResponse>;
 
-  fetchPlayerDeposit(request: FetchPlayerDepositRequest): Observable<FetchPlayerDepositResponse>;
+  fetchPlayerDeposit(request: FetchPlayerDepositRequest): Observable<WalletResponse>;
 
   fetchDepositRange(request: FetchDepositRangeRequest): Observable<FetchDepositRangeResponse>;
 
@@ -482,7 +475,7 @@ export interface WalletServiceController {
 
   fetchPlayerDeposit(
     request: FetchPlayerDepositRequest,
-  ): Promise<FetchPlayerDepositResponse> | Observable<FetchPlayerDepositResponse> | FetchPlayerDepositResponse;
+  ): Promise<WalletResponse> | Observable<WalletResponse> | WalletResponse;
 
   fetchDepositRange(
     request: FetchDepositRangeRequest,

@@ -140,7 +140,7 @@ export class PlayersController {
     return this.svc.registrationReport(body);
   }
 
-  @Get('/player/no-deposit')
+  @Get('/filter')
   @ApiOperation({
     summary: 'Get all registered players that are yet to make a deposit',
     description:
@@ -153,7 +153,9 @@ export class PlayersController {
   @ApiQuery({ name: 'minAmount', description: 'Minimum deposit amount' })
   @ApiQuery({ name: 'maxAmount', description: 'Maximum deposit amount' })
   @ApiQuery({ name: 'depositCount', description: 'Number of Deposit made' })
-  async registeredNotDeposited(@Query() segmentFilteDto) {
+  @ApiQuery({ name: 'page', description: 'Current page number' })
+  async playerSegmentation(@Query() segmentFilteDto) {
+    segmentFilteDto.page = segmentFilteDto.page || 1;
     return this.svc.fetchPlayerFilters(segmentFilteDto);
   }
 }

@@ -12,6 +12,7 @@ export interface FetchPlayerFilterRequest {
   maxAmount: number;
   depositCount: number;
   filterType: number;
+  page: number;
 }
 
 export interface FetchPlayerFilterResponse {
@@ -456,14 +457,22 @@ export interface ResetPasswordRequest {
   password: string;
 }
 
+export interface PaginationResponse {
+  message: string;
+  count: number;
+  currentPage: number;
+  nextPage: number;
+  prevPage: number;
+  lastPage: number;
+  data: string;
+}
+
 export interface EmptyRequest {
 }
 
 export const IDENTITY_PACKAGE_NAME = "identity";
 
 export interface IdentityServiceClient {
-  fetchPlayerFilters(request: FetchPlayerFilterRequest): Observable<FetchPlayerFilterResponse>;
-
   register(request: CreateUserRequest): Observable<RegisterResponse>;
 
   login(request: LoginRequest): Observable<LoginResponse>;
@@ -514,6 +523,8 @@ export interface IdentityServiceClient {
 
   registrationReport(request: RegistrationReportRequest): Observable<PlayersListResponse>;
 
+  fetchPlayerFilters(request: FetchPlayerFilterRequest): Observable<PaginationResponse>;
+
   getPlayerData(request: GetPlayerDataRequest): Observable<GetPlayerDataResponse>;
 
   updatePlayerData(request: UpdatePlayerDataRequest): Observable<UpdateUserResponse>;
@@ -524,10 +535,6 @@ export interface IdentityServiceClient {
 }
 
 export interface IdentityServiceController {
-  fetchPlayerFilters(
-    request: FetchPlayerFilterRequest,
-  ): Promise<FetchPlayerFilterResponse> | Observable<FetchPlayerFilterResponse> | FetchPlayerFilterResponse;
-
   register(request: CreateUserRequest): Promise<RegisterResponse> | Observable<RegisterResponse> | RegisterResponse;
 
   login(request: LoginRequest): Promise<LoginResponse> | Observable<LoginResponse> | LoginResponse;
@@ -596,6 +603,10 @@ export interface IdentityServiceController {
     request: RegistrationReportRequest,
   ): Promise<PlayersListResponse> | Observable<PlayersListResponse> | PlayersListResponse;
 
+  fetchPlayerFilters(
+    request: FetchPlayerFilterRequest,
+  ): Promise<PaginationResponse> | Observable<PaginationResponse> | PaginationResponse;
+
   getPlayerData(
     request: GetPlayerDataRequest,
   ): Promise<GetPlayerDataResponse> | Observable<GetPlayerDataResponse> | GetPlayerDataResponse;
@@ -616,7 +627,6 @@ export interface IdentityServiceController {
 export function IdentityServiceControllerMethods() {
   return function (constructor: Function) {
     const grpcMethods: string[] = [
-      "fetchPlayerFilters",
       "register",
       "login",
       "validate",
@@ -642,6 +652,7 @@ export function IdentityServiceControllerMethods() {
       "getUserByUsername",
       "onlinePlayersReport",
       "registrationReport",
+      "fetchPlayerFilters",
       "getPlayerData",
       "updatePlayerData",
       "changePassword",
