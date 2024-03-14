@@ -4,7 +4,59 @@ import { Observable } from "rxjs";
 
 export const protobufPackage = "identity";
 
-/** user */
+export interface FetchPlayerFilterRequest {
+  clientId: number;
+  startDate: string;
+  endDate: string;
+  minAmount: number;
+  maxAmount: number;
+  depositCount: number;
+  filterType: number;
+}
+
+export interface FetchPlayerFilterResponse {
+  status: number;
+  success: boolean;
+  data: UserInfo[];
+  error?: string | undefined;
+}
+
+export interface TransactionEntity {
+  id: number;
+  clientId: number;
+  userId: number;
+  username: string;
+  transactionNo: string;
+  amount: number;
+  transactionType: string;
+  subject: string;
+  description: string;
+  source: string;
+  channel: string;
+  balance: number;
+  status: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface UserInfo {
+  id: number;
+  roleId: string;
+  code: string;
+  email: string;
+  username: string;
+  password: string;
+  lastLogin: string;
+  authCode: string;
+  virtualToken: string;
+  registrationSource: string;
+  verified: boolean;
+  status: number;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface UserData {
   id: number;
   username: string;
@@ -410,6 +462,8 @@ export interface EmptyRequest {
 export const IDENTITY_PACKAGE_NAME = "identity";
 
 export interface IdentityServiceClient {
+  fetchPlayerFilters(request: FetchPlayerFilterRequest): Observable<FetchPlayerFilterResponse>;
+
   register(request: CreateUserRequest): Observable<RegisterResponse>;
 
   login(request: LoginRequest): Observable<LoginResponse>;
@@ -470,6 +524,10 @@ export interface IdentityServiceClient {
 }
 
 export interface IdentityServiceController {
+  fetchPlayerFilters(
+    request: FetchPlayerFilterRequest,
+  ): Promise<FetchPlayerFilterResponse> | Observable<FetchPlayerFilterResponse> | FetchPlayerFilterResponse;
+
   register(request: CreateUserRequest): Promise<RegisterResponse> | Observable<RegisterResponse> | RegisterResponse;
 
   login(request: LoginRequest): Promise<LoginResponse> | Observable<LoginResponse> | LoginResponse;
@@ -558,6 +616,7 @@ export interface IdentityServiceController {
 export function IdentityServiceControllerMethods() {
   return function (constructor: Function) {
     const grpcMethods: string[] = [
+      "fetchPlayerFilters",
       "register",
       "login",
       "validate",

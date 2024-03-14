@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty } from 'class-validator';
+import { PlayerBonusData } from 'src/identity/identity.pb';
 
 export class SwaggerPaymentMethodRequest {
   @ApiProperty({ description: 'Client ID of the operator' })
@@ -26,194 +27,214 @@ export class SwaggerPaymentMethodRequest {
   @ApiProperty({ description: 'Status of payment method (active or inactive' })
   status: number;
 
-  @ApiProperty({ description: 'If the payment method should be used for disbursement' })
+  @ApiProperty({
+    description: 'If the payment method should be used for disbursement',
+  })
   forDisbursement: number;
 
-  @ApiProperty({ description: 'ID of the payment method. Only available when editing' })
+  @ApiProperty({
+    description: 'ID of the payment method. Only available when editing',
+  })
   id: number;
 }
 
 export class SwaggerPaymentMethodResponse {
-    @ApiProperty({ description: 'Response status' })
-    success: boolean;
-    
-    @ApiProperty({ description: 'Server Message' })
-    message: string;
-  
-    @ApiProperty({ description: 'Request Status (true or false)' })
-    status: boolean;
+  @ApiProperty({ description: 'Response status' })
+  success: boolean;
+
+  @ApiProperty({ description: 'Server Message' })
+  message: string;
+
+  @ApiProperty({ description: 'Request Status (true or false)' })
+  status: boolean;
+}
+
+export class SwaggerFetchReportResponse {
+  @ApiProperty({ description: 'Message' })
+  message: string;
+
+  @ApiProperty({ description: 'Request Status (true or false)' })
+  status: boolean;
+
+  data?: PlayerBonusData[];
 }
 
 export class SwaggerGetPaymentMethodResponse {
-    @ApiProperty({ description: 'Message' })
-    message: string;
-  
-    @ApiProperty({ description: 'Request Status (true or false)' })
-    status: boolean;
-  
-    data?: PaymentMethod[];
+  @ApiProperty({ description: 'Message' })
+  message: string;
+
+  @ApiProperty({ description: 'Request Status (true or false)' })
+  status: boolean;
+
+  data?: PaymentMethod[];
 }
 
 export class SwaggerListDepositRequest {
-    @ApiProperty({ description: 'SBE Client ID of the operator' })
-    clientId: number;
+  @ApiProperty({ description: 'SBE Client ID of the operator' })
+  clientId: number;
 
-    @ApiProperty({ description: 'Start Date to query' })
-    startDate: string;
+  @ApiProperty({ description: 'Start Date to query' })
+  startDate: string;
 
-    @ApiProperty({ description: 'End date to query' })
-    endDate: string;
+  @ApiProperty({ description: 'End date to query' })
+  endDate: string;
 
-    @ApiProperty({ description: 'Payment method type to fetch (paystack, opay, flutterwave, monnify)' })
-    paymentMethod: string;
+  @ApiProperty({
+    description:
+      'Payment method type to fetch (paystack, opay, flutterwave, monnify)',
+  })
+  paymentMethod: string;
 
-    @ApiProperty({ description: 'Transaction status (1 - Completed, 0 - Pending, 2 - Failed' })
-    status: number;
+  @ApiProperty({
+    description: 'Transaction status (1 - Completed, 0 - Pending, 2 - Failed',
+  })
+  status: number;
 
-    @ApiProperty({ description: 'Filter transactions by username' })
-    username: string;
+  @ApiProperty({ description: 'Filter transactions by username' })
+  username: string;
 
-    @ApiProperty({ description: 'Filter transactions by transaction ID' })
-    transactionId: string;
+  @ApiProperty({ description: 'Filter transactions by transaction ID' })
+  transactionId: string;
 }
 
 export class SwaggerInitiateDepositRequest {
-    @ApiProperty({ description: 'Client ID of the operator' })
-    clientId: number;
-  
-    @ApiProperty({ description: 'Deposit Amount' })
-    amount: number;
+  @ApiProperty({ description: 'Client ID of the operator' })
+  clientId: number;
 
-    @ApiProperty({ description: 'Payment method selected for deposit' })
-    paymentMethod: string;
+  @ApiProperty({ description: 'Deposit Amount' })
+  amount: number;
+
+  @ApiProperty({ description: 'Payment method selected for deposit' })
+  paymentMethod: string;
 }
 
 export class SwaggerVerifyBankAccountRequest {
-    @ApiProperty({ description: 'Client ID of the operator' })
-    clientId: number;
-  
-    @ApiProperty({ description: 'Deposit Amount' })
-    accountNumber: number;
+  @ApiProperty({ description: 'Client ID of the operator' })
+  clientId: number;
 
-    @ApiProperty({ description: 'Payment method selected for deposit' })
-    bankCode: string;
+  @ApiProperty({ description: 'Deposit Amount' })
+  accountNumber: number;
+
+  @ApiProperty({ description: 'Payment method selected for deposit' })
+  bankCode: string;
 }
 
 export class SwaggerWithdrawalRequest {
-    @ApiProperty({ description: 'Client ID of the operator' })
-    clientId: number;
-  
-    @ApiProperty({ description: 'Account number' })
-    accountNumber: number;
+  @ApiProperty({ description: 'Client ID of the operator' })
+  clientId: number;
 
-    @ApiProperty({ description: 'Account name' })
-    accountName: string;
+  @ApiProperty({ description: 'Account number' })
+  accountNumber: number;
 
-    @ApiProperty({ description: 'Withdrawal Amount' })
-    amount: number;
-    
-    @ApiProperty({ description: 'Bank Code' })
-    bankCode?: string;
+  @ApiProperty({ description: 'Account name' })
+  accountName: string;
 
-    @ApiProperty({ description: 'Bank name' })
-    bankName?: string;
+  @ApiProperty({ description: 'Withdrawal Amount' })
+  amount: number;
 
-    @ApiProperty({ description: 'Withdrawal type' })
-    type?: string;
+  @ApiProperty({ description: 'Bank Code' })
+  bankCode?: string;
+
+  @ApiProperty({ description: 'Bank name' })
+  bankName?: string;
+
+  @ApiProperty({ description: 'Withdrawal type' })
+  type?: string;
 }
 
 export class SwaggerDepositReponse {
-    @ApiProperty({ description: 'Message' })
-    message: string;
-  
-    @ApiProperty({ description: 'Request Status (true or false)' })
-    success: boolean;
-  
-    @ApiProperty({ description: 'Data object containing deposit link and transaction reference' })
-    data?: DepositResponseData
+  @ApiProperty({ description: 'Message' })
+  message: string;
+
+  @ApiProperty({ description: 'Request Status (true or false)' })
+  success: boolean;
+
+  @ApiProperty({
+    description:
+      'Data object containing deposit link and transaction reference',
+  })
+  data?: DepositResponseData;
 }
 
 export class SwaggerVerifyDepositReponse {
-    @ApiProperty({ description: 'Message' })
-    message: string;
-  
-    @ApiProperty({ description: 'Request Status (true or false)' })
-    success: boolean;
-  
-    @ApiProperty({ description: 'HTTP Request status' })
-    status?: number
+  @ApiProperty({ description: 'Message' })
+  message: string;
+
+  @ApiProperty({ description: 'Request Status (true or false)' })
+  success: boolean;
+
+  @ApiProperty({ description: 'HTTP Request status' })
+  status?: number;
 }
 
-
 export class SwaggerListTransactions {
-    @ApiProperty({ description: 'Client ID of the operator' })
-    clientId: number;
-  
-    @ApiProperty({ description: 'Account number' })
-    userId: number;
+  @ApiProperty({ description: 'Client ID of the operator' })
+  clientId: number;
 
-    @ApiProperty({ description: 'Transaction Start date' })
-    startDate: string;
+  @ApiProperty({ description: 'Account number' })
+  userId: number;
 
-    @ApiProperty({ description: 'Transaction End date' })
-    endDate: number;
-    
-    @ApiProperty({ description: 'Bank Code' })
-    page?: string;
+  @ApiProperty({ description: 'Transaction Start date' })
+  startDate: string;
 
-    @ApiProperty({ description: 'Bank name' })
-    perPage?: string;
+  @ApiProperty({ description: 'Transaction End date' })
+  endDate: number;
+
+  @ApiProperty({ description: 'Bank Code' })
+  page?: string;
+
+  @ApiProperty({ description: 'Bank name' })
+  perPage?: string;
 }
 
 export class SwaggerListTransactionResponse {
-    @ApiProperty({ description: 'Message' })
-    message: string;
-  
-    @ApiProperty({ description: 'Request Status (true or false)' })
-    success: boolean;
-  
-    @ApiProperty({ description: 'data' })
-    data?: any
+  @ApiProperty({ description: 'Message' })
+  message: string;
+
+  @ApiProperty({ description: 'Request Status (true or false)' })
+  success: boolean;
+
+  @ApiProperty({ description: 'data' })
+  data?: any;
 }
 
 export class SwaggerListWithdrawalRequests {
-    @ApiProperty({ description: 'SBE Client ID' })
-    clientId: number;
-    @ApiProperty({ description: 'Start date' })
-    from: string;
-    @ApiProperty({ description: 'End Date' })
-    to: string;
-    @ApiProperty({ description: 'Status' })
-    status?: number;
-    @ApiProperty({ description: 'Username' })
-    userId?: number;
+  @ApiProperty({ description: 'SBE Client ID' })
+  clientId: number;
+  @ApiProperty({ description: 'Start date' })
+  from: string;
+  @ApiProperty({ description: 'End Date' })
+  to: string;
+  @ApiProperty({ description: 'Status' })
+  status?: number;
+  @ApiProperty({ description: 'Username' })
+  userId?: number;
 }
 
 export class SwaggerUpdateWithdrawalRequest {
-    @ApiProperty({ description: 'SBE Client ID' })
-    clientId: number;
-    @ApiProperty({ description: 'Withdrawal Request ID' })
-    withdrawalId: number;
-    @ApiProperty({ description: 'Update action' })
-    action: string;
-    @ApiProperty({ description: 'Comment if rejected' })
-    comment: string;
+  @ApiProperty({ description: 'SBE Client ID' })
+  clientId: number;
+  @ApiProperty({ description: 'Withdrawal Request ID' })
+  withdrawalId: number;
+  @ApiProperty({ description: 'Update action' })
+  action: string;
+  @ApiProperty({ description: 'Comment if rejected' })
+  comment: string;
 }
 
 interface DepositResponseData {
-    link: string;
-    transactionRef: string;
+  link: string;
+  transactionRef: string;
 }
 
-
 interface PaymentMethod {
-    title: string;
-    provider: string;
-    secretKey: string;
-    publicKey: string;
-    merchantId: string;
-    baseUrl: string;
-    status: number;
-    forDisbursement: number;
-    id: number;
+  title: string;
+  provider: string;
+  secretKey: string;
+  publicKey: string;
+  merchantId: string;
+  baseUrl: string;
+  status: number;
+  forDisbursement: number;
+  id: number;
 }

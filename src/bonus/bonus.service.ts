@@ -14,6 +14,7 @@ import {
   GetBonusByClientID,
   GetCampaignRequest,
   DeleteBonusRequest,
+  FetchReportRequest,
   CheckDepositBonusRequest,
 } from './bonus.pb';
 import { ClientGrpc } from '@nestjs/microservices';
@@ -38,12 +39,15 @@ export class BonusService implements OnModuleInit {
     console.log('CreateBonus ');
     return this.service.createBonus(data);
     // return this.service.createCashbackBonus(data);
-
   }
 
   UpdateBonus(data: CreateBonusRequest) {
     console.log('UpdateCashbackBonus ');
     return this.service.updateBonus(data);
+  }
+  fetchBonusReport(data: FetchReportRequest) {
+    console.log('FetchBonusReport');
+    return this.service.fetchBonusReport(data);
   }
 
   // CreateFirstDepositBonus(data: CreateFirstDepositBonusRequest) {
@@ -120,7 +124,6 @@ export class BonusService implements OnModuleInit {
     console.log('CreateCampaign ');
     return this.service.createCampaignBonus(data);
   }
-
 
   UpdateCampaignBonus(data: UpdateCampaignBonusDto) {
     console.log('UpdateCampaignBonus ');
