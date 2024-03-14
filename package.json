@@ -19,7 +19,7 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "proto:install": "npm i git+https://github.com/zoroplay/sbe-service-proto.git",
+    "proto:install": "yarn add git+https://github.com/zoroplay/sbe-service-proto.git",
     "proto:identity": "protoc --plugin=node_modules/.bin/protoc-gen-ts_proto -I=./node_modules/sbe-service-proto/proto --ts_proto_out=src/identity/ node_modules/sbe-service-proto/proto/identity.proto --ts_proto_opt=nestJs=true --ts_proto_opt=fileSuffix=.pb",
     "proto:retail": "protoc --plugin=node_modules/.bin/protoc-gen-ts_proto -I=./node_modules/sbe-service-proto/proto --ts_proto_out=src/retail/ node_modules/sbe-service-proto/proto/retail.proto --ts_proto_opt=nestJs=true --ts_proto_opt=fileSuffix=.pb",
     "proto:gaming": "protoc --plugin=node_modules/.bin/protoc-gen-ts_proto -I=./node_modules/sbe-service-proto/proto --ts_proto_out=src/gaming/ node_modules/sbe-service-proto/proto/gaming.proto --ts_proto_opt=nestJs=true --ts_proto_opt=fileSuffix=.pb",
