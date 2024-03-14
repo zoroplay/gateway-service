@@ -4,6 +4,78 @@ import { Observable } from "rxjs";
 
 export const protobufPackage = "wallet";
 
+export interface FetchBetRangeRequest {
+  minAmount: number;
+  maxAmount: number;
+  startDate: string;
+  endDate: string;
+}
+
+export interface FetchBetRangeResponse {
+  status: number;
+  success: boolean;
+  data: number[];
+  error?: string | undefined;
+}
+
+export interface FetchDepositRangeRequest {
+  minAmount: number;
+  maxAmount: number;
+  startDate: string;
+  endDate: string;
+}
+
+export interface FetchDepositCountRequest {
+  depositCount: number;
+  startDate: string;
+  endDate: string;
+}
+
+export interface FetchDepositCountResponse {
+  status: number;
+  success: boolean;
+  data: number[];
+  error?: string | undefined;
+}
+
+export interface FetchDepositRangeResponse {
+  status: number;
+  success: boolean;
+  data: number[];
+  error?: string | undefined;
+}
+
+export interface FetchPlayerDepositRequest {
+  clientId: number;
+  startDate: string;
+  endDate: string;
+}
+
+export interface FetchPlayerDepositResponse {
+  status: number;
+  success: boolean;
+  data: TransactionEntity[];
+  error?: string | undefined;
+}
+
+export interface TransactionEntity {
+  id: number;
+  clientId: number;
+  userId: number;
+  username: string;
+  transactionNo: string;
+  amount: number;
+  transactionType: string;
+  subject: string;
+  description: string;
+  source: string;
+  channel: string;
+  balance: number;
+  status: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface PaymentMethodRequest {
   clientId: number;
   title: string;
@@ -352,9 +424,17 @@ export interface PaginationResponse {
 export const WALLET_PACKAGE_NAME = "wallet";
 
 export interface WalletServiceClient {
+  getBalance(request: GetBalanceRequest): Observable<WalletResponse>;
+
   createWallet(request: CreateWalletRequest): Observable<WalletResponse>;
 
-  getBalance(request: GetBalanceRequest): Observable<WalletResponse>;
+  fetchBetRange(request: FetchBetRangeRequest): Observable<FetchBetRangeResponse>;
+
+  fetchPlayerDeposit(request: FetchPlayerDepositRequest): Observable<FetchPlayerDepositResponse>;
+
+  fetchDepositRange(request: FetchDepositRangeRequest): Observable<FetchDepositRangeResponse>;
+
+  fetchDepositCount(request: FetchDepositCountRequest): Observable<FetchDepositCountResponse>;
 
   creditUser(request: CreditUserRequest): Observable<WalletResponse>;
 
@@ -392,9 +472,25 @@ export interface WalletServiceClient {
 }
 
 export interface WalletServiceController {
+  getBalance(request: GetBalanceRequest): Promise<WalletResponse> | Observable<WalletResponse> | WalletResponse;
+
   createWallet(request: CreateWalletRequest): Promise<WalletResponse> | Observable<WalletResponse> | WalletResponse;
 
-  getBalance(request: GetBalanceRequest): Promise<WalletResponse> | Observable<WalletResponse> | WalletResponse;
+  fetchBetRange(
+    request: FetchBetRangeRequest,
+  ): Promise<FetchBetRangeResponse> | Observable<FetchBetRangeResponse> | FetchBetRangeResponse;
+
+  fetchPlayerDeposit(
+    request: FetchPlayerDepositRequest,
+  ): Promise<FetchPlayerDepositResponse> | Observable<FetchPlayerDepositResponse> | FetchPlayerDepositResponse;
+
+  fetchDepositRange(
+    request: FetchDepositRangeRequest,
+  ): Promise<FetchDepositRangeResponse> | Observable<FetchDepositRangeResponse> | FetchDepositRangeResponse;
+
+  fetchDepositCount(
+    request: FetchDepositCountRequest,
+  ): Promise<FetchDepositCountResponse> | Observable<FetchDepositCountResponse> | FetchDepositCountResponse;
 
   creditUser(request: CreditUserRequest): Promise<WalletResponse> | Observable<WalletResponse> | WalletResponse;
 
@@ -464,8 +560,12 @@ export interface WalletServiceController {
 export function WalletServiceControllerMethods() {
   return function (constructor: Function) {
     const grpcMethods: string[] = [
-      "createWallet",
       "getBalance",
+      "createWallet",
+      "fetchBetRange",
+      "fetchPlayerDeposit",
+      "fetchDepositRange",
+      "fetchDepositCount",
       "creditUser",
       "debitUser",
       "inititateDeposit",
