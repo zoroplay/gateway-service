@@ -95,11 +95,10 @@ export class BonusController {
     }
   }
 
-  @Get('user/check-first-deposit')
+  @Get('user/check-deposit-bonus')
   @ApiOperation({
-    summary: 'Check if first deposit bonus is available',
-    description:
-      'This endpoint will check and return success true or false if first deposit is available.',
+    summary: 'Check if first deposit bonus or deposit bonus is available',
+    description: 'This endpoint will check and return success true or false if first deposit is available.',
   })
   @ApiQuery({ name: 'clientId', description: 'ID of the client' })
   @ApiOkResponse({ type: SwaggerCheckFirstDepoistResponse })

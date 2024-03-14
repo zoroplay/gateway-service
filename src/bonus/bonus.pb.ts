@@ -4,12 +4,12 @@ import { Observable } from "rxjs";
 
 export const protobufPackage = "bonus";
 
-export interface CheckFirstDepositRequest {
+export interface CheckDepositBonusRequest {
   clientId: number;
   userId: number;
 }
 
-export interface CheckFirstDepositResponse {
+export interface CheckDepositBonusResponse {
   success: boolean;
   value: number;
   data?: FirstDepositBonus | undefined;
@@ -326,7 +326,7 @@ export interface BonusServiceClient {
 
   validateBetSelections(request: UserBet): Observable<ValidateBetResponse>;
 
-  checkFirstDeposit(request: CheckFirstDepositRequest): Observable<CheckFirstDepositResponse>;
+  checkDepositBonus(request: CheckDepositBonusRequest): Observable<CheckDepositBonusResponse>;
 
   getBonus(request: GetBonusRequest): Observable<GetBonusResponse>;
 
@@ -372,9 +372,9 @@ export interface BonusServiceController {
     request: UserBet,
   ): Promise<ValidateBetResponse> | Observable<ValidateBetResponse> | ValidateBetResponse;
 
-  checkFirstDeposit(
-    request: CheckFirstDepositRequest,
-  ): Promise<CheckFirstDepositResponse> | Observable<CheckFirstDepositResponse> | CheckFirstDepositResponse;
+  checkDepositBonus(
+    request: CheckDepositBonusRequest,
+  ): Promise<CheckDepositBonusResponse> | Observable<CheckDepositBonusResponse> | CheckDepositBonusResponse;
 
   getBonus(request: GetBonusRequest): Promise<GetBonusResponse> | Observable<GetBonusResponse> | GetBonusResponse;
 
@@ -423,7 +423,7 @@ export function BonusServiceControllerMethods() {
       "updateBonus",
       "getCampaign",
       "validateBetSelections",
-      "checkFirstDeposit",
+      "checkDepositBonus",
       "getBonus",
       "deleteBonus",
       "getUserBonus",
