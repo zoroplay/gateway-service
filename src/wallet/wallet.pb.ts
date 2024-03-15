@@ -9,6 +9,7 @@ export interface FetchBetRangeRequest {
   maxAmount: number;
   startDate: string;
   endDate: string;
+  clientId: number;
 }
 
 export interface FetchBetRangeResponse {
@@ -23,18 +24,20 @@ export interface FetchDepositRangeRequest {
   maxAmount: number;
   startDate: string;
   endDate: string;
+  clientId: number;
 }
 
 export interface FetchDepositCountRequest {
   clientId: number;
   startDate: string;
   endDate: string;
+  count: number;
 }
 
 export interface FetchDepositCountResponse {
   status: number;
   success: boolean;
-  data: TransactionEntity[];
+  data: number[];
   error?: string | undefined;
 }
 

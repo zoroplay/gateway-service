@@ -32,7 +32,6 @@ import {
   SwaggerOnlinePlayersRequest,
   SwaggerOnlinePlayersResponse,
   SwaggerRegistrationReportRequest,
-  SwaggerSaveClientRequest,
   SwaggerSearchPlayerRequest,
   SwaggerUpdatePlayerRequest,
 } from '../dto/admin.dto';
