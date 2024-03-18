@@ -94,6 +94,7 @@ export class BonusController {
       console.error(error);
     }
   }
+  
 
   @Get('user/check-deposit-bonus')
   @ApiOperation({
