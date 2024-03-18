@@ -20,6 +20,7 @@ import {
 import { BonusService } from '../bonus.service';
 
 import {
+  AwardBonusRequest,
   BonusStatusRequest,
   CreateBonusRequest,
   CreateCampaignBonusDto,
@@ -30,11 +31,13 @@ import {
 } from '../bonus.pb';
 import {
   SwaggerAllCampaignBonus,
+  SwaggerAwardBonusRequest,
   SwaggerBonusResponse,
   SwaggerBonusStatusRequest,
   SwaggerCreateBonusRequest,
   SwaggerCreateBonusResponse,
   SwaggerCreateCampaignBonus,
+  SwaggerGetUserBonusResponse,
   SwaggerUpdateCampaignBonus,
 } from '../dto';
 import {
@@ -241,6 +244,29 @@ export class AdminBonusController {
       return this.bonusService.GetCampaignBonus({
         clientId: clientID,
       });
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  @Post('/award')
+  @ApiOperation({
+    summary: 'Award user a bonus ',
+    description:
+      'This endpoint awards a user a bonus, this endpoint is meant to be used for administrative purposes only',
+  })
+  @ApiQuery({ name: 'client_id', description: 'SBE client ID' })
+  @ApiBody({ type: SwaggerAwardBonusRequest })
+  @ApiOkResponse({ type: SwaggerGetUserBonusResponse })
+  AwardBonus(
+    @Body() data: AwardBonusRequest,
+    @Query() query,
+    // @Req() req: IAuthorizedRequest,
+  ) {
+    try {
+      data.clientId = query.client_id;
+
+      return this.bonusService.AwardBonus(data);
     } catch (error) {
       console.error(error);
     }
