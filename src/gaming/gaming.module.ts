@@ -21,5 +21,6 @@ import { join } from 'path';
   ],
   controllers: [GamingController],
   providers: [GamingService],
+  exports: [GamingService],
 })
 export class GamingModule {}
