@@ -9,6 +9,9 @@ service BettingService {
   rpc GetAllSettings (GetAll) returns (AllSettingsResponse) {}
   rpc CancelBet (BetID) returns (StatusResponse) {}
   rpc PlaceBet (PlaceBetRequest) returns (PlaceBetResponse) {}
+  rpc PlaceCasinoBet (PlaceCasinoBetRequest) returns (PlaceBetResponse) {}
+  rpc settleCasinoBet (CreditCasinoBetRequest) returns (PlaceBetResponse) {}
+  rpc cancelCasinoBet (RollbackCasinoBetRequest) returns (PlaceBetResponse) {}
   rpc BetHistory (BetHistoryRequest) returns (BetHistoryResponse) {}
   rpc FindBet (FindBetRequest) returns (FindBetResponse) {}
   rpc UpdateBet (UpdateBetRequest) returns (UpdateBetResponse) {}
@@ -16,6 +19,25 @@ service BettingService {
   rpc GetCoupon(FindBetRequest) returns (FindBetResponse) {}
   rpc GamingActivity(GamingActivityRequest) returns (GamingActivityResponse) {}
 
+}
+
+message PlaceCasinoBetRequest {
+  int32 userId = 1;
+  int32 clientId = 2;
+  string roundId= 3;
+  string transactionId = 4;
+  string gameId = 5;
+  double stake = 6;
+  optional double winnings = 7;
+}
+
+message CreditCasinoBetRequest {
+  string transactionId = 1;
+  double winnings = 2;
+}
+
+message RollbackCasinoBetRequest {
+  string transactionId = 1;
 }
 
 message Settings {
@@ -121,7 +143,7 @@ message PlaceBetRequest {
   float minBonus = 9;
   float maxBonus = 10;
   float minOdds = 11;
-  float maxOdds = 12;
+  float totalOdds = 12;
   string type = 13;
   repeated Combo combos = 14;
   int32 isBooking = 15;
@@ -186,7 +208,7 @@ message BetSlipHistory {
   string outcomeId = 8;
   string outcomeName = 9;
   float odds = 10;
-  int64 sportId = 11;
+  int32 sportId = 11;
   string status = 12;
   string statusDescription = 13;
   int32 won = 14;

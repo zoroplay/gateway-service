@@ -106,6 +106,45 @@ export class SwaggerRegistrationReportRequest {
     limit?: number;
 }
 
+export class SwaggerSaveSegmentRequest {
+    @ApiProperty({ description: 'SBE client ID', example: 1 })
+    clientId: number;
+
+    @ApiProperty({ description: 'Current auth user id', example: 1 })
+    userId: number;
+
+    @ApiProperty({ description: 'Segment title', example: 'SSample 1' })
+    title: string;
+
+    @ApiProperty({ description: 'minimum odds', example: 1.2 })
+    minOdd: number;
+    @ApiProperty({ description: 'Minimum selection', example: 1 })
+    minSelection: number;
+
+    @ApiProperty({ description: 'Message to display on error', example: '' })
+    message: string;
+
+    @ApiProperty({ description: 'Segment ID for editing', example: 1 })
+    id?: number | undefined;
+}
+
+
+export class SwaggerAddToSegmentRequest {
+    @ApiProperty({ description: 'SBE client ID', example: 1 })
+    clientId: number;
+
+    @ApiProperty({ description: 'Player ID', example: 1 })
+    playerId: number;
+
+    @ApiProperty({ description: 'player segment ID', example: 1 })
+    segmentId: number;
+}
+
+export class SwaggerDeleteItemRequest {
+    @ApiProperty({ description: 'Item ID to be deleted', example: 1 })
+    id: number;
+}
+
 
 export class SwaggerOnlinePlayersResponse {
     @ApiProperty({ description: 'Current start page', example: 1 })
