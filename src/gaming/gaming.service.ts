@@ -7,6 +7,12 @@ import {
   SyncGameDto,
   StartGameDto,
   CallbackGameDto,
+  EvoplayCallback,
+  EvolutionCallback,
+  TadaCallback,
+  ShackEvolutionCallback,
+  SmartSoftCallback,
+  CreateProviderDto,
 } from './gaming.pb';
 import { ClientGrpc } from '@nestjs/microservices';
 
@@ -21,6 +27,16 @@ export class GamingService implements OnModuleInit {
       this.client.getService<GamingServiceClient>(GAMING_SERVICE_NAME);
   }
 
+  async createProvider(createDto: CreateProviderDto) {
+    console.log(createDto);
+    return await this.service.createProvider(createDto);
+  }
+
+  async findAllProvider() {
+    console.log('finding all providers');
+    return await this.service.findAllProviders({});
+  }
+
   async create(createGameDto: CreateGameDto) {
     console.log(createGameDto);
     return await this.service.createGame(createGameDto);
@@ -33,14 +49,23 @@ export class GamingService implements OnModuleInit {
 
   async sync(syncGameDto: SyncGameDto) {
     console.log('syncing games');
-    return await this.service.syncGames(syncGameDto);
+    const games = await this.service.syncGames(syncGameDto);
+    return {
+      games,
+    };
   }
 
   async startGame(request: StartGameDto) {
-    return await this.service.startGame(request);
+    const resp = await this.service.startGame(request);
+    return resp;
   }
 
   async handleGamesCallback(request: CallbackGameDto) {
-    return await this.service.handleGamesCallback(request);
+    console.log('service start');
+    console.log(request);
+    const resp = await this.service.handleCallback(request).toPromise();
+    console.log(resp);
+    console.log('service end');
+    return resp;
   }
 }
