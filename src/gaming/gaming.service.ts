@@ -15,6 +15,7 @@ import {
   CreateProviderDto,
 } from './gaming.pb';
 import { ClientGrpc } from '@nestjs/microservices';
+import { firstValueFrom } from 'rxjs';
 
 @Injectable()
 export class GamingService implements OnModuleInit {
@@ -29,41 +30,41 @@ export class GamingService implements OnModuleInit {
 
   async createProvider(createDto: CreateProviderDto) {
     console.log(createDto);
-    return await this.service.createProvider(createDto);
+    return firstValueFrom(this.service.createProvider(createDto));
   }
 
   async findAllProvider() {
     console.log('finding all providers');
-    return await this.service.findAllProviders({});
+    return firstValueFrom(this.service.findAllProviders({}));
   }
 
   async create(createGameDto: CreateGameDto) {
     console.log(createGameDto);
-    return await this.service.createGame(createGameDto);
+    return firstValueFrom(this.service.createGame(createGameDto));
   }
 
   async findAll() {
     console.log('finding all games');
-    return await this.service.findAllGames({});
+    return firstValueFrom(this.service.findAllGames({}));
   }
 
   async sync(syncGameDto: SyncGameDto) {
     console.log('syncing games');
-    const games = await this.service.syncGames(syncGameDto);
+    const games = await firstValueFrom(this.service.syncGames(syncGameDto));
     return {
       games,
     };
   }
 
   async startGame(request: StartGameDto) {
-    const resp = await this.service.startGame(request);
+    const resp = await firstValueFrom(this.service.startGame(request));
     return resp;
   }
 
   async handleGamesCallback(request: CallbackGameDto) {
     console.log('service start');
     console.log(request);
-    const resp = await this.service.handleCallback(request).toPromise();
+    const resp = await firstValueFrom(this.service.handleCallback(request));
     console.log(resp);
     console.log('service end');
     return resp;

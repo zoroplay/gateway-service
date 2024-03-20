@@ -4,6 +4,30 @@ import { Observable } from "rxjs";
 
 export const protobufPackage = "identity";
 
+export interface SaveSegmentRequest {
+  clientId: number;
+  userId: number;
+  title: string;
+  minOdd: number;
+  minSelection: number;
+  message: string;
+  id?: number | undefined;
+}
+
+export interface FetchPlayerSegmentRequest {
+  clientId: number;
+}
+
+export interface DeleteItemRequest {
+  id: number;
+}
+
+export interface AddToSegmentRequest {
+  clientId: number;
+  playerId: number;
+  segmentId: number;
+}
+
 export interface FetchPlayerFilterRequest {
   clientId: number;
   startDate: string;
@@ -287,9 +311,10 @@ export interface GetClientResponse {
 }
 
 export interface CommonResponse {
-  status: boolean;
+  status?: number | undefined;
+  success?: boolean | undefined;
   message: string;
-  data: string[];
+  data?: string | undefined;
   errors?: string | undefined;
 }
 
@@ -532,6 +557,16 @@ export interface IdentityServiceClient {
   changePassword(request: ChangePasswordRequest): Observable<UpdateUserResponse>;
 
   resetPassword(request: ResetPasswordRequest): Observable<UpdateUserResponse>;
+
+  savePlayerSegment(request: SaveSegmentRequest): Observable<CommonResponse>;
+
+  fetchPlayerSegment(request: FetchPlayerSegmentRequest): Observable<CommonResponse>;
+
+  addToSegment(request: AddToSegmentRequest): Observable<CommonResponse>;
+
+  deletePlayerSegment(request: DeleteItemRequest): Observable<CommonResponse>;
+
+  removePlayerFromSegment(request: DeleteItemRequest): Observable<CommonResponse>;
 }
 
 export interface IdentityServiceController {
@@ -622,6 +657,22 @@ export interface IdentityServiceController {
   resetPassword(
     request: ResetPasswordRequest,
   ): Promise<UpdateUserResponse> | Observable<UpdateUserResponse> | UpdateUserResponse;
+
+  savePlayerSegment(request: SaveSegmentRequest): Promise<CommonResponse> | Observable<CommonResponse> | CommonResponse;
+
+  fetchPlayerSegment(
+    request: FetchPlayerSegmentRequest,
+  ): Promise<CommonResponse> | Observable<CommonResponse> | CommonResponse;
+
+  addToSegment(request: AddToSegmentRequest): Promise<CommonResponse> | Observable<CommonResponse> | CommonResponse;
+
+  deletePlayerSegment(
+    request: DeleteItemRequest,
+  ): Promise<CommonResponse> | Observable<CommonResponse> | CommonResponse;
+
+  removePlayerFromSegment(
+    request: DeleteItemRequest,
+  ): Promise<CommonResponse> | Observable<CommonResponse> | CommonResponse;
 }
 
 export function IdentityServiceControllerMethods() {
@@ -657,6 +708,11 @@ export function IdentityServiceControllerMethods() {
       "updatePlayerData",
       "changePassword",
       "resetPassword",
+      "savePlayerSegment",
+      "fetchPlayerSegment",
+      "addToSegment",
+      "deletePlayerSegment",
+      "removePlayerFromSegment",
     ];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
