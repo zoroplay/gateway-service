@@ -50,10 +50,7 @@ export class GamingService implements OnModuleInit {
 
   async sync(syncGameDto: SyncGameDto) {
     console.log('syncing games');
-    const games = await firstValueFrom(this.service.syncGames(syncGameDto));
-    return {
-      games,
-    };
+    return await firstValueFrom(this.service.syncGames(syncGameDto));
   }
 
   async startGame(request: StartGameDto) {
