@@ -10,10 +10,10 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import {
-  LoginRequest, CreateUserRequest, UpdateUserRequest, ChangePasswordRequest, ResetPasswordRequest,
+  LoginRequest, CreateUserRequest, UpdateUserRequest, ChangePasswordRequest, ResetPasswordRequest, GetUserByUsernameRequest,
 } from '../identity.pb';
 import { ApiBody, ApiOkResponse, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
-import { LoginDTO, SwaggerChangePasswordRequest, SwaggerCommonResponse, SwaggerRegisterRequest, SwaggerResetPasswordRequest, SwaggerUserDetailsRequest  } from '../dto';
+import { LoginDTO, SwaggerChangePasswordRequest, SwaggerCommonResponse, SwaggerRegisterRequest, SwaggerResetPasswordRequest, SwaggerUserDetailsRequest, VerifyUsernameDTO  } from '../dto';
 import { AuthGuard } from './auth.guard';
 import { IAuthorizedRequest } from 'src/interfaces/authorized-request.interface';
 import { AuthService } from './auth.service';
@@ -44,6 +44,17 @@ export class AuthController {
   @ApiOkResponse({ type: SwaggerCommonResponse })
   loginUser(@Body() data: LoginRequest) {
     return this.authService.doLogin(data);
+  }
+
+  @Post('/verify-username')
+  @ApiOperation({
+    summary: 'Verify Username',
+    description: 'This endpoint is use to verify a username',
+  })
+  @ApiBody({ type: VerifyUsernameDTO })
+  @ApiOkResponse({ type: SwaggerCommonResponse })
+  verifyUsername(@Body() data: GetUserByUsernameRequest) {
+    return this.authService.validateUser(data);
   }
 
   @UseGuards(AuthGuard)

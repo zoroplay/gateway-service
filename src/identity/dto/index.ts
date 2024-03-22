@@ -14,6 +14,16 @@ export class LoginDTO {
     password: string;
 }
 
+export class VerifyUsernameDTO {
+  @ApiProperty({ description: 'SBE Platform Client ID' })
+  clientId: number;
+
+  @ApiProperty({ description: 'Unique username to verify', example: 'admin' })
+  @IsNotEmpty()
+  username: string;
+
+}
+
 export class SwaggerRegisterRequest {
     @ApiProperty({ description: 'SBE Platform Client ID' })
     clientId: number;
