@@ -1,9 +1,18 @@
-import { Body, Controller, Delete, Get, Inject, Param, Patch, Post, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpException, HttpStatus, Inject, Param, Patch, Post, Query, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { ApiBody, ApiOkResponse, ApiOperation, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
-import { AddToSegmentRequest, ClientRequest, DeleteItemRequest, FetchPlayerSegmentRequest, IDENTITY_SERVICE_NAME, IdentityServiceClient, SaveSegmentRequest, protobufPackage } from '../identity.pb';
+import { AddToSegmentRequest, ClientRequest, DeleteItemRequest, FetchPlayerSegmentRequest, GetSegmentPlayerRequest, IDENTITY_SERVICE_NAME, IdentityServiceClient, SaveSegmentRequest, protobufPackage } from '../identity.pb';
 import { ClientGrpc } from '@nestjs/microservices';
 import { SwaggerAddToSegmentRequest, SwaggerSaveClientRequest, SwaggerSaveSegmentRequest } from '../dto/admin.dto';
 import { SwaggerCommonResponse } from '../dto';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { PATH_DOWNLOADED_FILE, SUPPORTED_FILES, multerOptions } from 'src/uploads';
+import * as Excel from 'exceljs';
+
+const getCellValue = (row:  Excel.Row, cellIndex: number) => {
+    const cell = row.getCell(cellIndex);
+
+    return cell.value ? cell.value.toString() : '';
+};
 
 @ApiTags('BackOffice APIs')
 @Controller('admin')
@@ -39,7 +48,7 @@ export class UsersController {
     }
 
 
-    @Get('users/player-segments')
+    @Get('player-management/segments')
     @ApiOperation({
         summary: 'Fetch all Player Segments',
         description: 'This endpoint is used to get lists  of all player segments for a clients',
@@ -52,7 +61,7 @@ export class UsersController {
         return this.svc.fetchPlayerSegment(clientId);
     }
 
-    @Post('users/player-segments')
+    @Post('player-management/segments')
     @ApiOperation({
         summary: 'Save Player Segment',
         description: 'This endpoint is used to save or update player segment for a client',
@@ -63,7 +72,7 @@ export class UsersController {
         return this.svc.savePlayerSegment(body);
     }
 
-    @Patch('users/add-to-segments')
+    @Patch('player-management/segments/add-user')
     @ApiOperation({
         summary: 'Add Player to Segment',
         description: 'This endpoint is used to add a user to a particular segment',
@@ -74,7 +83,68 @@ export class UsersController {
         return this.svc.addToSegment(body);
     }
 
-    @Delete('users/delete-segment/:id')
+    @Post("/player-management/segment/:id/upload-players")
+    @UseInterceptors(FileInterceptor('file', multerOptions))
+    async upload(
+        @UploadedFile() file: Express.Multer.File, 
+        @Body() body,
+        @Param() param,
+    ) {
+        console.log(`body : ${JSON.stringify(body)}`);
+        if (!file) {    
+            throw new HttpException(
+                `Please provide correct file name with extension ${JSON.stringify(SUPPORTED_FILES)}`,
+                400
+            );
+        }
+
+        console.log(file.filename);
+        const workbook = new Excel.Workbook();
+        const content = await workbook.xlsx.readFile(`${PATH_DOWNLOADED_FILE}/${file.filename}`);
+
+        const worksheet = content.worksheets[0];
+        const rowStartIndex = 2;
+        const numberOfRows = worksheet.rowCount - 1;
+
+        const rows = worksheet.getRows(rowStartIndex, numberOfRows) ?? [];
+
+
+        const players = [];
+
+        rows.forEach((row) => players.push(getCellValue(row,1)))
+
+        console.log(players)
+
+        if (players.length) {
+
+            return this.svc.uploadToSegment({
+                clientId: body.clientId,
+                segmentId: param.id,
+                players
+            })
+            
+        } else {
+            return {
+                status: HttpStatus.BAD_REQUEST, 
+                success: false, 
+                message: 'No user was found in the document', 
+            }
+        }
+    }
+
+    @Get('player-management/segment/:id/get-players')
+    @ApiOperation({
+        summary: 'Get Players for Segment',
+        description: 'This endpoint is used to fetch all players for a particular segment',
+    })
+    @ApiParam({ name: 'id', description: 'Segment ID' })
+    @ApiOkResponse({ type: SwaggerCommonResponse })
+    getPlayers(@Param() param) {
+        console.log(param.id)
+        return this.svc.getSegmentPlayers({segmentId: param.id});
+    }
+
+    @Delete('player-management/segment/:id/delete')
     @ApiOperation({
         summary: 'Delete Player Segment',
         description: 'This endpoint is used to delete a particular segment',
@@ -85,7 +155,7 @@ export class UsersController {
         return this.svc.deletePlayerSegment(id);
     }
 
-    @Delete('users/segments/remove-player/:id')
+    @Delete('player-management/segments/remove-player/:id')
     @ApiOperation({
         summary: 'Remove Player from a Segment',
         description: 'This endpoint is used to delete a particular segment',
@@ -95,6 +165,4 @@ export class UsersController {
     removePlayerFromSegment(@Param() id: DeleteItemRequest) {
         return this.svc.removePlayerFromSegment(id);
     }
-    
-
 }
