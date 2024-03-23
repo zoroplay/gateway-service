@@ -18,6 +18,10 @@ export interface FetchPlayerSegmentRequest {
   clientId: number;
 }
 
+export interface GetSegmentPlayerRequest {
+  segmentId: number;
+}
+
 export interface DeleteItemRequest {
   id: number;
 }
@@ -26,6 +30,12 @@ export interface AddToSegmentRequest {
   clientId: number;
   playerId: number;
   segmentId: number;
+}
+
+export interface UploadPlayersToSegment {
+  clientId: number;
+  segmentId: number;
+  players: string[];
 }
 
 export interface FetchPlayerFilterRequest {
@@ -564,9 +574,13 @@ export interface IdentityServiceClient {
 
   addToSegment(request: AddToSegmentRequest): Observable<CommonResponse>;
 
+  uploadToSegment(request: UploadPlayersToSegment): Observable<CommonResponse>;
+
   deletePlayerSegment(request: DeleteItemRequest): Observable<CommonResponse>;
 
   removePlayerFromSegment(request: DeleteItemRequest): Observable<CommonResponse>;
+
+  getSegmentPlayers(request: GetSegmentPlayerRequest): Observable<CommonResponse>;
 }
 
 export interface IdentityServiceController {
@@ -666,12 +680,20 @@ export interface IdentityServiceController {
 
   addToSegment(request: AddToSegmentRequest): Promise<CommonResponse> | Observable<CommonResponse> | CommonResponse;
 
+  uploadToSegment(
+    request: UploadPlayersToSegment,
+  ): Promise<CommonResponse> | Observable<CommonResponse> | CommonResponse;
+
   deletePlayerSegment(
     request: DeleteItemRequest,
   ): Promise<CommonResponse> | Observable<CommonResponse> | CommonResponse;
 
   removePlayerFromSegment(
     request: DeleteItemRequest,
+  ): Promise<CommonResponse> | Observable<CommonResponse> | CommonResponse;
+
+  getSegmentPlayers(
+    request: GetSegmentPlayerRequest,
   ): Promise<CommonResponse> | Observable<CommonResponse> | CommonResponse;
 }
 
@@ -711,8 +733,10 @@ export function IdentityServiceControllerMethods() {
       "savePlayerSegment",
       "fetchPlayerSegment",
       "addToSegment",
+      "uploadToSegment",
       "deletePlayerSegment",
       "removePlayerFromSegment",
+      "getSegmentPlayers",
     ];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
