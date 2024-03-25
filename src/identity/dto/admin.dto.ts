@@ -129,6 +129,7 @@ export class SwaggerSaveSegmentRequest {
 }
 
 
+
 export class SwaggerAddToSegmentRequest {
     @ApiProperty({ description: 'SBE client ID', example: 1 })
     clientId: number;
@@ -201,6 +202,17 @@ export class SwaggerAdminCommonResponse {
     message: string;
     @ApiProperty({ description: 'true || false' })
     success: boolean;
+}
+
+export class SwaggerGrantBonusToSegment {
+    @ApiProperty({ description: 'SBE client ID', example: 1 })
+    clientId: number;
+
+    @ApiProperty({ description: 'Current auth user id', example: 1 })
+    bonusId: number;
+
+    @ApiProperty({ description: 'Bonus amount to be granted', example: 550 })
+    amount: number;
 }
 
 interface Player {

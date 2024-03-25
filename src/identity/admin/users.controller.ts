@@ -1,8 +1,8 @@
 import { Body, Controller, Delete, Get, HttpException, HttpStatus, Inject, Param, Patch, Post, Query, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { ApiBody, ApiOkResponse, ApiOperation, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
-import { AddToSegmentRequest, ClientRequest, DeleteItemRequest, FetchPlayerSegmentRequest, GetSegmentPlayerRequest, IDENTITY_SERVICE_NAME, IdentityServiceClient, SaveSegmentRequest, protobufPackage } from '../identity.pb';
+import { AddToSegmentRequest, ClientRequest, DeleteItemRequest, FetchPlayerSegmentRequest, GetSegmentPlayerRequest, GrantBonusRequest, IDENTITY_SERVICE_NAME, IdentityServiceClient, SaveSegmentRequest, protobufPackage } from '../identity.pb';
 import { ClientGrpc } from '@nestjs/microservices';
-import { SwaggerAddToSegmentRequest, SwaggerSaveClientRequest, SwaggerSaveSegmentRequest } from '../dto/admin.dto';
+import { SwaggerAddToSegmentRequest, SwaggerGrantBonusToSegment, SwaggerSaveClientRequest, SwaggerSaveSegmentRequest } from '../dto/admin.dto';
 import { SwaggerCommonResponse } from '../dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { PATH_DOWNLOADED_FILE, SUPPORTED_FILES, multerOptions } from 'src/uploads';
@@ -90,7 +90,6 @@ export class UsersController {
         @Body() body,
         @Param() param,
     ) {
-        console.log(`body : ${JSON.stringify(body)}`);
         if (!file) {    
             throw new HttpException(
                 `Please provide correct file name with extension ${JSON.stringify(SUPPORTED_FILES)}`,
@@ -98,7 +97,6 @@ export class UsersController {
             );
         }
 
-        console.log(file.filename);
         const workbook = new Excel.Workbook();
         const content = await workbook.xlsx.readFile(`${PATH_DOWNLOADED_FILE}/${file.filename}`);
 
@@ -108,12 +106,9 @@ export class UsersController {
 
         const rows = worksheet.getRows(rowStartIndex, numberOfRows) ?? [];
 
-
         const players = [];
 
         rows.forEach((row) => players.push(getCellValue(row,1)))
-
-        console.log(players)
 
         if (players.length) {
 
@@ -164,5 +159,22 @@ export class UsersController {
     @ApiOkResponse({ type: SwaggerCommonResponse })
     removePlayerFromSegment(@Param() id: DeleteItemRequest) {
         return this.svc.removePlayerFromSegment(id);
+    }
+
+
+    @Post('player-management/segments/:id/grant-bonus')
+    @ApiOperation({
+        summary: 'Grant Segment Bonus',
+        description: 'This endpoint is used to assing mass bonus to players under a segment',
+    })
+    @ApiParam({name: 'segmentId', description: 'Segment ID'})
+    @ApiBody({ type: SwaggerGrantBonusToSegment })
+    @ApiOkResponse({ type: SwaggerCommonResponse })
+    grantBonusToSegment(
+        @Body() body: GrantBonusRequest,
+        @Param() param
+    ) {
+        body.segmentId = param.id
+        return this.svc.grantBonusToSegment(body);
     }
 }
