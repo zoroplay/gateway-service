@@ -14,6 +14,13 @@ export interface SaveSegmentRequest {
   id?: number | undefined;
 }
 
+export interface GrantBonusRequest {
+  clientId: number;
+  segmentId: number;
+  bonusId: number;
+  amount: number;
+}
+
 export interface FetchPlayerSegmentRequest {
   clientId: number;
 }
@@ -581,6 +588,8 @@ export interface IdentityServiceClient {
   removePlayerFromSegment(request: DeleteItemRequest): Observable<CommonResponse>;
 
   getSegmentPlayers(request: GetSegmentPlayerRequest): Observable<CommonResponse>;
+
+  grantBonusToSegment(request: GrantBonusRequest): Observable<CommonResponse>;
 }
 
 export interface IdentityServiceController {
@@ -695,6 +704,10 @@ export interface IdentityServiceController {
   getSegmentPlayers(
     request: GetSegmentPlayerRequest,
   ): Promise<CommonResponse> | Observable<CommonResponse> | CommonResponse;
+
+  grantBonusToSegment(
+    request: GrantBonusRequest,
+  ): Promise<CommonResponse> | Observable<CommonResponse> | CommonResponse;
 }
 
 export function IdentityServiceControllerMethods() {
@@ -737,6 +750,7 @@ export function IdentityServiceControllerMethods() {
       "deletePlayerSegment",
       "removePlayerFromSegment",
       "getSegmentPlayers",
+      "grantBonusToSegment",
     ];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
