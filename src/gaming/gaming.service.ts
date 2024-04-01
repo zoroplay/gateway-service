@@ -71,7 +71,7 @@ export class GamingService implements OnModuleInit {
       return resp.data;
     } else {
       console.log('service ended in failure');
-      return resp.message;
+      return resp;
     }
   }
 }
