@@ -66,7 +66,12 @@ export class GamingService implements OnModuleInit {
     console.log(request);
     const resp = await firstValueFrom(this.service.handleCallback(request));
     console.log(resp);
-    console.log('service end');
-    return resp;
+    if (resp.success) {
+      console.log('service ended in success');
+      return resp.data;
+    } else {
+      console.log('service ended in failure');
+      return resp;
+    }
   }
 }
