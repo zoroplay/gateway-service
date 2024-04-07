@@ -101,6 +101,12 @@ export class AppController {
         })
         break;
       case 'monnify':
+        this.walletService.monnifyWebhook({
+          clientId: param.client,
+          body: JSON.stringify(body),
+          reference: body.eventData.paymentReference,
+          event: body.eventType
+        })
         break;
       case 'flutterwave':
         break;

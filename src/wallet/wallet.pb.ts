@@ -15,8 +15,15 @@ export interface FetchBetRangeRequest {
 export interface FetchBetRangeResponse {
   status: number;
   success: boolean;
-  data: number[];
+  data: FetchBetRangeResponse_Data[];
   error?: string | undefined;
+}
+
+export interface FetchBetRangeResponse_Data {
+  userId: number;
+  total: number;
+  count: number;
+  balance: number;
 }
 
 export interface FetchDepositRangeRequest {
@@ -37,15 +44,27 @@ export interface FetchDepositCountRequest {
 export interface FetchDepositCountResponse {
   status: number;
   success: boolean;
-  data: number[];
+  data: FetchDepositCountResponse_Data[];
   error?: string | undefined;
+}
+
+export interface FetchDepositCountResponse_Data {
+  userId: number;
+  total: number;
+  balance: number;
 }
 
 export interface FetchDepositRangeResponse {
   status: number;
   success: boolean;
-  data: number[];
+  data: FetchDepositRangeResponse_Data[];
   error?: string | undefined;
+}
+
+export interface FetchDepositRangeResponse_Data {
+  userId: number;
+  total: number;
+  balance: number;
 }
 
 export interface FetchPlayerDepositRequest {
@@ -103,6 +122,13 @@ export interface PaystackWebhookRequest {
   event: string;
   body: string;
   paystackKey: string;
+}
+
+export interface MonnifyWebhookRequest {
+  clientId: number;
+  reference: string;
+  event: string;
+  body: string;
 }
 
 export interface WebhookResponse {
@@ -452,6 +478,8 @@ export interface WalletServiceClient {
 
   paystackWebhook(request: PaystackWebhookRequest): Observable<WebhookResponse>;
 
+  monnifyWebhook(request: MonnifyWebhookRequest): Observable<WebhookResponse>;
+
   opayDepositWebhook(request: OpayWebhookRequest): Observable<OpayWebhookResponse>;
 
   opayLookUpWebhook(request: OpayWebhookRequest): Observable<OpayWebhookResponse>;
@@ -524,6 +552,10 @@ export interface WalletServiceController {
     request: PaystackWebhookRequest,
   ): Promise<WebhookResponse> | Observable<WebhookResponse> | WebhookResponse;
 
+  monnifyWebhook(
+    request: MonnifyWebhookRequest,
+  ): Promise<WebhookResponse> | Observable<WebhookResponse> | WebhookResponse;
+
   opayDepositWebhook(
     request: OpayWebhookRequest,
   ): Promise<OpayWebhookResponse> | Observable<OpayWebhookResponse> | OpayWebhookResponse;
@@ -572,6 +604,7 @@ export function WalletServiceControllerMethods() {
       "getPaymentMethods",
       "savePaymentMethod",
       "paystackWebhook",
+      "monnifyWebhook",
       "opayDepositWebhook",
       "opayLookUpWebhook",
       "listWithdrawals",
