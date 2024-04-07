@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { GetPaymentMethodRequest, GetPaymentMethodResponse, InitiateDepositRequest, InitiateDepositResponse, ListDepositRequests, ListWithdrawalRequestResponse, ListWithdrawalRequests, OpayWebhookRequest, OpayWebhookResponse, PaginationResponse, PaymentMethodRequest, PaymentMethodResponse, PaystackWebhookRequest, UpdateWithdrawalRequest, UpdateWithdrawalResponse, UserTransactionRequest, UserTransactionResponse, VerifyBankAccountRequest, VerifyBankAccountResponse, VerifyDepositRequest, VerifyDepositResponse, WALLET_SERVICE_NAME, WalletServiceClient, WebhookResponse, WithdrawRequest, WithdrawResponse, protobufPackage } from './wallet.pb';
+import { GetPaymentMethodRequest, GetPaymentMethodResponse, InitiateDepositRequest, InitiateDepositResponse, ListDepositRequests, ListWithdrawalRequestResponse, ListWithdrawalRequests, MonnifyWebhookRequest, OpayWebhookRequest, OpayWebhookResponse, PaginationResponse, PaymentMethodRequest, PaymentMethodResponse, PaystackWebhookRequest, UpdateWithdrawalRequest, UpdateWithdrawalResponse, UserTransactionRequest, UserTransactionResponse, VerifyBankAccountRequest, VerifyBankAccountResponse, VerifyDepositRequest, VerifyDepositResponse, WALLET_SERVICE_NAME, WalletServiceClient, WebhookResponse, WithdrawRequest, WithdrawResponse, protobufPackage } from './wallet.pb';
 import { ClientGrpc } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
 
@@ -54,6 +54,10 @@ export class WalletService {
 
     async paystackWebhook(data: PaystackWebhookRequest): Promise<WebhookResponse> {
         return await firstValueFrom(this.svc.paystackWebhook(data));
+    }
+
+    async monnifyWebhook(data: MonnifyWebhookRequest): Promise<WebhookResponse> {
+        return await firstValueFrom(this.svc.monnifyWebhook(data));
     }
 
     async opayDeposit(data: OpayWebhookRequest): Promise<OpayWebhookResponse> {
