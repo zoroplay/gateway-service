@@ -222,6 +222,29 @@ export class SwaggerUpdateWithdrawalRequest {
   comment: string;
 }
 
+export class SwaggerFundTransfer {
+  @ApiProperty({ description: 'SBE Client ID' })
+  clientId: number;
+  @ApiProperty({ description: 'User ID' })
+  userId: number;
+  @ApiProperty({ description: 'Username' })
+  username: string;
+  @ApiProperty({ description: 'Transfer Acction (deposit|withdraw)' })
+  action: string;
+  @ApiProperty({ description: 'Transfer amount' })
+  amount: number;
+  @ApiProperty({ description: 'Transfer Title' })
+  subject: string;
+  @ApiProperty({ description: 'Transaction description' })
+  description: string;
+  @ApiProperty({ description: 'Wallet to be funded' })
+  wallet: string;
+  @ApiProperty({ description: 'Source of transaction' })
+  source: string;
+  @ApiProperty({ description: 'Method of transaction' })
+  channel: string;
+}
+
 interface DepositResponseData {
   link: string;
   transactionRef: string;
