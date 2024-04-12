@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { GetPaymentMethodRequest, GetPaymentMethodResponse, InitiateDepositRequest, InitiateDepositResponse, ListDepositRequests, ListWithdrawalRequestResponse, ListWithdrawalRequests, MonnifyWebhookRequest, OpayWebhookRequest, OpayWebhookResponse, PaginationResponse, PaymentMethodRequest, PaymentMethodResponse, PaystackWebhookRequest, UpdateWithdrawalRequest, UpdateWithdrawalResponse, UserTransactionRequest, UserTransactionResponse, VerifyBankAccountRequest, VerifyBankAccountResponse, VerifyDepositRequest, VerifyDepositResponse, WALLET_SERVICE_NAME, WalletServiceClient, WebhookResponse, WithdrawRequest, WithdrawResponse, protobufPackage } from './wallet.pb';
+import { CreditUserRequest, DebitUserRequest, GetPaymentMethodRequest, GetPaymentMethodResponse, InitiateDepositRequest, InitiateDepositResponse, ListDepositRequests, ListWithdrawalRequestResponse, ListWithdrawalRequests, MonnifyWebhookRequest, OpayWebhookRequest, OpayWebhookResponse, PaginationResponse, PaymentMethodRequest, PaymentMethodResponse, PaystackWebhookRequest, UpdateWithdrawalRequest, UpdateWithdrawalResponse, UserTransactionRequest, UserTransactionResponse, VerifyBankAccountRequest, VerifyBankAccountResponse, VerifyDepositRequest, VerifyDepositResponse, WALLET_SERVICE_NAME, WalletResponse, WalletServiceClient, WebhookResponse, WithdrawRequest, WithdrawResponse, protobufPackage } from './wallet.pb';
 import { ClientGrpc } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
 
@@ -71,5 +71,14 @@ export class WalletService {
     async getUserTransactions(data: UserTransactionRequest): Promise<UserTransactionResponse> {
         console.log(data);
         return await firstValueFrom(this.svc.userTransactions(data));
+    }
+
+    async creditUser(data: CreditUserRequest): Promise<WalletResponse> {
+        // console.log(data);
+        return await firstValueFrom(this.svc.creditUser(data));
+    }
+
+    async debitUser(data: DebitUserRequest): Promise<WalletResponse> {
+        return await firstValueFrom(this.svc.debitUser(data));
     }
 }

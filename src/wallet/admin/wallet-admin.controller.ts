@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Param, Post, Put, Query, Req } from '@nestjs/common';
 import { ApiBody, ApiOkResponse, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 import { ListDepositRequests, ListWithdrawalRequests, PaymentMethodRequest, UpdateWithdrawalRequest } from '../wallet.pb';
-import { SwaggerGetPaymentMethodResponse, SwaggerListDepositRequest, SwaggerListWithdrawalRequests, SwaggerPaymentMethodRequest, SwaggerPaymentMethodResponse, SwaggerUpdateWithdrawalRequest } from '../dto';
+import { SwaggerFundTransfer, SwaggerGetPaymentMethodResponse, SwaggerListDepositRequest, SwaggerListWithdrawalRequests, SwaggerPaymentMethodRequest, SwaggerPaymentMethodResponse, SwaggerUpdateWithdrawalRequest } from '../dto';
 import { WalletService } from '../wallet.service';
 
 @ApiTags('BackOffice APIs')
@@ -98,5 +98,36 @@ export class WalletAdminController {
             updatedBy: ''
         });
     }
+
+
+    @Post('funds-transfer')
+    @ApiOperation({
+        summary: 'Credit or Debit user wallet',
+        description: 'This endpoint is used to credit or debit a users wallet',
+    })
+    @ApiBody({type: SwaggerFundTransfer})
+    @ApiOkResponse({ type: SwaggerPaymentMethodResponse })
+    fundsTransfer(@Body() body) {
+        const payload = {
+            clientId: body.clientId,
+            userId: body.userId,
+            username: body.username,
+            amount: body.amount,
+            source: body.source,
+            description: body.description,
+            wallet: body.wallet,
+            subject: body.subject,
+            channel: body.channel
+        };
+
+        if (body.action === 'deposit') {
+            return this.walletService.creditUser(payload)
+        } else {
+            return this.walletService.debitUser(payload)
+        }
+       
+    }
+
+
 
 }
