@@ -4,6 +4,7 @@ import { GamingService } from './gaming.service';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { GAMING_PACKAGE_NAME, protobufPackage } from './gaming.pb';
 import { join } from 'path';
+import { VirtualController } from './virtual.controller';
 
 @Module({
   imports: [
@@ -19,7 +20,7 @@ import { join } from 'path';
       },
     ]),
   ],
-  controllers: [GamingController],
+  controllers: [GamingController, VirtualController],
   providers: [GamingService],
   exports: [GamingService],
 })
