@@ -125,6 +125,7 @@ export interface UserData {
   gender: string;
   dateOfBirth: string;
   status: number;
+  group: string;
 }
 
 export interface CreateUserRequest {
@@ -525,6 +526,11 @@ export interface GetStatesRequest {
   countryId: number;
 }
 
+export interface SessionRequest {
+  clientId: number;
+  sessionId: string;
+}
+
 export interface State {
   id: number;
   name: string;
@@ -570,6 +576,8 @@ export interface IdentityServiceClient {
   login(request: LoginRequest): Observable<LoginResponse>;
 
   xpressGameLogin(request: XpressLoginRequest): Observable<XpressLoginResponse>;
+
+  xpressGameLogout(request: SessionRequest): Observable<XpressLoginResponse>;
 
   validate(request: ValidateRequest): Observable<ValidateResponse>;
 
@@ -648,6 +656,8 @@ export interface IdentityServiceClient {
   getCountries(request: EmptyRequest): Observable<CommonResponse>;
 
   getStatesByCoutnry(request: GetStatesRequest): Observable<CommonResponse>;
+
+  validateXpressSession(request: SessionRequest): Observable<CommonResponse>;
 }
 
 export interface IdentityServiceController {
@@ -657,6 +667,10 @@ export interface IdentityServiceController {
 
   xpressGameLogin(
     request: XpressLoginRequest,
+  ): Promise<XpressLoginResponse> | Observable<XpressLoginResponse> | XpressLoginResponse;
+
+  xpressGameLogout(
+    request: SessionRequest,
   ): Promise<XpressLoginResponse> | Observable<XpressLoginResponse> | XpressLoginResponse;
 
   validate(request: ValidateRequest): Promise<ValidateResponse> | Observable<ValidateResponse> | ValidateResponse;
@@ -776,6 +790,8 @@ export interface IdentityServiceController {
   getCountries(request: EmptyRequest): Promise<CommonResponse> | Observable<CommonResponse> | CommonResponse;
 
   getStatesByCoutnry(request: GetStatesRequest): Promise<CommonResponse> | Observable<CommonResponse> | CommonResponse;
+
+  validateXpressSession(request: SessionRequest): Promise<CommonResponse> | Observable<CommonResponse> | CommonResponse;
 }
 
 export function IdentityServiceControllerMethods() {
@@ -784,6 +800,7 @@ export function IdentityServiceControllerMethods() {
       "register",
       "login",
       "xpressGameLogin",
+      "xpressGameLogout",
       "validate",
       "validateClient",
       "getUserDetails",
@@ -823,6 +840,7 @@ export function IdentityServiceControllerMethods() {
       "grantBonusToSegment",
       "getCountries",
       "getStatesByCoutnry",
+      "validateXpressSession",
     ];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
