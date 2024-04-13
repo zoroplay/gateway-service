@@ -124,6 +124,7 @@ export interface UserData {
   address: string;
   gender: string;
   dateOfBirth: string;
+  status: number;
 }
 
 export interface CreateUserRequest {
@@ -314,6 +315,7 @@ export interface GetPaymentDataResponse {
   username: string;
   email: string;
   callbackUrl: string;
+  siteUrl: string;
 }
 
 export interface GetClientRequest {
@@ -509,6 +511,54 @@ export interface PaginationResponse {
   data: string;
 }
 
+export interface Country {
+  id: number;
+  name: string;
+  countryCodeLong: string;
+  countryCode: string;
+  dialCode: string;
+  currencyName: string;
+  currencySymbol: string;
+}
+
+export interface GetStatesRequest {
+  countryId: number;
+}
+
+export interface State {
+  id: number;
+  name: string;
+}
+
+export interface GetCountryResponse {
+  countries: Country[];
+}
+
+export interface StateResponse {
+  states: State[];
+}
+
+export interface XpressLoginRequest {
+  clientId: number;
+  token: string;
+}
+
+export interface XpressLoginResponse {
+  status: boolean;
+  code: number;
+  message: string;
+  data?: XpressLoginResponse_XpressData | undefined;
+}
+
+export interface XpressLoginResponse_XpressData {
+  playerId: string;
+  playerNickname: string;
+  balance: number;
+  sessionId: string;
+  group: string;
+  currency: string;
+}
+
 export interface EmptyRequest {
 }
 
@@ -518,6 +568,8 @@ export interface IdentityServiceClient {
   register(request: CreateUserRequest): Observable<RegisterResponse>;
 
   login(request: LoginRequest): Observable<LoginResponse>;
+
+  xpressGameLogin(request: XpressLoginRequest): Observable<XpressLoginResponse>;
 
   validate(request: ValidateRequest): Observable<ValidateResponse>;
 
@@ -532,6 +584,8 @@ export interface IdentityServiceClient {
   saveRole(request: RoleRequest): Observable<SaveRoleResponse>;
 
   getRoles(request: EmptyRequest): Observable<GetRolesResponse>;
+
+  getAgencyRoles(request: EmptyRequest): Observable<GetRolesResponse>;
 
   removeRole(request: RemoveRoleRequest): Observable<DeleteResponse>;
 
@@ -590,12 +644,20 @@ export interface IdentityServiceClient {
   getSegmentPlayers(request: GetSegmentPlayerRequest): Observable<CommonResponse>;
 
   grantBonusToSegment(request: GrantBonusRequest): Observable<CommonResponse>;
+
+  getCountries(request: EmptyRequest): Observable<CommonResponse>;
+
+  getStatesByCoutnry(request: GetStatesRequest): Observable<CommonResponse>;
 }
 
 export interface IdentityServiceController {
   register(request: CreateUserRequest): Promise<RegisterResponse> | Observable<RegisterResponse> | RegisterResponse;
 
   login(request: LoginRequest): Promise<LoginResponse> | Observable<LoginResponse> | LoginResponse;
+
+  xpressGameLogin(
+    request: XpressLoginRequest,
+  ): Promise<XpressLoginResponse> | Observable<XpressLoginResponse> | XpressLoginResponse;
 
   validate(request: ValidateRequest): Promise<ValidateResponse> | Observable<ValidateResponse> | ValidateResponse;
 
@@ -614,6 +676,8 @@ export interface IdentityServiceController {
   saveRole(request: RoleRequest): Promise<SaveRoleResponse> | Observable<SaveRoleResponse> | SaveRoleResponse;
 
   getRoles(request: EmptyRequest): Promise<GetRolesResponse> | Observable<GetRolesResponse> | GetRolesResponse;
+
+  getAgencyRoles(request: EmptyRequest): Promise<GetRolesResponse> | Observable<GetRolesResponse> | GetRolesResponse;
 
   removeRole(request: RemoveRoleRequest): Promise<DeleteResponse> | Observable<DeleteResponse> | DeleteResponse;
 
@@ -708,6 +772,10 @@ export interface IdentityServiceController {
   grantBonusToSegment(
     request: GrantBonusRequest,
   ): Promise<CommonResponse> | Observable<CommonResponse> | CommonResponse;
+
+  getCountries(request: EmptyRequest): Promise<CommonResponse> | Observable<CommonResponse> | CommonResponse;
+
+  getStatesByCoutnry(request: GetStatesRequest): Promise<CommonResponse> | Observable<CommonResponse> | CommonResponse;
 }
 
 export function IdentityServiceControllerMethods() {
@@ -715,6 +783,7 @@ export function IdentityServiceControllerMethods() {
     const grpcMethods: string[] = [
       "register",
       "login",
+      "xpressGameLogin",
       "validate",
       "validateClient",
       "getUserDetails",
@@ -722,6 +791,7 @@ export function IdentityServiceControllerMethods() {
       "createPermission",
       "saveRole",
       "getRoles",
+      "getAgencyRoles",
       "removeRole",
       "findAllPermissions",
       "findAllClients",
@@ -751,6 +821,8 @@ export function IdentityServiceControllerMethods() {
       "removePlayerFromSegment",
       "getSegmentPlayers",
       "grantBonusToSegment",
+      "getCountries",
+      "getStatesByCoutnry",
     ];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);

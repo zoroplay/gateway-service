@@ -13,6 +13,7 @@ import {
   ShackEvolutionCallback,
   SmartSoftCallback,
   CreateProviderDto,
+  XpressRequest,
 } from './gaming.pb';
 import { ClientGrpc } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
@@ -73,5 +74,35 @@ export class GamingService implements OnModuleInit {
       console.log('service ended in failure');
       return resp;
     }
+  }
+
+  async xpressLogin(data: XpressRequest) {
+    console.log('xpress login');
+    return firstValueFrom(this.service.xpressLogin(data));
+  }
+
+  async xpressBalance(data: XpressRequest) {
+    console.log('xpress balance');
+    return firstValueFrom(this.service.xpressBalance(data));
+  }
+
+  async xpressCredit(data: XpressRequest) {
+    console.log('xpress credit');
+    return firstValueFrom(this.service.xpressCredit(data));
+  }
+
+  async xpressDebit(data: XpressRequest) {
+    console.log('xpress debit');
+    return firstValueFrom(this.service.xpressDebit(data));
+  }
+
+  async xpressRollback(data: XpressRequest) {
+    console.log('xpress rollback');
+    return firstValueFrom(this.service.xpressRollback(data));
+  }
+
+  async xpressLogout(data: XpressRequest) {
+    console.log('xpress logout');
+    return firstValueFrom(this.service.xpressLogout(data));
   }
 }

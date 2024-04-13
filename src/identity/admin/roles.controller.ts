@@ -39,5 +39,15 @@ export class RolesController {
         return this.svc.getRoles({});
     }
 
+    @Get('/roles/agency')
+    @ApiOperation({
+        summary: 'Fetch all Agency Roles',
+        description: 'This endpoint is fetch all system roles',
+    })
+    @ApiOkResponse({ type: SwaggerCommonResponse })
+    agencyRoles() {
+        return this.svc.getAgencyRoles({});
+    }
+
     
 }
