@@ -14,6 +14,7 @@ import {
   SmartSoftCallback,
   CreateProviderDto,
   XpressRequest,
+  XpressResponse,
 } from './gaming.pb';
 import { ClientGrpc } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
@@ -81,9 +82,10 @@ export class GamingService implements OnModuleInit {
     return firstValueFrom(this.service.xpressLogin(data));
   }
 
-  async xpressBalance(data: XpressRequest) {
+  async xpressBalance(data: XpressRequest): Promise<XpressResponse> {
+    console.log('xpress balance');
     const res = await firstValueFrom(this.service.xpressBalance(data));
-    console.log('xpress balance', res);
+    res.data.balance = parseFloat(res.data.balance.toFixed(2))
     return res;
   }
 

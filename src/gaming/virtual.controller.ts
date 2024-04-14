@@ -13,6 +13,7 @@ import {
 import { GamingService } from './gaming.service';
 import {
   XpressRequest,
+  XpressResponse,
 } from './gaming.pb';
 import { SwaggerXpressResponse, XpressBalanceDto, XpressDebitCreditDto, XpressLoginDto, XpressLogoutDto, XpressRollbackDto } from './dto/virtuals';
 
@@ -40,7 +41,7 @@ export class VirtualController {
   balance(
     @Body() data: XpressRequest,
     @Param() param
-  ) {
+  ): Promise<XpressResponse> {
     data.clientId = param.clientId;
     return this.gamingService.xpressBalance(data);
   }
@@ -52,7 +53,7 @@ export class VirtualController {
   debit(
     @Body() data: XpressRequest,
     @Param() param
-  ) {
+  ): Promise<XpressResponse> {
     data.clientId = param.clientId;
     return this.gamingService.xpressDebit(data);
   }
