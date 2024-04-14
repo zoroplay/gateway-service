@@ -91,21 +91,31 @@ export class GamingService implements OnModuleInit {
 
   async xpressCredit(data: XpressRequest) {
     console.log('xpress credit');
-    return firstValueFrom(this.service.xpressCredit(data));
+    const res = await firstValueFrom(this.service.xpressCredit(data));
+    res.data.balance = parseFloat(res.data.balance.toFixed(2))
+    res.data.oldBalance = parseFloat(res.data.oldBalance.toFixed(2))
+    return res;
   }
 
   async xpressDebit(data: XpressRequest) {
     console.log('xpress debit');
-    return firstValueFrom(this.service.xpressDebit(data));
-  }
+    const res = await firstValueFrom(this.service.xpressDebit(data));
+    res.data.balance = parseFloat(res.data.balance.toFixed(2))
+    res.data.oldBalance = parseFloat(res.data.oldBalance.toFixed(2))
+    return res;  }
 
   async xpressRollback(data: XpressRequest) {
     console.log('xpress rollback');
-    return firstValueFrom(this.service.xpressRollback(data));
+    const res = await firstValueFrom(this.service.xpressRollback(data));
+    res.data.balance = parseFloat(res.data.balance.toFixed(2))
+    res.data.oldBalance = parseFloat(res.data.oldBalance.toFixed(2))
+    return res;
   }
 
   async xpressLogout(data: XpressRequest) {
     console.log('xpress logout');
-    return firstValueFrom(this.service.xpressLogout(data));
+    const res = await firstValueFrom(this.service.xpressLogout(data));
+    res.data.balance = parseFloat(res.data.balance.toFixed(2))
+    return res;
   }
 }
