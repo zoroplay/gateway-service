@@ -105,8 +105,8 @@ export class GamingService implements OnModuleInit {
     return res;  }
 
   async xpressRollback(data: XpressRequest) {
-    console.log('xpress rollback');
     const res = await firstValueFrom(this.service.xpressRollback(data));
+    console.log('xpress rollback', res);
     res.data.balance = parseFloat(res.data.balance.toFixed(2))
     res.data.oldBalance = parseFloat(res.data.oldBalance.toFixed(2))
     return res;
