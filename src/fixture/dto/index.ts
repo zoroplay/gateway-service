@@ -113,6 +113,10 @@ export class SwaggerSportMenuRequest {
 
   @ApiProperty({ description: 'GTM Time offset of the customer, default is 0, can either be a positive or negative integer' })
   timeoffset: number;
+
+  sportId?: number;
+  
+  categoryId?: number;
 }
 
 export class SwaggerSportMenuResponse {

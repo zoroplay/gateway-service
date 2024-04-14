@@ -9,14 +9,35 @@ service BettingService {
   rpc GetAllSettings (GetAll) returns (AllSettingsResponse) {}
   rpc CancelBet (BetID) returns (StatusResponse) {}
   rpc PlaceBet (PlaceBetRequest) returns (PlaceBetResponse) {}
-  rpc BookBet (PlaceBetRequest) returns (PlaceBetResponse) {}
+  rpc PlaceCasinoBet (PlaceCasinoBetRequest) returns (PlaceBetResponse) {}
+  rpc settleCasinoBet (CreditCasinoBetRequest) returns (PlaceBetResponse) {}
+  rpc cancelCasinoBet (RollbackCasinoBetRequest) returns (PlaceBetResponse) {}
   rpc BetHistory (BetHistoryRequest) returns (BetHistoryResponse) {}
   rpc FindBet (FindBetRequest) returns (FindBetResponse) {}
   rpc UpdateBet (UpdateBetRequest) returns (UpdateBetResponse) {}
   rpc GetProbabilityFromBetID(BetID) returns (Probability) {}
-  rpc GetBooking(BookingCode) returns (PlaceBetResponse) {}
+  rpc GetCoupon(FindBetRequest) returns (FindBetResponse) {}
   rpc GamingActivity(GamingActivityRequest) returns (GamingActivityResponse) {}
 
+}
+
+message PlaceCasinoBetRequest {
+  int32 userId = 1;
+  int32 clientId = 2;
+  string roundId= 3;
+  string transactionId = 4;
+  string gameId = 5;
+  double stake = 6;
+  optional double winnings = 7;
+}
+
+message CreditCasinoBetRequest {
+  string transactionId = 1;
+  double winnings = 2;
+}
+
+message RollbackCasinoBetRequest {
+  string transactionId = 1;
 }
 
 message Settings {
@@ -102,7 +123,7 @@ message UpdateBetResponse {
 }
 
 message BookingCode {
-  string code = 1;
+  string betslipId = 1;
   int32 clientId = 2;
 }
 
@@ -113,18 +134,19 @@ message StatusResponse {
 message PlaceBetRequest {
   repeated BetSlip selections = 1;
   int32 clientId = 2;
-  int32 userId = 3;
+  optional int32 userId = 3;
   float stake = 4;
   string source = 5;
   string ipAddress = 6;
   string betType = 7;
-  string username = 8;
+  optional string username = 8;
   float minBonus = 9;
   float maxBonus = 10;
   float minOdds = 11;
-  float maxOdds = 12;
+  float totalOdds = 12;
   string type = 13;
   repeated Combo combos = 14;
+  int32 isBooking = 15;
 }
 
 message BetSlip {
@@ -186,7 +208,7 @@ message BetSlipHistory {
   string outcomeId = 8;
   string outcomeName = 9;
   float odds = 10;
-  int64 sportId = 11;
+  int32 sportId = 11;
   string status = 12;
   string statusDescription = 13;
   int32 won = 14;
@@ -205,20 +227,26 @@ message BetHistory {
   repeated BetSlipHistory selections = 1;
   float stake = 2;
   string created = 3;
-  int32 status = 4;
+  int32 statusCode = 4;
   float cashOutAmount = 5;
   string statusDescription = 6;
   string source = 7;
   float totalOdd = 8;
   float possibleWin = 9;
-  string betType = 10;
+  int32 betType = 10;
   string betslipId = 11;
   int32 totalSelections = 12;
-  int32 betCategory = 13;
+  string betCategory = 13;
   int32 id = 14;
   int32 userId = 15;
   string username = 16;
   float winnings = 17;
+  string eventType = 18;
+  string sports = 19;
+  string tournaments = 20;
+  string events = 21;
+  string markets = 22;
+  string betCategoryDesc = 23;
 }
 
 message BetHistoryResponse {

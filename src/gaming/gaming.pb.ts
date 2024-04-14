@@ -1,6 +1,8 @@
 /* eslint-disable */
 import { GrpcMethod, GrpcStreamMethod } from "@nestjs/microservices";
+import { wrappers } from "protobufjs";
 import { Observable } from "rxjs";
+import { Struct } from "./google/protobuf/struct.pb";
 
 export const protobufPackage = "gaming";
 
@@ -16,12 +18,24 @@ export interface SyncGameDto {
   provider: string;
 }
 
+export interface CallbackGameDto {
+  provider: string;
+  action?: string | undefined;
+  method?: string | undefined;
+  header: { [key: string]: any } | undefined;
+  body: { [key: string]: any } | undefined;
+}
+
 export interface FindOneGameDto {
-  id: string;
+  id: number;
 }
 
 export interface Games {
   games: Game[];
+}
+
+export interface Providers {
+  providers: Provider[];
 }
 
 export interface UpdateGameDto {
@@ -37,6 +51,14 @@ export interface UpdateGameDto {
   providerId: number;
 }
 
+export interface CreateProviderDto {
+  id?: number | undefined;
+  slug: string;
+  name: string;
+  description: string;
+  imagePath: string;
+}
+
 export interface CreateGameDto {
   gameId: string;
   title: string;
@@ -50,9 +72,15 @@ export interface CreateGameDto {
 }
 
 export interface StartGameDto {
-  gameId: string;
-  providerSlug: string;
-  demo?: string | undefined;
+  gameId: number;
+  clientId: number;
+  userId: number;
+  username: string;
+  email: string;
+  homeUrl?: string | undefined;
+  depositUrl?: string | undefined;
+  demo?: boolean | undefined;
+  isMobile?: boolean | undefined;
 }
 
 export interface StartGameResponse {
@@ -86,7 +114,182 @@ export interface Provider {
   updatedAt: string;
 }
 
+/** Smart Soft TransactionInfo */
+export interface SmartSoftTransactionInfo {
+  Source: string;
+  GiftKey?: string | undefined;
+  RoundId: string;
+  GameName: string;
+  Jackpots?: string | undefined;
+  JetXBets?: string | undefined;
+  TotalWon?: number | undefined;
+  RoundDate: string;
+  RoundLong: number;
+  GameNumber: string;
+  GiftAmount?: number | undefined;
+  RakeAmount?: number | undefined;
+  RakeFromBet?: string | undefined;
+  RakePercent?: string | undefined;
+  GiftQuantity?: string | undefined;
+  TournamentId?: string | undefined;
+  RoundingDelta?: string | undefined;
+  RakeBackAmount?: number | undefined;
+  TotalPlacedBet?: string | undefined;
+  TournamentType?: string | undefined;
+  TransactionKey: string;
+  JetXCoefficient?: string | undefined;
+  TransactionDate: string;
+  BetTransactionId?: string | undefined;
+  TournamentNumber?: string | undefined;
+  JetX3Coefficients?: string | undefined;
+  OriginalSessionId: string;
+  TournamentGameType?: string | undefined;
+  IsTournamentSpecial?: string | undefined;
+  CashierTransacitonId: number;
+  TournamentPlayerRank?: number | undefined;
+  TournamentEnterAmount?: number | undefined;
+  JetXCashoutCoefficients?: number | undefined;
+  TournamentRegistrationTyp?: string | undefined;
+}
+
+/** SmartSoftCallback */
+export interface SmartSoftCallback {
+  Amount: number;
+  CurrencyCode: string;
+  TransactionId: string;
+  TransactionInfo: SmartSoftTransactionInfo | undefined;
+  TransactionType: string;
+}
+
+/** Tada Games Callback */
+export interface TadaCallback {
+  id: string;
+  game: number;
+  reqId: string;
+  round: number;
+  token: string;
+  currency: string;
+  betAmount: number;
+  wagersTime: number;
+  winloseAmount: number;
+}
+
+/** Shack Evolution Callback */
+export interface ShackEvolutionCallback {
+  type: string;
+  amount: number;
+  freebet: string;
+  roundId: string;
+  gameType: string;
+  playerId: string;
+  signature: string;
+  gameOutcome?: string | undefined;
+  gameRoundEnded: boolean;
+}
+
+/** Evoplay Data */
+export interface EvoplayData {
+  id?: string | undefined;
+  userId?: string | undefined;
+  roundId?: string | undefined;
+  actionId?: string | undefined;
+  refundRoundId?: string | undefined;
+  refundActionId?: string | undefined;
+  refundCallbackId?: string | undefined;
+  finalAction?: string | undefined;
+  type?: string | undefined;
+  eventId?: string | undefined;
+  currency: string;
+  amount: string;
+  details?: string | undefined;
+  userMessage?: string | undefined;
+  walletType?: string | undefined;
+}
+
+/** Evoplay Callback */
+export interface EvoplayCallback {
+  token: string;
+  callbackId: string;
+  name: string;
+  data?: EvoplayData | undefined;
+  signature: string;
+}
+
+/** EVOLUTION CALLBACK */
+export interface EvolutionCallback {
+  operatorId: number;
+  uid?: string | undefined;
+  transactionId?: string | undefined;
+  gameId?: number | undefined;
+  token: string;
+  debitAmount?: number | undefined;
+  betTypeID?: number | undefined;
+  serverId?: number | undefined;
+  roundId?: number | undefined;
+  currency?: string | undefined;
+  seatId?: string | undefined;
+  platformId: number;
+  tableId?: number | undefined;
+  timestamp: number;
+}
+
+export interface CallbackResponse {
+  success: boolean;
+  message: string;
+  data: { [key: string]: any } | undefined;
+}
+
+export interface XpressRequest {
+  clientId: number;
+  action: string;
+  token?: string | undefined;
+  gameId: string;
+  clientPlatform: string;
+  clientIp: string;
+  timestamp: string;
+  requestId: string;
+  siteId: string;
+  fingerprint: string;
+  sessionId?: string | undefined;
+  currency?: string | undefined;
+  group?: string | undefined;
+  playerId?: string | undefined;
+  gameCycle?: string | undefined;
+  transactionId?: string | undefined;
+  transactionAmount?: number | undefined;
+  transactionCategory?: string | undefined;
+  gameCycleClosed?: boolean | undefined;
+  transactionType?: string | undefined;
+}
+
+export interface XpressResponse {
+  status: boolean;
+  code: number;
+  message: string;
+  data?: XpressData | undefined;
+}
+
+export interface XpressData {
+  playerId: string;
+  currency: string;
+  balance: number;
+  sessionId: string;
+  group: string;
+  timestamp: string;
+  requestId: string;
+  fingerprint: string;
+  playerNickname?: string | undefined;
+  oldBalance?: number | undefined;
+  gameCycle?: string | undefined;
+  transactionId?: string | undefined;
+  transactionAmount?: number | undefined;
+  transactionCategory?: string | undefined;
+  transactionType?: string | undefined;
+}
+
 export const GAMING_PACKAGE_NAME = "gaming";
+
+wrappers[".google.protobuf.Struct"] = { fromObject: Struct.wrap, toObject: Struct.unwrap } as any;
 
 export interface GamingServiceClient {
   createGame(request: CreateGameDto): Observable<Game>;
@@ -101,9 +304,33 @@ export interface GamingServiceClient {
 
   removeGame(request: UpdateGameDto): Observable<Game>;
 
+  createProvider(request: CreateProviderDto): Observable<Provider>;
+
+  updateProvider(request: CreateProviderDto): Observable<Provider>;
+
+  findOneProvider(request: FindOneGameDto): Observable<Provider>;
+
+  removeProvider(request: CreateProviderDto): Observable<Provider>;
+
+  findAllProviders(request: Empty): Observable<Providers>;
+
   startGame(request: StartGameDto): Observable<StartGameResponse>;
 
   queryGames(request: Observable<PaginationDto>): Observable<Games>;
+
+  handleCallback(request: CallbackGameDto): Observable<CallbackResponse>;
+
+  xpressLogin(request: XpressRequest): Observable<XpressResponse>;
+
+  xpressBalance(request: XpressRequest): Observable<XpressResponse>;
+
+  xpressDebit(request: XpressRequest): Observable<XpressResponse>;
+
+  xpressCredit(request: XpressRequest): Observable<XpressResponse>;
+
+  xpressRollback(request: XpressRequest): Observable<XpressResponse>;
+
+  xpressLogout(request: XpressRequest): Observable<XpressResponse>;
 }
 
 export interface GamingServiceController {
@@ -119,9 +346,33 @@ export interface GamingServiceController {
 
   removeGame(request: UpdateGameDto): Promise<Game> | Observable<Game> | Game;
 
+  createProvider(request: CreateProviderDto): Promise<Provider> | Observable<Provider> | Provider;
+
+  updateProvider(request: CreateProviderDto): Promise<Provider> | Observable<Provider> | Provider;
+
+  findOneProvider(request: FindOneGameDto): Promise<Provider> | Observable<Provider> | Provider;
+
+  removeProvider(request: CreateProviderDto): Promise<Provider> | Observable<Provider> | Provider;
+
+  findAllProviders(request: Empty): Promise<Providers> | Observable<Providers> | Providers;
+
   startGame(request: StartGameDto): Promise<StartGameResponse> | Observable<StartGameResponse> | StartGameResponse;
 
   queryGames(request: Observable<PaginationDto>): Observable<Games>;
+
+  handleCallback(request: CallbackGameDto): Promise<CallbackResponse> | Observable<CallbackResponse> | CallbackResponse;
+
+  xpressLogin(request: XpressRequest): Promise<XpressResponse> | Observable<XpressResponse> | XpressResponse;
+
+  xpressBalance(request: XpressRequest): Promise<XpressResponse> | Observable<XpressResponse> | XpressResponse;
+
+  xpressDebit(request: XpressRequest): Promise<XpressResponse> | Observable<XpressResponse> | XpressResponse;
+
+  xpressCredit(request: XpressRequest): Promise<XpressResponse> | Observable<XpressResponse> | XpressResponse;
+
+  xpressRollback(request: XpressRequest): Promise<XpressResponse> | Observable<XpressResponse> | XpressResponse;
+
+  xpressLogout(request: XpressRequest): Promise<XpressResponse> | Observable<XpressResponse> | XpressResponse;
 }
 
 export function GamingServiceControllerMethods() {
@@ -133,7 +384,19 @@ export function GamingServiceControllerMethods() {
       "findOneGame",
       "updateGame",
       "removeGame",
+      "createProvider",
+      "updateProvider",
+      "findOneProvider",
+      "removeProvider",
+      "findAllProviders",
       "startGame",
+      "handleCallback",
+      "xpressLogin",
+      "xpressBalance",
+      "xpressDebit",
+      "xpressCredit",
+      "xpressRollback",
+      "xpressLogout",
     ];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);

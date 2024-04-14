@@ -3,6 +3,8 @@ import { GamingController } from './gaming.controller';
 import { GamingService } from './gaming.service';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { GAMING_PACKAGE_NAME, protobufPackage } from './gaming.pb';
+import { join } from 'path';
+import { VirtualController } from './virtual.controller';
 
 @Module({
   imports: [
@@ -11,13 +13,15 @@ import { GAMING_PACKAGE_NAME, protobufPackage } from './gaming.pb';
         name: protobufPackage,
         transport: Transport.GRPC,
         options: {
+          url: process.env.GAMING_SERVICE_URL,
           package: GAMING_PACKAGE_NAME,
-          protoPath: 'proto/gaming.proto',
+          protoPath: join('node_modules/sbe-service-proto/proto/gaming.proto'),
         },
       },
     ]),
   ],
-  controllers: [GamingController],
+  controllers: [GamingController, VirtualController],
   providers: [GamingService],
+  exports: [GamingService],
 })
 export class GamingModule {}

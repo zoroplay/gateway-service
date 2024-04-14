@@ -1,4 +1,13 @@
-import { Body, Controller, Get, Post, Patch, Param, Ip, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Patch,
+  Param,
+  Ip,
+  Query,
+} from '@nestjs/common';
 import {
   ApiBody,
   ApiOkResponse,
@@ -15,7 +24,8 @@ import {
   SwaggerBetHistoryResponse,
   SwaggerFindBetResponse,
   SwaggerPlaceBet,
-  SwaggerPlaceBetResponse, SwaggerProbability,
+  SwaggerPlaceBetResponse,
+  SwaggerProbability,
   SwaggerSettings,
   SwaggerSettingsResponse,
   SwaggerUpdateBetRequest,
@@ -23,9 +33,7 @@ import {
 } from './dto';
 import {
   BetHistoryRequest,
-  BetHistoryResponse, BetID,
   GamingActivityRequest,
-  GamingActivityResponse,
   PlaceBetRequest,
   Settings,
   UpdateBetRequest,
@@ -110,29 +118,24 @@ export class BettingController {
   @ApiParam({ name: 'client_id', type: 'number' })
   @ApiBody({ type: SwaggerPlaceBet })
   @ApiOkResponse({ type: SwaggerPlaceBetResponse })
-  PlaceBet(
-    @Body() data,
-    @Param() param: any,
-    @Ip() ip: any
-    ) {
+  PlaceBet(@Body() data, @Param() param: any, @Ip() ip: any) {
     try {
-      data.clientId = param.client_id
+      data.clientId = param.client_id;
       data.ipAddress = ip;
       data.betType = data.bet_type;
       data.type = data.event_type
-      
+
+      // console.log(data);
       return this.bettingService.PlaceBet(data);
     } catch (error) {
       console.error(error);
     }
   }
 
-
   @Post('/update-bet/:client_id')
   @ApiOperation({
     summary: 'Update a bet request',
-    description:
-      'Update bet or bet selections status',
+    description: 'Update bet or bet selections status',
   })
   @ApiParam({ name: 'client_id', type: 'number' })
   @ApiBody({ type: SwaggerUpdateBetRequest })
@@ -140,37 +143,35 @@ export class BettingController {
   UpdateBet(
     @Body() data: UpdateBetRequest,
     @Param() param: any,
-    @Ip() ip: any
-    ) {
+    @Ip() ip: any,
+  ) {
     try {
-      data.clientId = param.client_id
+      data.clientId = param.client_id;
       return this.bettingService.UpdateBet(data);
     } catch (error) {
       console.error(error);
     }
   }
 
-
-  @Post('/book-bet/:client_id')
+  @Post('/find-coupon')
   @ApiOperation({
-    summary: 'Book a bet request',
+    summary: 'Find bet by betslip ID',
     description:
-      'Receives a booking request with all the required detailed, upon successful a booking code is turned',
+        'This endpoints retrieves a bet if found',
   })
-  @ApiParam({ name: 'client_id', type: 'number' })
-  @ApiBody({ type: SwaggerPlaceBet })
-  @ApiOkResponse({ type: SwaggerPlaceBetResponse })
-  BookBet(
-    @Body() data: PlaceBetRequest,
-    @Param() param: any,
-    @Ip() ip: any
-    ) {
+  @ApiOkResponse({ type: SwaggerFindBetResponse })
+  FindCoupon(
+    @Body() body: FindBetDTO,
+  ) {
+
     try {
-      data.clientId = param.client_id
-      data.ipAddress = ip;
-      return this.bettingService.BookBet(data);
+
+      return this.bettingService.GetCoupon(body);
+
     } catch (error) {
+
       console.error(error);
+
     }
   }
 
@@ -182,23 +183,18 @@ export class BettingController {
   })
   @ApiBody({ type: SwaggerBetHistoryRequest })
   @ApiOkResponse({ type: SwaggerBetHistoryResponse })
-  BetHistory(
-    @Query() query,
-    @Body() data: BetHistoryRequest
-  ) {
+  BetHistory(@Query() query, @Body() data: BetHistoryRequest) {
     try {
-      let rq = {
-        userId : data.userId,
-        clientId : data.clientId,
-        status : data.status,
-        from : data.from,
-        to : data.to,
+      const rq = {
+        userId: data.userId,
+        clientId: data.clientId,
+        status: data.status,
+        from: data.from,
+        to: data.to,
         page: query.page ? query.page : 1,
-        perPage : query.perPage ? query.perPage : 100,
-        betslipId: data.betslipId,
-        username: data.username
-      }
-      return this.bettingService.BetHistory(rq);
+        perPage: query.perPage ? query.perPage : 100,
+      };
+      return this.bettingService.BetHistory(data);
     } catch (error) {
       console.error(error);
     }
@@ -207,75 +203,36 @@ export class BettingController {
   @Get('/probability/:bet_id')
   @ApiOperation({
     summary: 'Get probability of the supplied betID',
-    description:
-        'This endpoints retrieve probability of the supplied betID',
+    description: 'This endpoints retrieve probability of the supplied betID',
   })
   @ApiParam({ name: 'bet_id', type: 'number' })
   @ApiOkResponse({ type: SwaggerProbability })
   GetProbabilityFromBetID(@Param() params: any) {
-
     try {
-
       return this.bettingService.getProbabilityFromBetId({
         betID: params.bet_id,
       });
-
     } catch (error) {
-
       console.error(error);
-
     }
-
-  }
-
-  @Get('/get-booking/:client_id')
-  @ApiOperation({
-    summary: 'Get booking code',
-    description:
-        'This endpoints retrieves a booked game for rebet',
-  })
-  @ApiParam({ name: 'client_id', type: 'number' })
-  @ApiQuery({ name: 'code', type: 'string' })
-  @ApiOkResponse({ type: SwaggerPlaceBetResponse })
-  GetBooking(
-    @Param() param: any,
-    @Query() query: any
-  ) {
-
-    try {
-
-      return this.bettingService.GetBooking({
-        code: query.code,
-        clientId: param.client_id
-      });
-
-    } catch (error) {
-
-      console.error(error);
-
-    }
-
   }
 
   @Post('/find-bet')
   @ApiOperation({
-    summary: 'Find bet by betslip ID',
-    description:
-        'This endpoints retrieves a bet if found',
+    summary: 'Get booking code',
+    description: 'This endpoints retrieves a booked game for rebet',
   })
-  @ApiOkResponse({ type: SwaggerFindBetResponse })
-  FindBet(
-    @Body() body: FindBetDTO,
-  ) {
-
+  @ApiParam({ name: 'client_id', type: 'number' })
+  @ApiQuery({ name: 'code', type: 'string' })
+  @ApiOkResponse({ type: SwaggerPlaceBetResponse })
+  GetBooking(@Param() param: any, @Query() query: any) {
     try {
-
-      return this.bettingService.findBetById(body);
-
+      return this.bettingService.GetCoupon({
+        betslipId: query.code,
+        clientId: param.client_id,
+      });
     } catch (error) {
-
       console.error(error);
-
     }
   }
 
@@ -301,5 +258,4 @@ export class BettingController {
 
     }
   }
-
 }

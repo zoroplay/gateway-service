@@ -47,7 +47,7 @@ export class BettingService implements OnModuleInit {
   }
 
   PlaceBet(data: PlaceBetRequest) {
-    console.log('place bet ');
+    console.log('place bet ', data.useBonus);
     return this.service.placeBet(data);
   }
 
@@ -56,14 +56,9 @@ export class BettingService implements OnModuleInit {
     return this.service.updateBet(data);
   }
 
-  BookBet(data: PlaceBetRequest) {
-    console.log('book bet ');
-    return this.service.bookBet(data);
-  }
-
-  GetBooking(data: BookingCode) {
-    console.log('get booking code ');
-    return this.service.getBooking(data);
+  GetCoupon(data: FindBetRequest) {
+    console.log('get booking code');
+    return this.service.getCoupon(data);
   }
 
   BetHistory(data: BetHistoryRequest) {
@@ -72,18 +67,12 @@ export class BettingService implements OnModuleInit {
   }
 
   getProbabilityFromBetId(data: BetID) {
-
     console.log('check probability from betID  ');
     return this.service.getProbabilityFromBetId(data);
   }
 
-  findBetById(data: FindBetRequest) {
-    return this.service.findBet(data);
-  }
-
   getGamingActivity(data: GamingActivityRequest) {
+    console.log('gaming activity ');
     return this.service.gamingActivity(data);
   }
-
-
 }

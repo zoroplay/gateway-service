@@ -3,6 +3,8 @@ import { BettingController } from './betting.controller';
 import { BettingService } from './betting.service';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { BETTING_PACKAGE_NAME, protobufPackage } from './betting.pb';
+import {join} from "path";
+import 'dotenv/config'
 
 @Module({
   imports: [
@@ -13,7 +15,7 @@ import { BETTING_PACKAGE_NAME, protobufPackage } from './betting.pb';
         options: {
           url: process.env.BETTING_SERVICE_URL,
           package: BETTING_PACKAGE_NAME,
-          protoPath: 'proto/betting.proto',
+          protoPath: join('node_modules/sbe-service-proto/proto/betting.proto'),
         },
       },
     ]),
@@ -21,6 +23,5 @@ import { BETTING_PACKAGE_NAME, protobufPackage } from './betting.pb';
   controllers: [BettingController],
   providers: [BettingService],
   exports: [BettingService],
-
 })
 export class BettingModule {}

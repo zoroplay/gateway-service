@@ -1,0 +1,281 @@
+syntax = "proto3";
+
+package retail;
+
+service RetailService {
+
+    // Bonus Groups
+    rpc getBonusGroups(Empty) returns (BonusGroupResponse) {}
+    rpc createBonusGroups(BonusGroups) returns (BonusGroupResponse) {}
+
+    // Profiles
+    rpc getCommissionProfiles(Meta) returns (CommissionProfilesResponse) {}
+    rpc createCommissionProfile(CommissionProfile) returns (CommissionProfileResponse) {}
+    rpc updateCommissionProfile(CommissionProfile) returns (CommissionProfileResponse) {}
+    rpc assignUserCommissionProfile(AssignUserCommissionProfile) returns (CommissionProfileResponse) {}
+    
+    //rpc getAllCommissions(ProfileId) returns (CommissionResponse) {}
+    // rpc getCommissionsReport(CommissionReportRequest) returns (CommissionReportResponse) {}
+    
+    rpc onBetPlaced(BetData) returns (Response) {}
+    rpc onBetSettled(BetData) returns (Response) {}
+    rpc onBetCancelled(BetData) returns (Response) {}
+
+    rpc createPowerBonus(PowerRequest) returns (PowerBonusResponse) {}
+    rpc getPowerBonus(PowerRequest) returns (PowerBonusResponse) {}
+    rpc payOutPowerBonus(PayPowerRequest) returns (PowerResponse) {}
+
+    rpc getNormalBonus(GetNormalRequest) returns (NormalResponse) {}
+    rpc calculateNormalBonus(PayNormalRequest) returns (PayNormalResponse) {}
+    rpc payOutNormalBonus(PayNormalRequest) returns (PayNormalResponse) {}
+}
+
+message Empty {
+
+}
+// Bonus
+message BonusGroup {
+    string group = 1;
+    double maxSel = 2;
+    double minSel = 3;
+    double rate = 4;
+    double rateIsLess = 5;
+    double rateIsMore = 6;
+    int32 targetCoupon = 7;
+    double targetStake = 8;
+    optional string createdAt = 9;
+    optional string updatedAt = 10;
+}
+
+message BonusGroups {
+    repeated BonusGroup bonusGroups = 1;
+}
+
+message BonusGroupResponse {
+    bool success = 1;
+    string message = 2;
+    repeated BonusGroup  data = 3;
+}
+
+// Commission Profile
+message CommissionProfile {
+    optional int32 id = 1;
+    string name = 2;
+    bool default = 3;
+    string description = 4;
+    string providerGroup = 5;
+    string period = 6;
+    string type = 7;
+    double percentage = 8;
+    int32 commissionType = 9;
+    repeated CommissionTurnover turnovers = 10;
+    optional string createdAt = 11;
+    optional string updatedAt = 12;
+}
+
+message CommissionProfileResponse {
+    bool success = 1;
+    string message = 2;
+    CommissionProfile  data = 3;
+}
+
+message CommissionProfilesResponse {
+    bool success = 1;
+    string message = 2;
+    repeated CommissionProfile  data = 3;
+    optional Meta meta = 4;
+}
+
+message AssignUserCommissionProfile {
+    int32 profileId = 1;
+    int32 userId = 2;
+    int32 clientId = 3;
+    optional string createdAt = 4;
+    optional string updatedAt = 5;
+}
+
+// Commissions
+
+
+// Power Bonus
+message PowerRequest {
+    repeated int32 userIds = 1;
+    int32 clientId = 2;
+    string fromDate = 3;
+    string toDate = 4;
+}
+
+message BetData {
+    optional int32 id = 1;
+    int32 betId = 2;
+    int32 userId = 3;
+    int32 clientId = 4;
+    int32 selectionCount = 5;
+    optional string cancelledDate = 6;
+    optional string settledDate = 7;
+    int32 stake = 8;
+    int32 commission = 9;
+    double winnings = 10;
+    double weightedStake = 11;
+    double odds = 12;
+    optional string createdAt = 13;
+    optional string updatedAt = 14;
+}
+
+message Response {
+    bool success = 1;
+    string message = 2;
+}
+
+message PowerBonusData {
+    optional int32 id = 1;
+    double totalStake = 2;
+    int32 totalTickets = 3;
+    double totalWeightedStake = 4;
+    double averageNoOfSelections = 5;
+    double grossProfit = 6;
+    double ggrPercent = 7;
+    double rateIsLess = 8;
+    double rateIsMore = 9;
+    double rate = 10;
+    double turnoverCommission = 11;
+    double monthlyBonus = 12;
+    double totalWinnings = 13;
+    repeated BetData bets = 14;
+    optional string createdAt = 15;
+    optional string updatedAt = 16;
+}
+
+message PayPowerRequest {
+    int32 clientId = 1;
+    repeated int32 userIds = 2;
+    string fromDate = 3;
+    string toDate = 4;
+    string provider = 5;
+}
+message PowerCountData {
+    repeated string paidUsers = 1;
+    repeated string unPaidUsers = 2;
+    repeated string errors = 3;
+}
+message PowerResponse {
+    bool success = 1;
+    string message = 2;
+    PowerCountData data = 3;
+}
+
+message PowerBonusResponse {
+    bool success = 1;
+    string message = 2;
+    PowerBonusData data = 3;
+}
+
+// Normal Bonus
+message GetNormalRequest {
+    string fromDate = 1;
+    string toDate = 2;
+    string provider = 3;
+    optional Meta meta = 4;
+}
+
+message PayNormalRequest {
+    optional int32 id = 1;
+    int32 betId = 2;
+    int32 selectionsCount = 3;
+    double totalOdds = 4;
+    double stake = 5;
+    int32 clientId = 6;
+    int32 cashierId = 7;
+    optional int32 profileId = 8;
+    optional double commission = 9;
+    string profileGroup = 10;
+    optional bool isPaid = 11;
+}
+
+message CurrentWeekData {
+    int32 totalWeeks = 1;
+    int32 current_week= 2;
+    int32 no_of_tickets = 3;
+    int32 played = 4;
+    int32 won = 5;
+    int32 net = 6;
+    int32 commission = 7;
+}
+message CurrentMonth {
+    string month = 1;
+}
+
+message Meta {
+    optional int32 total = 1;
+    optional int32 totalPages = 2;
+    int32 currentPage = 3;
+    int32 itemsPerPage = 4;
+}
+
+message NormalResponse {
+    optional bool success = 1;
+    optional string message = 2;
+    repeated NormalPayout data = 3;
+    optional Meta meta = 4;
+}
+
+message PayNormalResponse {
+    bool success = 1;
+    string message = 2;
+    double data = 3;
+}
+
+message NormalPayout {
+    optional int32 id = 1;
+    int32 betId = 2;
+    int32 selectionsCount = 3;
+    double totalOdds = 4;
+    double stake = 5;
+    int32 userId = 6;
+    int32 clientId = 7;
+    int32 profileId = 8;
+    string profileGroup = 9;
+    double commission = 10;
+    bool isPaid = 11;
+    optional string createdAt = 12;
+    optional string updatedAt = 13;
+}
+
+
+// Commission Reequest
+message CommissionRequest {
+    string provider = 1;
+}
+
+message ArrayCommissionResponse {
+    repeated Commission commissions = 1;
+}
+
+message Commission {
+    optional int32 id = 1;
+    int32 userId = 2;
+    int32 clientId = 3;
+    int32 totalTickets = 4;
+    double totalSales = 5;
+    double totalWon = 6;
+    double net = 7;
+    double commission = 8;
+    string startDate = 9;
+    string endDate = 10;
+    bool isPaid = 11;
+    int32 userCommissionProfileId = 12;
+    optional string createdAt = 13;
+    optional string updatedAt = 14;
+}
+
+message CommissionTurnover {
+    optional int32 id = 1;
+    int32 event = 2;
+    optional CommissionProfile commissionProfile = 3;
+    double percentage = 4;
+    double maxOdd = 5;
+    double minOdd = 6;
+    bool oddSet = 7;
+    optional string createdAt = 8;
+    optional string updatedAt = 9;
+}

@@ -7,7 +7,7 @@ import {
   Inject,
 } from '@nestjs/common';
 import { Request } from 'express';
-import { ValidateResponse } from './auth.pb';
+import { ValidateResponse } from '../identity.pb';
 import { AuthService } from './auth.service';
 
 @Injectable()
@@ -31,11 +31,11 @@ export class AuthGuard implements CanActivate {
 
     const token: string = bearer[1];
 
-    const { status, userId }: ValidateResponse = await this.service.validate(
+    const { status, user }: ValidateResponse = await this.service.validate(
       token,
     );
 
-    req['user'] = userId;
+    req['user'] = user;
 
     if (status !== HttpStatus.OK) {
       throw new UnauthorizedException();
