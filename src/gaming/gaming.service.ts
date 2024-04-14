@@ -82,7 +82,7 @@ export class GamingService implements OnModuleInit {
   }
 
   async xpressBalance(data: XpressRequest) {
-    const res = firstValueFrom(this.service.xpressBalance(data));
+    const res = await firstValueFrom(this.service.xpressBalance(data));
     console.log('xpress balance', res);
     return res;
   }
