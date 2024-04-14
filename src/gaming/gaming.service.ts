@@ -85,37 +85,46 @@ export class GamingService implements OnModuleInit {
   async xpressBalance(data: XpressRequest): Promise<XpressResponse> {
     console.log('xpress balance');
     const res = await firstValueFrom(this.service.xpressBalance(data));
-    res.data.balance = parseFloat(res.data.balance.toFixed(2))
+    if (res.status)
+      res.data.balance = parseFloat(res.data.balance.toFixed(2));
+
     return res;
   }
 
   async xpressCredit(data: XpressRequest) {
     console.log('xpress credit');
     const res = await firstValueFrom(this.service.xpressCredit(data));
-    res.data.balance = parseFloat(res.data.balance.toFixed(2))
-    res.data.oldBalance = parseFloat(res.data.oldBalance.toFixed(2))
+    if(res.status){
+      res.data.balance = parseFloat(res.data.balance.toFixed(2))
+      res.data.oldBalance = parseFloat(res.data.oldBalance.toFixed(2))
+    }
     return res;
   }
 
   async xpressDebit(data: XpressRequest) {
     console.log('xpress debit');
     const res = await firstValueFrom(this.service.xpressDebit(data));
-    res.data.balance = parseFloat(res.data.balance.toFixed(2))
-    res.data.oldBalance = parseFloat(res.data.oldBalance.toFixed(2))
+    if (res.status){
+      res.data.balance = parseFloat(res.data.balance.toFixed(2))
+      res.data.oldBalance = parseFloat(res.data.oldBalance.toFixed(2));
+    }
     return res;  }
 
   async xpressRollback(data: XpressRequest) {
     const res = await firstValueFrom(this.service.xpressRollback(data));
     console.log('xpress rollback', res);
-    res.data.balance = parseFloat(res.data.balance.toFixed(2))
-    res.data.oldBalance = parseFloat(res.data.oldBalance.toFixed(2))
+    if (res.status) {
+      res.data.balance = parseFloat(res.data.balance.toFixed(2))
+      res.data.oldBalance = parseFloat(res.data.oldBalance.toFixed(2))
+    }
     return res;
   }
 
   async xpressLogout(data: XpressRequest) {
     console.log('xpress logout');
     const res = await firstValueFrom(this.service.xpressLogout(data));
-    res.data.balance = parseFloat(res.data.balance.toFixed(2))
+    if (res.status)
+      res.data.balance = parseFloat(res.data.balance.toFixed(2))
     return res;
   }
 }
