@@ -26,5 +26,6 @@ import 'dotenv/config';
   ],
   controllers: [AppController],
   providers: [AppService],
+  exports: [AppService]
 })
 export class AppModule {}

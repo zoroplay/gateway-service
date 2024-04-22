@@ -4,6 +4,24 @@ import { Observable } from "rxjs";
 
 export const protobufPackage = "identity";
 
+export interface GetSettingsRequest {
+  clientId: number;
+  category: string;
+}
+
+export interface SettingsRequest {
+  clientId: number;
+  inputs: string;
+  category?: string | undefined;
+  period?: string | undefined;
+}
+
+export interface UserRiskSettingsRequest {
+  userId: number;
+  inputs: string;
+  period: string;
+}
+
 export interface SaveSegmentRequest {
   clientId: number;
   userId: number;
@@ -658,6 +676,14 @@ export interface IdentityServiceClient {
   getStatesByCoutnry(request: GetStatesRequest): Observable<CommonResponse>;
 
   validateXpressSession(request: SessionRequest): Observable<CommonResponse>;
+
+  saveSettings(request: SettingsRequest): Observable<CommonResponse>;
+
+  saveRiskSettings(request: SettingsRequest): Observable<CommonResponse>;
+
+  saveUserRiskSettings(request: UserRiskSettingsRequest): Observable<CommonResponse>;
+
+  getSettings(request: GetSettingsRequest): Observable<CommonResponse>;
 }
 
 export interface IdentityServiceController {
@@ -792,6 +818,16 @@ export interface IdentityServiceController {
   getStatesByCoutnry(request: GetStatesRequest): Promise<CommonResponse> | Observable<CommonResponse> | CommonResponse;
 
   validateXpressSession(request: SessionRequest): Promise<CommonResponse> | Observable<CommonResponse> | CommonResponse;
+
+  saveSettings(request: SettingsRequest): Promise<CommonResponse> | Observable<CommonResponse> | CommonResponse;
+
+  saveRiskSettings(request: SettingsRequest): Promise<CommonResponse> | Observable<CommonResponse> | CommonResponse;
+
+  saveUserRiskSettings(
+    request: UserRiskSettingsRequest,
+  ): Promise<CommonResponse> | Observable<CommonResponse> | CommonResponse;
+
+  getSettings(request: GetSettingsRequest): Promise<CommonResponse> | Observable<CommonResponse> | CommonResponse;
 }
 
 export function IdentityServiceControllerMethods() {
@@ -841,6 +877,10 @@ export function IdentityServiceControllerMethods() {
       "getCountries",
       "getStatesByCoutnry",
       "validateXpressSession",
+      "saveSettings",
+      "saveRiskSettings",
+      "saveUserRiskSettings",
+      "getSettings",
     ];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);

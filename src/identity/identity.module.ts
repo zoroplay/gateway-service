@@ -9,6 +9,8 @@ import 'dotenv/config'
 import { RolesController } from './admin/roles.controller';
 import { PlayersController } from './admin/players.controller';
 import { WalletModule } from 'src/wallet/wallet.module';
+import { SettingsController } from './admin/settings.controller';
+import { AppService } from 'src/app.service';
 
 @Module({
   imports: [
@@ -25,8 +27,8 @@ import { WalletModule } from 'src/wallet/wallet.module';
       },
     ]),
   ],
-  controllers: [AuthController, PlayersController, UsersController, RolesController],
-  providers: [AuthService],
+  controllers: [AuthController, PlayersController, UsersController, RolesController, SettingsController],
+  providers: [AppService, AuthService],
   exports: [AuthService],
 })
 export class IdentityModule {}

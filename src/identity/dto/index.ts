@@ -103,6 +103,16 @@ export class SwaggerRegisterRequest {
     password: string;
   }
 
+  export class SwaggerSettingsRequest {
+    @ApiProperty({ description: 'SBE Client ID' })
+    clientId: number;
+    @ApiProperty({ description: 'Settings Category' })
+    category?: string;
+    @ApiProperty({ description: 'Period for betting parameters' })
+    period?: string;
+    
+  }
+
 
 
   export class SwaggerGetUserByUsernmae {
