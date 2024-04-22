@@ -4,6 +4,75 @@ import { Observable } from "rxjs";
 
 export const protobufPackage = "identity";
 
+export interface GetUserIdNameRequest {
+  username: string;
+}
+
+export interface GetUserIdNameResponse {
+  data: GetUserIdNameResponse_Users[];
+}
+
+export interface GetUserIdNameResponse_Users {
+  id: number;
+  username: string;
+}
+
+export interface AutoDisbursementRequest {
+  clientId: number;
+}
+
+export interface AutoDisbursementResponse {
+  autoDisbursement: number;
+  autoDisbursementMin: number;
+  autoDisbursementMax: number;
+  autoDisbursementCount: number;
+}
+
+export interface PlaceBetRequest {
+  selections: BetSelection[];
+  clientId: number;
+  userId?: number | undefined;
+  stake: number;
+  source: string;
+  ipAddress: string;
+  betType: string;
+  username?: string | undefined;
+  minBonus: number;
+  maxBonus: number;
+  minOdds: number;
+  totalOdds: number;
+  type: string;
+  isBooking: number;
+  bonusId?: number | undefined;
+  useBonus?: boolean | undefined;
+}
+
+export interface BetSelection {
+  eventName: string;
+  eventType: string;
+  eventId: number;
+  producerId: number;
+  marketId: number;
+  marketName: string;
+  specifier: string;
+  outcomeId: string;
+  outcomeName: string;
+  odds: number;
+  sportId: number;
+  sport: string;
+  tournament: string;
+  category: string;
+  matchId: number;
+  awayTeam: string;
+  homeTeam: string;
+  type: string;
+  fixed: boolean;
+  selectionId: string;
+  eventDate: string;
+  eventPrefix: string;
+  isBonus?: boolean | undefined;
+}
+
 export interface GetSettingsRequest {
   clientId: number;
   category: string;
@@ -684,6 +753,12 @@ export interface IdentityServiceClient {
   saveUserRiskSettings(request: UserRiskSettingsRequest): Observable<CommonResponse>;
 
   getSettings(request: GetSettingsRequest): Observable<CommonResponse>;
+
+  validateBet(request: PlaceBetRequest): Observable<CommonResponse>;
+
+  getAutoDisbursementSettings(request: AutoDisbursementRequest): Observable<AutoDisbursementResponse>;
+
+  getUserIdandName(request: GetUserIdNameRequest): Observable<GetUserIdNameResponse>;
 }
 
 export interface IdentityServiceController {
@@ -828,6 +903,16 @@ export interface IdentityServiceController {
   ): Promise<CommonResponse> | Observable<CommonResponse> | CommonResponse;
 
   getSettings(request: GetSettingsRequest): Promise<CommonResponse> | Observable<CommonResponse> | CommonResponse;
+
+  validateBet(request: PlaceBetRequest): Promise<CommonResponse> | Observable<CommonResponse> | CommonResponse;
+
+  getAutoDisbursementSettings(
+    request: AutoDisbursementRequest,
+  ): Promise<AutoDisbursementResponse> | Observable<AutoDisbursementResponse> | AutoDisbursementResponse;
+
+  getUserIdandName(
+    request: GetUserIdNameRequest,
+  ): Promise<GetUserIdNameResponse> | Observable<GetUserIdNameResponse> | GetUserIdNameResponse;
 }
 
 export function IdentityServiceControllerMethods() {
@@ -881,6 +966,9 @@ export function IdentityServiceControllerMethods() {
       "saveRiskSettings",
       "saveUserRiskSettings",
       "getSettings",
+      "validateBet",
+      "getAutoDisbursementSettings",
+      "getUserIdandName",
     ];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);

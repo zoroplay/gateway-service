@@ -1,5 +1,4 @@
 import {
-  BadRequestException,
   Body,
   Controller,
   Get,
@@ -38,7 +37,7 @@ import {
 import { SwaggerCommonResponse } from '../dto';
 import { SwaggerListTransactionResponse } from 'src/wallet/dto';
 import { WalletService } from 'src/wallet/wallet.service';
-import { SegmentFilterDTO } from 'src/identity/dto/create-player.dto';
+import { firstValueFrom } from 'rxjs';
 
 @ApiTags('BackOffice APIs')
 @Controller('admin/players')
@@ -156,5 +155,17 @@ export class PlayersController {
   async playerSegmentation(@Query() segmentFilteDto) {
     segmentFilteDto.page = segmentFilteDto.page || 1;
     return this.svc.fetchPlayerFilters(segmentFilteDto);
+  }
+
+  @Get('/get-select-dropdown')
+  @ApiOperation({
+    summary: 'Find users for select field',
+    description:
+      'This endpoint retrieves players id and username for select dropdown field',
+  })
+  @ApiQuery({ name: 'username', description: 'Search by username' })
+  async findPlayersByUsername(@Query('username') username: string ) {
+    const res =  await firstValueFrom(this.svc.getUserIdandName({username}));
+    return res.data;
   }
 }
