@@ -12,6 +12,7 @@ import {
   UpdateBetRequest,
   FindBetRequest,
   GamingActivityRequest,
+  GetVirtualBetsRequest,
 } from './betting.pb';
 import { ClientGrpc } from '@nestjs/microservices';
 
@@ -74,5 +75,10 @@ export class BettingService implements OnModuleInit {
   getGamingActivity(data: GamingActivityRequest) {
     console.log('gaming activity ');
     return this.service.gamingActivity(data);
+  }
+
+  getVirtualBets(data: GetVirtualBetsRequest) {
+    console.log('get virtual bets ');
+    return this.service.getVirtualBets(data);
   }
 }

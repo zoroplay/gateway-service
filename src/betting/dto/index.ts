@@ -218,6 +218,32 @@ export class SwaggerAllSettings {
 
 }
 
+export class SwaggerGetVirtualBets {
+
+  @ApiProperty({
+    description: 'start date',
+  })
+  from: string;
+
+
+  @ApiProperty({
+    description: 'end date',
+  })
+  to: string;
+
+  @ApiProperty({
+    description: 'virtual bet status',
+  })
+  betType?: number;
+
+
+  @ApiProperty({
+    description: 'filter by username',
+  })
+  username?: string;
+
+}
+
 export class SwaggerBetSlip {
   @ApiProperty({
     description: 'Fixture name',

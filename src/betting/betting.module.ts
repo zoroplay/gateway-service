@@ -5,6 +5,7 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
 import { BETTING_PACKAGE_NAME, protobufPackage } from './betting.pb';
 import {join} from "path";
 import 'dotenv/config'
+import { BettingAdminController } from './admin/betting-admin.controller';
 
 @Module({
   imports: [
@@ -20,7 +21,7 @@ import 'dotenv/config'
       },
     ]),
   ],
-  controllers: [BettingController],
+  controllers: [BettingController, BettingAdminController],
   providers: [BettingService],
   exports: [BettingService],
 })
