@@ -42,9 +42,18 @@ export class SwaggerRegisterRequest {
   }
   
   export class SwaggerUserDetailsRequest {
+    @ApiProperty({ description: 'Client ID' })
+    clientId?: string;
+
     @ApiProperty({ description: 'userID' })
-    userID!: string;
+    userId?: string;
   
+    @ApiProperty({ description: 'User Name' })
+    username?: string;
+
+    @ApiProperty({ description: 'Password' })
+    password?: string;
+
     @ApiProperty({ description: 'First Name' })
     firstName: string;
   
@@ -56,18 +65,30 @@ export class SwaggerRegisterRequest {
   
     @ApiProperty({ description: 'City' })
     city: string;
+
+    @ApiProperty({ description: 'State' })
+    state: string;
   
     @ApiProperty({ description: 'Country' })
     country: string;
   
     @ApiProperty({ description: 'Gender' })
     gender: string;
+
+    @ApiProperty({ description: 'Date of Birth' })
+    dateOfBirth: string;
   
     @ApiProperty({ description: 'Currency' })
     currency: string;
   
     @ApiProperty({ description: 'Phone' })
-    phone: string;
+    phoneNumber: string;
+
+    @ApiProperty({ description: 'Address' })
+    address: string;
+
+    @ApiProperty({ description: 'Language' })
+    language: string;
   
     @ApiProperty({ description: 'Role ID' })
     roleId: string;

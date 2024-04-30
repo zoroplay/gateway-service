@@ -11,6 +11,7 @@ import { PlayersController } from './admin/players.controller';
 import { WalletModule } from 'src/wallet/wallet.module';
 import { SettingsController } from './admin/settings.controller';
 import { AppService } from 'src/app.service';
+import { RetailController } from './admin/retail.controller';
 
 @Module({
   imports: [
@@ -27,7 +28,7 @@ import { AppService } from 'src/app.service';
       },
     ]),
   ],
-  controllers: [AuthController, PlayersController, UsersController, RolesController, SettingsController],
+  controllers: [AuthController, PlayersController, RetailController, UsersController, RolesController, SettingsController],
   providers: [AppService, AuthService],
   exports: [AuthService],
 })

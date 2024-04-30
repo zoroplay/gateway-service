@@ -4,6 +4,14 @@ import { Observable } from "rxjs";
 
 export const protobufPackage = "identity";
 
+export interface GetAgentUsersRequest {
+  userId: number;
+  clientId: number;
+  username?: string | undefined;
+  roleId?: number | undefined;
+  state?: number | undefined;
+}
+
 export interface GetUserIdNameRequest {
   username: string;
 }
@@ -235,6 +243,8 @@ export interface CreateUserRequest {
   parent?: number | undefined;
   promoCode?: string | undefined;
   trackingToken?: string | undefined;
+  parentId?: number | undefined;
+  balance?: number | undefined;
 }
 
 export interface UpdateUserRequest {
@@ -258,6 +268,7 @@ export interface UpdateUserRequest {
   parent?: number | undefined;
   promoCode?: string | undefined;
   trackingToken?: string | undefined;
+  parentId?: string | undefined;
 }
 
 /** user */
@@ -759,6 +770,10 @@ export interface IdentityServiceClient {
   getAutoDisbursementSettings(request: AutoDisbursementRequest): Observable<AutoDisbursementResponse>;
 
   getUserIdandName(request: GetUserIdNameRequest): Observable<GetUserIdNameResponse>;
+
+  listAgentUsers(request: GetAgentUsersRequest): Observable<CommonResponse>;
+
+  listAgents(request: GetAgentUsersRequest): Observable<CommonResponse>;
 }
 
 export interface IdentityServiceController {
@@ -913,6 +928,10 @@ export interface IdentityServiceController {
   getUserIdandName(
     request: GetUserIdNameRequest,
   ): Promise<GetUserIdNameResponse> | Observable<GetUserIdNameResponse> | GetUserIdNameResponse;
+
+  listAgentUsers(request: GetAgentUsersRequest): Promise<CommonResponse> | Observable<CommonResponse> | CommonResponse;
+
+  listAgents(request: GetAgentUsersRequest): Promise<CommonResponse> | Observable<CommonResponse> | CommonResponse;
 }
 
 export function IdentityServiceControllerMethods() {
@@ -969,6 +988,8 @@ export function IdentityServiceControllerMethods() {
       "validateBet",
       "getAutoDisbursementSettings",
       "getUserIdandName",
+      "listAgentUsers",
+      "listAgents",
     ];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
