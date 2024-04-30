@@ -51,6 +51,7 @@ export class BettingService implements OnModuleInit {
   async PlaceBet(data: PlaceBetRequest) {
     console.log('place bet ', data.useBonus);
     const res = await firstValueFrom(this.service.placeBet(data));
+    console.log(res)
     return res;
   }
 
