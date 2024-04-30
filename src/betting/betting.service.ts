@@ -15,6 +15,7 @@ import {
   GetVirtualBetsRequest,
 } from './betting.pb';
 import { ClientGrpc } from '@nestjs/microservices';
+import { firstValueFrom } from 'rxjs';
 
 @Injectable()
 export class BettingService implements OnModuleInit {
@@ -47,9 +48,10 @@ export class BettingService implements OnModuleInit {
     return this.service.getAllSettings({});
   }
 
-  PlaceBet(data: PlaceBetRequest) {
+  async PlaceBet(data: PlaceBetRequest) {
     console.log('place bet ', data.useBonus);
-    return this.service.placeBet(data);
+    const res = await firstValueFrom(this.service.placeBet(data));
+    return res;
   }
 
   UpdateBet(data: UpdateBetRequest) {
