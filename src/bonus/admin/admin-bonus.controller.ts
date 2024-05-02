@@ -140,16 +140,24 @@ export class AdminBonusController {
     }
   }
 
-  @Patch('status/update')
+  @Get('status/update')
   @ApiOperation({
     summary: 'Activate or Deactivate client bonus type ',
     description: 'Use this endpoint to activate or deactivate a client bonus',
   })
-  @ApiBody({ type: SwaggerBonusStatusRequest })
+  @ApiQuery({ name: 'id', description: 'Bonus ID' })
+  @ApiQuery({ name: 'status', description: 'Bonus Status' })
   @ApiOkResponse({ type: SwaggerCreateBonusResponse })
-  UpdateBonusStatus(@Body() data: BonusStatusRequest) {
+  UpdateBonusStatus(
+    @Query('id') id: number,
+    @Query('status') status: number,
+  ) {
     try {
-      return this.bonusService.UpdateBonusStatus(data);
+      const payload = {
+        bonusId: id,
+        status
+      }
+      return this.bonusService.UpdateBonusStatus(payload);
     } catch (error) {
       console.error(error);
     }
@@ -213,11 +221,13 @@ export class AdminBonusController {
   @ApiParam({ name: 'id', description: 'Campaign id to be deleted' })
   @ApiQuery({ name: 'client_id', description: 'SBE client ID' })
   @ApiOkResponse({ type: SwaggerCreateBonusResponse })
-  DeleteCampaignBonus(@Query() query, @Param() param) {
+  DeleteCampaignBonus(
+    @Query('client_id') clientId: number, 
+    @Param('id') id: number) {
     try {
       const data = {
-        id: param.id,
-        clientId: query.client_id,
+        id,
+        clientId,
       };
       return this.bonusService.DeleteCampaignBonus(data);
     } catch (error) {

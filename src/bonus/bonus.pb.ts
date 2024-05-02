@@ -205,8 +205,7 @@ export interface HasBonusBetResponse {
 }
 
 export interface BonusStatusRequest {
-  clientId: number;
-  bonusType: string;
+  bonusId: number;
   status: number;
 }
 
@@ -226,10 +225,11 @@ export interface UpdateCampaignBonusDto {
   name: string;
   bonusCode: string;
   bonusId: number;
-  expiryDate: string;
+  startDate: string;
   id: number;
   affiliateIds?: string | undefined;
   trackierCampaignId?: string | undefined;
+  endDate: string;
 }
 
 export interface RedeemCampaignBonusDto {
@@ -244,7 +244,8 @@ export interface CampaignBonusData {
   name: string;
   bonusCode: string;
   bonus: CreateBonusRequest | undefined;
-  expiryDate: string;
+  startDate: string;
+  endDate: string;
 }
 
 export interface AllCampaignBonus {
