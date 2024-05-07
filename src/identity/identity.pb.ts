@@ -14,6 +14,7 @@ export interface GetAgentUsersRequest {
 
 export interface GetUserIdNameRequest {
   username: string;
+  clientId?: number | undefined;
 }
 
 export interface GetUserIdNameResponse {
@@ -774,6 +775,8 @@ export interface IdentityServiceClient {
   listAgentUsers(request: GetAgentUsersRequest): Observable<CommonResponse>;
 
   listAgents(request: GetAgentUsersRequest): Observable<CommonResponse>;
+
+  getUserRiskSettings(request: GetAgentUsersRequest): Observable<CommonResponse>;
 }
 
 export interface IdentityServiceController {
@@ -932,6 +935,10 @@ export interface IdentityServiceController {
   listAgentUsers(request: GetAgentUsersRequest): Promise<CommonResponse> | Observable<CommonResponse> | CommonResponse;
 
   listAgents(request: GetAgentUsersRequest): Promise<CommonResponse> | Observable<CommonResponse> | CommonResponse;
+
+  getUserRiskSettings(
+    request: GetAgentUsersRequest,
+  ): Promise<CommonResponse> | Observable<CommonResponse> | CommonResponse;
 }
 
 export function IdentityServiceControllerMethods() {
@@ -990,6 +997,7 @@ export function IdentityServiceControllerMethods() {
       "getUserIdandName",
       "listAgentUsers",
       "listAgents",
+      "getUserRiskSettings",
     ];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
