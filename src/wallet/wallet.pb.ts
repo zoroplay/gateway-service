@@ -4,6 +4,17 @@ import { Observable } from "rxjs";
 
 export const protobufPackage = "wallet";
 
+export interface GetUserAccountsResponse {
+  data: GetUserAccountsResponse_BankAccount[];
+}
+
+export interface GetUserAccountsResponse_BankAccount {
+  bankCode: string;
+  accountName: string;
+  accountNumber: string;
+  bankName: string;
+}
+
 export interface FetchBetRangeRequest {
   minAmount: number;
   maxAmount: number;
@@ -493,6 +504,8 @@ export interface WalletServiceClient {
   updateWithdrawal(request: UpdateWithdrawalRequest): Observable<UpdateWithdrawalResponse>;
 
   getPlayerWalletData(request: GetBalanceRequest): Observable<PlayerWalletData>;
+
+  getUserAccounts(request: GetBalanceRequest): Observable<GetUserAccountsResponse>;
 }
 
 export interface WalletServiceController {
@@ -583,6 +596,10 @@ export interface WalletServiceController {
   getPlayerWalletData(
     request: GetBalanceRequest,
   ): Promise<PlayerWalletData> | Observable<PlayerWalletData> | PlayerWalletData;
+
+  getUserAccounts(
+    request: GetBalanceRequest,
+  ): Promise<GetUserAccountsResponse> | Observable<GetUserAccountsResponse> | GetUserAccountsResponse;
 }
 
 export function WalletServiceControllerMethods() {
@@ -612,6 +629,7 @@ export function WalletServiceControllerMethods() {
       "userTransactions",
       "updateWithdrawal",
       "getPlayerWalletData",
+      "getUserAccounts",
     ];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);

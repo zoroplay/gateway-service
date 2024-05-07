@@ -26,15 +26,18 @@ export interface GetUserIdNameResponse_Users {
   username: string;
 }
 
-export interface AutoDisbursementRequest {
+export interface GetWithdrawalSettingsRequest {
   clientId: number;
+  userId?: number | undefined;
 }
 
-export interface AutoDisbursementResponse {
+export interface WithdrawalSettingsResponse {
   autoDisbursement: number;
   autoDisbursementMin: number;
   autoDisbursementMax: number;
   autoDisbursementCount: number;
+  minimumWithdrawal: number;
+  maximumWithdrawal: number;
 }
 
 export interface PlaceBetRequest {
@@ -768,7 +771,7 @@ export interface IdentityServiceClient {
 
   validateBet(request: PlaceBetRequest): Observable<CommonResponse>;
 
-  getAutoDisbursementSettings(request: AutoDisbursementRequest): Observable<AutoDisbursementResponse>;
+  getWithdrawalSettings(request: GetWithdrawalSettingsRequest): Observable<WithdrawalSettingsResponse>;
 
   getUserIdandName(request: GetUserIdNameRequest): Observable<GetUserIdNameResponse>;
 
@@ -924,9 +927,9 @@ export interface IdentityServiceController {
 
   validateBet(request: PlaceBetRequest): Promise<CommonResponse> | Observable<CommonResponse> | CommonResponse;
 
-  getAutoDisbursementSettings(
-    request: AutoDisbursementRequest,
-  ): Promise<AutoDisbursementResponse> | Observable<AutoDisbursementResponse> | AutoDisbursementResponse;
+  getWithdrawalSettings(
+    request: GetWithdrawalSettingsRequest,
+  ): Promise<WithdrawalSettingsResponse> | Observable<WithdrawalSettingsResponse> | WithdrawalSettingsResponse;
 
   getUserIdandName(
     request: GetUserIdNameRequest,
@@ -993,7 +996,7 @@ export function IdentityServiceControllerMethods() {
       "saveUserRiskSettings",
       "getSettings",
       "validateBet",
-      "getAutoDisbursementSettings",
+      "getWithdrawalSettings",
       "getUserIdandName",
       "listAgentUsers",
       "listAgents",

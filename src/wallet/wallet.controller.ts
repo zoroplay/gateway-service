@@ -1,6 +1,6 @@
-import { Body, Controller, Get, Inject, Post, Query, Req, UseGuards } from '@nestjs/common';
-import { ApiBody, ApiOkResponse, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
-import { InitiateDepositRequest, UserTransactionRequest, VerifyBankAccountRequest, VerifyDepositRequest, WALLET_SERVICE_NAME, WalletServiceClient, WithdrawRequest, protobufPackage } from './wallet.pb';
+import { Body, Controller, Get, Inject, Param, Post, Query, Req, UseGuards } from '@nestjs/common';
+import { ApiBody, ApiOkResponse, ApiOperation, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { GetBalanceRequest, InitiateDepositRequest, UserTransactionRequest, VerifyBankAccountRequest, VerifyDepositRequest, WALLET_SERVICE_NAME, WalletServiceClient, WithdrawRequest, protobufPackage } from './wallet.pb';
 import { SwaggerDepositReponse, SwaggerInitiateDepositRequest, SwaggerListTransactionResponse, SwaggerListTransactions, SwaggerVerifyBankAccountRequest, SwaggerVerifyDepositReponse, SwaggerWithdrawalRequest } from './dto';
 import { AuthGuard } from 'src/identity/auth/auth.guard';
 import { IAuthorizedRequest } from 'src/interfaces/authorized-request.interface';
@@ -137,5 +137,27 @@ export class WalletController {
     ) {
         body.userId = req.user.id;
         return this.walletService.getUserTransactions(body);
+    }
+
+    @UseGuards(AuthGuard)
+    @Get('/bank-accounts')
+    @ApiOperation({
+        summary: 'Get User Bank Accounts',
+        description: 'This endpoint fetches authenticated user saved bank accounts',
+    })
+    @ApiQuery({
+        name: 'client',
+        type: 'number',
+        description: 'SBE Client ID',
+    })
+    getUserAccounts(
+        @Query('clientId') clientId: number,
+        @Req() req: IAuthorizedRequest
+    ) {
+        const payload: GetBalanceRequest = {
+            userId: req.user.id,
+            clientId
+        }
+        return this.walletService.getBankAccounts(payload)
     }
 }
