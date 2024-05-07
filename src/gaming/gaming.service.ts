@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { Injectable, Inject, OnModuleInit } from '@nestjs/common';
 import {
   GAMING_SERVICE_NAME,
@@ -53,6 +54,7 @@ export class GamingService implements OnModuleInit {
   async sync(syncGameDto: SyncGameDto) {
     console.log('syncing games');
     const games = await firstValueFrom(this.service.syncGames(syncGameDto));
+    console.log(games, 6786);
     return {
       games,
     };
@@ -85,8 +87,7 @@ export class GamingService implements OnModuleInit {
   async xpressBalance(data: XpressRequest): Promise<XpressResponse> {
     console.log('xpress balance');
     const res = await firstValueFrom(this.service.xpressBalance(data));
-    if (res.status)
-      res.data.balance = parseFloat(res.data.balance.toFixed(2));
+    if (res.status) res.data.balance = parseFloat(res.data.balance.toFixed(2));
 
     return res;
   }
@@ -94,9 +95,9 @@ export class GamingService implements OnModuleInit {
   async xpressCredit(data: XpressRequest) {
     console.log('xpress credit');
     const res = await firstValueFrom(this.service.xpressCredit(data));
-    if(res.status){
-      res.data.balance = parseFloat(res.data.balance.toFixed(2))
-      res.data.oldBalance = parseFloat(res.data.oldBalance.toFixed(2))
+    if (res.status) {
+      res.data.balance = parseFloat(res.data.balance.toFixed(2));
+      res.data.oldBalance = parseFloat(res.data.oldBalance.toFixed(2));
     }
     return res;
   }
@@ -104,18 +105,19 @@ export class GamingService implements OnModuleInit {
   async xpressDebit(data: XpressRequest) {
     console.log('xpress debit');
     const res = await firstValueFrom(this.service.xpressDebit(data));
-    if (res.status){
-      res.data.balance = parseFloat(res.data.balance.toFixed(2))
+    if (res.status) {
+      res.data.balance = parseFloat(res.data.balance.toFixed(2));
       res.data.oldBalance = parseFloat(res.data.oldBalance.toFixed(2));
     }
-    return res;  }
+    return res;
+  }
 
   async xpressRollback(data: XpressRequest) {
     const res = await firstValueFrom(this.service.xpressRollback(data));
     console.log('xpress rollback', res);
     if (res.status) {
-      res.data.balance = parseFloat(res.data.balance.toFixed(2))
-      res.data.oldBalance = parseFloat(res.data.oldBalance.toFixed(2))
+      res.data.balance = parseFloat(res.data.balance.toFixed(2));
+      res.data.oldBalance = parseFloat(res.data.oldBalance.toFixed(2));
     }
     return res;
   }
@@ -123,8 +125,7 @@ export class GamingService implements OnModuleInit {
   async xpressLogout(data: XpressRequest) {
     console.log('xpress logout');
     const res = await firstValueFrom(this.service.xpressLogout(data));
-    if (res.status)
-      res.data.balance = parseFloat(res.data.balance.toFixed(2))
+    if (res.status) res.data.balance = parseFloat(res.data.balance.toFixed(2));
     return res;
   }
 }
