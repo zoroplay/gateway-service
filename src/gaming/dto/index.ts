@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { ApiProperty } from '@nestjs/swagger';
 
 export class SwaggerSyncGameDto {
@@ -244,3 +245,76 @@ export class SwaggerCreateGameDto {
   })
   providerId: number;
 }
+
+// export class SwaggerClientDto {
+//   @ApiProperty({
+//     description: 'client_external_key',
+//     example: '3832u-9w4u-8902ehd',
+//   })
+//   client_external_key: string;
+//   @ApiProperty({
+//     description: 'username',
+//     example: 'James',
+//   })
+//   username: string;
+//   @ApiProperty({
+//     description: 'currency_code',
+//     example: 'NGN',
+//   })
+//   currency_code: string;
+// }
+// export class SwaggerGiftDto {
+//   @ApiProperty({
+//     description: 'GameName',
+//     example: 'smart_soft',
+//   })
+//   game_name: string;
+//   @ApiProperty({
+//     description: 'BetLevel',
+//     example: 'James',
+//   })
+//   bet_level: number;
+//   @ApiProperty({
+//     description: 'Quantity',
+//     example: '45',
+//   })
+//   quantity: number;
+//   @ApiProperty({
+//     description: 'ActivationDate',
+//     example: 'ISO date time',
+//   })
+//   activation_date: string;
+//   @ApiProperty({
+//     description: 'ExpirationDate',
+//     example: 'ISO date time',
+//   })
+//   expiration_date: string;
+//   @ApiProperty({
+//     description: 'ActivationDate',
+//     example: 'ISO date time',
+//   })
+//   gift_key: string;
+//   @ApiProperty({
+//     description: 'Lines',
+//     example: 'ISO date time',
+//   })
+//   lines: number;
+// }
+
+// export class SwaggerGiftSpinDto {
+//   @ApiProperty({
+//     description: 'Client object',
+//     example: 'Viking',
+//   })
+//   Client: SwaggerClientDto;
+//   @ApiProperty({
+//     description: 'List Of Gifts objects',
+//     example: 'Viking',
+//   })
+//   Gifts: SwaggerGiftDto[];
+//   @ApiProperty({
+//     description: 'PortalName',
+//     example: 'Viking-XGames',
+//   })
+//   Portalname: string;
+// }
