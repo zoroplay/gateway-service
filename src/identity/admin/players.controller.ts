@@ -116,6 +116,7 @@ export class PlayersController {
   })
   @ApiParam({ name: 'id', description: 'Player ID', example: 3 })
   @ApiQuery({ name: 'clientId', description: 'SBE Client ID' })
+  @ApiQuery({ name: 'page', description: 'Transaction Pagination' })
   @ApiOkResponse({ type: SwaggerListTransactionResponse })
   listTransactions(@Query() query: any, @Param() param: any) {
     const payload = {
@@ -123,6 +124,7 @@ export class PlayersController {
       clientId: query.clientId,
       startDate: '',
       endDate: '',
+      page: query.page || 1
     };
     return this.walletService.getUserTransactions(payload);
   }
