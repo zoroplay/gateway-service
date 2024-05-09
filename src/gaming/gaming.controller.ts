@@ -49,7 +49,7 @@ export class GamingController {
   findAll(@Res() res: Response) {
     try {
       const resp = this.gamingService.findAll();
-      return resp;
+      return res.json(resp);
     } catch (error) {
       console.error(error);
       return res
@@ -76,7 +76,7 @@ export class GamingController {
   findAllProvider(@Res() res: Response) {
     try {
       const resp = this.gamingService.findAllProvider();
-      return resp;
+      return res.json(resp);
     } catch (error) {
       console.error(error);
       return res
@@ -104,7 +104,7 @@ export class GamingController {
   syncGames(@Body() syncGameDto: SyncGameDto, @Res() res: Response) {
     try {
       const resp = this.gamingService.sync(syncGameDto);
-      return resp;
+      return res.json(resp);
     } catch (error) {
       console.error(error);
       return res
@@ -126,7 +126,7 @@ export class GamingController {
     try {
       const resp = this.gamingService.startGame(startGameDto);
 
-      return resp;
+      return res.json(resp);
     } catch (error) {
       console.error(error);
       return res
@@ -173,7 +173,7 @@ export class GamingController {
           })
           .json(response);
       }
-      return response;
+      return res.json(response);
     } catch (error) {
       console.error(error);
       return res
@@ -224,7 +224,7 @@ export class GamingController {
           })
           .json(response);
       }
-      return response;
+      return res.json(response);
     } catch (error) {
       console.error(error);
       return res
@@ -252,11 +252,11 @@ export class GamingController {
   @ApiBody({ type: SwaggerStartGameDto })
   async handleCallbackWithActionGet(
     @Req() request,
+    @Res() res: Response,
     @Param('action') action,
     @Param('provider_id') provider,
     @Headers() headers,
     @Body() data,
-    @Res() res: Response,
   ) {
     console.log({
       provider: provider,
@@ -273,6 +273,7 @@ export class GamingController {
         header: headers,
         body: data,
       });
+      console.log('response 001 ', response);
       if (response.success === false) {
         return res
           .set({
@@ -281,7 +282,8 @@ export class GamingController {
           })
           .json(response);
       }
-      return response;
+      console.log('response', response);
+      return res.json(response);
     } catch (error) {
       console.error(error);
       return res
@@ -323,6 +325,7 @@ export class GamingController {
         header: headers,
         body: data,
       });
+      console.log(response);
       if (response.success === false) {
         return res
           .set({
@@ -331,7 +334,7 @@ export class GamingController {
           })
           .json(response);
       }
-      return response;
+      return res.json(response);
     } catch (error) {
       console.error(error);
       return res
