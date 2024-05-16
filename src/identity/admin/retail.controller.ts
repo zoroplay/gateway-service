@@ -1,5 +1,5 @@
-import { Body, Controller, Get, Inject, Param, Post, Req } from '@nestjs/common';
-import { ApiBody, ApiOkResponse, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
+import { Body, Controller, Get, Inject, Param, Post, Query, Req } from '@nestjs/common';
+import { ApiBody, ApiOkResponse, ApiOperation, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { CreateUserRequest, GetAgentUsersRequest, IDENTITY_SERVICE_NAME, IdentityServiceClient, protobufPackage } from '../identity.pb';
 import { ClientGrpc } from '@nestjs/microservices';
 import { SwaggerCommonResponse, SwaggerUserDetailsRequest } from '../dto';
@@ -56,14 +56,16 @@ export class RetailController {
         description: 'This users for an agent',
     })
     @ApiParam({name: 'clientId', description: 'SBE Client ID'})
+    @ApiQuery({name: 'agentId', description: 'Agent ID'})
     @ApiOkResponse({ type: SwaggerCommonResponse })
     listAgentUsers(
         @Body() body: GetAgentUsersRequest,
         @Param('clientId') clientId: number,
+        @Query('agentId') agentId: number,
         @Req() req: IAuthorizedRequest,
     ) {
         body.clientId = clientId;
-        body.userId = req.user.id;
+        body.userId = agentId || req.user.id;
 
         return this.svc.listAgentUsers(body);
     }

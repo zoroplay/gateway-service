@@ -128,14 +128,21 @@ export class WalletController {
         description: 'SBE platform used to initiate the request',
         example: 'mobile'
     })
+    @ApiQuery({
+        name: 'limit',
+        type: 'number',
+        description: 'Page limit',
+        example: 'mobile'
+    })
     @ApiBody({ type: SwaggerListTransactions })
     @ApiOkResponse({ type: SwaggerListTransactionResponse })
     listTransactions(
         @Body() body: UserTransactionRequest,
-        @Query() query: any,
+        @Query('limit') limit: number,
         @Req() req: IAuthorizedRequest
     ) {
         body.userId = req.user.id;
+        body.limit = limit || 100;
         return this.walletService.getUserTransactions(body);
     }
 

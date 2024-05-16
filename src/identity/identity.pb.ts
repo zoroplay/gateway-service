@@ -5,11 +5,12 @@ import { Observable } from "rxjs";
 export const protobufPackage = "identity";
 
 export interface GetAgentUsersRequest {
-  userId: number;
   clientId: number;
+  userId?: number | undefined;
   username?: string | undefined;
   roleId?: number | undefined;
   state?: number | undefined;
+  page?: number | undefined;
 }
 
 export interface GetUserIdNameRequest {
@@ -668,6 +669,15 @@ export interface XpressLoginResponse_XpressData {
 }
 
 export interface EmptyRequest {
+}
+
+export interface MetaData {
+  page: number;
+  perPage: number;
+  total: number;
+  lastPage: number;
+  nextPage: number;
+  prevPage: number;
 }
 
 export const IDENTITY_PACKAGE_NAME = "identity";

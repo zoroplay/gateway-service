@@ -69,7 +69,7 @@ export class WalletService {
     }
 
     async getUserTransactions(data: UserTransactionRequest): Promise<UserTransactionResponse> {
-        console.log(data);
+        // console.log(data);
         return await firstValueFrom(this.svc.userTransactions(data));
     }
 
