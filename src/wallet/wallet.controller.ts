@@ -134,15 +134,24 @@ export class WalletController {
         description: 'Page limit',
         example: 'mobile'
     })
+    @ApiQuery({
+        name: 'page',
+        type: 'number',
+        description: 'Current Page',
+        example: 'mobile'
+    })
     @ApiBody({ type: SwaggerListTransactions })
     @ApiOkResponse({ type: SwaggerListTransactionResponse })
     listTransactions(
         @Body() body: UserTransactionRequest,
         @Query('limit') limit: number,
+        @Query('page') page: number,
         @Req() req: IAuthorizedRequest
     ) {
         body.userId = req.user.id;
         body.limit = limit || 100;
+        body.page = page || body.page;
+        
         return this.walletService.getUserTransactions(body);
     }
 

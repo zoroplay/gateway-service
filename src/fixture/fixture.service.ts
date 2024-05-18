@@ -84,6 +84,11 @@ export class FixtureService implements OnModuleInit {
     return this.service.getFixtures(data);
   }
 
+  GetRetailFixtures(data: GetFixturesRequest) {
+    console.log('Get Retail Fixtures');
+    return this.service.getRetailFixtures(data);
+  }
+
   GetFixtureWithOdds(matchID: number,timeoffset: number) {
 
     console.log('GetFixtureWithOdds ');
@@ -96,10 +101,8 @@ export class FixtureService implements OnModuleInit {
   }
 
   createOutcomeAlias(data: CreateOutcomeAliasRequest) {
-
     console.log('CreateOutcomeAlias ');
     return this.service.createOutcomeAlias(data);
-
   }
 
 
