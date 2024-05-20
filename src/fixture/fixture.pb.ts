@@ -214,6 +214,7 @@ export interface GetFixturesRequest {
   timeoffset: number;
   /** fetch fixtures of this categoryID if present */
   categoryID?: number | undefined;
+  specifier?: string | undefined;
 }
 
 export interface HighlightOutcomes {

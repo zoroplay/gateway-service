@@ -383,6 +383,7 @@ export class FixtureController {
         sportID: query.sportID ? query.sportID : 1,
         period: query.period ? query.period : 'all',
         timeoffset: query.timeoffset ? query.timeoffset : 0,
+        specifier: query.specifier || ''
       };
       return this.fixtureService.GetRetailFixtures(rq);
     } catch (error) {

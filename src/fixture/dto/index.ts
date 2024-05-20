@@ -193,6 +193,9 @@ export class SwaggerFixturesRequest {
 
   @ApiProperty({ description: 'GTM Time offset of the customer, default is 0, can either be a positive or negative integer' })
   timeoffset: number;
+
+  @ApiProperty({ description: 'Market specifier' })
+  specifier: string;
 }
 
 export class SwaggerTimeoffset {
