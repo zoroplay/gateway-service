@@ -6,6 +6,7 @@ import {
   CreateOutcomeAliasRequest, DefaultSportMarketDTO,
   DeleteMarketGroupRequest,
   DeleteSpecifierRequest,
+  FilterByMatchID,
   FIXTURE_SERVICE_NAME,
   FixtureServiceClient,
   GetFixturesRequest,
@@ -89,8 +90,11 @@ export class FixtureService implements OnModuleInit {
     return this.service.getRetailFixtures(data);
   }
 
-  GetFixtureWithOdds(matchID: number,timeoffset: number) {
+  GetRetailFixture(data: FilterByMatchID) {
+    return this.service.getRetailFixture(data);
+  }
 
+  GetFixtureWithOdds(matchID: number,timeoffset: number) {
     console.log('GetFixtureWithOdds ');
     return this.service.getFixtureWithOdds({matchID: matchID, timeoffset: timeoffset});
   }

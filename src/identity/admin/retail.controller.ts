@@ -67,6 +67,7 @@ export class RetailController {
         body.clientId = clientId;
         body.userId = agentId || req.user.id;
 
+        console.log(body);
         return this.svc.listAgentUsers(body);
     }
 

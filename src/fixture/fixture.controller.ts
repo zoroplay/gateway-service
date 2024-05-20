@@ -390,6 +390,35 @@ export class FixtureController {
     }
   }
 
+  @Get('/retail/fixture/:match_id')
+  @ApiOperation({
+    summary: 'Get all match odds ',
+    description:
+      'This endpoint gets odds for all the markets for the supplied matchID',
+  })
+  @ApiParam({
+    name: 'match_id',
+    type: 'number',
+    description: ' Unique ID of the match',
+  })
+  @ApiQuery({ type: SwaggerTimeoffset })
+  @ApiOkResponse({ type: SwaggerFixtureOdds })
+  GetRetailFixture(
+    @Param() params: any,
+    @Query() query: any
+  ) {
+    const timeoffset = query.timeoffset ? query.timeoffset : 0;
+
+    try {
+      return this.fixtureService.GetRetailFixture({
+        matchID: params.match_id,
+        timeoffset,
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   @Get('/get-fixtures-by-category/:category_id')
   @ApiOperation({
     summary: 'Get all upcoming fixtures by category ',

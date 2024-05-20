@@ -545,8 +545,6 @@ export interface FixtureServiceClient {
 
   getFixtures(request: GetFixturesRequest): Observable<GetFixturesResponse>;
 
-  getRetailFixtures(request: GetFixturesRequest): Observable<GetFixturesResponse>;
-
   /** GetLiveHighlights - This GRPC method retrieves the odds for a particular market (e.g 1x2, total, Double chance etc) for live games, the method provides a way to pass pagination parameters, this method will be used to load games in the front page of the site */
 
   getLiveHighlights(request: GetHighlightsRequest): Observable<GetHighlightsResponse>;
@@ -590,6 +588,14 @@ export interface FixtureServiceClient {
   getDefaultSportMarket(request: Empty): Observable<DefaultSportMarketsDTO>;
 
   addFavourites(request: AddFavouriteRequest): Observable<AddFavouriteResponse>;
+
+  /** GetHighlights - This GRPC method retrieves the odds for a particular market (e.g 1x2, total, Double chance etc) for games, the method provides a way to pass pagination parameters, this method will be used to load games in the front page of the site */
+
+  getRetailFixtures(request: GetFixturesRequest): Observable<GetFixturesResponse>;
+
+  /** Get Fixture Retail - Loads odds for all the markets of the supplied matchID */
+
+  getRetailFixture(request: FilterByMatchID): Observable<FixtureOdds>;
 }
 
 export interface FixtureServiceController {
@@ -638,10 +644,6 @@ export interface FixtureServiceController {
   /** GetHighlights - This GRPC method retrieves the odds for a particular market (e.g 1x2, total, Double chance etc) for games, the method provides a way to pass pagination parameters, this method will be used to load games in the front page of the site */
 
   getFixtures(
-    request: GetFixturesRequest,
-  ): Promise<GetFixturesResponse> | Observable<GetFixturesResponse> | GetFixturesResponse;
-
-  getRetailFixtures(
     request: GetFixturesRequest,
   ): Promise<GetFixturesResponse> | Observable<GetFixturesResponse> | GetFixturesResponse;
 
@@ -722,6 +724,16 @@ export interface FixtureServiceController {
   addFavourites(
     request: AddFavouriteRequest,
   ): Promise<AddFavouriteResponse> | Observable<AddFavouriteResponse> | AddFavouriteResponse;
+
+  /** GetHighlights - This GRPC method retrieves the odds for a particular market (e.g 1x2, total, Double chance etc) for games, the method provides a way to pass pagination parameters, this method will be used to load games in the front page of the site */
+
+  getRetailFixtures(
+    request: GetFixturesRequest,
+  ): Promise<GetFixturesResponse> | Observable<GetFixturesResponse> | GetFixturesResponse;
+
+  /** Get Fixture Retail - Loads odds for all the markets of the supplied matchID */
+
+  getRetailFixture(request: FilterByMatchID): Promise<FixtureOdds> | Observable<FixtureOdds> | FixtureOdds;
 }
 
 export function FixtureServiceControllerMethods() {
@@ -736,7 +748,6 @@ export function FixtureServiceControllerMethods() {
       "getLiveGamesCount",
       "getHighlights",
       "getFixtures",
-      "getRetailFixtures",
       "getLiveHighlights",
       "getFixtureWithOdds",
       "updateMarketPriority",
@@ -756,6 +767,8 @@ export function FixtureServiceControllerMethods() {
       "deleteDefaultSportMarket",
       "getDefaultSportMarket",
       "addFavourites",
+      "getRetailFixtures",
+      "getRetailFixture",
     ];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
