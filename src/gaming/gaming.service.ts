@@ -67,7 +67,7 @@ export class GamingService implements OnModuleInit {
 
   async handleGamesCallback(request: CallbackGameDto) {
     console.log('service start');
-    console.log(request);
+    // console.log(request);
     const resp = await firstValueFrom(this.service.handleCallback(request));
     console.log(resp);
     if (resp.success) {
@@ -79,11 +79,12 @@ export class GamingService implements OnModuleInit {
     }
   }
 
+
   async xpressLogin(data: XpressRequest) {
     console.log('xpress login');
     return firstValueFrom(this.service.xpressLogin(data));
   }
-
+  
   async xpressBalance(data: XpressRequest): Promise<XpressResponse> {
     console.log('xpress balance');
     const res = await firstValueFrom(this.service.xpressBalance(data));

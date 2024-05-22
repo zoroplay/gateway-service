@@ -128,7 +128,6 @@ export class BettingController {
       data.ipAddress = ip;
       data.betType = data.bet_type;
       data.type = data.event_type;
-
       // console.log(data);
       return this.bettingService.PlaceBet(data);
     } catch (error) {

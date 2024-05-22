@@ -119,7 +119,7 @@ export class GamingController {
     }
   }
 
-  @Post('/start')
+  @Post('/:clientId/start')
   @ApiBody({ type: SwaggerStartGameDto })
   @ApiOkResponse({ type: SwaggerStartGameResponseDto })
   constructGameUrl(@Body() startGameDto: StartGameDto, @Res() res: Response) {
@@ -141,7 +141,7 @@ export class GamingController {
     }
   }
 
-  @Get('/:provider_id/callback')
+  @Get('/:clientId/:provider_id/callback')
   @ApiParam({ name: 'provider_id', type: 'string' })
   @ApiHeader({ name: 'X-Signature', description: 'Signature' })
   @ApiHeader({ name: 'X-SessionId', description: 'Session ID' })
@@ -154,6 +154,7 @@ export class GamingController {
   async handleCallbackGet(
     @Req() request,
     @Param('provider_id') provider,
+    @Param('clientId') clientId,
     @Headers() headers,
     @Body() data,
     @Res() res: Response,
@@ -164,6 +165,7 @@ export class GamingController {
         method: request.method,
         header: headers,
         body: data,
+        clientId,
       });
       if (response.success === false) {
         return res
@@ -188,8 +190,9 @@ export class GamingController {
     }
   }
 
-  @Post('/:provider_id/callback')
+  @Post('/:clientId/:provider_id/callback')
   @ApiParam({ name: 'provider_id', type: 'string' })
+  @ApiParam({ name: 'clientId', type: 'string' })
   @ApiHeader({ name: 'X-Signature', description: 'Signature' })
   @ApiHeader({ name: 'X-SessionId', description: 'Session ID' })
   @ApiHeader({ name: 'X-UserName', description: 'User Name' })
@@ -205,6 +208,7 @@ export class GamingController {
   async handleCallbackPost(
     @Req() request,
     @Param('provider_id') provider,
+    @Param('clientId') clientId,
     @Headers() headers,
     @Body() data,
     @Res() res: Response,
@@ -215,6 +219,7 @@ export class GamingController {
         method: request.method,
         header: headers,
         body: data,
+        clientId
       });
       if (response.success === false) {
         return res
@@ -239,8 +244,9 @@ export class GamingController {
     }
   }
 
-  @Get('/:provider_id/callback/:action')
+  @Get('/:clientId/:provider_id/callback/:action')
   @ApiParam({ name: 'provider_id', type: 'string' })
+  @ApiParam({ name: 'clientId', type: 'string' })
   @ApiParam({ name: 'action', type: 'string' })
   @ApiHeader({ name: 'X-Signature', description: 'Signature' })
   @ApiHeader({ name: 'X-SessionId', description: 'Session ID' })
@@ -254,6 +260,7 @@ export class GamingController {
     @Req() request,
     @Param('action') action,
     @Param('provider_id') provider,
+    @Param('clientId') clientId,
     @Headers() headers,
     @Body() data,
     @Res() res: Response,
@@ -272,6 +279,7 @@ export class GamingController {
         method: request.method,
         header: headers,
         body: data,
+        clientId
       });
       if (response.success === false) {
         return res
@@ -296,7 +304,8 @@ export class GamingController {
     }
   }
 
-  @Post('/:provider_id/callback/:action')
+  @Post('/:clientId/:provider_id/callback/:action')
+  @ApiParam({ name: 'clientId', type: 'string' })
   @ApiParam({ name: 'provider_id', type: 'string' })
   @ApiParam({ name: 'action', type: 'string' })
   @ApiHeader({ name: 'X-Signature', description: 'Signature' })
@@ -311,6 +320,7 @@ export class GamingController {
     @Req() request,
     @Param('action') action,
     @Param('provider_id') provider,
+    @Param('clientId') clientId,
     @Headers() headers,
     @Body() data,
     @Res() res: Response,
@@ -322,6 +332,7 @@ export class GamingController {
         method: request.method,
         header: headers,
         body: data,
+        clientId
       });
       if (response.success === false) {
         return res
@@ -330,8 +341,9 @@ export class GamingController {
             'X-ErrorCode': `${HttpStatus.PROCESSING}`,
           })
           .json(response);
+      } else {
+        return res.json(response);
       }
-      return response;
     } catch (error) {
       console.error(error);
       return res
