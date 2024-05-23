@@ -9,35 +9,26 @@ import {
   Req,
   Res,
   HttpStatus,
+  Query,
 } from '@nestjs/common';
 import {
   ApiBody,
   ApiHeader,
   ApiOkResponse,
   ApiParam,
+  ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
 import { Response } from 'express';
 import { GamingService } from './gaming.service';
 import {
-  CallbackGameDto,
-  CreateGameDto,
-  CreateProviderDto,
   StartGameDto,
-  SyncGameDto,
 } from './gaming.pb';
 import {
-  SwaggerOKGameArrayResponse,
   SwaggerOKGameResponse,
-  SwaggerSyncGameDto,
-  SwaggerCreateGameDto,
-  SwaggerOKProviderArrayResponse,
-  SwaggerCreateProviderDto,
-  SwaggerOKProviderResponse,
   SwaggerStartGameDto,
   SwaggerStartGameResponseDto,
 } from './dto';
-import { HttpErrorByCode } from '@nestjs/common/utils/http-error-by-code.util';
 
 @ApiTags('Gaming APIs')
 @Controller('games')
@@ -46,99 +37,28 @@ export class GamingController {
 
   @Get()
   @ApiOkResponse({ type: [SwaggerOKGameResponse] })
-  findAll(@Res() res: Response) {
-    try {
-      const resp = this.gamingService.findAll();
-      return resp;
-    } catch (error) {
-      console.error(error);
-      return res
-        .set({
-          'X-ErrorMessage': error.message,
-          'X-ErrorCode': `${HttpStatus.INTERNAL_SERVER_ERROR}`,
-        })
-        .json({
-          message: error.message,
-          success: false,
-        });
+  @ApiQuery({name: 'categoryId', description: 'Gaming category ID'})
+  findAll(
+    @Query('categoryId') categoryId: number
+  ) {
+    const payload = {
+      categoryId
     }
+    return this.gamingService.fetchGames(payload);
   }
 
-  @Post()
-  @ApiBody({ type: SwaggerCreateGameDto })
-  @ApiOkResponse({ type: SwaggerOKGameResponse })
-  create(@Body() createGameDto: CreateGameDto) {
-    return this.gamingService.create(createGameDto);
+  @Get('categories')
+  @ApiOkResponse({ type: [SwaggerOKGameResponse] })
+  getCategories() {
+    return this.gamingService.listCategories();
   }
 
-  @Get('/provider')
-  @ApiOkResponse({ type: [SwaggerOKProviderArrayResponse] })
-  findAllProvider(@Res() res: Response) {
-    try {
-      const resp = this.gamingService.findAllProvider();
-      return resp;
-    } catch (error) {
-      console.error(error);
-      return res
-        .set({
-          'X-ErrorMessage': error.message,
-          'X-ErrorCode': `${HttpStatus.INTERNAL_SERVER_ERROR}`,
-        })
-        .json({
-          message: error.message,
-          success: false,
-        });
-    }
-  }
-
-  @Post('/provider')
-  @ApiBody({ type: SwaggerCreateProviderDto })
-  @ApiOkResponse({ type: SwaggerOKProviderResponse })
-  createProvider(@Body() createProviderDto: CreateProviderDto) {
-    return this.gamingService.createProvider(createProviderDto);
-  }
-
-  @Post('/sync')
-  @ApiBody({ type: SwaggerSyncGameDto })
-  @ApiOkResponse({ type: SwaggerOKGameArrayResponse })
-  syncGames(@Body() syncGameDto: SyncGameDto, @Res() res: Response) {
-    try {
-      const resp = this.gamingService.sync(syncGameDto);
-      return resp;
-    } catch (error) {
-      console.error(error);
-      return res
-        .set({
-          'X-ErrorMessage': error.message,
-          'X-ErrorCode': `${HttpStatus.INTERNAL_SERVER_ERROR}`,
-        })
-        .json({
-          message: error.message,
-          success: false,
-        });
-    }
-  }
 
   @Post('/:clientId/start')
   @ApiBody({ type: SwaggerStartGameDto })
   @ApiOkResponse({ type: SwaggerStartGameResponseDto })
-  constructGameUrl(@Body() startGameDto: StartGameDto, @Res() res: Response) {
-    try {
-      const resp = this.gamingService.startGame(startGameDto);
-
-      return resp;
-    } catch (error) {
-      console.error(error);
-      return res
-        .set({
-          'X-ErrorMessage': error.message,
-          'X-ErrorCode': `${HttpStatus.INTERNAL_SERVER_ERROR}`,
-        })
-        .json({
-          message: error.message,
-          success: false,
-        });
-    }
+  constructGameUrl(@Body() startGameDto: StartGameDto) {
+    return this.gamingService.startGame(startGameDto);
   }
 
   @Get('/:clientId/:provider_id/callback')
@@ -357,28 +277,4 @@ export class GamingController {
         });
     }
   }
-
-  // @Post('/:provider_id/gifts/:action')
-  // @ApiParam({ name: 'provider_id', type: 'string' })
-  // @ApiParam({ name: 'action', type: 'string' })
-  // @ApiHeader({ name: 'X-Signature', description: 'Signature' })
-  // @ApiBody({ type: SwaggerGiftSpinDto })
-  // async giftSpins(
-  //   @Param('provider_id') provider,
-  //   @Req() request,
-  //   @Param('action') action,
-  //   @Headers() headers,
-  //   @Body() data,
-  // ) {
-  //   try {
-  //     // return await this.gamingService.handleGamesCallback({
-  //     //   action: action,
-  //     //   method: request.method,
-  //     //   header: headers,
-  //     //   body: data,
-  //     // });
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // }
 }
