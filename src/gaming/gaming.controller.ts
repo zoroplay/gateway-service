@@ -95,7 +95,7 @@ export class GamingController {
           })
           .json(response);
       }
-      return response;
+      return res.json(response);
     } catch (error) {
       console.error(error);
       return res
@@ -149,7 +149,7 @@ export class GamingController {
           })
           .json(response);
       }
-      return response;
+      return res.json(response);
     } catch (error) {
       console.error(error);
       return res
@@ -185,13 +185,13 @@ export class GamingController {
     @Body() data,
     @Res() res: Response,
   ) {
-    console.log({
-      provider: provider,
-      action: action,
-      method: request.method,
-      header: headers,
-      body: data,
-    });
+    // console.log({
+    //   provider: provider,
+    //   action: action,
+    //   method: request.method,
+    //   header: headers,
+    //   body: data,
+    // });
     try {
       const response = await this.gamingService.handleGamesCallback({
         provider: provider,
@@ -209,7 +209,7 @@ export class GamingController {
           })
           .json(response);
       }
-      return response;
+      return res.json(response);
     } catch (error) {
       console.error(error);
       return res
