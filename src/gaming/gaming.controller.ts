@@ -104,7 +104,9 @@ export class GamingController {
   syncGames(@Body() syncGameDto: SyncGameDto, @Res() res: Response) {
     try {
       const resp = this.gamingService.sync(syncGameDto);
-      return resp;
+      console.log('resp', typeof resp);
+
+      return res.json(resp);
     } catch (error) {
       console.error(error);
       return res
@@ -122,11 +124,13 @@ export class GamingController {
   @Post('/:clientId/start')
   @ApiBody({ type: SwaggerStartGameDto })
   @ApiOkResponse({ type: SwaggerStartGameResponseDto })
-  constructGameUrl(@Body() startGameDto: StartGameDto, @Res() res: Response) {
+  async constructGameUrl(
+    @Body() startGameDto: StartGameDto,
+    @Res() res: Response,
+  ) {
     try {
-      const resp = this.gamingService.startGame(startGameDto);
-
-      return resp;
+      const resp = await this.gamingService.startGame(startGameDto);
+      return res.json(resp);
     } catch (error) {
       console.error(error);
       return res
@@ -175,7 +179,7 @@ export class GamingController {
           })
           .json(response);
       }
-      return response;
+      return res.json(response);
     } catch (error) {
       console.error(error);
       return res
@@ -219,7 +223,7 @@ export class GamingController {
         method: request.method,
         header: headers,
         body: data,
-        clientId
+        clientId,
       });
       if (response.success === false) {
         return res
@@ -229,7 +233,7 @@ export class GamingController {
           })
           .json(response);
       }
-      return response;
+      return res.json(response);
     } catch (error) {
       console.error(error);
       return res
@@ -279,7 +283,7 @@ export class GamingController {
         method: request.method,
         header: headers,
         body: data,
-        clientId
+        clientId,
       });
       if (response.success === false) {
         return res
@@ -332,7 +336,7 @@ export class GamingController {
         method: request.method,
         header: headers,
         body: data,
-        clientId
+        clientId,
       });
       if (response.success === false) {
         return res
