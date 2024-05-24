@@ -78,7 +78,7 @@ export class GamingService implements OnModuleInit {
 
   async handleGamesCallback(request: CallbackGameDto) {
     console.log('service start');
-    // console.log(request);
+    console.log(request);
     const resp = await firstValueFrom(this.service.handleCallback(request));
     console.log(resp);
     if (resp.success) {
