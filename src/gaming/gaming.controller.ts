@@ -10,6 +10,7 @@ import {
   Res,
   HttpStatus,
   Query,
+  RawBodyRequest,
 } from '@nestjs/common';
 import {
   ApiBody,
@@ -84,7 +85,7 @@ export class GamingController {
         provider: provider,
         method: request.method,
         header: headers,
-        body: data,
+        body: JSON.stringify(data),
         clientId,
       });
       if (response.success === false) {
@@ -138,7 +139,7 @@ export class GamingController {
         provider: provider,
         method: request.method,
         header: headers,
-        body: data,
+        body: JSON.stringify(data),
         clientId
       });
       if (response.success === false) {
@@ -198,7 +199,7 @@ export class GamingController {
         action: action,
         method: request.method,
         header: headers,
-        body: data,
+        body: Object.keys(data).length === 0 ? null : JSON.stringify(data),
         clientId
       });
       if (response.success === false) {
@@ -235,23 +236,26 @@ export class GamingController {
     name: 'X-ClientExternalKey',
     description: 'Client External Key',
   })
-  @ApiBody({ type: SwaggerStartGameDto })
+  // @ApiBody({ type: SwaggerStartGameDto })
   async handleCallbackWithActionPost(
-    @Req() request,
     @Param('action') action,
     @Param('provider_id') provider,
     @Param('clientId') clientId,
     @Headers() headers,
-    @Body() data,
+    @Req() req: RawBodyRequest<Request>,
     @Res() res: Response,
   ) {
+    const rawBody = req.rawBody;
+    let body = rawBody.toString().replace(/\r?\n|\r/g, "");
+    body = body.replace(/\s/g, "");
+
     try {
       const response = await this.gamingService.handleGamesCallback({
         provider: provider,
         action: action,
-        method: request.method,
+        method: req.method,
         header: headers,
-        body: data,
+        body,
         clientId
       });
       if (response.success === false) {
