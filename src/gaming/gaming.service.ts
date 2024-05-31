@@ -65,7 +65,7 @@ export class GamingService implements OnModuleInit {
   async sync(syncGameDto: SyncGameDto) {
     console.log('syncing games');
     const games = await firstValueFrom(this.service.syncGames(syncGameDto));
-    console.log(games, 6786);
+
     return {
       games,
     };
@@ -73,6 +73,7 @@ export class GamingService implements OnModuleInit {
 
   async startGame(request: StartGameDto) {
     const resp = await firstValueFrom(this.service.startGame(request));
+
     return resp;
   }
 
@@ -90,12 +91,11 @@ export class GamingService implements OnModuleInit {
     }
   }
 
-
   async xpressLogin(data: XpressRequest) {
     console.log('xpress login');
     return firstValueFrom(this.service.xpressLogin(data));
   }
-  
+
   async xpressBalance(data: XpressRequest): Promise<XpressResponse> {
     console.log('xpress balance');
     const res = await firstValueFrom(this.service.xpressBalance(data));
