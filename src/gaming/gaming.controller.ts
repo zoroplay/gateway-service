@@ -206,9 +206,9 @@ export class GamingController {
         return res
           .set({
             'X-ErrorMessage': response.message,
-            'X-ErrorCode': `${HttpStatus.PROCESSING}`,
+            'X-ErrorCode': `${response.status}`,
           })
-          .json(response);
+          .json(response).status(HttpStatus.OK);
       }
       return res.json(response);
     } catch (error) {
@@ -262,11 +262,11 @@ export class GamingController {
         return res
           .set({
             'X-ErrorMessage': response.message,
-            'X-ErrorCode': `${HttpStatus.PROCESSING}`,
+            'X-ErrorCode': `${response.status}`,
           })
-          .json(response);
+          .json(response).status(response.status);
       } else {
-        return res.json(response);
+        return res.json(response).status(response.status);
       }
     } catch (error) {
       console.error(error);
