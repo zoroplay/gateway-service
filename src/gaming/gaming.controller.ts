@@ -11,6 +11,7 @@ import {
   HttpStatus,
   Query,
   RawBodyRequest,
+  HttpCode,
 } from '@nestjs/common';
 import {
   ApiBody,
@@ -210,7 +211,7 @@ export class GamingController {
           })
           .json(response).status(HttpStatus.OK);
       }
-      return res.json(response);
+      return res.json(response).status(HttpStatus.OK);
     } catch (error) {
       console.error(error);
       return res
@@ -226,6 +227,7 @@ export class GamingController {
   }
 
   @Post('/:clientId/:provider_id/callback/:action')
+  @HttpCode(200)
   @ApiParam({ name: 'clientId', type: 'string' })
   @ApiParam({ name: 'provider_id', type: 'string' })
   @ApiParam({ name: 'action', type: 'string' })
@@ -264,9 +266,9 @@ export class GamingController {
             'X-ErrorMessage': response.message,
             'X-ErrorCode': `${response.status}`,
           })
-          .json(response).status(response.status);
+          .json(response).status(HttpStatus.OK);
       } else {
-        return res.json(response).status(response.status);
+        return res.json(response).status(HttpStatus.OK);
       }
     } catch (error) {
       console.error(error);
@@ -278,7 +280,7 @@ export class GamingController {
         .json({
           message: error.message,
           success: false,
-        });
+        }).status(HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 }
