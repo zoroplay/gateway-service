@@ -9,35 +9,27 @@ import {
   Req,
   Res,
   HttpStatus,
+  Query,
+  RawBodyRequest,
 } from '@nestjs/common';
 import {
   ApiBody,
   ApiHeader,
   ApiOkResponse,
   ApiParam,
+  ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
 import { Response } from 'express';
 import { GamingService } from './gaming.service';
 import {
-  CallbackGameDto,
-  CreateGameDto,
-  CreateProviderDto,
   StartGameDto,
-  SyncGameDto,
 } from './gaming.pb';
 import {
-  SwaggerOKGameArrayResponse,
   SwaggerOKGameResponse,
-  SwaggerSyncGameDto,
-  SwaggerCreateGameDto,
-  SwaggerOKProviderArrayResponse,
-  SwaggerCreateProviderDto,
-  SwaggerOKProviderResponse,
   SwaggerStartGameDto,
   SwaggerStartGameResponseDto,
 } from './dto';
-import { HttpErrorByCode } from '@nestjs/common/utils/http-error-by-code.util';
 
 @ApiTags('Gaming APIs')
 @Controller('games')
@@ -46,103 +38,28 @@ export class GamingController {
 
   @Get()
   @ApiOkResponse({ type: [SwaggerOKGameResponse] })
-  findAll(@Res() res: Response) {
-    try {
-      const resp = this.gamingService.findAll();
-      return resp;
-    } catch (error) {
-      console.error(error);
-      return res
-        .set({
-          'X-ErrorMessage': error.message,
-          'X-ErrorCode': `${HttpStatus.INTERNAL_SERVER_ERROR}`,
-        })
-        .json({
-          message: error.message,
-          success: false,
-        });
+  @ApiQuery({name: 'categoryId', description: 'Gaming category ID'})
+  findAll(
+    @Query('categoryId') categoryId: number
+  ) {
+    const payload = {
+      categoryId
     }
+    return this.gamingService.fetchGames(payload);
   }
 
-  @Post()
-  @ApiBody({ type: SwaggerCreateGameDto })
-  @ApiOkResponse({ type: SwaggerOKGameResponse })
-  create(@Body() createGameDto: CreateGameDto) {
-    return this.gamingService.create(createGameDto);
+  @Get('categories')
+  @ApiOkResponse({ type: [SwaggerOKGameResponse] })
+  getCategories() {
+    return this.gamingService.listCategories();
   }
 
-  @Get('/provider')
-  @ApiOkResponse({ type: [SwaggerOKProviderArrayResponse] })
-  findAllProvider(@Res() res: Response) {
-    try {
-      const resp = this.gamingService.findAllProvider();
-      return resp;
-    } catch (error) {
-      console.error(error);
-      return res
-        .set({
-          'X-ErrorMessage': error.message,
-          'X-ErrorCode': `${HttpStatus.INTERNAL_SERVER_ERROR}`,
-        })
-        .json({
-          message: error.message,
-          success: false,
-        });
-    }
-  }
-
-  @Post('/provider')
-  @ApiBody({ type: SwaggerCreateProviderDto })
-  @ApiOkResponse({ type: SwaggerOKProviderResponse })
-  createProvider(@Body() createProviderDto: CreateProviderDto) {
-    return this.gamingService.createProvider(createProviderDto);
-  }
-
-  @Post('/sync')
-  @ApiBody({ type: SwaggerSyncGameDto })
-  @ApiOkResponse({ type: SwaggerOKGameArrayResponse })
-  syncGames(@Body() syncGameDto: SyncGameDto, @Res() res: Response) {
-    try {
-      const resp = this.gamingService.sync(syncGameDto);
-      console.log('resp', typeof resp);
-
-      return res.json(resp);
-    } catch (error) {
-      console.error(error);
-      return res
-        .set({
-          'X-ErrorMessage': error.message,
-          'X-ErrorCode': `${HttpStatus.INTERNAL_SERVER_ERROR}`,
-        })
-        .json({
-          message: error.message,
-          success: false,
-        });
-    }
-  }
 
   @Post('/:clientId/start')
   @ApiBody({ type: SwaggerStartGameDto })
   @ApiOkResponse({ type: SwaggerStartGameResponseDto })
-  async constructGameUrl(
-    @Body() startGameDto: StartGameDto,
-    @Res() res: Response,
-  ) {
-    try {
-      const resp = await this.gamingService.startGame(startGameDto);
-      return res.json(resp);
-    } catch (error) {
-      console.error(error);
-      return res
-        .set({
-          'X-ErrorMessage': error.message,
-          'X-ErrorCode': `${HttpStatus.INTERNAL_SERVER_ERROR}`,
-        })
-        .json({
-          message: error.message,
-          success: false,
-        });
-    }
+  constructGameUrl(@Body() startGameDto: StartGameDto) {
+    return this.gamingService.startGame(startGameDto);
   }
 
   @Get('/:clientId/:provider_id/callback')
@@ -168,7 +85,7 @@ export class GamingController {
         provider: provider,
         method: request.method,
         header: headers,
-        body: data,
+        body: JSON.stringify(data),
         clientId,
       });
       if (response.success === false) {
@@ -222,8 +139,8 @@ export class GamingController {
         provider: provider,
         method: request.method,
         header: headers,
-        body: data,
-        clientId,
+        body: JSON.stringify(data),
+        clientId
       });
       if (response.success === false) {
         return res
@@ -269,31 +186,31 @@ export class GamingController {
     @Body() data,
     @Res() res: Response,
   ) {
-    console.log({
-      provider: provider,
-      action: action,
-      method: request.method,
-      header: headers,
-      body: data,
-    });
+    // console.log({
+    //   provider: provider,
+    //   action: action,
+    //   method: request.method,
+    //   header: headers,
+    //   body: data,
+    // });
     try {
       const response = await this.gamingService.handleGamesCallback({
         provider: provider,
         action: action,
         method: request.method,
         header: headers,
-        body: data,
-        clientId,
+        body: Object.keys(data).length === 0 ? null : JSON.stringify(data),
+        clientId
       });
       if (response.success === false) {
         return res
           .set({
             'X-ErrorMessage': response.message,
-            'X-ErrorCode': `${HttpStatus.PROCESSING}`,
+            'X-ErrorCode': `${response.status}`,
           })
-          .json(response);
+          .json(response).status(HttpStatus.OK);
       }
-      return response;
+      return res.json(response);
     } catch (error) {
       console.error(error);
       return res
@@ -319,34 +236,37 @@ export class GamingController {
     name: 'X-ClientExternalKey',
     description: 'Client External Key',
   })
-  @ApiBody({ type: SwaggerStartGameDto })
+  // @ApiBody({ type: SwaggerStartGameDto })
   async handleCallbackWithActionPost(
-    @Req() request,
     @Param('action') action,
     @Param('provider_id') provider,
     @Param('clientId') clientId,
     @Headers() headers,
-    @Body() data,
+    @Req() req: RawBodyRequest<Request>,
     @Res() res: Response,
   ) {
+    const rawBody = req.rawBody;
+    let body = rawBody.toString().replace(/\r?\n|\r/g, "");
+    body = body.replace(/\s/g, "");
+
     try {
       const response = await this.gamingService.handleGamesCallback({
         provider: provider,
         action: action,
-        method: request.method,
+        method: req.method,
         header: headers,
-        body: data,
-        clientId,
+        body,
+        clientId
       });
       if (response.success === false) {
         return res
           .set({
             'X-ErrorMessage': response.message,
-            'X-ErrorCode': `${HttpStatus.PROCESSING}`,
+            'X-ErrorCode': `${response.status}`,
           })
-          .json(response);
+          .json(response).status(response.status);
       } else {
-        return res.json(response);
+        return res.json(response).status(response.status);
       }
     } catch (error) {
       console.error(error);
@@ -361,28 +281,4 @@ export class GamingController {
         });
     }
   }
-
-  // @Post('/:provider_id/gifts/:action')
-  // @ApiParam({ name: 'provider_id', type: 'string' })
-  // @ApiParam({ name: 'action', type: 'string' })
-  // @ApiHeader({ name: 'X-Signature', description: 'Signature' })
-  // @ApiBody({ type: SwaggerGiftSpinDto })
-  // async giftSpins(
-  //   @Param('provider_id') provider,
-  //   @Req() request,
-  //   @Param('action') action,
-  //   @Headers() headers,
-  //   @Body() data,
-  // ) {
-  //   try {
-  //     // return await this.gamingService.handleGamesCallback({
-  //     //   action: action,
-  //     //   method: request.method,
-  //     //   header: headers,
-  //     //   body: data,
-  //     // });
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // }
 }

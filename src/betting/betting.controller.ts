@@ -22,6 +22,7 @@ import {
   SwaggerAllSettings,
   SwaggerBetHistoryRequest,
   SwaggerBetHistoryResponse,
+  SwaggerCashoutRequest,
   SwaggerFindBetResponse,
   SwaggerPlaceBet,
   SwaggerPlaceBetResponse,
@@ -35,9 +36,11 @@ import {
   BetHistoryRequest,
   GamingActivityRequest,
   PlaceBetRequest,
+  ProcessCashoutRequest,
   Settings,
   UpdateBetRequest,
 } from './betting.pb';
+import { SwaggerCommonResponse } from 'src/identity/dto';
 
 @ApiTags('Betting APIs')
 @Controller('bets')
@@ -260,5 +263,19 @@ export class BettingController {
       console.error(error);
 
     }
+  }
+
+  @Post('/cashout')
+  @ApiOperation({
+    summary: 'Process Cashout',
+    description:
+        'This endpoints process cashout request by user',
+  })
+  @ApiBody({ type: SwaggerCashoutRequest })
+  @ApiOkResponse({ type:  SwaggerCommonResponse})
+  CashoutRequest(
+    @Body() body: ProcessCashoutRequest,
+  ) {
+    return this.bettingService.cashoutRequest(body);
   }
 }

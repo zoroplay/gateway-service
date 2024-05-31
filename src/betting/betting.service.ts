@@ -13,6 +13,7 @@ import {
   FindBetRequest,
   GamingActivityRequest,
   GetVirtualBetsRequest,
+  ProcessCashoutRequest,
 } from './betting.pb';
 import { ClientGrpc } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
@@ -81,5 +82,10 @@ export class BettingService implements OnModuleInit {
   getVirtualBets(data: GetVirtualBetsRequest) {
     console.log('get virtual bets ');
     return this.service.getVirtualBets(data);
+  }
+
+  cashoutRequest(data: ProcessCashoutRequest) {
+    console.log('cashout request ');
+    return this.service.cashoutRequest(data);
   }
 }

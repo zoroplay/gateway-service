@@ -16,6 +16,7 @@ import {
   CreateProviderDto,
   XpressRequest,
   XpressResponse,
+  FetchGamesRequest,
 } from './gaming.pb';
 import { ClientGrpc } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
@@ -51,6 +52,16 @@ export class GamingService implements OnModuleInit {
     return firstValueFrom(this.service.findAllGames({}));
   }
 
+  async fetchGames(payload: FetchGamesRequest) {
+    console.log('fetch games');
+    return firstValueFrom(this.service.fetchGames(payload));
+  }
+
+  async listCategories() {
+    console.log('fetch categories');
+    return firstValueFrom(this.service.fetchCategories({}));
+  }
+
   async sync(syncGameDto: SyncGameDto) {
     console.log('syncing games');
     const games = await firstValueFrom(this.service.syncGames(syncGameDto));
@@ -68,7 +79,7 @@ export class GamingService implements OnModuleInit {
 
   async handleGamesCallback(request: CallbackGameDto) {
     console.log('service start');
-    // console.log(request);
+    console.log(request);
     const resp = await firstValueFrom(this.service.handleCallback(request));
     console.log(resp);
     if (resp.success) {

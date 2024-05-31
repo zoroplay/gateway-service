@@ -601,6 +601,18 @@ export class SwaggerProbability {
   selections: SwaggerProbabilityBetSlipSelection[];
 }
 
+export class SwaggerCashoutRequest {
+  @ApiProperty({
+    description: 'Betslip ID',
+  })
+  betId: number;
+
+  @ApiProperty({
+    description: 'Cashout Amount',
+  })
+  amount: number;
+}
+
 export class SwaggerUpdateBetRequest {
   @ApiProperty({
     description: 'Entity ID bet or bet selection ID',
