@@ -70,8 +70,10 @@ export class GamingService implements OnModuleInit {
       games,
     };
   }
+  
 
   async startGame(request: StartGameDto) {
+    // console.log('start game', request);
     const resp = await firstValueFrom(this.service.startGame(request));
 
     return resp;

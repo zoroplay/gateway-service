@@ -37,14 +37,16 @@ import {
 export class GamingController {
   constructor(private readonly gamingService: GamingService) {}
 
-  @Get()
+  @Get('/:clientId/list')
   @ApiOkResponse({ type: [SwaggerOKGameResponse] })
   @ApiQuery({name: 'categoryId', description: 'Gaming category ID'})
   findAll(
-    @Query('categoryId') categoryId: number
+    @Query('categoryId') categoryId: number,
+    @Param('clientId') clientId,
   ) {
     const payload = {
-      categoryId
+      categoryId,
+      clientId
     }
     return this.gamingService.fetchGames(payload);
   }
@@ -59,7 +61,12 @@ export class GamingController {
   @Post('/:clientId/start')
   @ApiBody({ type: SwaggerStartGameDto })
   @ApiOkResponse({ type: SwaggerStartGameResponseDto })
-  constructGameUrl(@Body() startGameDto: StartGameDto) {
+  @ApiParam({name: 'clientId', description: 'SBE CLient ID'})
+  constructGameUrl(
+    @Body() startGameDto: StartGameDto,
+    @Param('clientId') clientId,
+  ) {
+    startGameDto.clientId = parseInt(clientId);
     return this.gamingService.startGame(startGameDto);
   }
 
