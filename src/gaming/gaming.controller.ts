@@ -275,7 +275,7 @@ export class GamingController {
           .status(response.status)
           .send(response)
       } else {
-        return res.status(response.status).send(response);
+        return res.status(response.status).send(response.status);
       }
     } catch (error) {
       console.error(error);
