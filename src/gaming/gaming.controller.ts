@@ -234,7 +234,6 @@ export class GamingController {
   }
 
   @Post('/:clientId/:provider_id/callback/:action')
-  @HttpCode(200)
   @ApiParam({ name: 'clientId', type: 'string' })
   @ApiParam({ name: 'provider_id', type: 'string' })
   @ApiParam({ name: 'action', type: 'string' })
@@ -273,9 +272,10 @@ export class GamingController {
             'X-ErrorMessage': response.message,
             'X-ErrorCode': `${response.status}`,
           })
-          .json(response).status(HttpStatus.OK);
+          .status(response.status)
+          .send(response)
       } else {
-        return res.json(response).status(HttpStatus.OK);
+        return res.status(response.status).send(response);
       }
     } catch (error) {
       console.error(error);
@@ -284,10 +284,11 @@ export class GamingController {
           'X-ErrorMessage': error.message,
           'X-ErrorCode': `${HttpStatus.INTERNAL_SERVER_ERROR}`,
         })
-        .json({
+        .status(HttpStatus.INTERNAL_SERVER_ERROR)
+        .send({
           message: error.message,
           success: false,
-        }).status(HttpStatus.INTERNAL_SERVER_ERROR);
+        })
     }
   }
 }
