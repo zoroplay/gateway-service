@@ -70,7 +70,7 @@ export class GamingService implements OnModuleInit {
       games,
     };
   }
-  
+
 
   async startGame(request: StartGameDto) {
     // console.log('start game', request);
@@ -86,7 +86,7 @@ export class GamingService implements OnModuleInit {
     console.log(resp);
     if (resp.success) {
       console.log('service ended in success');
-      return resp.data;
+      return resp;
     } else {
       console.log('service ended in failure');
       return resp;

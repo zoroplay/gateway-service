@@ -218,7 +218,7 @@ export class GamingController {
           })
           .json(response).status(HttpStatus.OK);
       }
-      return res.json(response).status(HttpStatus.OK);
+      return res.json(response.data).status(HttpStatus.OK);
     } catch (error) {
       console.error(error);
       return res
@@ -275,7 +275,7 @@ export class GamingController {
           .status(response.status)
           .send(response)
       } else {
-        return res.status(response.status).send(response.status);
+        return res.status(response.status).send(response.data);
       }
     } catch (error) {
       console.error(error);
