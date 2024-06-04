@@ -80,17 +80,16 @@ export class GamingService implements OnModuleInit {
   }
 
   async handleGamesCallback(request: CallbackGameDto) {
-    console.log('service start');
-    console.log(request);
+    // console.log('service start');
+    // console.log(request);
     const resp = await firstValueFrom(this.service.handleCallback(request));
     console.log(resp);
     if (resp.success) {
       console.log('service ended in success');
-      return resp;
     } else {
       console.log('service ended in failure');
-      return resp;
     }
+    return resp;
   }
 
   async xpressLogin(data: XpressRequest) {

@@ -135,41 +135,34 @@ export class GamingController {
     description: 'Client External Key',
   })
   async handleCallbackPost(
-    @Req() request,
+    @Req() req: RawBodyRequest<Request>,
     @Param('provider_id') provider,
     @Param('clientId') clientId,
     @Headers() headers,
-    @Body() data,
-    @Res() res: Response,
+    @Body() body,
   ) {
+    // console.log(body);
+
     try {
-      const response = await this.gamingService.handleGamesCallback({
+      const res = await this.gamingService.handleGamesCallback({
         provider: provider,
-        method: request.method,
+        method: req.method,
         header: headers,
-        body: JSON.stringify(data),
+        body: JSON.stringify(body),
         clientId
-      });
-      if (response.success === false) {
-        return res
-          .set({
-            'X-ErrorMessage': response.message,
-            'X-ErrorCode': `${HttpStatus.PROCESSING}`,
-          })
-          .json(response);
-      }
-      return res.json(response);
+      })
+
+      return res.data;
+      
     } catch (error) {
-      console.error(error);
-      return res
-        .set({
-          'X-ErrorMessage': error.message,
-          'X-ErrorCode': `${HttpStatus.INTERNAL_SERVER_ERROR}`,
-        })
-        .json({
-          message: error.message,
-          success: false,
-        });
+      return {
+        status: "error", 
+        error: {
+          scope: "internal",
+          no_refund: "1",
+          message: "Internal server error"
+        }
+      }
     }
   }
 
