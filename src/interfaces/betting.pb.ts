@@ -105,6 +105,7 @@ export interface PlaceCasinoBetRequest {
   gameNumber?: string | undefined;
   source?: string | undefined;
   cashierTransactionId?: string | undefined;
+  username?: string | undefined;
 }
 
 export interface CreditCasinoBetRequest {
@@ -436,6 +437,8 @@ export interface BettingServiceClient {
 
   settleCasinoBet(request: SettleCasinoBetRequest): Observable<PlaceCasinoBetResponse>;
 
+  closeCasinoRound(request: SettleCasinoBetRequest): Observable<PlaceCasinoBetResponse>;
+
   settleVirtualBet(request: SettleVirtualBetRequest): Observable<SettleVirtualBetResponse>;
 
   cancelCasinoBet(request: RollbackCasinoBetRequest): Observable<PlaceCasinoBetResponse>;
@@ -481,6 +484,10 @@ export interface BettingServiceController {
   ): Promise<PlaceVirtualBetResponse> | Observable<PlaceVirtualBetResponse> | PlaceVirtualBetResponse;
 
   settleCasinoBet(
+    request: SettleCasinoBetRequest,
+  ): Promise<PlaceCasinoBetResponse> | Observable<PlaceCasinoBetResponse> | PlaceCasinoBetResponse;
+
+  closeCasinoRound(
     request: SettleCasinoBetRequest,
   ): Promise<PlaceCasinoBetResponse> | Observable<PlaceCasinoBetResponse> | PlaceCasinoBetResponse;
 
@@ -533,6 +540,7 @@ export function BettingServiceControllerMethods() {
       "placeCasinoBet",
       "placeVirtualBet",
       "settleCasinoBet",
+      "closeCasinoRound",
       "settleVirtualBet",
       "cancelCasinoBet",
       "betHistory",

@@ -21,10 +21,8 @@ import {
   SwaggerGetVirtualBets,
 } from '../dto';
 import {
-
   GetVirtualBetsRequest,
-
-} from '../betting.pb';
+} from 'src/interfaces/betting.pb';
 import { SwaggerCommonResponse } from 'src/identity/dto';
 
 @ApiTags('BackOffice APIs')

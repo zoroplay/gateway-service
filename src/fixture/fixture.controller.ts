@@ -1,12 +1,8 @@
 import {
-  Body,
   Controller,
-  Delete,
   Get,
   Logger,
   Param,
-  Post,
-  Put,
   Query,
 } from '@nestjs/common';
 import {
@@ -19,35 +15,18 @@ import {
 } from '@nestjs/swagger';
 import { FixtureService } from './fixture.service';
 import {
-  SwaggerAddSpecifierRequest,
   SwaggerAllMarketsResponse,
   SwaggerAllSportResponse,
   SwaggerAllTournamentResponse,
   SwaggerCountResponse,
-  SwaggerCreateMarketGroupRequest,
-  SwaggerCreateOutcomeAlias,
-  SwaggerCreateOutcomeAliasResponse,
-  SwaggerDefaultSportMarketDTO,
-  SwaggerDefaultSportMarketsDTO,
   SwaggerFixtureOdds,
   SwaggerFixturesRequest,
   SwaggerFixturesResponse,
   SwaggerHighlightsResponse,
-  SwaggerMarketGroupResponse,
-  SwaggerResponseString,
   SwaggerSportMenuRequest,
   SwaggerSportMenuResponse,
   SwaggerTimeoffset,
-  SwaggerUpdateMarketRequest,
 } from './dto';
-import {
-  AddFavouriteRequest,
-  AddSpecifierRequest,
-  CreateMarketGroupRequest,
-  CreateOutcomeAliasRequest,
-  DefaultSportMarketDTO,
-  UpdateMarketRequest,
-} from './fixture.pb';
 
 const logger = new Logger();
 

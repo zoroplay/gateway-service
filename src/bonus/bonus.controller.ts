@@ -26,7 +26,7 @@ import {
   GetCampaignRequest,
   GetUserBonusRequest,
   RedeemCampaignBonusDto,
-} from './bonus.pb';
+} from 'src/interfaces/bonus.pb';
 import {
   SwaggerAwardBonusRequest,
   SwaggerBonusStatusRequest,

@@ -25,7 +25,7 @@ import { Response } from 'express';
 import { GamingService } from './gaming.service';
 import {
   StartGameDto,
-} from './gaming.pb';
+} from 'src/interfaces/gaming.pb';
 import {
   SwaggerOKGameResponse,
   SwaggerStartGameDto,

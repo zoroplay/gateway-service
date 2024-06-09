@@ -14,7 +14,7 @@ import {
   GamingActivityRequest,
   GetVirtualBetsRequest,
   ProcessCashoutRequest,
-} from './betting.pb';
+} from 'src/interfaces/betting.pb';
 import { ClientGrpc } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
 

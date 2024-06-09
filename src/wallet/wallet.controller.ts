@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Inject, Param, Post, Query, Req, UseGuards } from '@nestjs/common';
 import { ApiBody, ApiOkResponse, ApiOperation, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
-import { GetBalanceRequest, InitiateDepositRequest, UserTransactionRequest, VerifyBankAccountRequest, VerifyDepositRequest, WALLET_SERVICE_NAME, WalletServiceClient, WithdrawRequest, protobufPackage } from './wallet.pb';
+import { GetBalanceRequest, InitiateDepositRequest, UserTransactionRequest, VerifyBankAccountRequest, VerifyDepositRequest, WALLET_SERVICE_NAME, WalletServiceClient, WithdrawRequest, protobufPackage } from '../interfaces/wallet.pb';
 import { SwaggerDepositReponse, SwaggerInitiateDepositRequest, SwaggerListTransactionResponse, SwaggerListTransactions, SwaggerVerifyBankAccountRequest, SwaggerVerifyDepositReponse, SwaggerWithdrawalRequest } from './dto';
 import { AuthGuard } from 'src/identity/auth/auth.guard';
 import { IAuthorizedRequest } from 'src/interfaces/authorized-request.interface';

@@ -23,7 +23,7 @@ import {
   SendOtpRequest,
   SendSmsRequest,
   VerifyOtpRequest,
-} from './noti.pb';
+} from 'src/interfaces/noti.pb';
 import {
   SwaggerSendOtpRequest,
   SwaggerSendSMSRequest,

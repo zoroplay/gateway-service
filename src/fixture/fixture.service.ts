@@ -14,7 +14,7 @@ import {
   GetSportMenuRequest,
   protobufPackage,
   UpdateMarketRequest,
-} from './fixture.pb';
+} from 'src/interfaces/fixture.pb';
 import {ClientGrpc} from '@nestjs/microservices';
 
 @Injectable()

@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { GamingController } from './gaming.controller';
 import { GamingService } from './gaming.service';
 import { ClientsModule, Transport } from '@nestjs/microservices';
-import { GAMING_PACKAGE_NAME, protobufPackage } from './gaming.pb';
+import { GAMING_PACKAGE_NAME, protobufPackage } from 'src/interfaces/gaming.pb';
 import { join } from 'path';
 import { VirtualController } from './virtual.controller';
 import { GamingAdminController } from './admin/gaming.admin.controller';

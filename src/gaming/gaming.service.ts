@@ -8,16 +8,11 @@ import {
   SyncGameDto,
   StartGameDto,
   CallbackGameDto,
-  EvoplayCallback,
-  EvolutionCallback,
-  TadaCallback,
-  ShackEvolutionCallback,
-  SmartSoftCallback,
   CreateProviderDto,
   XpressRequest,
   XpressResponse,
   FetchGamesRequest,
-} from './gaming.pb';
+} from 'src/interfaces/gaming.pb';
 import { ClientGrpc } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
 
@@ -96,6 +91,7 @@ export class GamingService implements OnModuleInit {
     console.log('xpress login');
     return firstValueFrom(this.service.xpressLogin(data));
   }
+
 
   async xpressBalance(data: XpressRequest): Promise<XpressResponse> {
     console.log('xpress balance');

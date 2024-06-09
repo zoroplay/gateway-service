@@ -1,6 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty } from 'class-validator';
-import { PlayerBonusData } from 'src/identity/identity.pb';
+import { PlayerBonusData } from 'src/interfaces/identity.pb';
 
 export class SwaggerPaymentMethodRequest {
   @ApiProperty({ description: 'Client ID of the operator' })

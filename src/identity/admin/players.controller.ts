@@ -24,7 +24,7 @@ import {
   SearchPlayerRequest,
   UpdatePlayerDataRequest,
   protobufPackage,
-} from '../identity.pb';
+} from 'src/interfaces/identity.pb';
 import { ClientGrpc } from '@nestjs/microservices';
 import {
   SwaggerAdminCommonResponse,

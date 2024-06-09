@@ -1,8 +1,67 @@
 /* eslint-disable */
 import { GrpcMethod, GrpcStreamMethod } from "@nestjs/microservices";
+import { wrappers } from "protobufjs";
 import { Observable } from "rxjs";
+import { Struct } from "./google/protobuf/struct.pb";
 
 export const protobufPackage = "retail";
+
+export interface ProcessRetailTransaction {
+  id: number;
+  clientId: number;
+  userId: number;
+  username: string;
+  amount: number;
+  withdrawalCharge: number;
+}
+
+export interface WalletTransferRequest {
+  clientId: number;
+  toUserId: number;
+  toUsername: string;
+  fromUsername: string;
+  fromUserId: number;
+  amount: number;
+  description?: string | undefined;
+  action: string;
+}
+
+export interface ValidateTransactionRequest {
+  clientId: number;
+  userId: number;
+  code: string;
+  userRole: string;
+}
+
+export interface GetAgentUserRequest {
+  clientId: number;
+  userId: number;
+}
+
+export interface GetAgentUsersRequest {
+  clientId: number;
+  userId?: number | undefined;
+  username?: string | undefined;
+  roleId?: number | undefined;
+  state?: number | undefined;
+  page?: number | undefined;
+}
+
+export interface CommonResponseArray {
+  status?: number | undefined;
+  success?: boolean | undefined;
+  message: string;
+  data: { [key: string]: any }[];
+  errors?: string | undefined;
+}
+
+export interface CommonResponseObj {
+  status?: number | undefined;
+  success?: boolean | undefined;
+  message: string;
+  data?: { [key: string]: any } | undefined;
+  errors?: string | undefined;
+}
 
 export interface Empty {
 }
@@ -251,115 +310,27 @@ export interface CommissionTurnover {
 
 export const RETAIL_PACKAGE_NAME = "retail";
 
+wrappers[".google.protobuf.Struct"] = { fromObject: Struct.wrap, toObject: Struct.unwrap } as any;
+
 export interface RetailServiceClient {
-  /** Bonus Groups */
-
-  getBonusGroups(request: Empty): Observable<BonusGroupResponse>;
-
-  createBonusGroups(request: BonusGroups): Observable<BonusGroupResponse>;
-
-  /** Profiles */
-
-  getCommissionProfiles(request: Meta): Observable<CommissionProfilesResponse>;
-
-  createCommissionProfile(request: CommissionProfile): Observable<CommissionProfileResponse>;
-
-  updateCommissionProfile(request: CommissionProfile): Observable<CommissionProfileResponse>;
-
-  assignUserCommissionProfile(request: AssignUserCommissionProfile): Observable<CommissionProfileResponse>;
-
   onBetPlaced(request: BetData): Observable<Response>;
 
   onBetSettled(request: BetData): Observable<Response>;
 
   onBetCancelled(request: BetData): Observable<Response>;
-
-  createPowerBonus(request: PowerRequest): Observable<PowerBonusResponse>;
-
-  getPowerBonus(request: PowerRequest): Observable<PowerBonusResponse>;
-
-  payOutPowerBonus(request: PayPowerRequest): Observable<PowerResponse>;
-
-  getNormalBonus(request: GetNormalRequest): Observable<NormalResponse>;
-
-  calculateNormalBonus(request: PayNormalRequest): Observable<PayNormalResponse>;
-
-  payOutNormalBonus(request: PayNormalRequest): Observable<PayNormalResponse>;
 }
 
 export interface RetailServiceController {
-  /** Bonus Groups */
-
-  getBonusGroups(request: Empty): Promise<BonusGroupResponse> | Observable<BonusGroupResponse> | BonusGroupResponse;
-
-  createBonusGroups(
-    request: BonusGroups,
-  ): Promise<BonusGroupResponse> | Observable<BonusGroupResponse> | BonusGroupResponse;
-
-  /** Profiles */
-
-  getCommissionProfiles(
-    request: Meta,
-  ): Promise<CommissionProfilesResponse> | Observable<CommissionProfilesResponse> | CommissionProfilesResponse;
-
-  createCommissionProfile(
-    request: CommissionProfile,
-  ): Promise<CommissionProfileResponse> | Observable<CommissionProfileResponse> | CommissionProfileResponse;
-
-  updateCommissionProfile(
-    request: CommissionProfile,
-  ): Promise<CommissionProfileResponse> | Observable<CommissionProfileResponse> | CommissionProfileResponse;
-
-  assignUserCommissionProfile(
-    request: AssignUserCommissionProfile,
-  ): Promise<CommissionProfileResponse> | Observable<CommissionProfileResponse> | CommissionProfileResponse;
-
   onBetPlaced(request: BetData): Promise<Response> | Observable<Response> | Response;
 
   onBetSettled(request: BetData): Promise<Response> | Observable<Response> | Response;
 
   onBetCancelled(request: BetData): Promise<Response> | Observable<Response> | Response;
-
-  createPowerBonus(
-    request: PowerRequest,
-  ): Promise<PowerBonusResponse> | Observable<PowerBonusResponse> | PowerBonusResponse;
-
-  getPowerBonus(
-    request: PowerRequest,
-  ): Promise<PowerBonusResponse> | Observable<PowerBonusResponse> | PowerBonusResponse;
-
-  payOutPowerBonus(request: PayPowerRequest): Promise<PowerResponse> | Observable<PowerResponse> | PowerResponse;
-
-  getNormalBonus(request: GetNormalRequest): Promise<NormalResponse> | Observable<NormalResponse> | NormalResponse;
-
-  calculateNormalBonus(
-    request: PayNormalRequest,
-  ): Promise<PayNormalResponse> | Observable<PayNormalResponse> | PayNormalResponse;
-
-  payOutNormalBonus(
-    request: PayNormalRequest,
-  ): Promise<PayNormalResponse> | Observable<PayNormalResponse> | PayNormalResponse;
 }
 
 export function RetailServiceControllerMethods() {
   return function (constructor: Function) {
-    const grpcMethods: string[] = [
-      "getBonusGroups",
-      "createBonusGroups",
-      "getCommissionProfiles",
-      "createCommissionProfile",
-      "updateCommissionProfile",
-      "assignUserCommissionProfile",
-      "onBetPlaced",
-      "onBetSettled",
-      "onBetCancelled",
-      "createPowerBonus",
-      "getPowerBonus",
-      "payOutPowerBonus",
-      "getNormalBonus",
-      "calculateNormalBonus",
-      "payOutNormalBonus",
-    ];
+    const grpcMethods: string[] = ["onBetPlaced", "onBetSettled", "onBetCancelled"];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
       GrpcMethod("RetailService", method)(constructor.prototype[method], method, descriptor);

@@ -39,7 +39,7 @@ import {
   ProcessCashoutRequest,
   Settings,
   UpdateBetRequest,
-} from './betting.pb';
+} from '../interfaces/betting.pb';
 import { SwaggerCommonResponse } from 'src/identity/dto';
 
 @ApiTags('Betting APIs')

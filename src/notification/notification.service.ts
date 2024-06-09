@@ -7,7 +7,7 @@ import {
   SaveSettingsRequest,
   SendOtpRequest,
   VerifyOtpRequest,
-} from './noti.pb';
+} from 'src/interfaces/noti.pb';
 import { ClientGrpc } from '@nestjs/microservices';
 
 @Injectable()

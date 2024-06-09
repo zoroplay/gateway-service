@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { BettingController } from './betting.controller';
 import { BettingService } from './betting.service';
 import { ClientsModule, Transport } from '@nestjs/microservices';
-import { BETTING_PACKAGE_NAME, protobufPackage } from './betting.pb';
+import { BETTING_PACKAGE_NAME, protobufPackage } from 'src/interfaces/betting.pb';
 import {join} from "path";
 import 'dotenv/config'
 import { BettingAdminController } from './admin/betting-admin.controller';

@@ -21,14 +21,12 @@ import { BonusService } from '../bonus.service';
 
 import {
   AwardBonusRequest,
-  BonusStatusRequest,
   CreateBonusRequest,
   CreateCampaignBonusDto,
-  DeleteBonusRequest,
   FetchReportRequest,
   GetBonusRequest,
   UpdateCampaignBonusDto,
-} from '../bonus.pb';
+} from 'src/interfaces/bonus.pb';
 import {
   SwaggerAllCampaignBonus,
   SwaggerAwardBonusRequest,
@@ -44,7 +42,6 @@ import {
   SwaggerFetchReportResponse,
   SwaggerGetPaymentMethodResponse,
 } from 'src/wallet/dto';
-import { BonusServiceClient } from '../bonus.pb';
 
 @ApiTags('BackOffice APIs')
 @Controller('admin/bonus')

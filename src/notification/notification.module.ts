@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { NotificationController } from './notification.controller';
 import { NotificationService } from './notification.service';
 import { ClientsModule, Transport } from '@nestjs/microservices';
-import { NOTIFICATION_PACKAGE_NAME, protobufPackage } from './noti.pb';
+import { NOTIFICATION_PACKAGE_NAME, protobufPackage } from 'src/interfaces/noti.pb';
 import { AdminController } from './admin/admin.controller';
 import {join} from "path";
 import 'dotenv/config'

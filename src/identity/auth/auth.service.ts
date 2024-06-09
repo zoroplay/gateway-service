@@ -19,7 +19,7 @@ import {
   UpdateUserResponse,
   ChangePasswordRequest,
   ResetPasswordRequest,
-} from '../identity.pb';
+} from 'src/interfaces/identity.pb';
 
 @Injectable()
 export class AuthService {
@@ -42,6 +42,10 @@ export class AuthService {
 
   public async updateUser(data: UpdateUserRequest): Promise<UpdateUserResponse> {
     return firstValueFrom(this.svc.updateUserDetails(data));
+  }
+
+  public async createUser(data: CreateUserRequest) {
+    return firstValueFrom(this.svc.createRetailUser(data))
   }
 
   public async validate(token: string): Promise<ValidateResponse> {

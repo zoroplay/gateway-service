@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Inject, Param, Post, Put, Query, UploadedFiles, UseInterceptors } from '@nestjs/common';
-import { GetAgentUsersRequest, GetSettingsRequest, IDENTITY_SERVICE_NAME, IdentityServiceClient, SettingsRequest, UserRiskSettingsRequest, protobufPackage } from '../identity.pb';
+import { GetRiskSettingRequest, GetSettingsRequest, IDENTITY_SERVICE_NAME, IdentityServiceClient, SettingsRequest, UserRiskSettingsRequest, protobufPackage } from 'src/interfaces/identity.pb';
 import { ClientGrpc } from '@nestjs/microservices';
 import { ApiBody, ApiOkResponse, ApiOperation, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { SwaggerCommonResponse, SwaggerSettingsRequest } from '../dto';
@@ -93,6 +93,7 @@ export class SettingsController {
             clientId,
             category,
         }
+        
         return this.svc.getSettings(payload);
     }
 
@@ -109,10 +110,11 @@ export class SettingsController {
         @Param('userId') userId: number,
     ) {
         
-        const payload: GetAgentUsersRequest = {
+        const payload: GetRiskSettingRequest = {
             clientId,
             userId,
         }
+
         return this.svc.getUserRiskSettings(payload);
     }
 

@@ -17,7 +17,7 @@ import {
   CreateGameDto,
   CreateProviderDto,
   SyncGameDto,
-} from '../gaming.pb';
+} from 'src/interfaces/gaming.pb';
 import {
   SwaggerOKGameArrayResponse,
   SwaggerOKGameResponse,

@@ -47,7 +47,7 @@ import {
   CreateOutcomeAliasRequest,
   DefaultSportMarketDTO,
   UpdateMarketRequest,
-} from '../fixture.pb';
+} from 'src/interfaces/fixture.pb';
 
 const logger = new Logger();
 

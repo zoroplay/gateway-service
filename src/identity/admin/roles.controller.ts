@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Inject, Post } from '@nestjs/common';
 import { ApiBody, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { IDENTITY_SERVICE_NAME, IdentityServiceClient, protobufPackage } from '../identity.pb';
+import { IDENTITY_SERVICE_NAME, IdentityServiceClient, protobufPackage } from 'src/interfaces/identity.pb';
 import { ClientGrpc } from '@nestjs/microservices';
 import { SaveRoleRequest } from '../dto/admin.dto';
 import { SwaggerCommonResponse } from '../dto';

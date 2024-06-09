@@ -1,76 +1,74 @@
-// import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
-// import {
-//   AssignUserCommissionProfile,
-//   BonusGroups,
-//   CreateCommissionProfile,
-//   Empty,
-//   NormalRequest,
-//   PayPowerRequest,
-//   PowerRequest,
-//   protobufPackage,
-//   RETAIL_SERVICE_NAME,
-//   RetailServiceClient,
-//   UpdateCommissionProfile,
-// } from './retail.pb';
-// import { ClientGrpc } from '@nestjs/microservices';
+import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
+import { ClientGrpc } from '@nestjs/microservices';
+import { firstValueFrom } from 'rxjs';
 
-// @Injectable()
-// export class RetailService implements OnModuleInit {
-//   private service: RetailServiceClient;
+@Injectable()
+export class RetailService implements OnModuleInit {
+//   private service: IdentityServiceClient;
 
-//   constructor(@Inject(protobufPackage) private client: ClientGrpc) {}
+//   constructor(
+//     @Inject(retailProtobuf) private client: ClientGrpc,
+// ) {}
 
-//   onModuleInit() {
+  onModuleInit() {
 //     this.service =
 //       this.client.getService<RetailServiceClient>(RETAIL_SERVICE_NAME);
+  }
+
+//   async getAgents(data) {
+//     return await firstValueFrom(this.service.listAgents(data))
+//   }
+
+//   async getAgentUsers(data) {
+//     return await firstValueFrom(this.service.listAgentUsers(data))
 //   }
 
 //   // Bonus Groups
-//   getBonusGroups(data: Empty) {
-//     console.log(data);
-//     return this.service.getBonusGroups(data);
-//   }
+// //   getBonusGroups(data: Empty) {
+// //     console.log(data);
+// //     return this.service.getBonusGroups(data);
+// //   }
 
-//   createBonusGroups(data: BonusGroups) {
-//     console.log(data);
-//     return this.service.createBonusGroups(data);
-//   }
+// //   createBonusGroups(data: BonusGroups) {
+// //     console.log(data);
+// //     return this.service.createBonusGroups(data);
+// //   }
 
-//   // Commission Profiles
+// //   // Commission Profiles
 
-//   getCommissionProfiles(data: Empty) {
-//     console.log(data);
-//     return this.service.getCommissionProfiles(data);
-//   }
-//   createCommissionProfile(data: CreateCommissionProfile) {
-//     console.log(data);
-//     return this.service.createCommissionProfile(data);
-//   }
-//   updateCommissionProfile(data: UpdateCommissionProfile) {
-//     console.log(data);
-//     return this.service.updateCommissionProfile(data);
-//   }
-//   assignUserCommissionProfile(data: AssignUserCommissionProfile) {
-//     console.log(data);
-//     return this.service.assignUserCommissionProfile(data);
-//   }
+// //   getCommissionProfiles(data: Empty) {
+// //     console.log(data);
+// //     return this.service.getCommissionProfiles(data);
+// //   }
+// //   createCommissionProfile(data: CommissionProfile) {
+// //     console.log(data);
+// //     return this.service.createCommissionProfile(data);
+// //   }
+// //   updateCommissionProfile(data: CommissionProfile) {
+// //     console.log(data);
+// //     return this.service.updateCommissionProfile(data);
+// //   }
+// //   assignUserCommissionProfile(data: AssignUserCommissionProfile) {
+// //     console.log(data);
+// //     return this.service.assignUserCommissionProfile(data);
+// //   }
 
-//   // Power Bonus
-//   getPowerBonus(data: PowerRequest) {
-//     console.log(data);
-//     return this.service.getPowerBonus(data);
-//   }
-//   payOutPowerBonus(data: PayPowerRequest) {
-//     console.log(data);
-//     return this.service.payOutPowerBonus(data);
-//   }
-//   // Normal Bonus
-//   getNormalBonus(data: NormalRequest) {
-//     console.log(data);
-//     return this.service.getNormalBonus(data);
-//   }
-//   payOutNormalBonus(data: NormalRequest) {
-//     console.log(data);
-//     return this.service.payOutNormalBonus(data);
-//   }
-// }
+// //   // Power Bonus
+// //   getPowerBonus(data: PowerRequest) {
+// //     console.log(data);
+// //     return this.service.getPowerBonus(data);
+// //   }
+// //   payOutPowerBonus(data: PayPowerRequest) {
+// //     console.log(data);
+// //     return this.service.payOutPowerBonus(data);
+// //   }
+// //   // Normal Bonus
+// //   getNormalBonus(data: GetNormalRequest) {
+// //     console.log(data);
+// //     return this.service.getNormalBonus(data);
+// //   }
+// //   payOutNormalBonus(data: PayNormalRequest) {
+// //     console.log(data);
+// //     return this.service.payOutNormalBonus(data);
+// //   }
+}

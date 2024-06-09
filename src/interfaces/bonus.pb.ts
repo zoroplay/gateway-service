@@ -1,8 +1,23 @@
 /* eslint-disable */
 import { GrpcMethod, GrpcStreamMethod } from "@nestjs/microservices";
 import { Observable } from "rxjs";
+import {
+  BonusGroupResponse,
+  BonusGroups,
+  GetNormalRequest,
+  NormalResponse,
+  PayNormalRequest,
+  PayNormalResponse,
+  PayPowerRequest,
+  PowerBonusResponse,
+  PowerRequest,
+  PowerResponse,
+} from "./retail.pb";
 
 export const protobufPackage = "bonus";
+
+export interface Empty {
+}
 
 export interface CheckDepositBonusRequest {
   clientId: number;
@@ -363,6 +378,24 @@ export interface BonusServiceClient {
   redeemCampaignBonus(request: RedeemCampaignBonusDto): Observable<CreateBonusResponse>;
 
   getCampaignBonus(request: GetBonusByClientID): Observable<AllCampaignBonus>;
+
+  /** RETAIL SERVICE */
+
+  getBonusGroups(request: Empty): Observable<BonusGroupResponse>;
+
+  createBonusGroups(request: BonusGroups): Observable<BonusGroupResponse>;
+
+  createPowerBonus(request: PowerRequest): Observable<PowerBonusResponse>;
+
+  getPowerBonus(request: PowerRequest): Observable<PowerBonusResponse>;
+
+  payOutPowerBonus(request: PayPowerRequest): Observable<PowerResponse>;
+
+  getNormalBonus(request: GetNormalRequest): Observable<NormalResponse>;
+
+  calculateNormalBonus(request: PayNormalRequest): Observable<PayNormalResponse>;
+
+  payOutNormalBonus(request: PayNormalRequest): Observable<PayNormalResponse>;
 }
 
 export interface BonusServiceController {
@@ -429,6 +462,34 @@ export interface BonusServiceController {
   getCampaignBonus(
     request: GetBonusByClientID,
   ): Promise<AllCampaignBonus> | Observable<AllCampaignBonus> | AllCampaignBonus;
+
+  /** RETAIL SERVICE */
+
+  getBonusGroups(request: Empty): Promise<BonusGroupResponse> | Observable<BonusGroupResponse> | BonusGroupResponse;
+
+  createBonusGroups(
+    request: BonusGroups,
+  ): Promise<BonusGroupResponse> | Observable<BonusGroupResponse> | BonusGroupResponse;
+
+  createPowerBonus(
+    request: PowerRequest,
+  ): Promise<PowerBonusResponse> | Observable<PowerBonusResponse> | PowerBonusResponse;
+
+  getPowerBonus(
+    request: PowerRequest,
+  ): Promise<PowerBonusResponse> | Observable<PowerBonusResponse> | PowerBonusResponse;
+
+  payOutPowerBonus(request: PayPowerRequest): Promise<PowerResponse> | Observable<PowerResponse> | PowerResponse;
+
+  getNormalBonus(request: GetNormalRequest): Promise<NormalResponse> | Observable<NormalResponse> | NormalResponse;
+
+  calculateNormalBonus(
+    request: PayNormalRequest,
+  ): Promise<PayNormalResponse> | Observable<PayNormalResponse> | PayNormalResponse;
+
+  payOutNormalBonus(
+    request: PayNormalRequest,
+  ): Promise<PayNormalResponse> | Observable<PayNormalResponse> | PayNormalResponse;
 }
 
 export function BonusServiceControllerMethods() {
@@ -452,6 +513,14 @@ export function BonusServiceControllerMethods() {
       "deleteCampaignBonus",
       "redeemCampaignBonus",
       "getCampaignBonus",
+      "getBonusGroups",
+      "createBonusGroups",
+      "createPowerBonus",
+      "getPowerBonus",
+      "payOutPowerBonus",
+      "getNormalBonus",
+      "calculateNormalBonus",
+      "payOutNormalBonus",
     ];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);

@@ -9,7 +9,7 @@ import { BettingModule } from './betting/betting.module';
 import { BonusModule } from './bonus/bonus.module';
 import { NotificationModule } from './notification/notification.module';
 import { WalletModule } from './wallet/wallet.module';
-// import { RetailModule } from './retail/retail.module';
+import { RetailModule } from './retail/retail.module';
 import 'dotenv/config';
 
 @Module({
@@ -22,7 +22,7 @@ import 'dotenv/config';
     BonusModule,
     NotificationModule,
     WalletModule,
-    // RetailModule,
+    RetailModule,
   ],
   controllers: [AppController],
   providers: [AppService],

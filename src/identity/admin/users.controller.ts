@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, HttpException, HttpStatus, Inject, Param, Patch, Post, Query, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { ApiBody, ApiOkResponse, ApiOperation, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
-import { AddToSegmentRequest, ClientRequest, DeleteItemRequest, FetchPlayerSegmentRequest, GetSegmentPlayerRequest, GrantBonusRequest, IDENTITY_SERVICE_NAME, IdentityServiceClient, SaveSegmentRequest, protobufPackage } from '../identity.pb';
+import { AddToSegmentRequest, ClientRequest, DeleteItemRequest, FetchPlayerSegmentRequest, GetSegmentPlayerRequest, GrantBonusRequest, IDENTITY_SERVICE_NAME, IdentityServiceClient, SaveSegmentRequest, protobufPackage } from 'src/interfaces/identity.pb';
 import { ClientGrpc } from '@nestjs/microservices';
 import { SwaggerAddToSegmentRequest, SwaggerGrantBonusToSegment, SwaggerSaveClientRequest, SwaggerSaveSegmentRequest } from '../dto/admin.dto';
 import { SwaggerCommonResponse } from '../dto';

@@ -14,7 +14,7 @@ import { GamingService } from './gaming.service';
 import {
   XpressRequest,
   XpressResponse,
-} from './gaming.pb';
+} from 'src/interfaces/gaming.pb';
 import { SwaggerXpressResponse, XpressBalanceDto, XpressDebitCreditDto, XpressLoginDto, XpressLogoutDto, XpressRollbackDto } from './dto/virtuals';
 
 @ApiTags('Gaming APIs')

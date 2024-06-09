@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Inject, Post, Query } from '@nestjs/common';
 import { ApiBody, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { ClientGrpc } from '@nestjs/microservices';
-import { NOTIFICATION_SERVICE_NAME, NotificationServiceClient, SaveSettingsRequest, protobufPackage } from '../noti.pb';
+import { NOTIFICATION_SERVICE_NAME, NotificationServiceClient, SaveSettingsRequest, protobufPackage } from 'src/interfaces/noti.pb';
 import { GettSmsSettingsRequest, GettSmsSettingsResponse, SaveSMSSettingsRequest, SaveSMSSettingsResponse } from '../dto';
 
 @ApiTags('BackOffice APIs')

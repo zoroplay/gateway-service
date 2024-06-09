@@ -11,7 +11,7 @@ import {
 } from '@nestjs/common';
 import {
   LoginRequest, CreateUserRequest, UpdateUserRequest, ChangePasswordRequest, ResetPasswordRequest, GetUserByUsernameRequest,
-} from '../identity.pb';
+} from 'src/interfaces/identity.pb';
 import { ApiBody, ApiOkResponse, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 import { LoginDTO, SwaggerChangePasswordRequest, SwaggerCommonResponse, SwaggerRegisterRequest, SwaggerResetPasswordRequest, SwaggerUserDetailsRequest, VerifyUsernameDTO  } from '../dto';
 import { AuthGuard } from './auth.guard';

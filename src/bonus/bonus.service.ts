@@ -16,7 +16,7 @@ import {
   DeleteBonusRequest,
   FetchReportRequest,
   CheckDepositBonusRequest,
-} from './bonus.pb';
+} from 'src/interfaces/bonus.pb';
 import { ClientGrpc } from '@nestjs/microservices';
 
 @Injectable()
