@@ -80,12 +80,14 @@ export class GamingService implements OnModuleInit {
     const resp = await firstValueFrom(this.service.handleCallback(request));
 
     if (resp.success) {
-      if(request.action === 'GetBalance' && request.provider === 'smart-soft') {
-        console.log('formatting amount')
-        resp.data.Amount = parseFloat(resp.data.Amount.toFixed(2))
-      } else if (request.action === 'smart-soft') {
-        console.log('formatting balance')
-        resp.data.Balance = parseFloat(resp.data.Balance.toFixed(2))
+      if(request.provider === 'smart-soft' && request.action !== 'ActivateSession') {
+        if(request.action === 'GetBalance') {
+          console.log('formatting amount')
+          resp.data.Amount = parseFloat(resp.data.Amount.toFixed(2))
+        } else {
+          console.log('formatting balance')
+          resp.data.Balance = parseFloat(resp.data.Balance.toFixed(2))
+        }
       }
       console.log('service ended in success');
     } else {
