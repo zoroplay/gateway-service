@@ -3,27 +3,101 @@ import { GrpcMethod, GrpcStreamMethod } from "@nestjs/microservices";
 import { wrappers } from "protobufjs";
 import { Observable } from "rxjs";
 import { Struct } from "./google/protobuf/struct.pb";
-import {
-  AssignUserCommissionProfile,
-  CommissionProfile,
-  CommissionProfileResponse,
-  CommissionProfilesResponse,
-  GetAgentUsersRequest,
-} from "./retail.pb";
 
 export const protobufPackage = "identity";
 
+export interface GetAgentUserRequest {
+  clientId: number;
+  userId: number;
+}
+
+export interface GetAgentUsersRequest {
+  clientId: number;
+  userId?: number | undefined;
+  username?: string | undefined;
+  roleId?: number | undefined;
+  state?: number | undefined;
+  page?: number | undefined;
+}
+
 export interface Empty {
+}
+
+/** Commission Profile */
+export interface CommissionProfile {
+  id?: number | undefined;
+  name: string;
+  default: boolean;
+  description: string;
+  providerGroup: string;
+  period: string;
+  type: string;
+  percentage: number;
+  commissionType: number;
+  turnovers: CommissionTurnover[];
+  createdAt?: string | undefined;
+  updatedAt?: string | undefined;
+}
+
+export interface CommissionProfileResponse {
+  success: boolean;
+  message: string;
+  data: CommissionProfile | undefined;
+}
+
+export interface CommissionProfilesResponse {
+  success: boolean;
+  message: string;
+  data: CommissionProfile[];
+}
+
+export interface AssignUserCommissionProfile {
+  profileId: number;
+  userId: number;
+  createdAt?: string | undefined;
+  updatedAt?: string | undefined;
+}
+
+/** Commission Reequest */
+export interface CommissionRequest {
+  provider: string;
+}
+
+export interface ArrayCommissionResponse {
+  commissions: Commission[];
+}
+
+export interface Commission {
+  id?: number | undefined;
+  userId: number;
+  totalTickets: number;
+  totalSales: number;
+  totalWon: number;
+  net: number;
+  commission: number;
+  startDate: string;
+  endDate: string;
+  isPaid: boolean;
+  userCommissionProfileId: number;
+  createdAt?: string | undefined;
+  updatedAt?: string | undefined;
+}
+
+export interface CommissionTurnover {
+  id?: number | undefined;
+  event: number;
+  commissionProfile?: CommissionProfile | undefined;
+  percentage: number;
+  maxOdd: number;
+  minOdd: number;
+  oddSet: boolean;
+  createdAt?: string | undefined;
+  updatedAt?: string | undefined;
 }
 
 export interface GetRiskSettingRequest {
   clientId: number;
   userId: number;
-}
-
-export interface GetAgentUserRequest {
-  branchId: number;
-  cashierId: number;
 }
 
 export interface FindUserRequest {
