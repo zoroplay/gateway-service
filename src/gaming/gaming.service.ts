@@ -83,10 +83,16 @@ export class GamingService implements OnModuleInit {
       if(request.provider === 'smart-soft' && request.action !== 'ActivateSession') {
         if(request.action === 'GetBalance') {
           console.log('formatting amount')
-          resp.data.Amount = parseFloat(resp.data.Amount.toFixed(2))
+          resp.data.Amount = parseFloat(resp.data.Amount.toFixed(2)).toLocaleString(undefined, {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          })
         } else {
           console.log('formatting balance')
-          resp.data.Balance = parseFloat(resp.data.Balance.toFixed(2))
+          resp.data.Balance = parseFloat(resp.data.Balance.toFixed(2)).toLocaleString(undefined, {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          })
         }
       }
       console.log('service ended in success');
