@@ -78,17 +78,27 @@ export class GamingService implements OnModuleInit {
     // console.log('service start');
     // console.log(request);
     const resp = await firstValueFrom(this.service.handleCallback(request));
-    console.log(resp);
+
     if (resp.success) {
       if(resp.data.Amount) {
-        resp.data.Amount = parseFloat(resp.data.Amount.toFixed(2))
+        console.log('formatting amount')
+        resp.data.Amount = parseFloat(resp.data.Amount.toFixed(2)).toLocaleString(undefined, {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        })
       } else if (resp.data.Balance) {
-        resp.data.Balance = parseFloat(resp.data.Balance.toFixed(2))
+        console.log('formatting balance')
+
+        resp.data.Balance = parseFloat(resp.data.Balance.toFixed(2)).toLocaleString(undefined, {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        })
       }
       console.log('service ended in success');
     } else {
       console.log('service ended in failure');
     }
+    console.log(resp);
     return resp;
   }
 
