@@ -82,11 +82,11 @@ export class GamingService implements OnModuleInit {
     if (resp.success) {
       if(request.provider === 'smart-soft' && request.action !== 'ActivateSession') {
         if(request.action === 'GetBalance') {
-          console.log('formatting amount')
-          resp.data.Amount = this.formatNumber(resp.data.Amount)
+          const amount = this.formatNumber(resp.data.Amount)
+          console.log('formatting amount', amount)
         } else {
-          console.log('formatting balance')
-          resp.data.Balance = this.formatNumber(resp.data.Balance)
+          const balance = this.formatNumber(resp.data.Balance)
+          console.log('formatting balance', balance)
         }
       }
       console.log('service ended in success');
