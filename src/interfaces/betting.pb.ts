@@ -1,8 +1,18 @@
 /* eslint-disable */
 import { GrpcMethod, GrpcStreamMethod } from "@nestjs/microservices";
+import { wrappers } from "protobufjs";
 import { Observable } from "rxjs";
+import { Struct } from "./google/protobuf/struct.pb";
 
 export const protobufPackage = "betting";
+
+export interface CommonResponseObj {
+  status?: number | undefined;
+  success?: boolean | undefined;
+  message: string;
+  data?: { [key: string]: any } | undefined;
+  errors?: string | undefined;
+}
 
 export interface GetVirtualBetsRequest {
   clientId: number;
@@ -418,6 +428,8 @@ export interface ProcessCashoutResponse {
 
 export const BETTING_PACKAGE_NAME = "betting";
 
+wrappers[".google.protobuf.Struct"] = { fromObject: Struct.wrap, toObject: Struct.unwrap } as any;
+
 export interface BettingServiceClient {
   createSetting(request: Settings): Observable<SettingsResponse>;
 
@@ -460,6 +472,8 @@ export interface BettingServiceClient {
   getVirtualBets(request: GetVirtualBetsRequest): Observable<PaginationResponse>;
 
   cashoutRequest(request: ProcessCashoutRequest): Observable<ProcessCashoutResponse>;
+
+  getRetailBets(request: BetHistoryRequest): Observable<CommonResponseObj>;
 }
 
 export interface BettingServiceController {
@@ -526,6 +540,10 @@ export interface BettingServiceController {
   cashoutRequest(
     request: ProcessCashoutRequest,
   ): Promise<ProcessCashoutResponse> | Observable<ProcessCashoutResponse> | ProcessCashoutResponse;
+
+  getRetailBets(
+    request: BetHistoryRequest,
+  ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
 }
 
 export function BettingServiceControllerMethods() {
@@ -552,6 +570,7 @@ export function BettingServiceControllerMethods() {
       "getVirtualBet",
       "getVirtualBets",
       "cashoutRequest",
+      "getRetailBets",
     ];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);

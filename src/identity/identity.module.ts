@@ -11,6 +11,7 @@ import { PlayersController } from './admin/players.controller';
 import { WalletModule } from 'src/wallet/wallet.module';
 import { SettingsController } from './admin/settings.controller';
 import { AppService } from 'src/app.service';
+import { RetailService } from '../retail/retail.service';
 
 @Module({
   imports: [
@@ -28,7 +29,7 @@ import { AppService } from 'src/app.service';
     ]),
   ],
   controllers: [AuthController, PlayersController, UsersController, RolesController, SettingsController],
-  providers: [AppService, AuthService],
-  exports: [AuthService],
+  providers: [AppService, AuthService, RetailService],
+  exports: [AuthService, RetailService],
 })
 export class IdentityModule {}

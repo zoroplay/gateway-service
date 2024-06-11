@@ -88,4 +88,9 @@ export class BettingService implements OnModuleInit {
     console.log('cashout request ');
     return this.service.cashoutRequest(data);
   }
+
+  getAgentBets(data: BetHistoryRequest) {
+    console.log('get agent bet list ');
+    return this.service.getRetailBets(data);
+  }
 }

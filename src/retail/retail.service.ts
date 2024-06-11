@@ -1,74 +1,75 @@
 import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { ClientGrpc } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
+import { IDENTITY_SERVICE_NAME, IdentityServiceClient, protobufPackage } from 'src/interfaces/identity.pb';
 
 @Injectable()
 export class RetailService implements OnModuleInit {
-//   private service: IdentityServiceClient;
+  private service: IdentityServiceClient;
 
-//   constructor(
-//     @Inject(retailProtobuf) private client: ClientGrpc,
-// ) {}
+  constructor(
+    @Inject(protobufPackage) private client: ClientGrpc,
+  ) {}
 
   onModuleInit() {
-//     this.service =
-//       this.client.getService<RetailServiceClient>(RETAIL_SERVICE_NAME);
+    this.service =
+      this.client.getService<IdentityServiceClient>(IDENTITY_SERVICE_NAME);
   }
 
-//   async getAgents(data) {
-//     return await firstValueFrom(this.service.listAgents(data))
+  async getAgents(data) {
+    return await firstValueFrom(this.service.listAgents(data))
+  }
+
+  async getAgentUsers(data) {
+    return await firstValueFrom(this.service.listAgentUsers(data))
+  }
+
+  // Bonus Groups
+  // getBonusGroups(data: Empty) {
+  //   console.log(data);
+  //   return this.service.getBonusGroups(data);
+  // }
+
+  // createBonusGroups(data: BonusGroups) {
+  //   console.log(data);
+  //   return this.service.createBonusGroups(data);
+  // }
+
+//   // Commission Profiles
+
+//   getCommissionProfiles(data: Empty) {
+//     console.log(data);
+//     return this.service.getCommissionProfiles(data);
+//   }
+//   createCommissionProfile(data: CommissionProfile) {
+//     console.log(data);
+//     return this.service.createCommissionProfile(data);
+//   }
+//   updateCommissionProfile(data: CommissionProfile) {
+//     console.log(data);
+//     return this.service.updateCommissionProfile(data);
+//   }
+//   assignUserCommissionProfile(data: AssignUserCommissionProfile) {
+//     console.log(data);
+//     return this.service.assignUserCommissionProfile(data);
 //   }
 
-//   async getAgentUsers(data) {
-//     return await firstValueFrom(this.service.listAgentUsers(data))
+//   // Power Bonus
+//   getPowerBonus(data: PowerRequest) {
+//     console.log(data);
+//     return this.service.getPowerBonus(data);
 //   }
-
-//   // Bonus Groups
-// //   getBonusGroups(data: Empty) {
-// //     console.log(data);
-// //     return this.service.getBonusGroups(data);
-// //   }
-
-// //   createBonusGroups(data: BonusGroups) {
-// //     console.log(data);
-// //     return this.service.createBonusGroups(data);
-// //   }
-
-// //   // Commission Profiles
-
-// //   getCommissionProfiles(data: Empty) {
-// //     console.log(data);
-// //     return this.service.getCommissionProfiles(data);
-// //   }
-// //   createCommissionProfile(data: CommissionProfile) {
-// //     console.log(data);
-// //     return this.service.createCommissionProfile(data);
-// //   }
-// //   updateCommissionProfile(data: CommissionProfile) {
-// //     console.log(data);
-// //     return this.service.updateCommissionProfile(data);
-// //   }
-// //   assignUserCommissionProfile(data: AssignUserCommissionProfile) {
-// //     console.log(data);
-// //     return this.service.assignUserCommissionProfile(data);
-// //   }
-
-// //   // Power Bonus
-// //   getPowerBonus(data: PowerRequest) {
-// //     console.log(data);
-// //     return this.service.getPowerBonus(data);
-// //   }
-// //   payOutPowerBonus(data: PayPowerRequest) {
-// //     console.log(data);
-// //     return this.service.payOutPowerBonus(data);
-// //   }
-// //   // Normal Bonus
-// //   getNormalBonus(data: GetNormalRequest) {
-// //     console.log(data);
-// //     return this.service.getNormalBonus(data);
-// //   }
-// //   payOutNormalBonus(data: PayNormalRequest) {
-// //     console.log(data);
-// //     return this.service.payOutNormalBonus(data);
-// //   }
+//   payOutPowerBonus(data: PayPowerRequest) {
+//     console.log(data);
+//     return this.service.payOutPowerBonus(data);
+//   }
+//   // Normal Bonus
+//   getNormalBonus(data: GetNormalRequest) {
+//     console.log(data);
+//     return this.service.getNormalBonus(data);
+//   }
+//   payOutNormalBonus(data: PayNormalRequest) {
+//     console.log(data);
+//     return this.service.payOutNormalBonus(data);
+//   }
 }
