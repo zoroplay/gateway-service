@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Inject, Param, Post, Query, Req, UseGuards } from '@nestjs/common';
 import { ApiBody, ApiOkResponse, ApiOperation, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { GetBalanceRequest, InitiateDepositRequest, UserTransactionRequest, VerifyBankAccountRequest, VerifyDepositRequest, WALLET_SERVICE_NAME, WalletServiceClient, WithdrawRequest, protobufPackage } from '../interfaces/wallet.pb';
-import { SwaggerDepositReponse, SwaggerInitiateDepositRequest, SwaggerListTransactionResponse, SwaggerListTransactions, SwaggerVerifyBankAccountRequest, SwaggerVerifyDepositReponse, SwaggerWithdrawalRequest } from './dto';
+import { SwaggerDepositReponse, SwaggerGetPaymentMethodResponse, SwaggerInitiateDepositRequest, SwaggerListTransactionResponse, SwaggerListTransactions, SwaggerVerifyBankAccountRequest, SwaggerVerifyDepositReponse, SwaggerWithdrawalRequest } from './dto';
 import { AuthGuard } from 'src/identity/auth/auth.guard';
 import { IAuthorizedRequest } from 'src/interfaces/authorized-request.interface';
 import { WalletService } from './wallet.service';
@@ -12,6 +12,7 @@ export class WalletController {
     constructor(
         private walletService: WalletService
     ) {}
+
     @UseGuards(AuthGuard)
     @Post('/initiate-deposit')
     @ApiOperation({
@@ -175,5 +176,23 @@ export class WalletController {
             clientId
         }
         return this.walletService.getBankAccounts(payload)
+    }
+
+    @Get(':clientId/payment-methods')
+    @ApiOperation({
+        summary: 'Fetch Payment Methods',
+        description: 'This endpoint is used to fetch payment methods for a particular SBE client',
+    })
+    @ApiParam({
+        name: 'clientId',
+        type: 'number',
+        description: ' Unique ID of the client',
+      })
+    @ApiOkResponse({ type: SwaggerGetPaymentMethodResponse })
+    fetchRoles(
+        @Param() param: any,
+        @Query() query 
+    ) {
+        return this.walletService.getPaymentMethods({clientId: param.client_id, status: 1});
     }
 }

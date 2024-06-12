@@ -10,9 +10,10 @@ export interface ProcessRetailTransaction {
   id: number;
   clientId: number;
   userId: number;
-  username: string;
-  amount: number;
-  withdrawalCharge: number;
+  username?: string | undefined;
+  amount?: number | undefined;
+  withdrawalCharge?: number | undefined;
+  userRole?: string | undefined;
 }
 
 export interface WalletTransferRequest {
@@ -30,7 +31,7 @@ export interface ValidateTransactionRequest {
   clientId: number;
   userId: number;
   code: string;
-  userRole: string;
+  userRole?: string | undefined;
 }
 
 export interface EmptyRequest {
@@ -38,6 +39,7 @@ export interface EmptyRequest {
 
 export interface BranchRequest {
   branchId: number;
+  date?: string | undefined;
 }
 
 export interface IdRequest {
@@ -681,6 +683,10 @@ export interface WalletServiceClient {
 
   cashbookFindAllBranchCashIn(request: BranchRequest): Observable<CashInOutRepeatedResponse>;
 
+  findAllBranchApprovedCashinWDate(request: BranchRequest): Observable<CashInOutRepeatedResponse>;
+
+  findAllBranchPendingCashinWDate(request: BranchRequest): Observable<CashInOutRepeatedResponse>;
+
   cashbookApproveCashOut(request: CashbookApproveCashInOutRequest): Observable<CashInOutSingleResponse>;
 
   cashbookCreateCashOut(request: CashbookCreateCashInOutRequest): Observable<CashInOutSingleResponse>;
@@ -822,6 +828,14 @@ export interface WalletServiceController {
   ): Promise<CashInOutRepeatedResponse> | Observable<CashInOutRepeatedResponse> | CashInOutRepeatedResponse;
 
   cashbookFindAllBranchCashIn(
+    request: BranchRequest,
+  ): Promise<CashInOutRepeatedResponse> | Observable<CashInOutRepeatedResponse> | CashInOutRepeatedResponse;
+
+  findAllBranchApprovedCashinWDate(
+    request: BranchRequest,
+  ): Promise<CashInOutRepeatedResponse> | Observable<CashInOutRepeatedResponse> | CashInOutRepeatedResponse;
+
+  findAllBranchPendingCashinWDate(
     request: BranchRequest,
   ): Promise<CashInOutRepeatedResponse> | Observable<CashInOutRepeatedResponse> | CashInOutRepeatedResponse;
 
@@ -991,6 +1005,8 @@ export function WalletServiceControllerMethods() {
       "cashbookFindOneCashIn",
       "cashbookFindAllCashIn",
       "cashbookFindAllBranchCashIn",
+      "findAllBranchApprovedCashinWDate",
+      "findAllBranchPendingCashinWDate",
       "cashbookApproveCashOut",
       "cashbookCreateCashOut",
       "cashbookUpdateCashOut",
