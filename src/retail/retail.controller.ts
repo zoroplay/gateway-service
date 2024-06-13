@@ -12,7 +12,7 @@ import { AuthGuard } from 'src/identity/auth/auth.guard';
 import { WalletService } from 'src/wallet/wallet.service';
 import { ProcessRetailTransaction, ValidateTransactionRequest, WalletTransferRequest } from 'src/interfaces/wallet.pb';
 import { SwaggerBetHistoryRequest, SwaggerBetHistoryResponse } from 'src/betting/dto';
-import { BetHistoryRequest } from 'src/interfaces/betting.pb';
+import { BetHistoryRequest, SalesReportRequest } from 'src/interfaces/betting.pb';
 import { BettingService } from 'src/betting/betting.service';
 import { IAuthorizedRequest } from 'src/interfaces/authorized-request.interface';
 
@@ -124,6 +124,7 @@ export class RetailController {
     return this.walletService.processShopWithdrawal(payload);
   }
 
+
   @Post(':clientId/betlist')
   @ApiOperation({
     summary: 'Retrieve bet history of a retail user',
@@ -144,6 +145,28 @@ export class RetailController {
       data.page = query.page || 1;
 
       return this.bettingService.getAgentBets(data);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  @Post(':clientId/reports/sales')
+  @ApiOperation({
+    summary: 'Retail Sales Report',
+    description:
+      'Retrieves sales report for a retail user',
+  })
+  @ApiBody({ type: SwaggerBetHistoryRequest })
+  @ApiOkResponse({ type: SwaggerBetHistoryResponse })
+  SalesReport(
+    @Param('clientId') clientId: number,
+    @Body() data: SalesReportRequest,
+    @Req() req: IAuthorizedRequest
+  ) {
+    try {
+      data.userId = req.user.id;
+      data.clientId = clientId;
+      return this.bettingService.getSalesReport(data);
     } catch (error) {
       console.error(error);
     }

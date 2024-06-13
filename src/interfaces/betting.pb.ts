@@ -6,6 +6,15 @@ import { Struct } from "./google/protobuf/struct.pb";
 
 export const protobufPackage = "betting";
 
+export interface SalesReportRequest {
+  clientId: number;
+  userId: number;
+  role: string;
+  from: string;
+  to: string;
+  productType: string;
+}
+
 export interface CommonResponseObj {
   status?: number | undefined;
   success?: boolean | undefined;
@@ -474,6 +483,8 @@ export interface BettingServiceClient {
   cashoutRequest(request: ProcessCashoutRequest): Observable<ProcessCashoutResponse>;
 
   getRetailBets(request: BetHistoryRequest): Observable<CommonResponseObj>;
+
+  getSalesReport(request: SalesReportRequest): Observable<CommonResponseObj>;
 }
 
 export interface BettingServiceController {
@@ -544,6 +555,10 @@ export interface BettingServiceController {
   getRetailBets(
     request: BetHistoryRequest,
   ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
+
+  getSalesReport(
+    request: SalesReportRequest,
+  ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
 }
 
 export function BettingServiceControllerMethods() {
@@ -571,6 +586,7 @@ export function BettingServiceControllerMethods() {
       "getVirtualBets",
       "cashoutRequest",
       "getRetailBets",
+      "getSalesReport",
     ];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);

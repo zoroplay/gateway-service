@@ -14,6 +14,7 @@ import {
   GamingActivityRequest,
   GetVirtualBetsRequest,
   ProcessCashoutRequest,
+  SalesReportRequest,
 } from 'src/interfaces/betting.pb';
 import { ClientGrpc } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
@@ -92,5 +93,10 @@ export class BettingService implements OnModuleInit {
   getAgentBets(data: BetHistoryRequest) {
     console.log('get agent bet list ');
     return this.service.getRetailBets(data);
+  }
+
+  getSalesReport(data: SalesReportRequest) {
+    console.log('get sales retport ');
+    return this.service.getSalesReport(data);
   }
 }
