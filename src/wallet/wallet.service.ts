@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { CommonResponseObj, CreditUserRequest, DebitUserRequest, GetBalanceRequest, GetPaymentMethodRequest, GetPaymentMethodResponse, GetUserAccountsResponse, InitiateDepositRequest, InitiateDepositResponse, ListDepositRequests, ListWithdrawalRequestResponse, ListWithdrawalRequests, MonnifyWebhookRequest, OpayWebhookRequest, OpayWebhookResponse, PaginationResponse, PaymentMethodRequest, PaymentMethodResponse, PaystackWebhookRequest, ProcessRetailTransaction, UpdateWithdrawalRequest, UserTransactionRequest, UserTransactionResponse, ValidateTransactionRequest, VerifyBankAccountRequest, VerifyBankAccountResponse, VerifyDepositRequest, VerifyDepositResponse, WALLET_SERVICE_NAME, WalletResponse, WalletServiceClient, WalletTransferRequest, WebhookResponse, WithdrawRequest, WithdrawResponse, protobufPackage } from '../interfaces/wallet.pb';
+import { CommonResponseArray, CommonResponseObj, CreditUserRequest, DebitUserRequest, GetBalanceRequest, GetPaymentMethodRequest, GetPaymentMethodResponse, GetUserAccountsResponse, InitiateDepositRequest, InitiateDepositResponse, ListDepositRequests, ListWithdrawalRequestResponse, ListWithdrawalRequests, MonnifyWebhookRequest, OpayWebhookRequest, OpayWebhookResponse, PaginationResponse, PaymentMethodRequest, PaymentMethodResponse, PaystackWebhookRequest, ProcessRetailTransaction, UpdateWithdrawalRequest, UserTransactionRequest, UserTransactionResponse, ValidateTransactionRequest, VerifyBankAccountRequest, VerifyBankAccountResponse, VerifyDepositRequest, VerifyDepositResponse, WALLET_SERVICE_NAME, WalletResponse, WalletServiceClient, WalletTransferRequest, WebhookResponse, WithdrawRequest, WithdrawResponse, protobufPackage } from '../interfaces/wallet.pb';
 import { ClientGrpc } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
 
@@ -20,6 +20,10 @@ export class WalletService {
 
     async getPaymentMethods(request: GetPaymentMethodRequest): Promise<GetPaymentMethodResponse> {
         return await firstValueFrom(this.svc.getPaymentMethods(request))
+    }
+
+    async listBanks(request): Promise<CommonResponseArray> {
+        return await firstValueFrom(this.svc.listBanks(request))
     }
 
     async listWithdrawals(request: ListWithdrawalRequests): Promise<ListWithdrawalRequestResponse> {

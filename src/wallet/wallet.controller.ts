@@ -195,4 +195,22 @@ export class WalletController {
     ) {
         return this.walletService.getPaymentMethods({clientId: param.client_id, status: 1});
     }
+
+    @Get(':clientId/banks')
+    @ApiOperation({
+        summary: 'Fetch Banks',
+        description: 'This endpoint is used to fetch all banks',
+    })
+    @ApiParam({
+        name: 'clientId',
+        type: 'number',
+        description: ' Unique ID of the client',
+      })
+    @ApiOkResponse({ type: SwaggerGetPaymentMethodResponse })
+    fetchBanks(
+        @Param() param: any,
+        @Query() query 
+    ) {
+        return this.walletService.listBanks({clientId: param.client_id});
+    }
 }

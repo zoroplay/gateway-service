@@ -725,6 +725,8 @@ export interface WalletServiceClient {
 
   verifyBankAccount(request: VerifyBankAccountRequest): Observable<VerifyBankAccountResponse>;
 
+  listBanks(request: EmptyRequest): Observable<CommonResponseArray>;
+
   getTransactions(request: GetTransactionRequest): Observable<GetTransactionResponse>;
 
   getPaymentMethods(request: GetPaymentMethodRequest): Observable<GetPaymentMethodResponse>;
@@ -907,6 +909,10 @@ export interface WalletServiceController {
     request: VerifyBankAccountRequest,
   ): Promise<VerifyBankAccountResponse> | Observable<VerifyBankAccountResponse> | VerifyBankAccountResponse;
 
+  listBanks(
+    request: EmptyRequest,
+  ): Promise<CommonResponseArray> | Observable<CommonResponseArray> | CommonResponseArray;
+
   getTransactions(
     request: GetTransactionRequest,
   ): Promise<GetTransactionResponse> | Observable<GetTransactionResponse> | GetTransactionResponse;
@@ -1026,6 +1032,7 @@ export function WalletServiceControllerMethods() {
       "verifyDeposit",
       "requestWithdrawal",
       "verifyBankAccount",
+      "listBanks",
       "getTransactions",
       "getPaymentMethods",
       "savePaymentMethod",
