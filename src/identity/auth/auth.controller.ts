@@ -92,6 +92,23 @@ export class AuthController {
     return this.authService.getUserDetails({clientId: param.client_id, userId: req.user.id});
   }
 
+  @Get('/globalvariables/:client_id')
+  @ApiOperation({
+    summary: 'get client variables',
+    description: 'This endpoint retrieves the global variables of the SBE client',
+  })
+  @ApiParam({
+    name: 'client_id',
+    type: 'number',
+    description: ' Unique ID of the client',
+  })
+  @ApiOkResponse({ type: SwaggerCommonResponse })
+  getGlobalVariables(
+    @Param() param
+  ) {
+    return this.authService.getVariables({clientId: param.client_id, category: null});
+  }
+
 
   @UseGuards(AuthGuard)
   @Put('/update/password')

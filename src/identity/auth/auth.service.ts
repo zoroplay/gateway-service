@@ -19,6 +19,8 @@ import {
   UpdateUserResponse,
   ChangePasswordRequest,
   ResetPasswordRequest,
+  GetSettingsRequest,
+  CommonResponseArray,
 } from 'src/interfaces/identity.pb';
 
 @Injectable()
@@ -70,5 +72,9 @@ export class AuthService {
 
   public async resetPassword(data: ResetPasswordRequest): Promise<UpdateUserResponse> {
     return firstValueFrom(this.svc.resetPassword(data));
+  }
+
+  public async getVariables(data: GetSettingsRequest): Promise<CommonResponseArray> {
+    return firstValueFrom(this.svc.getGlobalVariables(data));
   }
 }

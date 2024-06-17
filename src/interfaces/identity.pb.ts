@@ -806,7 +806,7 @@ export interface IdentityServiceClient {
 
   createPermission(request: PermissionRequest): Observable<CommonResponseObj>;
 
-  findUser(request: FindUserRequest): Observable<CommonResponseArray>;
+  findUser(request: FindUserRequest): Observable<CommonResponseObj>;
 
   saveRole(request: RoleRequest): Observable<SaveRoleResponse>;
 
@@ -886,6 +886,8 @@ export interface IdentityServiceClient {
 
   getSettings(request: GetSettingsRequest): Observable<CommonResponseArray>;
 
+  getGlobalVariables(request: GetSettingsRequest): Observable<CommonResponseArray>;
+
   validateBet(request: PlaceBetRequest): Observable<CommonResponseObj>;
 
   getWithdrawalSettings(request: GetWithdrawalSettingsRequest): Observable<WithdrawalSettingsResponse>;
@@ -944,9 +946,7 @@ export interface IdentityServiceController {
     request: PermissionRequest,
   ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
 
-  findUser(
-    request: FindUserRequest,
-  ): Promise<CommonResponseArray> | Observable<CommonResponseArray> | CommonResponseArray;
+  findUser(request: FindUserRequest): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
 
   saveRole(request: RoleRequest): Promise<SaveRoleResponse> | Observable<SaveRoleResponse> | SaveRoleResponse;
 
@@ -1090,6 +1090,10 @@ export interface IdentityServiceController {
     request: GetSettingsRequest,
   ): Promise<CommonResponseArray> | Observable<CommonResponseArray> | CommonResponseArray;
 
+  getGlobalVariables(
+    request: GetSettingsRequest,
+  ): Promise<CommonResponseArray> | Observable<CommonResponseArray> | CommonResponseArray;
+
   validateBet(request: PlaceBetRequest): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
 
   getWithdrawalSettings(
@@ -1188,6 +1192,7 @@ export function IdentityServiceControllerMethods() {
       "saveRiskSettings",
       "saveUserRiskSettings",
       "getSettings",
+      "getGlobalVariables",
       "validateBet",
       "getWithdrawalSettings",
       "getUserIdandName",
