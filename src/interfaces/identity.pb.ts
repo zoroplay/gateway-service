@@ -886,7 +886,7 @@ export interface IdentityServiceClient {
 
   getSettings(request: GetSettingsRequest): Observable<CommonResponseArray>;
 
-  getGlobalVariables(request: GetSettingsRequest): Observable<CommonResponseArray>;
+  getGlobalVariables(request: GetSettingsRequest): Observable<CommonResponseObj>;
 
   validateBet(request: PlaceBetRequest): Observable<CommonResponseObj>;
 
@@ -1092,7 +1092,7 @@ export interface IdentityServiceController {
 
   getGlobalVariables(
     request: GetSettingsRequest,
-  ): Promise<CommonResponseArray> | Observable<CommonResponseArray> | CommonResponseArray;
+  ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
 
   validateBet(request: PlaceBetRequest): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
 
