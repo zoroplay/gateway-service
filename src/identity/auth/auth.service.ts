@@ -21,6 +21,7 @@ import {
   ResetPasswordRequest,
   GetSettingsRequest,
   CommonResponseArray,
+  CommonResponseObj,
 } from 'src/interfaces/identity.pb';
 
 @Injectable()
@@ -74,7 +75,7 @@ export class AuthService {
     return firstValueFrom(this.svc.resetPassword(data));
   }
 
-  public async getVariables(data: GetSettingsRequest): Promise<CommonResponseArray> {
+  public async getVariables(data: GetSettingsRequest): Promise<CommonResponseObj> {
     return firstValueFrom(this.svc.getGlobalVariables(data));
   }
 }
