@@ -6,6 +6,178 @@ import { Struct } from "./google/protobuf/struct.pb";
 
 export const protobufPackage = "identity";
 
+/** Power Bonus */
+export interface PowerRequest {
+  agentIds: number[];
+  clientId: number;
+  fromDate: string;
+  toDate: string;
+}
+
+export interface BetData {
+  id?: number | undefined;
+  betId: number;
+  userId: number;
+  clientId: number;
+  selectionCount: number;
+  cancelledDate?: string | undefined;
+  settledDate?: string | undefined;
+  stake: number;
+  commission: number;
+  winnings: number;
+  weightedStake: number;
+  odds: number;
+  createdAt?: string | undefined;
+  updatedAt?: string | undefined;
+}
+
+export interface Response {
+  success: boolean;
+  message: string;
+}
+
+export interface CurrentWeekData {
+  totalWeeks: number;
+  currentWeek: number;
+  noOfTickets: number;
+  played: number;
+  won: number;
+  net: number;
+  commission: number;
+}
+
+export interface CurrentMonth {
+  month: string;
+}
+
+export interface Meta {
+  total?: number | undefined;
+  totalPages?: number | undefined;
+  currentPage: number;
+  itemsPerPage: number;
+}
+
+export interface NormalResponse {
+  success?: boolean | undefined;
+  message?: string | undefined;
+  data: NormalPayout[];
+  meta?: Meta | undefined;
+}
+
+export interface PayNormalResponse {
+  success: boolean;
+  message: string;
+  data: number;
+}
+
+export interface NormalPayout {
+  id?: number | undefined;
+  betId: number;
+  selectionsCount: number;
+  totalOdds: number;
+  stake: number;
+  cashierId: number;
+  profileId: number;
+  profileGroup: string;
+  commission: number;
+  isPaid: boolean;
+  createdAt?: string | undefined;
+  updatedAt?: string | undefined;
+}
+
+export interface PowerBonusData {
+  id?: number | undefined;
+  totalStake: number;
+  totalTickets: number;
+  totalWeightedStake: number;
+  averageNoOfSelections: number;
+  grossProfit: number;
+  ggrPercent: number;
+  rateIsLess: number;
+  rateIsMore: number;
+  rate: number;
+  turnoverCommission: number;
+  monthlyBonus: number;
+  totalWinnings: number;
+  bets: BetData[];
+  createdAt?: string | undefined;
+  updatedAt?: string | undefined;
+}
+
+export interface PayPowerRequest {
+  clientId: number;
+  agentIds: number[];
+  fromDate: string;
+  toDate: string;
+  provider: string;
+}
+
+export interface PowerCountData {
+  paidUsers: string[];
+  unPaidUsers: string[];
+  errors: string[];
+}
+
+export interface PowerResponse {
+  success: boolean;
+  message: string;
+  data: PowerCountData | undefined;
+}
+
+export interface PowerBonusResponse {
+  success: boolean;
+  message: string;
+  data: PowerBonusData | undefined;
+}
+
+/** Normal Bonus */
+export interface GetNormalRequest {
+  clientId: number;
+  fromDate: string;
+  toDate: string;
+  provider: string;
+  meta?: Meta | undefined;
+}
+
+export interface PayNormalRequest {
+  id?: number | undefined;
+  betId: number;
+  selectionsCount: number;
+  totalOdds: number;
+  stake: number;
+  clientId: number;
+  cashierId: number;
+  profileId?: number | undefined;
+  commission?: number | undefined;
+  profileGroup: string;
+  isPaid?: boolean | undefined;
+}
+
+/** Bonus */
+export interface BonusGroup {
+  group: string;
+  maxSelection: number;
+  minSelection: number;
+  rate: number;
+  rateIsLess: number;
+  rateIsMore: number;
+  targetCoupon: number;
+  targetStake: number;
+  createdAt?: string | undefined;
+  updatedAt?: string | undefined;
+}
+
+export interface BonusGroups {
+  clientId: number;
+  bonusGroups: BonusGroup[];
+}
+
+export interface BonusGroupResponse {
+  success: boolean;
+  message: string;
+  data: BonusGroup[];
+}
+
 export interface GetAgentUserRequest {
   clientId: number;
   userId: number;
@@ -20,18 +192,20 @@ export interface GetAgentUsersRequest {
   page?: number | undefined;
 }
 
-export interface Empty {
+export interface GetCommissionsRequest {
+  clientId: number;
 }
 
 /** Commission Profile */
 export interface CommissionProfile {
+  clientId: number;
   id?: number | undefined;
   name: string;
-  default: boolean;
+  isDefault: boolean;
   description: string;
   providerGroup: string;
   period: string;
-  type: string;
+  calculationType: string;
   percentage: number;
   commissionType: number;
   turnovers: CommissionTurnover[];
@@ -39,16 +213,8 @@ export interface CommissionProfile {
   updatedAt?: string | undefined;
 }
 
-export interface CommissionProfileResponse {
-  success: boolean;
-  message: string;
-  data: CommissionProfile | undefined;
-}
-
-export interface CommissionProfilesResponse {
-  success: boolean;
-  message: string;
-  data: CommissionProfile[];
+export interface SingleItemRequest {
+  itemId: number;
 }
 
 export interface AssignUserCommissionProfile {
@@ -56,15 +222,6 @@ export interface AssignUserCommissionProfile {
   userId: number;
   createdAt?: string | undefined;
   updatedAt?: string | undefined;
-}
-
-/** Commission Reequest */
-export interface CommissionRequest {
-  provider: string;
-}
-
-export interface ArrayCommissionResponse {
-  commissions: Commission[];
 }
 
 export interface Commission {
@@ -904,13 +1061,37 @@ export interface IdentityServiceClient {
 
   getAgentUser(request: GetAgentUserRequest): Observable<CommonResponseArray>;
 
-  getCommissionProfiles(request: Empty): Observable<CommissionProfilesResponse>;
+  getCommissionProfiles(request: GetCommissionsRequest): Observable<CommonResponseArray>;
 
-  createCommissionProfile(request: CommissionProfile): Observable<CommissionProfileResponse>;
+  createCommissionProfile(request: CommissionProfile): Observable<CommonResponseObj>;
 
-  updateCommissionProfile(request: CommissionProfile): Observable<CommissionProfileResponse>;
+  updateCommissionProfile(request: CommissionProfile): Observable<CommonResponseObj>;
 
-  assignUserCommissionProfile(request: AssignUserCommissionProfile): Observable<CommissionProfileResponse>;
+  assignUserCommissionProfile(request: AssignUserCommissionProfile): Observable<CommonResponseObj>;
+
+  getUserCommissionProfiles(request: SingleItemRequest): Observable<CommonResponseArray>;
+
+  removeUserCommissionProfile(request: AssignUserCommissionProfile): Observable<CommonResponseArray>;
+
+  getCommissionProfile(request: SingleItemRequest): Observable<CommonResponseObj>;
+
+  deleteCommissionProfile(request: SingleItemRequest): Observable<CommonResponseObj>;
+
+  getBonusGroups(request: SingleItemRequest): Observable<BonusGroupResponse>;
+
+  createBonusGroups(request: BonusGroups): Observable<BonusGroupResponse>;
+
+  createPowerBonus(request: PowerRequest): Observable<PowerBonusResponse>;
+
+  getPowerBonus(request: PowerRequest): Observable<PowerBonusResponse>;
+
+  payOutPowerBonus(request: PayPowerRequest): Observable<PowerResponse>;
+
+  getNormalBonus(request: GetNormalRequest): Observable<NormalResponse>;
+
+  calculateNormalBonus(request: PayNormalRequest): Observable<PayNormalResponse>;
+
+  payOutNormalBonus(request: PayNormalRequest): Observable<PayNormalResponse>;
 }
 
 export interface IdentityServiceController {
@@ -1123,20 +1304,64 @@ export interface IdentityServiceController {
   ): Promise<CommonResponseArray> | Observable<CommonResponseArray> | CommonResponseArray;
 
   getCommissionProfiles(
-    request: Empty,
-  ): Promise<CommissionProfilesResponse> | Observable<CommissionProfilesResponse> | CommissionProfilesResponse;
+    request: GetCommissionsRequest,
+  ): Promise<CommonResponseArray> | Observable<CommonResponseArray> | CommonResponseArray;
 
   createCommissionProfile(
     request: CommissionProfile,
-  ): Promise<CommissionProfileResponse> | Observable<CommissionProfileResponse> | CommissionProfileResponse;
+  ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
 
   updateCommissionProfile(
     request: CommissionProfile,
-  ): Promise<CommissionProfileResponse> | Observable<CommissionProfileResponse> | CommissionProfileResponse;
+  ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
 
   assignUserCommissionProfile(
     request: AssignUserCommissionProfile,
-  ): Promise<CommissionProfileResponse> | Observable<CommissionProfileResponse> | CommissionProfileResponse;
+  ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
+
+  getUserCommissionProfiles(
+    request: SingleItemRequest,
+  ): Promise<CommonResponseArray> | Observable<CommonResponseArray> | CommonResponseArray;
+
+  removeUserCommissionProfile(
+    request: AssignUserCommissionProfile,
+  ): Promise<CommonResponseArray> | Observable<CommonResponseArray> | CommonResponseArray;
+
+  getCommissionProfile(
+    request: SingleItemRequest,
+  ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
+
+  deleteCommissionProfile(
+    request: SingleItemRequest,
+  ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
+
+  getBonusGroups(
+    request: SingleItemRequest,
+  ): Promise<BonusGroupResponse> | Observable<BonusGroupResponse> | BonusGroupResponse;
+
+  createBonusGroups(
+    request: BonusGroups,
+  ): Promise<BonusGroupResponse> | Observable<BonusGroupResponse> | BonusGroupResponse;
+
+  createPowerBonus(
+    request: PowerRequest,
+  ): Promise<PowerBonusResponse> | Observable<PowerBonusResponse> | PowerBonusResponse;
+
+  getPowerBonus(
+    request: PowerRequest,
+  ): Promise<PowerBonusResponse> | Observable<PowerBonusResponse> | PowerBonusResponse;
+
+  payOutPowerBonus(request: PayPowerRequest): Promise<PowerResponse> | Observable<PowerResponse> | PowerResponse;
+
+  getNormalBonus(request: GetNormalRequest): Promise<NormalResponse> | Observable<NormalResponse> | NormalResponse;
+
+  calculateNormalBonus(
+    request: PayNormalRequest,
+  ): Promise<PayNormalResponse> | Observable<PayNormalResponse> | PayNormalResponse;
+
+  payOutNormalBonus(
+    request: PayNormalRequest,
+  ): Promise<PayNormalResponse> | Observable<PayNormalResponse> | PayNormalResponse;
 }
 
 export function IdentityServiceControllerMethods() {
@@ -1204,6 +1429,18 @@ export function IdentityServiceControllerMethods() {
       "createCommissionProfile",
       "updateCommissionProfile",
       "assignUserCommissionProfile",
+      "getUserCommissionProfiles",
+      "removeUserCommissionProfile",
+      "getCommissionProfile",
+      "deleteCommissionProfile",
+      "getBonusGroups",
+      "createBonusGroups",
+      "createPowerBonus",
+      "getPowerBonus",
+      "payOutPowerBonus",
+      "getNormalBonus",
+      "calculateNormalBonus",
+      "payOutNormalBonus",
     ];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);

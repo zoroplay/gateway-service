@@ -163,7 +163,7 @@ export class WalletController {
         description: 'This endpoint fetches authenticated user saved bank accounts',
     })
     @ApiQuery({
-        name: 'client',
+        name: 'clientId',
         type: 'number',
         description: 'SBE Client ID',
     })

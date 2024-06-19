@@ -1,7 +1,7 @@
 import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { ClientGrpc } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
-import { IDENTITY_SERVICE_NAME, IdentityServiceClient, protobufPackage } from 'src/interfaces/identity.pb';
+import { AssignUserCommissionProfile, CommissionProfile, GetCommissionsRequest, IDENTITY_SERVICE_NAME, IdentityServiceClient, SingleItemRequest, protobufPackage } from 'src/interfaces/identity.pb';
 
 @Injectable()
 export class RetailService implements OnModuleInit {
@@ -24,7 +24,47 @@ export class RetailService implements OnModuleInit {
     return await firstValueFrom(this.service.listAgentUsers(data))
   }
 
-  // Bonus Groups
+  // Commission Profiles
+
+  getCommissionProfiles(data: GetCommissionsRequest) {
+    // console.log(data);
+    return this.service.getCommissionProfiles(data);
+  }
+
+  getCommissionProfile(data: SingleItemRequest) {
+    // console.log(data);
+    return this.service.getCommissionProfile(data);
+  }
+
+  createCommissionProfile(data: CommissionProfile) {
+    // console.log(data);
+    return this.service.createCommissionProfile(data);
+  }
+
+  updateCommissionProfile(data: CommissionProfile) {
+    // console.log(data);
+    return this.service.updateCommissionProfile(data);
+  }
+  assignUserCommissionProfile(data: AssignUserCommissionProfile) {
+    // console.log(data);
+    return firstValueFrom(this.service.assignUserCommissionProfile(data));
+  }
+
+  removeUserCommissionProfile(data: AssignUserCommissionProfile) {
+    // console.log(data);
+    return firstValueFrom(this.service.removeUserCommissionProfile(data));
+  }
+
+  getUserCommissionProfiles(data: SingleItemRequest) {
+    // console.log(data);
+    return firstValueFrom(this.service.getUserCommissionProfiles(data));
+  }
+
+  deleteCommission(data: SingleItemRequest) {
+    // console.log(data);
+    return this.service.deleteCommissionProfile(data);
+  }
+    // Bonus Groups
   // getBonusGroups(data: Empty) {
   //   console.log(data);
   //   return this.service.getBonusGroups(data);
@@ -35,26 +75,8 @@ export class RetailService implements OnModuleInit {
   //   return this.service.createBonusGroups(data);
   // }
 
-//   // Commission Profiles
 
-//   getCommissionProfiles(data: Empty) {
-//     console.log(data);
-//     return this.service.getCommissionProfiles(data);
-//   }
-//   createCommissionProfile(data: CommissionProfile) {
-//     console.log(data);
-//     return this.service.createCommissionProfile(data);
-//   }
-//   updateCommissionProfile(data: CommissionProfile) {
-//     console.log(data);
-//     return this.service.updateCommissionProfile(data);
-//   }
-//   assignUserCommissionProfile(data: AssignUserCommissionProfile) {
-//     console.log(data);
-//     return this.service.assignUserCommissionProfile(data);
-//   }
-
-//   // Power Bonus
+  // Power Bonus
 //   getPowerBonus(data: PowerRequest) {
 //     console.log(data);
 //     return this.service.getPowerBonus(data);

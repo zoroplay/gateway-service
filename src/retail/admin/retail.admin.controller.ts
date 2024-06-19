@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Inject, Param, Patch, Post, Query, Req } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Inject, Param, Patch, Post, Query, Req } from '@nestjs/common';
 import { ApiBody, ApiOkResponse, ApiOperation, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { SwaggerCommonResponse, SwaggerUserDetailsRequest } from '../../identity/dto';
 import { IAuthorizedRequest } from 'src/interfaces/authorized-request.interface';
@@ -20,7 +20,7 @@ import { IAuthorizedRequest } from 'src/interfaces/authorized-request.interface'
   } from '../dto';
 import { RetailService } from '../retail.service';
 import { AuthService } from 'src/identity/auth/auth.service';
-import { CreateUserRequest, GetAgentUsersRequest } from 'src/interfaces/identity.pb';
+import { AssignUserCommissionProfile, CommissionProfile, CreateUserRequest, GetAgentUsersRequest } from 'src/interfaces/identity.pb';
 
 @ApiTags('BackOffice APIs')
 @Controller('admin/retail')
@@ -80,11 +80,137 @@ export class RetailAdminController {
     ) {
         body.clientId = clientId;
         body.userId = agentId || req.user.id;
-
         // console.log(body);
         return this.retailService.getAgentUsers(body);
     }
 
+
+    @Get(':clientId/commission-profile')
+    @ApiOperation({
+        summary: 'Get all Commission Profile',
+        description:
+        'These are Profiles with parameters used in calculating commissions when bet is placed',
+    })
+    @ApiParam({name: 'clientId', description: 'SBE Client ID'})
+    @ApiOkResponse({ type: [SwaggerCommissionProfileResponse] })
+    getCommissionProfiles(
+        @Param('clientId') clientId: number
+    ) {
+        const data = {clientId}
+        return this.retailService.getCommissionProfiles(data);
+    }
+
+    @Get(':clientId/commission-profile/:id')
+    @ApiOperation({
+        summary: 'Get a Commission Profile',
+        description: 'Get a single commission profile',
+    })
+    @ApiParam({name: 'clientId', description: 'SBE Client ID'})
+    @ApiParam({name: 'id', description: 'Commission Profile ID'})
+    @ApiOkResponse({ type: [SwaggerCommissionProfileResponse] })
+    getCommissionProfile(
+        @Param('clientId') clientId: number,
+        @Param('id') id: number
+    ) {
+        const data = {itemId: id}
+        return this.retailService.getCommissionProfile(data);
+    }
+    
+
+    @Post(':clientId/commission-profile')
+    @ApiOperation({
+        summary: 'Create a Commission Profile',
+        description:
+        'These are Profiles with parameters used in calculating commissions when bet is placed',
+    })
+    @ApiParam({name: 'clientId', description: 'SBE Client ID'})
+    @ApiBody({ type: SwaggerCreateCommissionProfile })
+    @ApiOkResponse({ type: SwaggerCommissionProfileResponse })
+    createCommissionProfile(
+        @Body() data: CommissionProfile,
+        @Param('clientId') clientId: number
+    ) {
+        data.clientId = clientId;
+        return this.retailService.createCommissionProfile(data);
+    }
+
+    @Patch(':clientId/commission-profile')
+    @ApiOperation({
+        summary: 'Update a Commission Profile',
+        description:
+        'These are Profiles with parameters used in calculating commissions when bet is placed',
+    })
+    @ApiParam({name: 'clientId', description: 'SBE Client ID'})
+    @ApiBody({ type: SwaggerUpdateCommissionProfile })
+    @ApiOkResponse({ type: SwaggerCommissionProfileResponse })
+    updateCommissionProfile(
+        @Body() data: CommissionProfile,
+        @Param('clientId') clientId: number
+    ) {
+        data.clientId = clientId;
+        return this.retailService.updateCommissionProfile(data);
+    }
+
+    @Post(':clientid/commission-profile/assign-user')
+    @ApiOperation({
+        summary: 'Assign User a Commission Profile',
+        description: 'These are Profiles links a Profile with a user',
+    })
+    @ApiParam({name: 'clientId', description: 'SBE Client ID'})
+    @ApiBody({ type: SwaggerAssignUserCommissionProfile })
+    @ApiOkResponse({ type: SwaggerCommissionProfileResponse })
+    assignUserCommissionProfile(
+        @Body() data: AssignUserCommissionProfile,
+        @Param('clientId') clientId: number
+    ) {
+        return this.retailService.assignUserCommissionProfile(data);
+    }
+
+    @Post(':clientid/commission-profile/remove-profile')
+    @ApiOperation({
+        summary: 'Remove a User Commission Profile',
+        description: 'These are Profiles removes linked Profile with a user',
+    })
+    @ApiParam({name: 'clientId', description: 'SBE Client ID'})
+    @ApiBody({ type: SwaggerAssignUserCommissionProfile })
+    @ApiOkResponse({ type: SwaggerCommissionProfileResponse })
+    removeUserCommissionProfile(
+        @Body() data: AssignUserCommissionProfile,
+        @Param('clientId') clientId: number
+    ) {
+        return this.retailService.removeUserCommissionProfile(data);
+    }
+
+    @Get(':clientid/commission-profile/users/:id')
+    @ApiOperation({
+        summary: 'Get Commission Profiles',
+        description: 'This endpoint returns all assigned profiles for a user',
+    })
+    @ApiParam({name: 'clientId', description: 'SBE Client ID'})
+    @ApiParam({name: 'id', description: 'Agent ID'})
+    @ApiOkResponse({ type: SwaggerCommissionProfileResponse })
+    getUserCommissionProfiles(
+        @Param('clientId') clientId: number,
+        @Param('id') id: number,
+    ) {
+        return this.retailService.getUserCommissionProfiles({itemId: id});
+    }
+
+    @Delete(':clientId/commission-profile/:id')
+    @ApiOperation({
+        summary: 'Get a Commission Profile',
+        description: 'Get a single commission profile',
+    })
+    @ApiParam({name: 'clientId', description: 'SBE Client ID'})
+    @ApiParam({name: 'id', description: 'Commission Profile ID'})
+    @ApiOkResponse({ type: [SwaggerCommissionProfileResponse] })
+    deleteCommissionProfile(
+        @Param('clientId') clientId: number,
+        @Param('id') id: number
+    ) {
+        const data = {itemId: id}
+        return this.retailService.deleteCommission(data);
+    }
 
   // @Get('/bonus-groups')
   // @ApiOperation({
@@ -107,52 +233,6 @@ export class RetailAdminController {
   // @ApiOkResponse({ type: [SwaggerBonusGroupResponse] })
   // createBonusGroups(@Body() data: BonusGroups) {
   //   return this.retailService.createBonusGroups(data);
-  // }
-
-  // @Get('/commission-profile')
-  // @ApiOperation({
-  //   summary: 'Get all Commission Profile',
-  //   description:
-  //     'These are Profiles with parameters used in calculating commissions when bet is placed',
-  // })
-  // @ApiOkResponse({ type: [SwaggerCommissionProfileResponse] })
-  // getCommissionProfiles(@Body() data: Empty) {
-  //   return this.retailService.getCommissionProfiles(data);
-  // }
-
-  // @Post('/commission-profile')
-  // @ApiOperation({
-  //   summary: 'Create a Commission Profile',
-  //   description:
-  //     'These are Profiles with parameters used in calculating commissions when bet is placed',
-  // })
-  // @ApiBody({ type: SwaggerCreateCommissionProfile })
-  // @ApiOkResponse({ type: SwaggerCommissionProfileResponse })
-  // createCommissionProfile(@Body() data: CommissionProfile) {
-  //   return this.retailService.createCommissionProfile(data);
-  // }
-
-  // @Patch('/commission-profile')
-  // @ApiOperation({
-  //   summary: 'Update a Commission Profile',
-  //   description:
-  //     'These are Profiles with parameters used in calculating commissions when bet is placed',
-  // })
-  // @ApiBody({ type: SwaggerUpdateCommissionProfile })
-  // @ApiOkResponse({ type: SwaggerCommissionProfileResponse })
-  // updateCommissionProfile(@Body() data: CommissionProfile) {
-  //   return this.retailService.updateCommissionProfile(data);
-  // }
-
-  // @Post('/commission-profile/assign-user')
-  // @ApiOperation({
-  //   summary: 'Assign User a Commission Profile',
-  //   description: 'These are Profiles links a Profile with a user',
-  // })
-  // @ApiBody({ type: SwaggerAssignUserCommissionProfile })
-  // @ApiOkResponse({ type: SwaggerCommissionProfileResponse })
-  // assignUserCommissionProfile(@Body() data: AssignUserCommissionProfile) {
-  //   return this.retailService.assignUserCommissionProfile(data);
   // }
 
   // @Get('/power-bonus')
