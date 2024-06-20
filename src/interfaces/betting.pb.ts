@@ -472,7 +472,7 @@ export interface BettingServiceClient {
 
   getProbabilityFromBetId(request: BetID): Observable<Probability>;
 
-  getCoupon(request: FindBetRequest): Observable<FindBetResponse>;
+  getCoupon(request: FindBetRequest): Observable<CommonResponseObj>;
 
   gamingActivity(request: GamingActivityRequest): Observable<GamingActivityResponse>;
 
@@ -534,7 +534,7 @@ export interface BettingServiceController {
 
   getProbabilityFromBetId(request: BetID): Promise<Probability> | Observable<Probability> | Probability;
 
-  getCoupon(request: FindBetRequest): Promise<FindBetResponse> | Observable<FindBetResponse> | FindBetResponse;
+  getCoupon(request: FindBetRequest): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
 
   gamingActivity(
     request: GamingActivityRequest,
