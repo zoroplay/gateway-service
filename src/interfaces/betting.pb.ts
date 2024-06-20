@@ -466,7 +466,7 @@ export interface BettingServiceClient {
 
   betHistory(request: BetHistoryRequest): Observable<BetHistoryResponse>;
 
-  findBet(request: FindBetRequest): Observable<FindBetResponse>;
+  findBet(request: FindBetRequest): Observable<CommonResponseObj>;
 
   updateBet(request: UpdateBetRequest): Observable<UpdateBetResponse>;
 
@@ -528,7 +528,7 @@ export interface BettingServiceController {
     request: BetHistoryRequest,
   ): Promise<BetHistoryResponse> | Observable<BetHistoryResponse> | BetHistoryResponse;
 
-  findBet(request: FindBetRequest): Promise<FindBetResponse> | Observable<FindBetResponse> | FindBetResponse;
+  findBet(request: FindBetRequest): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
 
   updateBet(request: UpdateBetRequest): Promise<UpdateBetResponse> | Observable<UpdateBetResponse> | UpdateBetResponse;
 
