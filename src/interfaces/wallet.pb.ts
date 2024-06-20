@@ -10,9 +10,10 @@ export interface ProcessRetailTransaction {
   id: number;
   clientId: number;
   userId: number;
-  username: string;
-  amount: number;
-  withdrawalCharge: number;
+  username?: string | undefined;
+  amount?: number | undefined;
+  withdrawalCharge?: number | undefined;
+  userRole?: string | undefined;
 }
 
 export interface WalletTransferRequest {
@@ -30,7 +31,7 @@ export interface ValidateTransactionRequest {
   clientId: number;
   userId: number;
   code: string;
-  userRole: string;
+  userRole?: string | undefined;
 }
 
 export interface EmptyRequest {
@@ -38,6 +39,7 @@ export interface EmptyRequest {
 
 export interface BranchRequest {
   branchId: number;
+  date?: string | undefined;
 }
 
 export interface IdRequest {
@@ -87,6 +89,7 @@ export interface Expense {
   verifiedBy: number;
   createdAt: string;
   balance?: number | undefined;
+  expenseType?: string | undefined;
 }
 
 export interface CashbookApproveCashInOutRequest {
@@ -632,7 +635,7 @@ export interface PaginationResponse {
   nextPage: number;
   prevPage: number;
   lastPage: number;
-  data: string;
+  data: { [key: string]: any }[];
 }
 
 export interface MetaData {
@@ -681,6 +684,10 @@ export interface WalletServiceClient {
 
   cashbookFindAllBranchCashIn(request: BranchRequest): Observable<CashInOutRepeatedResponse>;
 
+  findAllBranchApprovedCashinWDate(request: BranchRequest): Observable<CashInOutRepeatedResponse>;
+
+  findAllBranchPendingCashinWDate(request: BranchRequest): Observable<CashInOutRepeatedResponse>;
+
   cashbookApproveCashOut(request: CashbookApproveCashInOutRequest): Observable<CashInOutSingleResponse>;
 
   cashbookCreateCashOut(request: CashbookCreateCashInOutRequest): Observable<CashInOutSingleResponse>;
@@ -718,6 +725,8 @@ export interface WalletServiceClient {
   requestWithdrawal(request: WithdrawRequest): Observable<WithdrawResponse>;
 
   verifyBankAccount(request: VerifyBankAccountRequest): Observable<VerifyBankAccountResponse>;
+
+  listBanks(request: EmptyRequest): Observable<CommonResponseArray>;
 
   getTransactions(request: GetTransactionRequest): Observable<GetTransactionResponse>;
 
@@ -758,6 +767,8 @@ export interface WalletServiceClient {
   validateWithdrawalCode(request: ValidateTransactionRequest): Observable<CommonResponseObj>;
 
   processShopWithdrawal(request: ProcessRetailTransaction): Observable<CommonResponseObj>;
+
+  debitAgentBalance(request: DebitUserRequest): Observable<CommonResponseObj>;
 }
 
 export interface WalletServiceController {
@@ -822,6 +833,14 @@ export interface WalletServiceController {
   ): Promise<CashInOutRepeatedResponse> | Observable<CashInOutRepeatedResponse> | CashInOutRepeatedResponse;
 
   cashbookFindAllBranchCashIn(
+    request: BranchRequest,
+  ): Promise<CashInOutRepeatedResponse> | Observable<CashInOutRepeatedResponse> | CashInOutRepeatedResponse;
+
+  findAllBranchApprovedCashinWDate(
+    request: BranchRequest,
+  ): Promise<CashInOutRepeatedResponse> | Observable<CashInOutRepeatedResponse> | CashInOutRepeatedResponse;
+
+  findAllBranchPendingCashinWDate(
     request: BranchRequest,
   ): Promise<CashInOutRepeatedResponse> | Observable<CashInOutRepeatedResponse> | CashInOutRepeatedResponse;
 
@@ -892,6 +911,10 @@ export interface WalletServiceController {
   verifyBankAccount(
     request: VerifyBankAccountRequest,
   ): Promise<VerifyBankAccountResponse> | Observable<VerifyBankAccountResponse> | VerifyBankAccountResponse;
+
+  listBanks(
+    request: EmptyRequest,
+  ): Promise<CommonResponseArray> | Observable<CommonResponseArray> | CommonResponseArray;
 
   getTransactions(
     request: GetTransactionRequest,
@@ -970,6 +993,10 @@ export interface WalletServiceController {
   processShopWithdrawal(
     request: ProcessRetailTransaction,
   ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
+
+  debitAgentBalance(
+    request: DebitUserRequest,
+  ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
 }
 
 export function WalletServiceControllerMethods() {
@@ -991,6 +1018,8 @@ export function WalletServiceControllerMethods() {
       "cashbookFindOneCashIn",
       "cashbookFindAllCashIn",
       "cashbookFindAllBranchCashIn",
+      "findAllBranchApprovedCashinWDate",
+      "findAllBranchPendingCashinWDate",
       "cashbookApproveCashOut",
       "cashbookCreateCashOut",
       "cashbookUpdateCashOut",
@@ -1010,6 +1039,7 @@ export function WalletServiceControllerMethods() {
       "verifyDeposit",
       "requestWithdrawal",
       "verifyBankAccount",
+      "listBanks",
       "getTransactions",
       "getPaymentMethods",
       "savePaymentMethod",
@@ -1029,6 +1059,7 @@ export function WalletServiceControllerMethods() {
       "processShopDeposit",
       "validateWithdrawalCode",
       "processShopWithdrawal",
+      "debitAgentBalance",
     ];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
