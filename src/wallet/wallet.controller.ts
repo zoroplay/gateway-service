@@ -193,7 +193,7 @@ export class WalletController {
         @Param() param: any,
         @Query() query 
     ) {
-        return this.walletService.getPaymentMethods({clientId: param.client_id, status: 1});
+        return this.walletService.getPaymentMethods({clientId: param.clientId, status: 1});
     }
 
     @Get(':clientId/banks')
