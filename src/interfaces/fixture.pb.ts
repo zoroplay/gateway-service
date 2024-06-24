@@ -340,8 +340,15 @@ export interface Outcome {
   oddID: number;
   /** wether odd is active (1) or not (0), only display active odds on the site */
   active: number;
-  displayName: number;
+  displayName?: string | undefined;
   producerID: number;
+  marketName?: string | undefined;
+  specifier?: string | undefined;
+  id?: number | undefined;
+  marketId?: number | undefined;
+  status?: number | undefined;
+  priority?: number | undefined;
+  marketAlias?: string | undefined;
 }
 
 export interface AvailableMarket {
@@ -405,6 +412,45 @@ export interface FixtureOdds {
   producerID: number;
   /** array of markets */
   markets: Market[];
+  /** Fixture country */
+  categoryName: string;
+  /** match status code */
+  statusCode: number;
+  /** producer status */
+  producerStatus: number;
+  /** Match status description, available values NotStarted,Live,Ended,Suspended */
+  matchStatus: string;
+  /** Current score of the home team */
+  homeScore: string;
+  /** Current score of the away team */
+  awayScore: string;
+  /** Home team name */
+  competitor1: string;
+  /** Away team name */
+  competitor2: string;
+  /** Current event time e.g 00:10 */
+  eventTime: string;
+  sportName: string;
+  categoryID: string;
+}
+
+export interface FixtureWithOutcomes {
+  /** Tournament name */
+  tournament: string;
+  /** Unique ID of the sport */
+  sportID: number;
+  /** Unique ID of the match (internal ID) */
+  gameID: number;
+  /** Fixture name */
+  name: string;
+  /** Unique ID of the match (betradr ID) */
+  matchID: number;
+  /** Fixture date */
+  date: string;
+  /** Unique ID of the producer that sent the odd */
+  producerID: number;
+  /** array of markets */
+  outcomes: Outcome[];
   /** Fixture country */
   categoryName: string;
   /** match status code */
@@ -596,7 +642,7 @@ export interface FixtureServiceClient {
 
   /** Get Fixture Retail - Loads odds for all the markets of the supplied matchID */
 
-  getRetailFixture(request: FilterByMatchID): Observable<FixtureOdds>;
+  getRetailFixture(request: FilterByMatchID): Observable<FixtureWithOutcomes>;
 }
 
 export interface FixtureServiceController {
@@ -734,7 +780,9 @@ export interface FixtureServiceController {
 
   /** Get Fixture Retail - Loads odds for all the markets of the supplied matchID */
 
-  getRetailFixture(request: FilterByMatchID): Promise<FixtureOdds> | Observable<FixtureOdds> | FixtureOdds;
+  getRetailFixture(
+    request: FilterByMatchID,
+  ): Promise<FixtureWithOutcomes> | Observable<FixtureWithOutcomes> | FixtureWithOutcomes;
 }
 
 export function FixtureServiceControllerMethods() {

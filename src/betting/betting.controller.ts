@@ -209,16 +209,13 @@ export class BettingController {
   @ApiOkResponse({ type: SwaggerBetHistoryResponse })
   BetHistory(@Query() query, @Body() data: BetHistoryRequest) {
     try {
-      const rq = {
-        userId: data.userId,
-        clientId: data.clientId,
-        status: data.status,
-        from: data.from,
-        to: data.to,
-        page: query.page ? query.page : 1,
-        perPage: query.perPage ? query.perPage : 100,
-      };
-      return this.bettingService.BetHistory(data);
+
+      const payload = {...data};
+      payload.userId = data.userId;
+      payload.page = query.page ? query.page : 1;
+      payload.perPage = query.perPage ? query.perPage : 100;
+    
+      return this.bettingService.BetHistory(payload);
     } catch (error) {
       console.error(error);
     }
