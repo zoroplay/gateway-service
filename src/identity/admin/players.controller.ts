@@ -177,4 +177,19 @@ export class PlayersController {
     const res =  await firstValueFrom(this.svc.getUserIdandName({username}));
     return res.data;
   }
+
+  @Get('/update-status/:id')
+  @ApiOperation({
+    summary: 'Update Player Status',
+    description:
+      'This endpoint is used to update a user status',
+  })
+  @ApiQuery({ name: 'status', description: 'Status name' })
+  @ApiParam({ name: 'id', description: 'Player ID' })
+  async updatePlayerStatus(
+    @Query('status') status: number,
+    @Param('id') id: number
+  ) {
+    return await firstValueFrom(this.svc.updatePlayerStatus({userId: id, status}));
+  }
 }

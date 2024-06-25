@@ -259,6 +259,7 @@ export interface GetRiskSettingRequest {
 
 export interface FindUserRequest {
   userId: number;
+  status?: number | undefined;
 }
 
 export interface GetUserIdNameRequest {
@@ -1009,6 +1010,8 @@ export interface IdentityServiceClient {
 
   updatePlayerData(request: UpdatePlayerDataRequest): Observable<UpdateUserResponse>;
 
+  updatePlayerStatus(request: FindUserRequest): Observable<CommonResponseObj>;
+
   changePassword(request: ChangePasswordRequest): Observable<UpdateUserResponse>;
 
   resetPassword(request: ResetPasswordRequest): Observable<UpdateUserResponse>;
@@ -1202,6 +1205,10 @@ export interface IdentityServiceController {
   updatePlayerData(
     request: UpdatePlayerDataRequest,
   ): Promise<UpdateUserResponse> | Observable<UpdateUserResponse> | UpdateUserResponse;
+
+  updatePlayerStatus(
+    request: FindUserRequest,
+  ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
 
   changePassword(
     request: ChangePasswordRequest,
@@ -1400,6 +1407,7 @@ export function IdentityServiceControllerMethods() {
       "fetchPlayerFilters",
       "getPlayerData",
       "updatePlayerData",
+      "updatePlayerStatus",
       "changePassword",
       "resetPassword",
       "savePlayerSegment",
