@@ -19,6 +19,7 @@ import {
 } from '@nestjs/swagger';
 import { FixtureService } from '../fixture.service';
 import {
+  AddFavouriteResponse,
   SwaggerAddSpecifierRequest,
   SwaggerAllMarketsResponse,
   SwaggerAllSportResponse,
@@ -46,6 +47,7 @@ import {
   CreateMarketGroupRequest,
   CreateOutcomeAliasRequest,
   DefaultSportMarketDTO,
+  SaveTopTournamentRequest,
   UpdateMarketRequest,
 } from 'src/interfaces/fixture.pb';
 
@@ -339,6 +341,77 @@ export class AdminFixtureController {
       const id = parseInt(params.sport_id);
 
       return this.fixtureService.deleteDefaultSportMarket(id);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  @Get(':clientId/top-bets')
+  @ApiOperation({
+    summary: 'Get top tournaments',
+    description: 'This endpoint fetches top tournaments',
+  })
+  @ApiParam({
+    name: 'clientId',
+    type: 'number',
+    description: 'SBE Client ID',
+  })
+  @ApiOkResponse({ type: AddFavouriteResponse })
+  getTopTournaments(@Param() params: any) {
+    try {
+      const id = parseInt(params.clientId);
+
+      return this.fixtureService.getTopTournament({clientID: id});
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  @Post(':clientId/top-bets')
+  @ApiOperation({
+    summary: 'Save top tournament',
+    description: 'This endpoint adds new top tournament',
+  })
+  @ApiParam({
+    name: 'clientId',
+    type: 'number',
+    description: 'SBE Client ID',
+  })
+  @ApiOkResponse({ type: AddFavouriteResponse })
+  saveTopTournamnet(
+    @Param() params: any,
+    @Body() body: SaveTopTournamentRequest
+  ) {
+    try {
+      body.clientID = parseInt(params.clientId);
+
+      return this.fixtureService.saveTopTournament(body);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  @Delete(':clientId/top-bets/delete/:id')
+  @ApiOperation({
+    summary: 'Delete top tournament',
+    description: 'This endpoint deletes an existing top tournament',
+  })
+  @ApiParam({
+    name: 'clientId',
+    type: 'number',
+    description: 'SBE Client ID',
+  })
+  @ApiParam({
+    name: 'id',
+    type: 'number',
+    description: 'Top tournament ID',
+  })
+  @ApiOkResponse({ type: AddFavouriteResponse })
+  deletTopTournament(@Param() params: any) {
+    try {
+      const id = parseInt(params.id);
+
+      return this.fixtureService.deleteTopTournamnet({id});
     } catch (error) {
       console.error(error);
     }

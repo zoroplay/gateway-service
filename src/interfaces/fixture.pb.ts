@@ -4,6 +4,34 @@ import { Observable } from "rxjs";
 
 export const protobufPackage = "fixture";
 
+export interface CommonResponse {
+  success: boolean;
+  message: string;
+}
+
+export interface TopTournamentData {
+  id: number;
+  sportID: number;
+  sportName: string;
+  categoryID: number;
+  categoryName: string;
+  tournamentID: number;
+  tournamentName: string;
+}
+
+export interface GetTopTournamentResponse {
+  data: TopTournamentData[];
+}
+
+export interface SaveTopTournamentRequest {
+  clientID: number;
+  sportId: number;
+  categoryId: number;
+  tournamentId: number;
+  sideMenu: string;
+  homeScreen: string;
+}
+
 export interface CreateMarketGroupRequest {
   clientID: number;
   groupName: string;
@@ -643,6 +671,12 @@ export interface FixtureServiceClient {
   /** Get Fixture Retail - Loads odds for all the markets of the supplied matchID */
 
   getRetailFixture(request: FilterByMatchID): Observable<FixtureWithOutcomes>;
+
+  getTopTournaments(request: FilterByClientIDRequest): Observable<GetTopTournamentResponse>;
+
+  saveTopTournament(request: SaveTopTournamentRequest): Observable<CommonResponse>;
+
+  removeTopTournament(request: DeleteMarketGroupRequest): Observable<CommonResponse>;
 }
 
 export interface FixtureServiceController {
@@ -783,6 +817,18 @@ export interface FixtureServiceController {
   getRetailFixture(
     request: FilterByMatchID,
   ): Promise<FixtureWithOutcomes> | Observable<FixtureWithOutcomes> | FixtureWithOutcomes;
+
+  getTopTournaments(
+    request: FilterByClientIDRequest,
+  ): Promise<GetTopTournamentResponse> | Observable<GetTopTournamentResponse> | GetTopTournamentResponse;
+
+  saveTopTournament(
+    request: SaveTopTournamentRequest,
+  ): Promise<CommonResponse> | Observable<CommonResponse> | CommonResponse;
+
+  removeTopTournament(
+    request: DeleteMarketGroupRequest,
+  ): Promise<CommonResponse> | Observable<CommonResponse> | CommonResponse;
 }
 
 export function FixtureServiceControllerMethods() {
@@ -818,6 +864,9 @@ export function FixtureServiceControllerMethods() {
       "addFavourites",
       "getRetailFixtures",
       "getRetailFixture",
+      "getTopTournaments",
+      "saveTopTournament",
+      "removeTopTournament",
     ];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
