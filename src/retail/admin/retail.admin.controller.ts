@@ -1,26 +1,19 @@
-import { Body, Controller, Delete, Get, Inject, Param, Patch, Post, Query, Req } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query, Req } from '@nestjs/common';
 import { ApiBody, ApiOkResponse, ApiOperation, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { SwaggerCommonResponse, SwaggerUserDetailsRequest } from '../../identity/dto';
 import { IAuthorizedRequest } from 'src/interfaces/authorized-request.interface';
 
   import {
     SwaggerAssignUserCommissionProfile,
-    SwaggerBonusGroupResponse,
-    SwaggerBonusGroups,
     SwaggerCommissionProfileResponse,
     SwaggerCreateCommissionProfile,
-    SwaggerNormalDataResponse,
-    SwaggerNormalRequest,
-    SwaggerNormalResponse,
-    SwaggerPayPowerRequest,
-    SwaggerPowerBonusResponse,
-    SwaggerPowerRequest,
-    SwaggerPowerResponse,
     SwaggerUpdateCommissionProfile,
   } from '../dto';
 import { RetailService } from '../retail.service';
 import { AuthService } from 'src/identity/auth/auth.service';
 import { AssignUserCommissionProfile, CommissionProfile, CreateUserRequest, GetAgentUsersRequest } from 'src/interfaces/identity.pb';
+import { BetHistoryRequest } from 'src/interfaces/betting.pb';
+import { BettingService } from 'src/betting/betting.service';
 
 @ApiTags('BackOffice APIs')
 @Controller('admin/retail')
@@ -28,7 +21,8 @@ export class RetailAdminController {
 
     constructor(
         private readonly retailService: RetailService,
-        private readonly authService: AuthService
+        private readonly authService: AuthService,
+        private readonly bettingService: BettingService
     ) {}
     
     @Post(':clientId/create-user')
@@ -151,7 +145,7 @@ export class RetailAdminController {
         return this.retailService.updateCommissionProfile(data);
     }
 
-    @Post(':clientid/commission-profile/assign-user')
+    @Post(':clientId/commission-profile/assign-user')
     @ApiOperation({
         summary: 'Assign User a Commission Profile',
         description: 'These are Profiles links a Profile with a user',
@@ -166,7 +160,7 @@ export class RetailAdminController {
         return this.retailService.assignUserCommissionProfile(data);
     }
 
-    @Post(':clientid/commission-profile/remove-profile')
+    @Post(':clientId/commission-profile/remove-profile')
     @ApiOperation({
         summary: 'Remove a User Commission Profile',
         description: 'These are Profiles removes linked Profile with a user',
@@ -181,7 +175,7 @@ export class RetailAdminController {
         return this.retailService.removeUserCommissionProfile(data);
     }
 
-    @Get(':clientid/commission-profile/users/:id')
+    @Get(':clientId/commission-profile/users/:id')
     @ApiOperation({
         summary: 'Get Commission Profiles',
         description: 'This endpoint returns all assigned profiles for a user',
@@ -210,6 +204,45 @@ export class RetailAdminController {
     ) {
         const data = {itemId: id}
         return this.retailService.deleteCommission(data);
+    }
+
+    @Get(':clientId/agent/:id')
+    @ApiOperation({
+        summary: 'Get Agent Profile',
+        description: 'This endpoint returns details for an agent',
+    })
+    @ApiParam({name: 'clientId', description: 'SBE Client ID'})
+    @ApiParam({name: 'id', description: 'Agent ID'})
+    @ApiOkResponse({ type: SwaggerCommissionProfileResponse })
+    getAgentProfile(
+        @Param('clientId') clientId: number,
+        @Param('id') id: number,
+    ) {
+        return this.authService.getUserDetails({clientId, userId: id});
+    }
+
+    @Post(':clientId/agent/:id/bet-list')
+    @ApiOperation({
+        summary: 'Get Agent Profile',
+        description: 'This endpoint returns details for an agent',
+    })
+    @ApiParam({name: 'clientId', description: 'SBE Client ID'})
+    @ApiParam({name: 'id', description: 'Agent ID'})
+    @ApiQuery({name: 'page', description: 'Current Page'})
+    @ApiQuery({name: 'limit', description: 'No of Records'})
+    @ApiOkResponse({ type: SwaggerCommissionProfileResponse })
+    getAgentBets(
+        @Param('clientId') clientId: number,
+        @Param('id') id: number,
+        @Query() query, 
+        @Body() data: BetHistoryRequest,
+    ) {
+        data.userId = id;
+        data.clientId = clientId;
+        data.page = query.page || 1;
+        data.perPage = query.limit
+
+        return this.bettingService.getAgentBets(data);
     }
 
   // @Get('/bonus-groups')
