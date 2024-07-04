@@ -25,11 +25,15 @@ export interface CommonResponseObj {
 
 export interface GetVirtualBetsRequest {
   clientId: number;
+  gameId?: string | undefined;
+  transactionId?: string | undefined;
   from: string;
   to: string;
-  betType?: number | undefined;
-  username?: string | undefined;
+  status?: string | undefined;
   page: number;
+  perPage?: number | undefined;
+  username?: string | undefined;
+  userId?: number | undefined;
 }
 
 export interface PaginationResponse {
@@ -195,6 +199,7 @@ export interface GamingActivityRequest {
   groupBy: string;
   clientID: number;
   displayType: string;
+  userId?: number | undefined;
 }
 
 export interface GamingActivityResponse {
@@ -478,13 +483,17 @@ export interface BettingServiceClient {
 
   getVirtualBet(request: GetVirtualBetRequest): Observable<GetVirtualBetResponse>;
 
-  getVirtualBets(request: GetVirtualBetsRequest): Observable<PaginationResponse>;
+  getVirtualBets(request: GetVirtualBetsRequest): Observable<CommonResponseObj>;
 
   cashoutRequest(request: ProcessCashoutRequest): Observable<ProcessCashoutResponse>;
 
   getRetailBets(request: BetHistoryRequest): Observable<CommonResponseObj>;
 
+  getRetailVBets(request: GetVirtualBetsRequest): Observable<CommonResponseObj>;
+
   getSalesReport(request: SalesReportRequest): Observable<CommonResponseObj>;
+
+  deletePlayerData(request: SettingsById): Observable<CommonResponseObj>;
 }
 
 export interface BettingServiceController {
@@ -546,7 +555,7 @@ export interface BettingServiceController {
 
   getVirtualBets(
     request: GetVirtualBetsRequest,
-  ): Promise<PaginationResponse> | Observable<PaginationResponse> | PaginationResponse;
+  ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
 
   cashoutRequest(
     request: ProcessCashoutRequest,
@@ -556,8 +565,16 @@ export interface BettingServiceController {
     request: BetHistoryRequest,
   ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
 
+  getRetailVBets(
+    request: GetVirtualBetsRequest,
+  ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
+
   getSalesReport(
     request: SalesReportRequest,
+  ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
+
+  deletePlayerData(
+    request: SettingsById,
   ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
 }
 
@@ -586,7 +603,9 @@ export function BettingServiceControllerMethods() {
       "getVirtualBets",
       "cashoutRequest",
       "getRetailBets",
+      "getRetailVBets",
       "getSalesReport",
+      "deletePlayerData",
     ];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);

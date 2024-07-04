@@ -100,6 +100,11 @@ export class BettingService implements OnModuleInit {
     return this.service.getRetailBets(data);
   }
 
+  getAgentVBets(data: GetVirtualBetsRequest) {
+    console.log('get agent bet list ');
+    return this.service.getRetailVBets(data);
+  }
+
   getSalesReport(data: SalesReportRequest) {
     console.log('get sales retport ');
     return this.service.getSalesReport(data);

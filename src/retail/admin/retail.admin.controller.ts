@@ -12,7 +12,7 @@ import { IAuthorizedRequest } from 'src/interfaces/authorized-request.interface'
 import { RetailService } from '../retail.service';
 import { AuthService } from 'src/identity/auth/auth.service';
 import { AssignUserCommissionProfile, CommissionProfile, CreateUserRequest, GetAgentUsersRequest } from 'src/interfaces/identity.pb';
-import { BetHistoryRequest } from 'src/interfaces/betting.pb';
+import { BetHistoryRequest, GetVirtualBetsRequest } from 'src/interfaces/betting.pb';
 import { BettingService } from 'src/betting/betting.service';
 
 @ApiTags('BackOffice APIs')
@@ -224,7 +224,7 @@ export class RetailAdminController {
     @Post(':clientId/agent/:id/bet-list')
     @ApiOperation({
         summary: 'Get Agent Profile',
-        description: 'This endpoint returns details for an agent',
+        description: 'This endpoint returns betlist for an agent',
     })
     @ApiParam({name: 'clientId', description: 'SBE Client ID'})
     @ApiParam({name: 'id', description: 'Agent ID'})
@@ -240,9 +240,33 @@ export class RetailAdminController {
         data.userId = id;
         data.clientId = clientId;
         data.page = query.page || 1;
-        data.perPage = query.limit
+        data.perPage = query.limit || 100
 
         return this.bettingService.getAgentBets(data);
+    }
+
+    @Post(':clientId/agent/:id/virtual-bets')
+    @ApiOperation({
+        summary: 'Get Agent Profile',
+        description: 'This endpoint returns virtual bets for an agent',
+    })
+    @ApiParam({name: 'clientId', description: 'SBE Client ID'})
+    @ApiParam({name: 'id', description: 'Agent ID'})
+    @ApiQuery({name: 'page', description: 'Current Page'})
+    @ApiQuery({name: 'limit', description: 'No of Records'})
+    @ApiOkResponse({ type: SwaggerCommissionProfileResponse })
+    getAgentVBets(
+        @Param('clientId') clientId: number,
+        @Param('id') id: number,
+        @Query() query, 
+        @Body() data: GetVirtualBetsRequest,
+    ) {
+        data.userId = id;
+        data.clientId = clientId;
+        data.page = query.page || 1;
+        data.perPage = query.limit || 100
+
+        return this.bettingService.getAgentVBets(data);
     }
 
   // @Get('/bonus-groups')
