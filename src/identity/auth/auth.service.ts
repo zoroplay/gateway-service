@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { Inject, Injectable } from '@nestjs/common';
 import { ClientGrpc } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
@@ -22,6 +23,8 @@ import {
   GetSettingsRequest,
   CommonResponseArray,
   CommonResponseObj,
+  HandlePinRequest,
+  HandleTransferRequest,
 } from 'src/interfaces/identity.pb';
 
 @Injectable()
@@ -32,7 +35,19 @@ export class AuthService {
   private readonly client: ClientGrpc;
 
   public onModuleInit(): void {
-    this.svc = this.client.getService<IdentityServiceClient>(IDENTITY_SERVICE_NAME);
+    this.svc = this.client.getService<IdentityServiceClient>(
+      IDENTITY_SERVICE_NAME,
+    );
+  }
+
+  public async handleTransfer(
+    data: HandleTransferRequest,
+  ): Promise<CommonResponseObj> {
+    return firstValueFrom(this.svc.handleTransfer(data));
+  }
+
+  public async handlePin(data: HandlePinRequest): Promise<CommonResponseObj> {
+    return firstValueFrom(this.svc.handlePin(data));
   }
 
   public async doRegister(data: CreateUserRequest): Promise<RegisterResponse> {
@@ -43,12 +58,14 @@ export class AuthService {
     return firstValueFrom(this.svc.login(data));
   }
 
-  public async updateUser(data: UpdateUserRequest): Promise<UpdateUserResponse> {
+  public async updateUser(
+    data: UpdateUserRequest,
+  ): Promise<UpdateUserResponse> {
     return firstValueFrom(this.svc.updateUserDetails(data));
   }
 
   public async createUser(data: CreateUserRequest) {
-    return firstValueFrom(this.svc.createRetailUser(data))
+    return firstValueFrom(this.svc.createRetailUser(data));
   }
 
   public async validate(token: string): Promise<ValidateResponse> {
@@ -59,23 +76,33 @@ export class AuthService {
     return firstValueFrom(this.svc.validateClient({ token }));
   }
 
-  public async getUserDetails(data: GetUserDetailsRequest): Promise<GetUserDetailsResponse> {
+  public async getUserDetails(
+    data: GetUserDetailsRequest,
+  ): Promise<GetUserDetailsResponse> {
     return firstValueFrom(this.svc.getUserDetails(data));
   }
 
-  public async validateUser(data: GetUserByUsernameRequest): Promise<GetUserByUsernameResponse> {
+  public async validateUser(
+    data: GetUserByUsernameRequest,
+  ): Promise<GetUserByUsernameResponse> {
     return firstValueFrom(this.svc.getUserByUsername(data));
   }
 
-  public async changePassword(data: ChangePasswordRequest): Promise<UpdateUserResponse> {
+  public async changePassword(
+    data: ChangePasswordRequest,
+  ): Promise<UpdateUserResponse> {
     return firstValueFrom(this.svc.changePassword(data));
   }
 
-  public async resetPassword(data: ResetPasswordRequest): Promise<UpdateUserResponse> {
+  public async resetPassword(
+    data: ResetPasswordRequest,
+  ): Promise<UpdateUserResponse> {
     return firstValueFrom(this.svc.resetPassword(data));
   }
 
-  public async getVariables(data: GetSettingsRequest): Promise<CommonResponseObj> {
+  public async getVariables(
+    data: GetSettingsRequest,
+  ): Promise<CommonResponseObj> {
     return firstValueFrom(this.svc.getGlobalVariables(data));
   }
 }

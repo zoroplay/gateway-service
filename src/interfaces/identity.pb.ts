@@ -6,6 +6,23 @@ import { Struct } from "./google/protobuf/struct.pb";
 
 export const protobufPackage = "identity";
 
+/** HandlePin */
+export interface HandlePinRequest {
+  pin: number;
+  confirmPin?: number | undefined;
+  userId: number;
+  type: string;
+}
+
+/** HandleTransfer */
+export interface HandleTransferRequest {
+  pin: number;
+  clientId: number;
+  fromUserId: number;
+  toUsername: string;
+  amount: number;
+}
+
 /** Power Bonus */
 export interface PowerRequest {
   agentIds: number[];
@@ -201,7 +218,7 @@ export interface CommissionProfile {
   clientId: number;
   id?: number | undefined;
   name: string;
-  isDefault: boolean;
+  isDefault?: boolean | undefined;
   description: string;
   providerGroup: string;
   period: string;
@@ -259,6 +276,7 @@ export interface GetRiskSettingRequest {
 
 export interface FindUserRequest {
   userId: number;
+  status?: number | undefined;
 }
 
 export interface GetUserIdNameRequest {
@@ -943,6 +961,10 @@ export const IDENTITY_PACKAGE_NAME = "identity";
 wrappers[".google.protobuf.Struct"] = { fromObject: Struct.wrap, toObject: Struct.unwrap } as any;
 
 export interface IdentityServiceClient {
+  handlePin(request: HandlePinRequest): Observable<CommonResponseObj>;
+
+  handleTransfer(request: HandleTransferRequest): Observable<CommonResponseObj>;
+
   register(request: CreateUserRequest): Observable<RegisterResponse>;
 
   login(request: LoginRequest): Observable<LoginResponse>;
@@ -1008,6 +1030,8 @@ export interface IdentityServiceClient {
   getPlayerData(request: GetPlayerDataRequest): Observable<GetPlayerDataResponse>;
 
   updatePlayerData(request: UpdatePlayerDataRequest): Observable<UpdateUserResponse>;
+
+  updatePlayerStatus(request: FindUserRequest): Observable<CommonResponseObj>;
 
   changePassword(request: ChangePasswordRequest): Observable<UpdateUserResponse>;
 
@@ -1095,6 +1119,12 @@ export interface IdentityServiceClient {
 }
 
 export interface IdentityServiceController {
+  handlePin(request: HandlePinRequest): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
+
+  handleTransfer(
+    request: HandleTransferRequest,
+  ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
+
   register(request: CreateUserRequest): Promise<RegisterResponse> | Observable<RegisterResponse> | RegisterResponse;
 
   login(request: LoginRequest): Promise<LoginResponse> | Observable<LoginResponse> | LoginResponse;
@@ -1202,6 +1232,10 @@ export interface IdentityServiceController {
   updatePlayerData(
     request: UpdatePlayerDataRequest,
   ): Promise<UpdateUserResponse> | Observable<UpdateUserResponse> | UpdateUserResponse;
+
+  updatePlayerStatus(
+    request: FindUserRequest,
+  ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
 
   changePassword(
     request: ChangePasswordRequest,
@@ -1367,6 +1401,8 @@ export interface IdentityServiceController {
 export function IdentityServiceControllerMethods() {
   return function (constructor: Function) {
     const grpcMethods: string[] = [
+      "handlePin",
+      "handleTransfer",
       "register",
       "login",
       "xpressGameLogin",
@@ -1400,6 +1436,7 @@ export function IdentityServiceControllerMethods() {
       "fetchPlayerFilters",
       "getPlayerData",
       "updatePlayerData",
+      "updatePlayerStatus",
       "changePassword",
       "resetPassword",
       "savePlayerSegment",

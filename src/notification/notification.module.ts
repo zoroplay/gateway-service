@@ -1,11 +1,17 @@
+/* eslint-disable prettier/prettier */
 import { Module } from '@nestjs/common';
 import { NotificationController } from './notification.controller';
 import { NotificationService } from './notification.service';
 import { ClientsModule, Transport } from '@nestjs/microservices';
-import { NOTIFICATION_PACKAGE_NAME, protobufPackage } from 'src/interfaces/noti.pb';
+import {
+  NOTIFICATION_PACKAGE_NAME,
+  protobufPackage,
+} from 'src/interfaces/noti.pb';
 import { AdminController } from './admin/admin.controller';
-import {join} from "path";
-import 'dotenv/config'
+import { join } from 'path';
+import 'dotenv/config';
+import { AuthService } from 'src/identity/auth/auth.service';
+import { IdentityModule } from 'src/identity/identity.module';
 
 @Module({
   imports: [
@@ -20,6 +26,7 @@ import 'dotenv/config'
         },
       },
     ]),
+    IdentityModule,
   ],
   controllers: [NotificationController, AdminController],
   providers: [NotificationService],
