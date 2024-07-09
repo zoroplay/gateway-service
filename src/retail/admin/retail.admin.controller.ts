@@ -12,7 +12,7 @@ import { IAuthorizedRequest } from 'src/interfaces/authorized-request.interface'
 import { RetailService } from '../retail.service';
 import { AuthService } from 'src/identity/auth/auth.service';
 import { AssignUserCommissionProfile, CommissionProfile, CreateUserRequest, GetAgentUsersRequest } from 'src/interfaces/identity.pb';
-import { BetHistoryRequest, GetVirtualBetsRequest } from 'src/interfaces/betting.pb';
+import { BetHistoryRequest, GetCommissionsRequest, GetVirtualBetsRequest } from 'src/interfaces/betting.pb';
 import { BettingService } from 'src/betting/betting.service';
 
 @ApiTags('BackOffice APIs')
@@ -267,6 +267,27 @@ export class RetailAdminController {
         data.perPage = query.limit || 100
 
         return this.bettingService.getAgentVBets(data);
+    }
+
+    @Post(':clientId/get-commissions')
+    @ApiOperation({
+        summary: 'Get Agent Profile',
+        description: 'This endpoint returns virtual bets for an agent',
+    })
+    @ApiParam({name: 'clientId', description: 'SBE Client ID'})
+    @ApiQuery({name: 'page', description: 'Current Page'})
+    @ApiQuery({name: 'limit', description: 'No of Records'})
+    @ApiOkResponse({ type: SwaggerCommissionProfileResponse })
+    getCommissions(
+        @Param('clientId') clientId: number,
+        @Query() query, 
+        @Body() data: GetCommissionsRequest,
+    ) {
+        data.clientId = clientId;
+        // data.page = query.page || 1;
+        // data.perPage = query.limit || 100
+
+        return this.bettingService.getCommissions(data);
     }
 
   // @Get('/bonus-groups')
