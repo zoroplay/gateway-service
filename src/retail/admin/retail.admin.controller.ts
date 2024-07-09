@@ -205,6 +205,7 @@ export class RetailAdminController {
         const data = {itemId: id}
         return this.retailService.deleteCommission(data);
     }
+    
 
     @Get(':clientId/agent/:id')
     @ApiOperation({

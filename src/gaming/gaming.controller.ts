@@ -268,6 +268,7 @@ export class GamingController {
           .status(response.status)
           .send(response)
       } else {
+        console.log('response status is', response.status);
         return res.status(response.status).send(response.data);
       }
     } catch (error) {
