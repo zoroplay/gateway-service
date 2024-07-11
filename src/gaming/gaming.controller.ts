@@ -159,7 +159,7 @@ export class GamingController {
             'X-ErrorMessage': response.message,
             'X-ErrorCode': `${response.status}`,
           })
-          .json(response).status(HttpStatus.OK);
+          .json(response.data).status(HttpStatus.OK);
       }
       console.log('response status is', response.status);
       return res.status(response.status).json(response.data);
