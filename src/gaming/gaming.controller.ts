@@ -152,16 +152,7 @@ export class GamingController {
         body: JSON.stringify(body),
         clientId
       })
-
-      if (response.success === false) {
-        return res
-          .set({
-            'X-ErrorMessage': response.message,
-            'X-ErrorCode': `${response.status}`,
-          })
-          .json(response.data).status(HttpStatus.OK);
-      }
-      console.log('response status is', response.status);
+      
       return res.status(response.status).json(response.data);
       
     } catch (error) {
