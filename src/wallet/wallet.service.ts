@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { CommonResponseArray, CommonResponseObj, CreditUserRequest, DebitUserRequest, GetBalanceRequest, GetPaymentMethodRequest, GetPaymentMethodResponse, GetUserAccountsResponse, InitiateDepositRequest, InitiateDepositResponse, ListDepositRequests, ListWithdrawalRequestResponse, ListWithdrawalRequests, MonnifyWebhookRequest, OpayWebhookRequest, OpayWebhookResponse, PaginationResponse, PaymentMethodRequest, PaymentMethodResponse, PaystackWebhookRequest, ProcessRetailTransaction, UpdateWithdrawalRequest, UserTransactionRequest, UserTransactionResponse, ValidateTransactionRequest, VerifyBankAccountRequest, VerifyBankAccountResponse, VerifyDepositRequest, VerifyDepositResponse, WALLET_SERVICE_NAME, WalletResponse, WalletServiceClient, WalletTransferRequest, WebhookResponse, WithdrawRequest, WithdrawResponse, protobufPackage } from '../interfaces/wallet.pb';
+import { CommonResponseArray, CommonResponseObj, CreditUserRequest, DebitUserRequest, GetBalanceRequest, GetMoneyTransactionRequest, GetPaymentMethodRequest, GetPaymentMethodResponse, GetUserAccountsResponse, InitiateDepositRequest, InitiateDepositResponse, ListDepositRequests, ListWithdrawalRequestResponse, ListWithdrawalRequests, MonnifyWebhookRequest, OpayWebhookRequest, OpayWebhookResponse, PaginationResponse, PaymentMethodRequest, PaymentMethodResponse, PaystackWebhookRequest, ProcessRetailTransaction, UpdateWithdrawalRequest, UserTransactionRequest, UserTransactionResponse, ValidateTransactionRequest, VerifyBankAccountRequest, VerifyBankAccountResponse, VerifyDepositRequest, VerifyDepositResponse, WALLET_SERVICE_NAME, WalletResponse, WalletServiceClient, WalletTransferRequest, WebhookResponse, WithdrawRequest, WithdrawResponse, protobufPackage } from '../interfaces/wallet.pb';
 import { ClientGrpc } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
 
@@ -112,5 +112,10 @@ export class WalletService {
     async processShopWithdrawal(data: ProcessRetailTransaction): Promise<CommonResponseObj> {
         console.log('process shop withdrawal', data);
         return await firstValueFrom(this.svc.processShopWithdrawal(data));
+    }
+
+    async getMoneyTransactions(data: GetMoneyTransactionRequest): Promise<CommonResponseObj> {
+        console.log('get money transaction', data);
+        return await firstValueFrom(this.svc.getMoneyTransaction(data));
     }
 }

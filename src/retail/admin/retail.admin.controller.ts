@@ -206,7 +206,6 @@ export class RetailAdminController {
         return this.retailService.deleteCommission(data);
     }
     
-
     @Get(':clientId/agent/:id')
     @ApiOperation({
         summary: 'Get Agent Profile',
@@ -287,7 +286,6 @@ export class RetailAdminController {
         data.clientId = clientId;
         // data.page = query.page || 1;
         // data.perPage = query.limit || 100
-
         return this.bettingService.getCommissions(data);
     }
 

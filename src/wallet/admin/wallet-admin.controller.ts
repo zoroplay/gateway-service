@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Param, Post, Put, Query, Req } from '@nestjs/common';
-import { ApiBody, ApiOkResponse, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
-import { ListDepositRequests, ListWithdrawalRequests, PaymentMethodRequest, UpdateWithdrawalRequest } from 'src/interfaces/wallet.pb';
+import { ApiBody, ApiOkResponse, ApiOperation, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { GetMoneyTransactionRequest, ListDepositRequests, ListWithdrawalRequests, PaymentMethodRequest, UpdateWithdrawalRequest } from 'src/interfaces/wallet.pb';
 import { SwaggerFundTransfer, SwaggerGetPaymentMethodResponse, SwaggerListDepositRequest, SwaggerListWithdrawalRequests, SwaggerPaymentMethodRequest, SwaggerPaymentMethodResponse, SwaggerUpdateWithdrawalRequest } from '../dto';
 import { WalletService } from '../wallet.service';
 
@@ -125,6 +125,30 @@ export class WalletAdminController {
         } else {
             return this.walletService.debitUser(payload)
         }
+       
+    }
+
+
+    @Post(':clientId/get-money-transactions')
+    @ApiOperation({
+        summary: 'Get admin money transactions',
+        description: 'This endpoint is used to fetch money transactions',
+    })
+    @ApiBody({type: SwaggerFundTransfer})
+    @ApiParam({name: 'clientId', description: 'SBE Client ID'})
+    @ApiQuery({name: 'page', description: 'Current Page'})
+    @ApiQuery({name: 'limit', description: 'No of Records'})
+    @ApiOkResponse({ type: SwaggerPaymentMethodResponse })
+    getMoneyTransactions(
+        @Body() body: GetMoneyTransactionRequest,
+        @Query() query, 
+        @Param('clientId') clientId: number,
+    ) {
+        body.page = query.page || 1;
+        body.limit = query.limit || 100
+        body.clientId = clientId;
+
+        return this.walletService.getMoneyTransactions(body)
        
     }
 
