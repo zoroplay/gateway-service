@@ -576,6 +576,7 @@ export interface TransactionData {
   transactionDate: string;
   channel: string;
   status: number;
+  wallet: string;
 }
 
 export interface UpdateWithdrawalRequest {
@@ -751,6 +752,8 @@ export interface WalletServiceClient {
   updateWithdrawal(request: UpdateWithdrawalRequest): Observable<CommonResponseObj>;
 
   getPlayerWalletData(request: GetBalanceRequest): Observable<PlayerWalletData>;
+
+  deletePlayerData(request: IdRequest): Observable<CommonResponseObj>;
 
   getUserAccounts(request: GetBalanceRequest): Observable<GetUserAccountsResponse>;
 
@@ -964,6 +967,8 @@ export interface WalletServiceController {
     request: GetBalanceRequest,
   ): Promise<PlayerWalletData> | Observable<PlayerWalletData> | PlayerWalletData;
 
+  deletePlayerData(request: IdRequest): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
+
   getUserAccounts(
     request: GetBalanceRequest,
   ): Promise<GetUserAccountsResponse> | Observable<GetUserAccountsResponse> | GetUserAccountsResponse;
@@ -1052,6 +1057,7 @@ export function WalletServiceControllerMethods() {
       "userTransactions",
       "updateWithdrawal",
       "getPlayerWalletData",
+      "deletePlayerData",
       "getUserAccounts",
       "getNetworkBalance",
       "walletTransfer",

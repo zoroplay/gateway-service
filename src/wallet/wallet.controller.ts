@@ -280,6 +280,7 @@ export class WalletController {
     return this.walletService.CashbookFindAllExpense({});
   }
 
+  @UseGuards(AuthGuard)
   @Delete('/cashbook/expense/:expense_id')
   @ApiOperation({
     summary: 'Create expense category for cashbook',
