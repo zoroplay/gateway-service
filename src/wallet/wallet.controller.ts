@@ -43,6 +43,7 @@ import {
   SwaggerApproveExpenseRequest,
   SwaggerCashbookReponse,
   SwaggerCreateCashInOutRequest,
+  SwaggerCreateExpenseRequest,
   SwaggerDepositReponse,
   SwaggerInitiateDepositRequest,
   SwaggerListTransactionResponse,
@@ -206,10 +207,35 @@ export class WalletController {
     summary: 'Create expense category for cashbook',
     description: 'This endpoint is create an expense category',
   })
-  @ApiBody({ type: SwaggerCreateCashInOutRequest })
+  @ApiBody({ type: SwaggerCreateExpenseRequest })
   @ApiOkResponse({ type: SwaggerCashbookReponse })
-  CashbookCreateExpense(@Body() body: CashbookCreateExpenseRequest) {
-    return this.walletService.CashbookCreateExpense(body);
+  CashbookCreateExpense(
+    @Body() body: CashbookCreateExpenseRequest,
+    @Req() req: IAuthorizedRequest,
+  ) {
+    return this.walletService.CashbookCreateExpense({
+      ...body,
+      branchId: req.user.id,
+    });
+  }
+  @UseGuards(AuthGuard)
+  @Put('/cashbook/expense/:expense_id')
+  @ApiOperation({
+    summary: 'update expense category for branch cashbook',
+    description: 'This endpoint is to update an expense category',
+  })
+  @ApiBody({ type: SwaggerCreateExpenseRequest })
+  @ApiOkResponse({ type: SwaggerCashbookReponse })
+  CashbookUpdateExpense(
+    @Body() body: CashbookCreateExpenseRequest,
+    @Param('expense_id') expense_id: number,
+    @Req() req: IAuthorizedRequest,
+  ) {
+    return this.walletService.CashbookUpdateExpense({
+      ...body,
+      id: expense_id,
+      branchId: req.user.id,
+    });
   }
 
   @UseGuards(AuthGuard)
@@ -245,7 +271,7 @@ export class WalletController {
 
   @Get('/cashbook/expense')
   @ApiOperation({
-    summary: 'Create expense category for cashbook',
+    summary: 'get all expenses',
     description: 'This endpoint is create an expense category',
   })
   @ApiBody({ type: SwaggerCreateCashInOutRequest })

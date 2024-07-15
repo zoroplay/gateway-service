@@ -5,6 +5,7 @@ import {
   CashInOutSingleResponse,
   CashbookApproveCashInOutRequest,
   CashbookCreateCashInOutRequest,
+  CashbookCreateExpenseRequest,
   CashbookCreateExpenseTypeRequest,
   CreditUserRequest,
   DebitUserRequest,
@@ -49,7 +50,6 @@ import { CommonResponseObj } from 'src/interfaces/retail.pb';
 import {
   BranchRequest,
   CashbookApproveExpenseRequest,
-  CashbookCreateExpenseRequest,
   ExpenseRepeatedResponse,
   ExpenseSingleResponse,
 } from 'src/interfaces/cashbook.pb';
@@ -170,6 +170,11 @@ export class WalletService {
     data: CashbookCreateExpenseRequest,
   ): Promise<ExpenseSingleResponse> {
     return await firstValueFrom(this.svc.cashbookCreateExpense(data));
+  }
+  async CashbookUpdateExpense(
+    data: CashbookCreateExpenseRequest,
+  ): Promise<ExpenseSingleResponse> {
+    return await firstValueFrom(this.svc.cashbookUpdateOneExpense(data));
   }
   async CashbookFindAllExpense(
     data: EmptyRequest,

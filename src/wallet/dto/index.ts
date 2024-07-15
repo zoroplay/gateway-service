@@ -140,6 +140,22 @@ export class SwaggerCreateCashInOutRequest {
   @ApiProperty({ description: 'Comment for cashin/cashout' })
   comment: string;
 }
+export class SwaggerCreateExpenseRequest {
+  @ApiProperty({ description: 'ID of Expense Type' })
+  expenseTypeId: number;
+
+  @ApiProperty({ description: 'Branch Id ' })
+  branchId: number;
+
+  @ApiProperty({ description: 'Id of expense during an update' })
+  id!: number;
+
+  @ApiProperty({ description: 'Expense Amount' })
+  amount: number;
+
+  @ApiProperty({ description: 'Comment for cashin/cashout' })
+  comment: string;
+}
 
 export class SwaggerInitiateDepositRequest {
   @ApiProperty({ description: 'Client ID of the operator' })
