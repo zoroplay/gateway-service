@@ -6,6 +6,20 @@ import { Struct } from "./google/protobuf/struct.pb";
 
 export const protobufPackage = "wallet";
 
+
+export interface GetMoneyTransactionRequest {
+  clientId: number;
+  from: string;
+  to: string;
+  transactionType?: string | undefined;
+  referenceNo?: string | undefined;
+  username?: string | undefined;
+  keyword?: string | undefined;
+  limit?: number | undefined;
+  page: number;
+}
+
+
 export interface ProcessRetailTransaction {
   id: number;
   clientId: number;
@@ -759,6 +773,8 @@ export interface WalletServiceClient {
 
   getNetworkBalance(request: GetNetworkBalanceRequest): Observable<GetNetworkBalanceResponse>;
 
+  getMoneyTransaction(request: GetMoneyTransactionRequest): Observable<CommonResponseObj>;
+
   /** RETAIL SERVICES */
 
   walletTransfer(request: WalletTransferRequest): Observable<CommonResponseObj>;
@@ -977,6 +993,10 @@ export interface WalletServiceController {
     request: GetNetworkBalanceRequest,
   ): Promise<GetNetworkBalanceResponse> | Observable<GetNetworkBalanceResponse> | GetNetworkBalanceResponse;
 
+  getMoneyTransaction(
+    request: GetMoneyTransactionRequest,
+  ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
+
   /** RETAIL SERVICES */
 
   walletTransfer(
@@ -1060,6 +1080,7 @@ export function WalletServiceControllerMethods() {
       "deletePlayerData",
       "getUserAccounts",
       "getNetworkBalance",
+      "getMoneyTransaction",
       "walletTransfer",
       "validateDepositCode",
       "processShopDeposit",

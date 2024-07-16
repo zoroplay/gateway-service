@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import {
   Body,
   Controller,
@@ -8,6 +9,8 @@ import {
   Post,
   Put,
   Query,
+  Req,
+  UseGuards,
 } from '@nestjs/common';
 import {
   ApiBody,
@@ -30,6 +33,9 @@ import {
   SwaggerSendSMSResponse,
   SwaggerVerifyOtpRequest,
 } from './dto';
+import { SwaggerCommonResponse } from 'src/identity/dto';
+import { IAuthorizedRequest } from 'src/interfaces/authorized-request.interface';
+import { AuthGuard } from 'src/identity/auth/auth.guard';
 
 @ApiTags('Notification Service APIs')
 @Controller('notification')
@@ -76,6 +82,23 @@ export class NotificationController {
   SendSMS(@Body() data: SendSmsRequest) {
     try {
       return this.notiService.sendSMS(data);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  @UseGuards(AuthGuard)
+  @Get('/user')
+  @ApiOperation({
+    summary: 'Get unread notifications',
+    description: 'This endpoint fetched users unread notifications',
+  })
+  @ApiOkResponse({ type: SwaggerCommonResponse })
+  getUserNotifications(@Req() req: IAuthorizedRequest) {
+    try {
+      return this.notiService.getUserNotifications({
+        userId: req.user.id,
+      });
     } catch (error) {
       console.error(error);
     }

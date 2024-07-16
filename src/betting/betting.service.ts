@@ -14,6 +14,8 @@ import {
   GamingActivityRequest,
   GetVirtualBetsRequest,
   ProcessCashoutRequest,
+  SalesReportRequest,
+  GetCommissionsRequest,
 } from 'src/interfaces/betting.pb';
 import { ClientGrpc } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
@@ -60,8 +62,13 @@ export class BettingService implements OnModuleInit {
   }
 
   GetCoupon(data: FindBetRequest) {
-    console.log('get booking code');
+    console.log('get bet');
     return this.service.getCoupon(data);
+  }
+
+  FindBooking(data: FindBetRequest) {
+    console.log('get booking code');
+    return this.service.findBet(data);
   }
 
   BetHistory(data: BetHistoryRequest) {
@@ -87,5 +94,25 @@ export class BettingService implements OnModuleInit {
   cashoutRequest(data: ProcessCashoutRequest) {
     console.log('cashout request ');
     return this.service.cashoutRequest(data);
+  }
+
+  getAgentBets(data: BetHistoryRequest) {
+    console.log('get agent bet list ');
+    return this.service.getRetailBets(data);
+  }
+
+  getAgentVBets(data: GetVirtualBetsRequest) {
+    console.log('get agent bet list ');
+    return this.service.getRetailVBets(data);
+  }
+
+  getSalesReport(data: SalesReportRequest) {
+    console.log('get sales retport ');
+    return this.service.getSalesReport(data);
+  }
+
+  getCommissions(data: GetCommissionsRequest) {
+    console.log('get commission retport ');
+    return this.service.getCommissions(data);
   }
 }

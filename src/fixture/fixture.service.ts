@@ -6,6 +6,7 @@ import {
   CreateOutcomeAliasRequest, DefaultSportMarketDTO,
   DeleteMarketGroupRequest,
   DeleteSpecifierRequest,
+  FilterByClientIDRequest,
   FilterByMatchID,
   FIXTURE_SERVICE_NAME,
   FixtureServiceClient,
@@ -13,6 +14,7 @@ import {
   GetHighlightsRequest,
   GetSportMenuRequest,
   protobufPackage,
+  SaveTopTournamentRequest,
   UpdateMarketRequest,
 } from 'src/interfaces/fixture.pb';
 import {ClientGrpc} from '@nestjs/microservices';
@@ -207,18 +209,29 @@ export class FixtureService implements OnModuleInit {
   }
 
   deleteDefaultSportMarket(sportID: number) {
-
     console.log('deleteDefaultSportMarket ');
     return this.service.deleteDefaultSportMarket({id: sportID});
-
   }
 
 
   saveFavourite(data: AddFavouriteRequest) {
-
     console.log('add favourite ');
     return this.service.addFavourites(data);
+  }
 
+  getTopTournament(data: FilterByClientIDRequest) {
+    console.log('get top tournament ');
+    return this.service.getTopTournaments(data);
+  }
+
+  deleteTopTournamnet(data: DeleteMarketGroupRequest) {
+    console.log('remove top tournament');
+    return this.service.removeTopTournament(data);
+  }
+
+  saveTopTournament(data: SaveTopTournamentRequest) {
+    console.log('save top tournament ');
+    return this.service.saveTopTournament(data);
   }
 
 }

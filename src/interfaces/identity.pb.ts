@@ -3,17 +3,271 @@ import { GrpcMethod, GrpcStreamMethod } from "@nestjs/microservices";
 import { wrappers } from "protobufjs";
 import { Observable } from "rxjs";
 import { Struct } from "./google/protobuf/struct.pb";
-import {
-  AssignUserCommissionProfile,
-  CommissionProfile,
-  CommissionProfileResponse,
-  CommissionProfilesResponse,
-  GetAgentUsersRequest,
-} from "./retail.pb";
 
 export const protobufPackage = "identity";
 
-export interface Empty {
+/** HandlePin */
+export interface HandlePinRequest {
+  pin: number;
+  confirmPin?: number | undefined;
+  userId: number;
+  type: string;
+}
+
+/** HandleTransfer */
+export interface HandleTransferRequest {
+  pin: number;
+  clientId: number;
+  fromUserId: number;
+  toUsername: string;
+  amount: number;
+}
+
+/** Power Bonus */
+export interface PowerRequest {
+  agentIds: number[];
+  clientId: number;
+  fromDate: string;
+  toDate: string;
+}
+
+export interface BetData {
+  id?: number | undefined;
+  betId: number;
+  userId: number;
+  clientId: number;
+  selectionCount: number;
+  cancelledDate?: string | undefined;
+  settledDate?: string | undefined;
+  stake: number;
+  commission: number;
+  winnings: number;
+  weightedStake: number;
+  odds: number;
+  createdAt?: string | undefined;
+  updatedAt?: string | undefined;
+}
+
+export interface Response {
+  success: boolean;
+  message: string;
+}
+
+export interface CurrentWeekData {
+  totalWeeks: number;
+  currentWeek: number;
+  noOfTickets: number;
+  played: number;
+  won: number;
+  net: number;
+  commission: number;
+}
+
+export interface CurrentMonth {
+  month: string;
+}
+
+export interface Meta {
+  total?: number | undefined;
+  totalPages?: number | undefined;
+  currentPage: number;
+  itemsPerPage: number;
+}
+
+export interface NormalResponse {
+  success?: boolean | undefined;
+  message?: string | undefined;
+  data: NormalPayout[];
+  meta?: Meta | undefined;
+}
+
+export interface PayNormalResponse {
+  success: boolean;
+  message: string;
+  data: number;
+}
+
+export interface NormalPayout {
+  id?: number | undefined;
+  betId: number;
+  selectionsCount: number;
+  totalOdds: number;
+  stake: number;
+  cashierId: number;
+  profileId: number;
+  profileGroup: string;
+  commission: number;
+  isPaid: boolean;
+  createdAt?: string | undefined;
+  updatedAt?: string | undefined;
+}
+
+export interface PowerBonusData {
+  id?: number | undefined;
+  totalStake: number;
+  totalTickets: number;
+  totalWeightedStake: number;
+  averageNoOfSelections: number;
+  grossProfit: number;
+  ggrPercent: number;
+  rateIsLess: number;
+  rateIsMore: number;
+  rate: number;
+  turnoverCommission: number;
+  monthlyBonus: number;
+  totalWinnings: number;
+  bets: BetData[];
+  createdAt?: string | undefined;
+  updatedAt?: string | undefined;
+}
+
+export interface PayPowerRequest {
+  clientId: number;
+  agentIds: number[];
+  fromDate: string;
+  toDate: string;
+  provider: string;
+}
+
+export interface PowerCountData {
+  paidUsers: string[];
+  unPaidUsers: string[];
+  errors: string[];
+}
+
+export interface PowerResponse {
+  success: boolean;
+  message: string;
+  data: PowerCountData | undefined;
+}
+
+export interface PowerBonusResponse {
+  success: boolean;
+  message: string;
+  data: PowerBonusData | undefined;
+}
+
+/** Normal Bonus */
+export interface GetNormalRequest {
+  clientId: number;
+  fromDate: string;
+  toDate: string;
+  provider: string;
+  meta?: Meta | undefined;
+}
+
+export interface PayNormalRequest {
+  id?: number | undefined;
+  betId: number;
+  selectionsCount: number;
+  totalOdds: number;
+  stake: number;
+  clientId: number;
+  cashierId: number;
+  profileId?: number | undefined;
+  commission?: number | undefined;
+  profileGroup: string;
+  isPaid?: boolean | undefined;
+}
+
+/** Bonus */
+export interface BonusGroup {
+  group: string;
+  maxSelection: number;
+  minSelection: number;
+  rate: number;
+  rateIsLess: number;
+  rateIsMore: number;
+  targetCoupon: number;
+  targetStake: number;
+  createdAt?: string | undefined;
+  updatedAt?: string | undefined;
+}
+
+export interface BonusGroups {
+  clientId: number;
+  bonusGroups: BonusGroup[];
+}
+
+export interface BonusGroupResponse {
+  success: boolean;
+  message: string;
+  data: BonusGroup[];
+}
+
+export interface GetAgentUserRequest {
+  clientId: number;
+  userId: number;
+}
+
+export interface GetAgentUsersRequest {
+  clientId: number;
+  userId?: number | undefined;
+  username?: string | undefined;
+  roleId?: number | undefined;
+  state?: number | undefined;
+  page?: number | undefined;
+}
+
+export interface GetCommissionsRequest {
+  clientId: number;
+  provider?: string | undefined;
+}
+
+/** Commission Profile */
+export interface CommissionProfile {
+  clientId: number;
+  id?: number | undefined;
+  name: string;
+  isDefault?: boolean | undefined;
+  description: string;
+  providerGroup: string;
+  period: string;
+  calculationType: string;
+  percentage: number;
+  commissionType: number;
+  turnovers: CommissionTurnover[];
+  createdAt?: string | undefined;
+  updatedAt?: string | undefined;
+}
+
+export interface SingleItemRequest {
+  itemId: number;
+}
+
+export interface AssignUserCommissionProfile {
+  profileId: number;
+  userId: number;
+  createdAt?: string | undefined;
+  updatedAt?: string | undefined;
+}
+
+export interface Commission {
+  id?: number | undefined;
+  userId: number;
+  totalTickets: number;
+  totalSales: number;
+  totalWon: number;
+  net: number;
+  commission: number;
+  startDate: string;
+  endDate: string;
+  isPaid: boolean;
+  userCommissionProfileId: number;
+  createdAt?: string | undefined;
+  updatedAt?: string | undefined;
+}
+
+export interface CommissionTurnover {
+  id?: number | undefined;
+  event: number;
+  commissionProfile?: CommissionProfile | undefined;
+  percentage: number;
+  maxOdd: number;
+  minOdd: number;
+  oddSet: boolean;
+  createdAt?: string | undefined;
+  updatedAt?: string | undefined;
 }
 
 export interface GetRiskSettingRequest {
@@ -21,13 +275,9 @@ export interface GetRiskSettingRequest {
   userId: number;
 }
 
-export interface GetAgentUserRequest {
-  branchId: number;
-  cashierId: number;
-}
-
 export interface FindUserRequest {
   userId: number;
+  status?: number | undefined;
 }
 
 export interface GetUserIdNameRequest {
@@ -639,7 +889,7 @@ export interface PaginationResponse {
   nextPage: number;
   prevPage: number;
   lastPage: number;
-  data: string;
+  data: { [key: string]: any }[];
 }
 
 export interface Country {
@@ -712,6 +962,10 @@ export const IDENTITY_PACKAGE_NAME = "identity";
 wrappers[".google.protobuf.Struct"] = { fromObject: Struct.wrap, toObject: Struct.unwrap } as any;
 
 export interface IdentityServiceClient {
+  handlePin(request: HandlePinRequest): Observable<CommonResponseObj>;
+
+  handleTransfer(request: HandleTransferRequest): Observable<CommonResponseObj>;
+
   register(request: CreateUserRequest): Observable<RegisterResponse>;
 
   login(request: LoginRequest): Observable<LoginResponse>;
@@ -732,7 +986,7 @@ export interface IdentityServiceClient {
 
   createPermission(request: PermissionRequest): Observable<CommonResponseObj>;
 
-  findUser(request: FindUserRequest): Observable<CommonResponseArray>;
+  findUser(request: FindUserRequest): Observable<CommonResponseObj>;
 
   saveRole(request: RoleRequest): Observable<SaveRoleResponse>;
 
@@ -778,6 +1032,8 @@ export interface IdentityServiceClient {
 
   updatePlayerData(request: UpdatePlayerDataRequest): Observable<UpdateUserResponse>;
 
+  updatePlayerStatus(request: FindUserRequest): Observable<CommonResponseObj>;
+
   changePassword(request: ChangePasswordRequest): Observable<UpdateUserResponse>;
 
   resetPassword(request: ResetPasswordRequest): Observable<UpdateUserResponse>;
@@ -812,6 +1068,8 @@ export interface IdentityServiceClient {
 
   getSettings(request: GetSettingsRequest): Observable<CommonResponseArray>;
 
+  getGlobalVariables(request: GetSettingsRequest): Observable<CommonResponseObj>;
+
   validateBet(request: PlaceBetRequest): Observable<CommonResponseObj>;
 
   getWithdrawalSettings(request: GetWithdrawalSettingsRequest): Observable<WithdrawalSettingsResponse>;
@@ -828,16 +1086,48 @@ export interface IdentityServiceClient {
 
   getAgentUser(request: GetAgentUserRequest): Observable<CommonResponseArray>;
 
-  getCommissionProfiles(request: Empty): Observable<CommissionProfilesResponse>;
+  getCommissionProfiles(request: GetCommissionsRequest): Observable<CommonResponseArray>;
 
-  createCommissionProfile(request: CommissionProfile): Observable<CommissionProfileResponse>;
+  createCommissionProfile(request: CommissionProfile): Observable<CommonResponseObj>;
 
-  updateCommissionProfile(request: CommissionProfile): Observable<CommissionProfileResponse>;
+  updateCommissionProfile(request: CommissionProfile): Observable<CommonResponseObj>;
 
-  assignUserCommissionProfile(request: AssignUserCommissionProfile): Observable<CommissionProfileResponse>;
+  assignUserCommissionProfile(request: AssignUserCommissionProfile): Observable<CommonResponseObj>;
+
+  getUserCommissionProfiles(request: SingleItemRequest): Observable<CommonResponseArray>;
+
+  removeUserCommissionProfile(request: AssignUserCommissionProfile): Observable<CommonResponseArray>;
+
+  getCommissionProfile(request: SingleItemRequest): Observable<CommonResponseObj>;
+
+  deleteCommissionProfile(request: SingleItemRequest): Observable<CommonResponseObj>;
+
+  getCommissionProfileUsers(request: GetCommissionsRequest): Observable<CommonResponseArray>;
+
+  getBonusGroups(request: SingleItemRequest): Observable<BonusGroupResponse>;
+
+  createBonusGroups(request: BonusGroups): Observable<BonusGroupResponse>;
+
+  createPowerBonus(request: PowerRequest): Observable<PowerBonusResponse>;
+
+  getPowerBonus(request: PowerRequest): Observable<PowerBonusResponse>;
+
+  payOutPowerBonus(request: PayPowerRequest): Observable<PowerResponse>;
+
+  getNormalBonus(request: GetNormalRequest): Observable<NormalResponse>;
+
+  calculateNormalBonus(request: PayNormalRequest): Observable<PayNormalResponse>;
+
+  payOutNormalBonus(request: PayNormalRequest): Observable<PayNormalResponse>;
 }
 
 export interface IdentityServiceController {
+  handlePin(request: HandlePinRequest): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
+
+  handleTransfer(
+    request: HandleTransferRequest,
+  ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
+
   register(request: CreateUserRequest): Promise<RegisterResponse> | Observable<RegisterResponse> | RegisterResponse;
 
   login(request: LoginRequest): Promise<LoginResponse> | Observable<LoginResponse> | LoginResponse;
@@ -870,9 +1160,7 @@ export interface IdentityServiceController {
     request: PermissionRequest,
   ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
 
-  findUser(
-    request: FindUserRequest,
-  ): Promise<CommonResponseArray> | Observable<CommonResponseArray> | CommonResponseArray;
+  findUser(request: FindUserRequest): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
 
   saveRole(request: RoleRequest): Promise<SaveRoleResponse> | Observable<SaveRoleResponse> | SaveRoleResponse;
 
@@ -948,6 +1236,10 @@ export interface IdentityServiceController {
     request: UpdatePlayerDataRequest,
   ): Promise<UpdateUserResponse> | Observable<UpdateUserResponse> | UpdateUserResponse;
 
+  updatePlayerStatus(
+    request: FindUserRequest,
+  ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
+
   changePassword(
     request: ChangePasswordRequest,
   ): Promise<UpdateUserResponse> | Observable<UpdateUserResponse> | UpdateUserResponse;
@@ -1016,6 +1308,10 @@ export interface IdentityServiceController {
     request: GetSettingsRequest,
   ): Promise<CommonResponseArray> | Observable<CommonResponseArray> | CommonResponseArray;
 
+  getGlobalVariables(
+    request: GetSettingsRequest,
+  ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
+
   validateBet(request: PlaceBetRequest): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
 
   getWithdrawalSettings(
@@ -1045,25 +1341,75 @@ export interface IdentityServiceController {
   ): Promise<CommonResponseArray> | Observable<CommonResponseArray> | CommonResponseArray;
 
   getCommissionProfiles(
-    request: Empty,
-  ): Promise<CommissionProfilesResponse> | Observable<CommissionProfilesResponse> | CommissionProfilesResponse;
+    request: GetCommissionsRequest,
+  ): Promise<CommonResponseArray> | Observable<CommonResponseArray> | CommonResponseArray;
 
   createCommissionProfile(
     request: CommissionProfile,
-  ): Promise<CommissionProfileResponse> | Observable<CommissionProfileResponse> | CommissionProfileResponse;
+  ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
 
   updateCommissionProfile(
     request: CommissionProfile,
-  ): Promise<CommissionProfileResponse> | Observable<CommissionProfileResponse> | CommissionProfileResponse;
+  ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
 
   assignUserCommissionProfile(
     request: AssignUserCommissionProfile,
-  ): Promise<CommissionProfileResponse> | Observable<CommissionProfileResponse> | CommissionProfileResponse;
+  ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
+
+  getUserCommissionProfiles(
+    request: SingleItemRequest,
+  ): Promise<CommonResponseArray> | Observable<CommonResponseArray> | CommonResponseArray;
+
+  removeUserCommissionProfile(
+    request: AssignUserCommissionProfile,
+  ): Promise<CommonResponseArray> | Observable<CommonResponseArray> | CommonResponseArray;
+
+  getCommissionProfile(
+    request: SingleItemRequest,
+  ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
+
+  deleteCommissionProfile(
+    request: SingleItemRequest,
+  ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
+
+  getCommissionProfileUsers(
+    request: GetCommissionsRequest,
+  ): Promise<CommonResponseArray> | Observable<CommonResponseArray> | CommonResponseArray;
+
+  getBonusGroups(
+    request: SingleItemRequest,
+  ): Promise<BonusGroupResponse> | Observable<BonusGroupResponse> | BonusGroupResponse;
+
+  createBonusGroups(
+    request: BonusGroups,
+  ): Promise<BonusGroupResponse> | Observable<BonusGroupResponse> | BonusGroupResponse;
+
+  createPowerBonus(
+    request: PowerRequest,
+  ): Promise<PowerBonusResponse> | Observable<PowerBonusResponse> | PowerBonusResponse;
+
+  getPowerBonus(
+    request: PowerRequest,
+  ): Promise<PowerBonusResponse> | Observable<PowerBonusResponse> | PowerBonusResponse;
+
+  payOutPowerBonus(request: PayPowerRequest): Promise<PowerResponse> | Observable<PowerResponse> | PowerResponse;
+
+  getNormalBonus(request: GetNormalRequest): Promise<NormalResponse> | Observable<NormalResponse> | NormalResponse;
+
+  calculateNormalBonus(
+    request: PayNormalRequest,
+  ): Promise<PayNormalResponse> | Observable<PayNormalResponse> | PayNormalResponse;
+
+  payOutNormalBonus(
+    request: PayNormalRequest,
+  ): Promise<PayNormalResponse> | Observable<PayNormalResponse> | PayNormalResponse;
 }
 
 export function IdentityServiceControllerMethods() {
   return function (constructor: Function) {
     const grpcMethods: string[] = [
+      "handlePin",
+      "handleTransfer",
       "register",
       "login",
       "xpressGameLogin",
@@ -1097,6 +1443,7 @@ export function IdentityServiceControllerMethods() {
       "fetchPlayerFilters",
       "getPlayerData",
       "updatePlayerData",
+      "updatePlayerStatus",
       "changePassword",
       "resetPassword",
       "savePlayerSegment",
@@ -1114,6 +1461,7 @@ export function IdentityServiceControllerMethods() {
       "saveRiskSettings",
       "saveUserRiskSettings",
       "getSettings",
+      "getGlobalVariables",
       "validateBet",
       "getWithdrawalSettings",
       "getUserIdandName",
@@ -1125,6 +1473,19 @@ export function IdentityServiceControllerMethods() {
       "createCommissionProfile",
       "updateCommissionProfile",
       "assignUserCommissionProfile",
+      "getUserCommissionProfiles",
+      "removeUserCommissionProfile",
+      "getCommissionProfile",
+      "deleteCommissionProfile",
+      "getCommissionProfileUsers",
+      "getBonusGroups",
+      "createBonusGroups",
+      "createPowerBonus",
+      "getPowerBonus",
+      "payOutPowerBonus",
+      "getNormalBonus",
+      "calculateNormalBonus",
+      "payOutNormalBonus",
     ];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);

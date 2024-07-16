@@ -12,7 +12,7 @@ import {
   Query,
   Req,
   UseGuards,
-} from '@nestjs/common';
+} from "@nestjs/common";
 import {
   ApiBody,
   ApiOkResponse,
@@ -20,7 +20,7 @@ import {
   ApiParam,
   ApiQuery,
   ApiTags,
-} from '@nestjs/swagger';
+} from "@nestjs/swagger";
 import {
   BranchRequest,
   CashbookApproveCashInOutRequest,
@@ -37,7 +37,7 @@ import {
   WalletServiceClient,
   WithdrawRequest,
   protobufPackage,
-} from '../interfaces/wallet.pb';
+} from "../interfaces/wallet.pb";
 import {
   SwaggerApproveCashInOutRequest,
   SwaggerApproveExpenseRequest,
@@ -45,33 +45,34 @@ import {
   SwaggerCreateCashInOutRequest,
   SwaggerCreateExpenseRequest,
   SwaggerDepositReponse,
+  SwaggerGetPaymentMethodResponse,
   SwaggerInitiateDepositRequest,
   SwaggerListTransactionResponse,
   SwaggerListTransactions,
   SwaggerVerifyBankAccountRequest,
   SwaggerVerifyDepositReponse,
   SwaggerWithdrawalRequest,
-} from './dto';
+} from "./dto";
 
-import { AuthGuard } from 'src/identity/auth/auth.guard';
-import { IAuthorizedRequest } from 'src/interfaces/authorized-request.interface';
-import { WalletService } from './wallet.service';
+import { AuthGuard } from "src/identity/auth/auth.guard";
+import { IAuthorizedRequest } from "src/interfaces/authorized-request.interface";
+import { WalletService } from "./wallet.service";
 
-@ApiTags('User Account APIs')
-@Controller('user/wallet')
+@ApiTags("User Account APIs")
+@Controller("user/wallet")
 export class WalletController {
   constructor(private walletService: WalletService) {}
   @UseGuards(AuthGuard)
-  @Put('/cashbook/approve/cashin')
+  @Put("/cashbook/approve/cashin")
   @ApiOperation({
-    summary: 'Approve cashin for cashbook',
-    description: 'This endpoint is create a cashin',
+    summary: "Approve cashin for cashbook",
+    description: "This endpoint is create a cashin",
   })
   @ApiBody({ type: SwaggerApproveCashInOutRequest })
   @ApiOkResponse({ type: SwaggerCashbookReponse })
   cashbookApproveCashin(
     @Body() body: CashbookApproveCashInOutRequest,
-    @Req() req: IAuthorizedRequest,
+    @Req() req: IAuthorizedRequest
   ) {
     return this.walletService.CashbookApproveCashIn({
       ...body,
@@ -80,16 +81,16 @@ export class WalletController {
   }
 
   @UseGuards(AuthGuard)
-  @Post('/cashbook/cashin')
+  @Post("/cashbook/cashin")
   @ApiOperation({
-    summary: 'Create cashin for cashbook',
-    description: 'This endpoint is create a cashin',
+    summary: "Create cashin for cashbook",
+    description: "This endpoint is create a cashin",
   })
   @ApiBody({ type: SwaggerCreateCashInOutRequest })
   @ApiOkResponse({ type: SwaggerCashbookReponse })
   cashbookCashin(
     @Body() body: CashbookCreateCashInOutRequest,
-    @Req() req: IAuthorizedRequest,
+    @Req() req: IAuthorizedRequest
   ) {
     return this.walletService.CashbookCreateCashIn({
       ...body,
@@ -98,10 +99,10 @@ export class WalletController {
   }
 
   @UseGuards(AuthGuard)
-  @Get('/cashbook/branch/cashin')
+  @Get("/cashbook/branch/cashin")
   @ApiOperation({
-    summary: 'create cashin',
-    description: 'This endpoint is used to create cashin for cashbook',
+    summary: "create cashin",
+    description: "This endpoint is used to create cashin for cashbook",
   })
   @ApiOkResponse({ type: SwaggerCashbookReponse })
   cashbookFindAllBranchCashin(@Req() req: IAuthorizedRequest) {
@@ -109,42 +110,42 @@ export class WalletController {
       branchId: req.user.id,
     });
   }
-  @Get('/cashbook/cashin')
+  @Get("/cashbook/cashin")
   @ApiOperation({
-    summary: 'create cashin',
-    description: 'This endpoint is used to create cashin for cashbook',
+    summary: "create cashin",
+    description: "This endpoint is used to create cashin for cashbook",
   })
   @ApiOkResponse({ type: SwaggerCashbookReponse })
   cashbookFindAllCashin() {
     return this.walletService.CashbookFindAllCashIn({});
   }
-  @Delete('/cashbook/cashin/:cashin_id')
+  @Delete("/cashbook/cashin/:cashin_id")
   @ApiOperation({
-    summary: 'create cashin',
-    description: 'This endpoint is used to create cashin for cashbook',
+    summary: "create cashin",
+    description: "This endpoint is used to create cashin for cashbook",
   })
   @ApiOkResponse({ type: SwaggerCashbookReponse })
-  CashbookDeleteOneCashIn(@Param('cashin_id') cashin_id) {
+  CashbookDeleteOneCashIn(@Param("cashin_id") cashin_id) {
     return this.walletService.CashbookDeleteOneCashIn({ id: cashin_id });
   }
 
-  @Get('/cashbook/cashin/:cashin_id')
+  @Get("/cashbook/cashin/:cashin_id")
   @ApiOperation({
-    summary: 'create cashin',
-    description: 'This endpoint is used to create cashin for cashbook',
+    summary: "create cashin",
+    description: "This endpoint is used to create cashin for cashbook",
   })
   @ApiOkResponse({ type: SwaggerCashbookReponse })
-  CashbookFindOneCashIn(@Param('cashin_id') cashin_id) {
+  CashbookFindOneCashIn(@Param("cashin_id") cashin_id) {
     return this.walletService.CashbookFindOneCashIn({ id: cashin_id });
   }
 
   @UseGuards(AuthGuard)
-  @Put('/cashbook/approve/cashout')
+  @Put("/cashbook/approve/cashout")
   @ApiBody({ type: SwaggerApproveCashInOutRequest })
   @ApiOkResponse({ type: SwaggerCashbookReponse })
   CashbookApproveCashOut(
     @Body() body: CashbookApproveCashInOutRequest,
-    @Req() req: IAuthorizedRequest,
+    @Req() req: IAuthorizedRequest
   ) {
     return this.walletService.CashbookApproveCashOut({
       ...body,
@@ -153,12 +154,12 @@ export class WalletController {
   }
 
   @UseGuards(AuthGuard)
-  @Post('/cashbook/cashout')
+  @Post("/cashbook/cashout")
   @ApiBody({ type: SwaggerCreateCashInOutRequest })
   @ApiOkResponse({ type: SwaggerCashbookReponse })
   cashbookCashout(
     @Body() body: CashbookCreateCashInOutRequest,
-    @Req() req: IAuthorizedRequest,
+    @Req() req: IAuthorizedRequest
   ) {
     return this.walletService.CashbookCreateCashOut({
       ...body,
@@ -166,52 +167,52 @@ export class WalletController {
     });
   }
   @UseGuards(AuthGuard)
-  @Get('/cashbook/branch/cashout')
+  @Get("/cashbook/branch/cashout")
   @ApiOkResponse({ type: SwaggerCashbookReponse })
   CashbookFindAllBranchCashOut(@Req() req: IAuthorizedRequest) {
     return this.walletService.CashbookFindAllBranchCashOut({
       branchId: req.user.id,
     });
   }
-  @Get('/cashbook/cashout')
+  @Get("/cashbook/cashout")
   @ApiOperation({
-    summary: 'Initiate Deposit REquest',
-    description: 'This endpoint is used to initiate a deposit',
+    summary: "Initiate Deposit REquest",
+    description: "This endpoint is used to initiate a deposit",
   })
   @ApiOkResponse({ type: SwaggerCashbookReponse })
   cashbookFindAllCashout() {
     return this.walletService.CashbookFindAllCashOut({});
   }
-  @Delete('/cashbook/cashout/:cashout_id')
+  @Delete("/cashbook/cashout/:cashout_id")
   @ApiOperation({
-    summary: 'create cashout',
-    description: 'This endpoint is used to create cashin for cashbook',
+    summary: "create cashout",
+    description: "This endpoint is used to create cashin for cashbook",
   })
   @ApiOkResponse({ type: SwaggerCashbookReponse })
-  CashbookDeleteOneCashOut(@Param('cashout_id') cashout_id) {
+  CashbookDeleteOneCashOut(@Param("cashout_id") cashout_id) {
     return this.walletService.CashbookDeleteOneCashOut({ id: cashout_id });
   }
-  @Get('/cashbook/cashout/:cashout_id')
+  @Get("/cashbook/cashout/:cashout_id")
   @ApiOperation({
-    summary: 'create cashout',
-    description: 'This endpoint is used to create cashout  for cashbook',
+    summary: "create cashout",
+    description: "This endpoint is used to create cashout  for cashbook",
   })
   @ApiOkResponse({ type: SwaggerCashbookReponse })
-  CashbookFindOneCashOut(@Param('cashout_id') cashout_id) {
+  CashbookFindOneCashOut(@Param("cashout_id") cashout_id) {
     return this.walletService.CashbookFindOneCashOut({ id: cashout_id });
   }
 
   @UseGuards(AuthGuard)
-  @Post('/cashbook/expense')
+  @Post("/cashbook/expense")
   @ApiOperation({
-    summary: 'Create expense category for cashbook',
-    description: 'This endpoint is create an expense category',
+    summary: "Create expense category for cashbook",
+    description: "This endpoint is create an expense category",
   })
   @ApiBody({ type: SwaggerCreateExpenseRequest })
   @ApiOkResponse({ type: SwaggerCashbookReponse })
   CashbookCreateExpense(
     @Body() body: CashbookCreateExpenseRequest,
-    @Req() req: IAuthorizedRequest,
+    @Req() req: IAuthorizedRequest
   ) {
     return this.walletService.CashbookCreateExpense({
       ...body,
@@ -219,17 +220,17 @@ export class WalletController {
     });
   }
   @UseGuards(AuthGuard)
-  @Put('/cashbook/expense/:expense_id')
+  @Put("/cashbook/expense/:expense_id")
   @ApiOperation({
-    summary: 'update expense category for branch cashbook',
-    description: 'This endpoint is to update an expense category',
+    summary: "update expense category for branch cashbook",
+    description: "This endpoint is to update an expense category",
   })
   @ApiBody({ type: SwaggerCreateExpenseRequest })
   @ApiOkResponse({ type: SwaggerCashbookReponse })
   CashbookUpdateExpense(
     @Body() body: CashbookCreateExpenseRequest,
-    @Param('expense_id') expense_id: number,
-    @Req() req: IAuthorizedRequest,
+    @Param("expense_id") expense_id: number,
+    @Req() req: IAuthorizedRequest
   ) {
     return this.walletService.CashbookUpdateExpense({
       ...body,
@@ -239,16 +240,16 @@ export class WalletController {
   }
 
   @UseGuards(AuthGuard)
-  @Put('/cashbook/approve/expense')
+  @Put("/cashbook/approve/expense")
   @ApiOperation({
-    summary: 'Create expense category for cashbook',
-    description: 'This endpoint is create an expense category',
+    summary: "Create expense category for cashbook",
+    description: "This endpoint is create an expense category",
   })
   @ApiBody({ type: SwaggerApproveExpenseRequest })
   @ApiOkResponse({ type: SwaggerCashbookReponse })
   CashbookApproveExpense(
     @Body() body: CashbookApproveExpenseRequest,
-    @Req() req: IAuthorizedRequest,
+    @Req() req: IAuthorizedRequest
   ) {
     return this.walletService.CashbookApproveExpense({
       ...body,
@@ -256,10 +257,10 @@ export class WalletController {
     });
   }
   @UseGuards(AuthGuard)
-  @Get('/cashbook/branch/expense')
+  @Get("/cashbook/branch/expense")
   @ApiOperation({
-    summary: 'Create expense category for cashbook',
-    description: 'This endpoint is create an expense category',
+    summary: "Create expense category for cashbook",
+    description: "This endpoint is create an expense category",
   })
   @ApiBody({ type: SwaggerCreateCashInOutRequest })
   @ApiOkResponse({ type: SwaggerCashbookReponse })
@@ -269,10 +270,10 @@ export class WalletController {
     });
   }
 
-  @Get('/cashbook/expense')
+  @Get("/cashbook/expense")
   @ApiOperation({
-    summary: 'get all expenses',
-    description: 'This endpoint is create an expense category',
+    summary: "get all expenses",
+    description: "This endpoint is create an expense category",
   })
   @ApiBody({ type: SwaggerCreateCashInOutRequest })
   @ApiOkResponse({ type: SwaggerCashbookReponse })
@@ -281,33 +282,33 @@ export class WalletController {
   }
 
   @UseGuards(AuthGuard)
-  @Delete('/cashbook/expense/:expense_id')
+  @Delete("/cashbook/expense/:expense_id")
   @ApiOperation({
-    summary: 'Create expense category for cashbook',
-    description: 'This endpoint is create an expense category',
+    summary: "Create expense category for cashbook",
+    description: "This endpoint is create an expense category",
   })
   @ApiBody({ type: SwaggerCreateCashInOutRequest })
   @ApiOkResponse({ type: SwaggerCashbookReponse })
-  CashbookDeleteOneExpense(@Param('expense_id') expense_id) {
+  CashbookDeleteOneExpense(@Param("expense_id") expense_id) {
     return this.walletService.CashbookDeleteOneExpense({ id: expense_id });
   }
-  @Get('/cashbook/expense/:expense_id')
+  @Get("/cashbook/expense/:expense_id")
   @ApiOperation({
-    summary: 'Create expense category for cashbook',
-    description: 'This endpoint is create an expense category',
+    summary: "Create expense category for cashbook",
+    description: "This endpoint is create an expense category",
   })
   @ApiBody({ type: SwaggerCreateCashInOutRequest })
   @ApiOkResponse({ type: SwaggerCashbookReponse })
-  CashbookFindOneExpense(@Param('expense_id') expense_id) {
+  CashbookFindOneExpense(@Param("expense_id") expense_id) {
     return this.walletService.CashbookFindOneExpense({ id: expense_id });
   }
 
   //  EXPENSE TYPE
   @UseGuards(AuthGuard)
-  @Post('/cashbook/expense-type')
+  @Post("/cashbook/expense-type")
   @ApiOperation({
-    summary: 'Create expense category for cashbook',
-    description: 'This endpoint is create an expense category',
+    summary: "Create expense category for cashbook",
+    description: "This endpoint is create an expense category",
   })
   @ApiBody({ type: SwaggerCreateCashInOutRequest })
   @ApiOkResponse({ type: SwaggerCashbookReponse })
@@ -315,10 +316,10 @@ export class WalletController {
     return this.walletService.CashbookCreateExpenseType(body);
   }
 
-  @Get('/cashbook/expense-type')
+  @Get("/cashbook/expense-type")
   @ApiOperation({
-    summary: 'Create expense category for cashbook',
-    description: 'This endpoint is create an expense category',
+    summary: "Create expense category for cashbook",
+    description: "This endpoint is create an expense category",
   })
   @ApiBody({ type: SwaggerCreateCashInOutRequest })
   @ApiOkResponse({ type: SwaggerCashbookReponse })
@@ -327,52 +328,52 @@ export class WalletController {
   }
 
   @UseGuards(AuthGuard)
-  @Post('/initiate-deposit')
+  @Post("/initiate-deposit")
   @ApiOperation({
-    summary: 'Initiate Deposit REquest',
-    description: 'This endpoint is used to initiate a deposit',
+    summary: "Initiate Deposit REquest",
+    description: "This endpoint is used to initiate a deposit",
   })
   @ApiQuery({
-    name: 'source',
-    type: 'string',
-    description: 'SBE platform used to initiate the request',
-    example: 'mobile',
+    name: "source",
+    type: "string",
+    description: "SBE platform used to initiate the request",
+    example: "mobile",
   })
   @ApiBody({ type: SwaggerInitiateDepositRequest })
   @ApiOkResponse({ type: SwaggerDepositReponse })
   inititateDeposit(
     @Body() body: InitiateDepositRequest,
     @Query() query: any,
-    @Req() req: IAuthorizedRequest,
+    @Req() req: IAuthorizedRequest
   ) {
     body.userId = req.user.id;
     body.source = query.source;
     return this.walletService.inititateDeposit(body);
   }
 
-  @Get('/verify-payment')
+  @Get("/verify-payment")
   @ApiOperation({
-    summary: 'Verify Deposit transaction',
+    summary: "Verify Deposit transaction",
     description:
-      'This endpoint is used to check the status of a deposit transaction',
+      "This endpoint is used to check the status of a deposit transaction",
   })
   @ApiQuery({
-    name: 'paymentChannel',
-    type: 'string',
-    description: 'name of the payment gateway',
-    example: 'paystack',
+    name: "paymentChannel",
+    type: "string",
+    description: "name of the payment gateway",
+    example: "paystack",
   })
   @ApiQuery({
-    name: 'clientId',
-    type: 'number',
-    description: 'SBE client ID',
+    name: "clientId",
+    type: "number",
+    description: "SBE client ID",
     example: 1,
   })
   @ApiQuery({
-    name: 'transactionRef',
-    type: 'string',
-    description: 'Transaction reference number',
-    example: '',
+    name: "transactionRef",
+    type: "string",
+    description: "Transaction reference number",
+    example: "",
   })
   @ApiBody({ type: SwaggerInitiateDepositRequest })
   @ApiOkResponse({ type: SwaggerVerifyDepositReponse })
@@ -381,24 +382,24 @@ export class WalletController {
   }
 
   @UseGuards(AuthGuard)
-  @Post('/verify-bank-account')
+  @Post("/verify-bank-account")
   @ApiOperation({
-    summary: 'Verify Bank Account',
+    summary: "Verify Bank Account",
     description:
-      'This endpoint is used to verify a users banka account before withdrawal',
+      "This endpoint is used to verify a users banka account before withdrawal",
   })
   @ApiQuery({
-    name: 'source',
-    type: 'string',
-    description: 'SBE platform used to initiate the request',
-    example: 'mobile',
+    name: "source",
+    type: "string",
+    description: "SBE platform used to initiate the request",
+    example: "mobile",
   })
   @ApiBody({ type: SwaggerVerifyBankAccountRequest })
   @ApiOkResponse({ type: SwaggerVerifyDepositReponse })
   verifyBankAccount(
     @Body() body: VerifyBankAccountRequest,
     @Query() query: any,
-    @Req() req: IAuthorizedRequest,
+    @Req() req: IAuthorizedRequest
   ) {
     body.userId = req.user.id;
     body.source = query.source;
@@ -406,23 +407,23 @@ export class WalletController {
   }
 
   @UseGuards(AuthGuard)
-  @Post('/withdraw')
+  @Post("/withdraw")
   @ApiOperation({
-    summary: 'Withdrawal Request',
-    description: 'This endpoint is used to make a withdrawal request',
+    summary: "Withdrawal Request",
+    description: "This endpoint is used to make a withdrawal request",
   })
   @ApiQuery({
-    name: 'source',
-    type: 'string',
-    description: 'SBE platform used to initiate the request',
-    example: 'mobile',
+    name: "source",
+    type: "string",
+    description: "SBE platform used to initiate the request",
+    example: "mobile",
   })
   @ApiBody({ type: SwaggerWithdrawalRequest })
   @ApiOkResponse({ type: SwaggerDepositReponse })
   requestWithdrawal(
     @Body() body: WithdrawRequest,
     @Query() query: any,
-    @Req() req: IAuthorizedRequest,
+    @Req() req: IAuthorizedRequest
   ) {
     body.userId = req.user.id;
     body.username = req.user.username;
@@ -431,36 +432,36 @@ export class WalletController {
   }
 
   @UseGuards(AuthGuard)
-  @Post('/transactions')
+  @Post("/transactions")
   @ApiOperation({
-    summary: 'List Transactions',
-    description: 'This endpoint fetches authenticated user transactions',
+    summary: "List Transactions",
+    description: "This endpoint fetches authenticated user transactions",
   })
   @ApiQuery({
-    name: 'source',
-    type: 'string',
-    description: 'SBE platform used to initiate the request',
-    example: 'mobile',
+    name: "source",
+    type: "string",
+    description: "SBE platform used to initiate the request",
+    example: "mobile",
   })
   @ApiQuery({
-    name: 'limit',
-    type: 'number',
-    description: 'Page limit',
-    example: 'mobile',
+    name: "limit",
+    type: "number",
+    description: "Page limit",
+    example: "mobile",
   })
   @ApiQuery({
-    name: 'page',
-    type: 'number',
-    description: 'Current Page',
-    example: 'mobile',
+    name: "page",
+    type: "number",
+    description: "Current Page",
+    example: "mobile",
   })
   @ApiBody({ type: SwaggerListTransactions })
   @ApiOkResponse({ type: SwaggerListTransactionResponse })
   listTransactions(
     @Body() body: UserTransactionRequest,
-    @Query('limit') limit: number,
-    @Query('page') page: number,
-    @Req() req: IAuthorizedRequest,
+    @Query("limit") limit: number,
+    @Query("page") page: number,
+    @Req() req: IAuthorizedRequest
   ) {
     body.userId = req.user.id;
     body.limit = limit || 100;
@@ -470,24 +471,58 @@ export class WalletController {
   }
 
   @UseGuards(AuthGuard)
-  @Get('/bank-accounts')
+  @Get("/bank-accounts")
   @ApiOperation({
-    summary: 'Get User Bank Accounts',
-    description: 'This endpoint fetches authenticated user saved bank accounts',
+    summary: "Get User Bank Accounts",
+    description: "This endpoint fetches authenticated user saved bank accounts",
   })
   @ApiQuery({
-    name: 'client',
-    type: 'number',
-    description: 'SBE Client ID',
+    name: "clientId",
+    type: "number",
+    description: "SBE Client ID",
   })
   getUserAccounts(
-    @Query('clientId') clientId: number,
-    @Req() req: IAuthorizedRequest,
+    @Query("clientId") clientId: number,
+    @Req() req: IAuthorizedRequest
   ) {
     const payload: GetBalanceRequest = {
       userId: req.user.id,
       clientId,
     };
     return this.walletService.getBankAccounts(payload);
+  }
+
+  @Get(":clientId/payment-methods")
+  @ApiOperation({
+    summary: "Fetch Payment Methods",
+    description:
+      "This endpoint is used to fetch payment methods for a particular SBE client",
+  })
+  @ApiParam({
+    name: "clientId",
+    type: "number",
+    description: " Unique ID of the client",
+  })
+  @ApiOkResponse({ type: SwaggerGetPaymentMethodResponse })
+  fetchRoles(@Param() param: any, @Query() query) {
+    return this.walletService.getPaymentMethods({
+      clientId: param.clientId,
+      status: 1,
+    });
+  }
+
+  @Get(":clientId/banks")
+  @ApiOperation({
+    summary: "Fetch Banks",
+    description: "This endpoint is used to fetch all banks",
+  })
+  @ApiParam({
+    name: "clientId",
+    type: "number",
+    description: " Unique ID of the client",
+  })
+  @ApiOkResponse({ type: SwaggerGetPaymentMethodResponse })
+  fetchBanks(@Param() param: any, @Query() query) {
+    return this.walletService.listBanks({ clientId: param.client_id });
   }
 }

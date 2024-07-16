@@ -4,6 +4,34 @@ import { Observable } from "rxjs";
 
 export const protobufPackage = "fixture";
 
+export interface CommonResponse {
+  success: boolean;
+  message: string;
+}
+
+export interface TopTournamentData {
+  id: number;
+  sportID: number;
+  sportName: string;
+  categoryID: number;
+  categoryName: string;
+  tournamentID: number;
+  tournamentName: string;
+}
+
+export interface GetTopTournamentResponse {
+  data: TopTournamentData[];
+}
+
+export interface SaveTopTournamentRequest {
+  clientID: number;
+  sportId: number;
+  categoryId: number;
+  tournamentId: number;
+  sideMenu: string;
+  homeScreen: string;
+}
+
 export interface CreateMarketGroupRequest {
   clientID: number;
   groupName: string;
@@ -340,8 +368,15 @@ export interface Outcome {
   oddID: number;
   /** wether odd is active (1) or not (0), only display active odds on the site */
   active: number;
-  displayName: number;
+  displayName?: string | undefined;
   producerID: number;
+  marketName?: string | undefined;
+  specifier?: string | undefined;
+  id?: number | undefined;
+  marketId?: number | undefined;
+  status?: number | undefined;
+  priority?: number | undefined;
+  marketAlias?: string | undefined;
 }
 
 export interface AvailableMarket {
@@ -405,6 +440,45 @@ export interface FixtureOdds {
   producerID: number;
   /** array of markets */
   markets: Market[];
+  /** Fixture country */
+  categoryName: string;
+  /** match status code */
+  statusCode: number;
+  /** producer status */
+  producerStatus: number;
+  /** Match status description, available values NotStarted,Live,Ended,Suspended */
+  matchStatus: string;
+  /** Current score of the home team */
+  homeScore: string;
+  /** Current score of the away team */
+  awayScore: string;
+  /** Home team name */
+  competitor1: string;
+  /** Away team name */
+  competitor2: string;
+  /** Current event time e.g 00:10 */
+  eventTime: string;
+  sportName: string;
+  categoryID: string;
+}
+
+export interface FixtureWithOutcomes {
+  /** Tournament name */
+  tournament: string;
+  /** Unique ID of the sport */
+  sportID: number;
+  /** Unique ID of the match (internal ID) */
+  gameID: number;
+  /** Fixture name */
+  name: string;
+  /** Unique ID of the match (betradr ID) */
+  matchID: number;
+  /** Fixture date */
+  date: string;
+  /** Unique ID of the producer that sent the odd */
+  producerID: number;
+  /** array of markets */
+  outcomes: Outcome[];
   /** Fixture country */
   categoryName: string;
   /** match status code */
@@ -596,7 +670,13 @@ export interface FixtureServiceClient {
 
   /** Get Fixture Retail - Loads odds for all the markets of the supplied matchID */
 
-  getRetailFixture(request: FilterByMatchID): Observable<FixtureOdds>;
+  getRetailFixture(request: FilterByMatchID): Observable<FixtureWithOutcomes>;
+
+  getTopTournaments(request: FilterByClientIDRequest): Observable<GetTopTournamentResponse>;
+
+  saveTopTournament(request: SaveTopTournamentRequest): Observable<CommonResponse>;
+
+  removeTopTournament(request: DeleteMarketGroupRequest): Observable<CommonResponse>;
 }
 
 export interface FixtureServiceController {
@@ -734,7 +814,21 @@ export interface FixtureServiceController {
 
   /** Get Fixture Retail - Loads odds for all the markets of the supplied matchID */
 
-  getRetailFixture(request: FilterByMatchID): Promise<FixtureOdds> | Observable<FixtureOdds> | FixtureOdds;
+  getRetailFixture(
+    request: FilterByMatchID,
+  ): Promise<FixtureWithOutcomes> | Observable<FixtureWithOutcomes> | FixtureWithOutcomes;
+
+  getTopTournaments(
+    request: FilterByClientIDRequest,
+  ): Promise<GetTopTournamentResponse> | Observable<GetTopTournamentResponse> | GetTopTournamentResponse;
+
+  saveTopTournament(
+    request: SaveTopTournamentRequest,
+  ): Promise<CommonResponse> | Observable<CommonResponse> | CommonResponse;
+
+  removeTopTournament(
+    request: DeleteMarketGroupRequest,
+  ): Promise<CommonResponse> | Observable<CommonResponse> | CommonResponse;
 }
 
 export function FixtureServiceControllerMethods() {
@@ -770,6 +864,9 @@ export function FixtureServiceControllerMethods() {
       "addFavourites",
       "getRetailFixtures",
       "getRetailFixture",
+      "getTopTournaments",
+      "saveTopTournament",
+      "removeTopTournament",
     ];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);

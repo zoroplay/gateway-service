@@ -140,29 +140,33 @@ export class GamingController {
     @Param('clientId') clientId,
     @Headers() headers,
     @Body() body,
+    @Res() res,
   ) {
     // console.log(body);
 
     try {
-      const res = await this.gamingService.handleGamesCallback({
+      const response = await this.gamingService.handleGamesCallback({
         provider: provider,
         method: req.method,
         header: headers,
         body: JSON.stringify(body),
         clientId
       })
-
-      return res.data;
+      
+      return res.status(response.status).json(response.data);
       
     } catch (error) {
-      return {
-        status: "error", 
-        error: {
-          scope: "internal",
-          no_refund: "1",
-          message: "Internal server error"
-        }
-      }
+      console.error(error);
+      return res
+        .status(HttpStatus.INTERNAL_SERVER_ERROR)
+        .send({
+          status: "error", 
+          error: {
+            scope: "internal",
+            no_refund: "1",
+            message: "Internal server error"
+          }
+        })
     }
   }
 
@@ -268,6 +272,7 @@ export class GamingController {
           .status(response.status)
           .send(response)
       } else {
+        console.log('response status is', response.status);
         return res.status(response.status).send(response.data);
       }
     } catch (error) {

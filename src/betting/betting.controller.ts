@@ -167,7 +167,7 @@ export class BettingController {
   })
   @ApiOkResponse({ type: SwaggerFindBetResponse })
   FindCoupon(
-    @Body() body: FindBetDTO,
+    @Body() body,
   ) {
 
     try {
@@ -181,6 +181,24 @@ export class BettingController {
     }
   }
 
+  @Post('/find-bet')
+  @ApiOperation({
+    summary: 'Get booking code',
+    description: 'This endpoints retrieves a booked game for rebet',
+  })
+  // @ApiParam({ name: 'client_id', type: 'number' })
+  @ApiOkResponse({ type: SwaggerPlaceBetResponse })
+  GetBooking(
+    @Param() param: any, 
+    @Body() body,
+  ) {
+    try {
+      return this.bettingService.FindBooking(body);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   @Post('/history')
   @ApiOperation({
     summary: 'Retrieve bet history of a user',
@@ -191,16 +209,13 @@ export class BettingController {
   @ApiOkResponse({ type: SwaggerBetHistoryResponse })
   BetHistory(@Query() query, @Body() data: BetHistoryRequest) {
     try {
-      const rq = {
-        userId: data.userId,
-        clientId: data.clientId,
-        status: data.status,
-        from: data.from,
-        to: data.to,
-        page: query.page ? query.page : 1,
-        perPage: query.perPage ? query.perPage : 100,
-      };
-      return this.bettingService.BetHistory(data);
+
+      const payload = {...data};
+      payload.userId = data.userId;
+      payload.page = query.page ? query.page : 1;
+      payload.perPage = query.perPage ? query.perPage : 100;
+    
+      return this.bettingService.BetHistory(payload);
     } catch (error) {
       console.error(error);
     }
@@ -217,25 +232,6 @@ export class BettingController {
     try {
       return this.bettingService.getProbabilityFromBetId({
         betID: params.bet_id,
-      });
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
-  @Post('/find-bet')
-  @ApiOperation({
-    summary: 'Get booking code',
-    description: 'This endpoints retrieves a booked game for rebet',
-  })
-  @ApiParam({ name: 'client_id', type: 'number' })
-  @ApiQuery({ name: 'code', type: 'string' })
-  @ApiOkResponse({ type: SwaggerPlaceBetResponse })
-  GetBooking(@Param() param: any, @Query() query: any) {
-    try {
-      return this.bettingService.GetCoupon({
-        betslipId: query.code,
-        clientId: param.client_id,
       });
     } catch (error) {
       console.error(error);

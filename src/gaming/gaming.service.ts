@@ -78,12 +78,22 @@ export class GamingService implements OnModuleInit {
     // console.log('service start');
     // console.log(request);
     const resp = await firstValueFrom(this.service.handleCallback(request));
-    console.log(resp);
+
     if (resp.success) {
+      if(request.provider === 'smart-soft' && request.action !== 'ActivateSession') {
+        if(request.action === 'GetBalance') {
+          const amount = this.formatNumber(resp.data.Amount)
+          console.log('formatting amount', amount)
+        } else {
+          const balance = this.formatNumber(resp.data.Balance)
+          console.log('formatting balance', balance)
+        }
+      }
       console.log('service ended in success');
     } else {
       console.log('service ended in failure');
     }
+    console.log(resp);
     return resp;
   }
 
@@ -137,4 +147,12 @@ export class GamingService implements OnModuleInit {
     if (res.status) res.data.balance = parseFloat(res.data.balance.toFixed(2));
     return res;
   }
+
+  formatNumber (num) {
+    if (num > 0 && num % 1 === 0) {
+      return parseFloat(num + ".00");
+    } else {
+      return parseFloat(num.toFixed(2))
+    }
+  };
 }
