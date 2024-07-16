@@ -6,6 +6,7 @@ import { Struct } from "./google/protobuf/struct.pb";
 
 export const protobufPackage = "wallet";
 
+
 export interface GetMoneyTransactionRequest {
   clientId: number;
   from: string;
@@ -17,6 +18,7 @@ export interface GetMoneyTransactionRequest {
   limit?: number | undefined;
   page: number;
 }
+
 
 export interface ProcessRetailTransaction {
   id: number;
