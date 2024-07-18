@@ -96,6 +96,67 @@ export class SwaggerListDepositRequest {
   transactionId: string;
 }
 
+export class SwaggerApproveExpenseRequest {
+  @ApiProperty({ description: 'ID of Admin that requested the expense' })
+  status: number;
+
+  @ApiProperty({ description: 'ID of Admin to verify the expense' })
+  verifiedBy: number;
+
+  @ApiProperty({ description: 'Id of expense in case of update' })
+  expenseId: number;
+
+  @ApiProperty({ description: 'Expense Amount' })
+  amount: number;
+
+  @ApiProperty({ description: 'Comment for expense' })
+  comment: string;
+}
+
+export class SwaggerApproveCashInOutRequest {
+  @ApiProperty({ description: 'ID of Admin that requested the cashin?cashout' })
+  status: number;
+
+  @ApiProperty({ description: 'ID of Branch toverify the cashin/cashut' })
+  verifiedBy: number;
+
+  @ApiProperty({ description: 'Id of cashin/cashout in case of update' })
+  id: number;
+}
+
+export class SwaggerCreateCashInOutRequest {
+  @ApiProperty({ description: 'ID of Admin that requested the cashin?cashout' })
+  userId: number;
+
+  @ApiProperty({ description: 'Branch Id ' })
+  branchId: number;
+
+  @ApiProperty({ description: 'Id of cashin/cashout in case of update' })
+  id!: number;
+
+  @ApiProperty({ description: 'Cashin/Cashout Amount' })
+  amount: number;
+
+  @ApiProperty({ description: 'Comment for cashin/cashout' })
+  comment: string;
+}
+export class SwaggerCreateExpenseRequest {
+  @ApiProperty({ description: 'ID of Expense Type' })
+  expenseTypeId: number;
+
+  @ApiProperty({ description: 'Branch Id ' })
+  branchId: number;
+
+  @ApiProperty({ description: 'Id of expense during an update' })
+  id!: number;
+
+  @ApiProperty({ description: 'Expense Amount' })
+  amount: number;
+
+  @ApiProperty({ description: 'Comment for cashin/cashout' })
+  comment: string;
+}
+
 export class SwaggerInitiateDepositRequest {
   @ApiProperty({ description: 'Client ID of the operator' })
   clientId: number;
@@ -141,6 +202,18 @@ export class SwaggerWithdrawalRequest {
   type?: string;
 }
 
+export class SwaggerCashbookReponse {
+  @ApiProperty({ description: 'Message' })
+  message: string;
+
+  @ApiProperty({ description: 'Request Status (true or false)' })
+  success: boolean;
+
+  @ApiProperty({
+    description: 'Data object containing cashbook response',
+  })
+  data?: any;
+}
 export class SwaggerDepositReponse {
   @ApiProperty({ description: 'Message' })
   message: string;

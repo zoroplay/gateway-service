@@ -18,6 +18,7 @@ export interface GetTransactionsRequest {
   page: number;
 }
 
+
 export interface ProcessRetailTransaction {
   id: number;
   clientId: number;
