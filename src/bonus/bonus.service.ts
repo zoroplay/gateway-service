@@ -16,6 +16,7 @@ import {
   DeleteBonusRequest,
   FetchReportRequest,
   CheckDepositBonusRequest,
+  SettleBetRequest,
 } from 'src/interfaces/bonus.pb';
 import { ClientGrpc } from '@nestjs/microservices';
 
@@ -148,5 +149,10 @@ export class BonusService implements OnModuleInit {
   GetCampaign(data: GetCampaignRequest) {
     console.log('GetCampaign ');
     return this.service.getCampaign(data);
+  }
+
+  settleBet(data: SettleBetRequest) {
+    console.log('Settle Bet request ');
+    return this.service.settleBet(data);
   }
 }
