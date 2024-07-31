@@ -163,19 +163,4 @@ export class BonusController {
     }
   }
 
-  @Post('/process-bet')
-  @ApiOperation({
-    summary: 'Process bet test',
-    description:
-      'This endpoint is use to test bet settlement',
-  })
-  @ApiBody({ type: SwaggerSettleBonusBet })
-  @ApiOkResponse({ type: SwaggerValidateCampaignResponse })
-  testBetSettlement(@Body() data: SettleBetRequest) {
-    try {
-      return this.bonusService.settleBet(data);
-    } catch (error) {
-      console.error(error);
-    }
-  }
 }

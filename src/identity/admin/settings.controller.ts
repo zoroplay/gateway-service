@@ -87,8 +87,7 @@ export class SettingsController {
     getSettings(
         @Param('clientId') clientId: number,
         @Query('category') category: string,
-    ) {
-        
+    ) {   
         const payload: GetSettingsRequest = {
             clientId,
             category,
