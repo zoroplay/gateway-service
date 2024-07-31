@@ -4816,7 +4816,7 @@ saxes@^5.0.1:
 
 "sbe-service-proto@git+https://github.com/zoroplay/sbe-service-proto.git":
   version "1.0.0"
-  resolved "git+https://github.com/zoroplay/sbe-service-proto.git#5303e9db9536c9b2abaae67e41f03953ee28fe7e"
+  resolved "git+https://github.com/zoroplay/sbe-service-proto.git#2e3e7d808e0e4a2cffa7ae5a08cd1c7fdaf5da79"
 
 schema-utils@^3.1.0, schema-utils@^3.1.1:
   version "3.3.0"

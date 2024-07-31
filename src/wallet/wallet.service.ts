@@ -1,5 +1,6 @@
-/* eslint-disable prettier/prettier */
+
 import { Inject, Injectable } from '@nestjs/common';
+
 import {
   CashbookIdRequest,
   CashInOutRepeatedResponse,
@@ -60,9 +61,10 @@ import {
   FetchSalesReportRequest,
   SalesReportResponseArray,
   LastApprovedResponse,
+  GetTransactionsRequest
 } from '../interfaces/wallet.pb';
-import { ClientGrpc } from '@nestjs/microservices';
-import { firstValueFrom } from 'rxjs';
+import { ClientGrpc } from "@nestjs/microservices";
+import { firstValueFrom } from "rxjs";
 
 @Injectable()
 export class WalletService {
@@ -207,12 +209,12 @@ export class WalletService {
     return await firstValueFrom(this.svc.processShopWithdrawal(data));
   }
 
-  // async getMoneyTransactions(
-  //   data: GetMoneyTransactionRequest
-  // ): Promise<CommonResponseObj> {
-  //   console.log("get money transaction", data);
-  //   return await firstValueFrom(this.svc.getMoneyTransaction(data));
-  // }
+  async getMoneyTransactions(
+    data: GetTransactionsRequest
+  ): Promise<CommonResponseObj> {
+    console.log("get money transaction", data);
+    return await firstValueFrom(this.svc.getMoneyTransaction(data));
+  }
   // EXPENSES
   async CashbookApproveExpense(
     data: CashbookApproveExpenseRequest,

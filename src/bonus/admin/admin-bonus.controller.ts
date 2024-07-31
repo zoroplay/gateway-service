@@ -25,6 +25,7 @@ import {
   CreateCampaignBonusDto,
   FetchReportRequest,
   GetBonusRequest,
+  SettleBetRequest,
   UpdateCampaignBonusDto,
 } from 'src/interfaces/bonus.pb';
 import {
@@ -36,7 +37,9 @@ import {
   SwaggerCreateBonusResponse,
   SwaggerCreateCampaignBonus,
   SwaggerGetUserBonusResponse,
+  SwaggerSettleBonusBet,
   SwaggerUpdateCampaignBonus,
+  SwaggerValidateCampaignResponse,
 } from '../dto';
 import {
   SwaggerFetchReportResponse,
@@ -274,6 +277,22 @@ export class AdminBonusController {
       data.clientId = query.client_id;
 
       return this.bonusService.AwardBonus(data);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  @Post('/process-bet')
+  @ApiOperation({
+    summary: 'Process bet test',
+    description:
+      'This endpoint is use to test bet settlement',
+  })
+  @ApiBody({ type: SwaggerSettleBonusBet })
+  @ApiOkResponse({ type: SwaggerValidateCampaignResponse })
+  testBetSettlement(@Body() data: SettleBetRequest) {
+    try {
+      return this.bonusService.settleBet(data);
     } catch (error) {
       console.error(error);
     }
