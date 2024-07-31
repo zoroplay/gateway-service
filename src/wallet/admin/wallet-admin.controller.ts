@@ -2,12 +2,12 @@ import { Body, Controller, Get, Param, Post, Put, Query, Req } from '@nestjs/com
 import { ApiBody, ApiOkResponse, ApiOperation, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { GetTransactionsRequest, ListDepositRequests, ListWithdrawalRequests, PaymentMethodRequest, UpdateWithdrawalRequest } from 'src/interfaces/wallet.pb';
 import { SwaggerFundTransfer, SwaggerGetPaymentMethodResponse, SwaggerListDepositRequest, SwaggerListWithdrawalRequests, SwaggerPaymentMethodRequest, SwaggerPaymentMethodResponse, SwaggerUpdateWithdrawalRequest } from '../dto';
+
 import { WalletService } from '../wallet.service';
 
 @ApiTags('BackOffice APIs')
 @Controller('admin/wallet')
 export class WalletAdminController {
-
     constructor(private readonly walletService: WalletService) {}
 
     @Post('/payment-methods')
@@ -175,7 +175,4 @@ export class WalletAdminController {
         // return this.walletService.getSystemTransactions(body)
        
     }
-
-
-
 }
