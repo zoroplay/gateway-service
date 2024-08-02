@@ -8,7 +8,6 @@ import {
   BetHistoryRequest,
   PlaceBetRequest,
   BetID,
-  BookingCode,
   UpdateBetRequest,
   FindBetRequest,
   GamingActivityRequest,
@@ -16,6 +15,7 @@ import {
   ProcessCashoutRequest,
   SalesReportRequest,
   GetCommissionsRequest,
+  GetTicketsRequest,
 } from 'src/interfaces/betting.pb';
 import { ClientGrpc } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
@@ -86,9 +86,9 @@ export class BettingService implements OnModuleInit {
     return this.service.gamingActivity(data);
   }
 
-  getVirtualBets(data: GetVirtualBetsRequest) {
-    console.log('get virtual bets ');
-    return this.service.getVirtualBets(data);
+  getTickets(data: GetTicketsRequest) {
+    console.log('get tickets ');
+    return this.service.ticketsReport(data);
   }
 
   cashoutRequest(data: ProcessCashoutRequest) {
@@ -102,7 +102,7 @@ export class BettingService implements OnModuleInit {
   }
 
   getAgentVBets(data: GetVirtualBetsRequest) {
-    console.log('get agent bet list ');
+    console.log('get agent bet list');
     return this.service.getRetailVBets(data);
   }
 

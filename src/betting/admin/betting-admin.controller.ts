@@ -21,7 +21,7 @@ import {
   SwaggerGetVirtualBets,
 } from '../dto';
 import {
-  GetVirtualBetsRequest,
+  GetTicketsRequest,
 } from 'src/interfaces/betting.pb';
 import { SwaggerCommonResponse } from 'src/identity/dto';
 
@@ -31,17 +31,17 @@ export class BettingAdminController {
   constructor(private readonly bettingService: BettingService) {}
 
 
-  @Post(':clientId/virtuals')
+  @Post(':clientId/tickets')
   @ApiOperation({
-    summary: 'Get all clients virtual bets tickets',
-    description: 'List all virtual bets tickets for a particular client',
+    summary: 'Get all tickets for client',
+    description: 'List all tickets for a particular client',
   })
   @ApiParam({name: 'clientId', description: 'SBE Client ID'})
   @ApiQuery({name: 'page', description: 'page number for pagination'})
   @ApiBody({ type: SwaggerGetVirtualBets })
   @ApiOkResponse({ type: SwaggerCommonResponse })
   GetAllVirtualBets(
-    @Body() data: GetVirtualBetsRequest,
+    @Body() data: GetTicketsRequest,
     @Query('page') page: number,
     @Param('clientId') clientId: number,
   ) {
@@ -49,7 +49,7 @@ export class BettingAdminController {
       data.clientId = clientId;
       data.page = page;
 
-      return this.bettingService.getVirtualBets(data);
+      return this.bettingService.getTickets(data);
     } catch (error) {
       console.error(error);
     }
