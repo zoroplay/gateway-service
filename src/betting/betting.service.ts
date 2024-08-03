@@ -87,7 +87,7 @@ export class BettingService implements OnModuleInit {
   }
 
   getTickets(data: GetTicketsRequest) {
-    console.log('get tickets ');
+    // console.log('get tickets ');
     return this.service.ticketsReport(data);
   }
 
