@@ -243,6 +243,8 @@ export interface GetFixturesRequest {
   /** fetch fixtures of this categoryID if present */
   categoryID?: number | undefined;
   specifier?: string | undefined;
+  startDate?: string | undefined;
+  endDate?: string | undefined;
 }
 
 export interface HighlightOutcomes {
