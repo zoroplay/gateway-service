@@ -345,11 +345,6 @@ export class FixtureController {
     description:
       'This endpoint gets matches with odds for the specified period',
   })
-  @ApiParam({
-    name: 'tournament_id',
-    type: 'number',
-    description: ' Unique ID of the tournament',
-  })
   @ApiQuery({ type: SwaggerFixturesRequest })
   @ApiOkResponse({ type: SwaggerFixturesResponse })
   GetFixturesByPeriod(@Param() params: any, @Query() query: any) {

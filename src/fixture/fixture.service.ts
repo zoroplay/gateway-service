@@ -6,14 +6,17 @@ import {
   CreateOutcomeAliasRequest, DefaultSportMarketDTO,
   DeleteMarketGroupRequest,
   DeleteSpecifierRequest,
+  FetchMarketGroup,
   FilterByClientIDRequest,
   FilterByMatchID,
   FIXTURE_SERVICE_NAME,
   FixtureServiceClient,
   GetFixturesRequest,
   GetHighlightsRequest,
+  GetMarketsRequest,
   GetSportMenuRequest,
   protobufPackage,
+  SaveMarketRequest,
   SaveTopTournamentRequest,
   UpdateMarketRequest,
 } from 'src/interfaces/fixture.pb';
@@ -30,10 +33,10 @@ export class FixtureService implements OnModuleInit {
       this.client.getService<FixtureServiceClient>(FIXTURE_SERVICE_NAME);
   }
 
-  GetMarkets(sportID: number) {
+  GetMarkets(data: GetMarketsRequest) {
 
-    console.log("get markets for "+sportID);
-    return this.service.getMarkets({sportID: sportID});
+    console.log("get markets for ", data);
+    return this.service.getMarkets(data);
 
   }
 
@@ -46,6 +49,11 @@ export class FixtureService implements OnModuleInit {
   GetSports() {
     console.log('GetSports');
     return this.service.getSports({});
+  }
+
+  GetBetradarMarkets() {
+    console.log('Bet Betradar Markets');
+    return this.service.getBetradarMarkets({});
   }
 
 
@@ -111,59 +119,40 @@ export class FixtureService implements OnModuleInit {
     return this.service.createOutcomeAlias(data);
   }
 
-
   updateOutcomeAlias(data: CreateOutcomeAliasRequest) {
-
     console.log('updateOutcomeAlias ');
     return this.service.updateOutcomeAlias(data);
-
   }
 
   deleteOutcomeAlias(data: CreateOutcomeAliasRequest) {
-
     console.log('deleteOutcomeAlias ');
     return this.service.deleteOutcomeAlias(data);
-
   }
 
   findAllOutcomeAlias(clientID: number) {
-
     console.log('findAllOutcomeAlias ');
     return this.service.getAllOutcomeAlias({clientID: clientID});
-
   }
-
-
-
-
 
 
   createMarketGroup(data: CreateMarketGroupRequest) {
-
     console.log('createMarketGroup ');
     return this.service.createMarketGroup(data);
-
   }
 
   updateMarketGroup(data: CreateMarketGroupRequest) {
-
     console.log('updateMarketGroup ');
     return this.service.updateMarketGroup(data);
-
   }
 
   deleteMarketGroup(data: DeleteMarketGroupRequest) {
-
     console.log('createMarketGroup ');
     return this.service.deleteMarketGroup(data);
-
   }
 
-  getAllMarketGroup(clientID: number) {
-
-    console.log('getAllMarketGroup ');
-    return this.service.getAllMarketGroup({clientID: clientID});
-
+  getAllMarketGroup(data: FetchMarketGroup) {
+    console.log('getAllMarketGroup ', data);
+    return this.service.getAllMarketGroup(data);
   }
 
   addMarketGroupSpecifier(data: AddSpecifierRequest) {
@@ -180,17 +169,17 @@ export class FixtureService implements OnModuleInit {
 
   }
 
-  deleteMarketGroupSpecifier(data: DeleteSpecifierRequest) {
+  deleteMarket(data: DeleteMarketGroupRequest) {
 
-    console.log('deleteMarketGroupSpecifier ');
-    return this.service.deleteMarketGroupSpecifier(data);
+    console.log('delete market ');
+    return this.service.deleteMarket(data);
 
   }
 
-  createDefaultSportMarket(data: DefaultSportMarketDTO) {
+  saveMarket(data: SaveMarketRequest) {
 
-    console.log('createDefaultSportMarket ');
-    return this.service.createDefaultSportMarket(data);
+    console.log('save market ');
+    return this.service.saveMarket(data);
 
   }
 

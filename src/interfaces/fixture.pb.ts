@@ -1,6 +1,8 @@
 /* eslint-disable */
 import { GrpcMethod, GrpcStreamMethod } from "@nestjs/microservices";
+import { wrappers } from "protobufjs";
 import { Observable } from "rxjs";
+import { Struct } from "./google/protobuf/struct.pb";
 
 export const protobufPackage = "fixture";
 
@@ -23,6 +25,20 @@ export interface GetTopTournamentResponse {
   data: TopTournamentData[];
 }
 
+export interface CommonResponseObj {
+  success: boolean;
+  message: string;
+  status: number;
+  data?: { [key: string]: any } | undefined;
+}
+
+export interface CommonResponseArray {
+  success: boolean;
+  message: string;
+  status: number;
+  data: { [key: string]: any }[];
+}
+
 export interface SaveTopTournamentRequest {
   clientID: number;
   sportId: number;
@@ -34,12 +50,18 @@ export interface SaveTopTournamentRequest {
 
 export interface CreateMarketGroupRequest {
   clientID: number;
+  sportID: number;
   groupName: string;
-  priority: number;
+  id?: number | undefined;
 }
 
 export interface DeleteMarketGroupRequest {
   id: number;
+}
+
+export interface FetchMarketGroup {
+  clientID: number;
+  sportID: number;
 }
 
 export interface FilterByClientIDRequest {
@@ -64,11 +86,32 @@ export interface MarketGroupData {
   marketGroupID: number;
   groupName: string;
   priority: number;
-  specifiers: MarketGroupSpecifier[];
+  /** repeated MarketGroupSpecifier specifiers = 4; */
+  status: number;
+}
+
+export interface GetMarketsRequest {
+  clientID: number;
+  sportID: number;
+  groupID?: number | undefined;
+}
+
+export interface SaveMarketRequest {
+  clientID: number;
+  sportID: number;
+  marketID: number;
+  groupID?: number | undefined;
+  name: string;
+  displayName?: string | undefined;
+  description?: string | undefined;
+  status: number;
+  enableCashout?: number | undefined;
+  isDefault: number;
+  id?: number | undefined;
 }
 
 export interface MarketGroupResponse {
-  markets: MarketGroupData[];
+  groups: MarketGroupData[];
 }
 
 export interface DeleteSpecifierRequest {
@@ -530,6 +573,7 @@ export interface CreateOutcomeAliasRequest {
 }
 
 export interface CreateOutcomeAliasResponse {
+  success: boolean;
   status: number;
   statusDescription: string;
 }
@@ -585,6 +629,8 @@ export interface AddFavouriteResponse {
 
 export const FIXTURE_PACKAGE_NAME = "fixture";
 
+wrappers[".google.protobuf.Struct"] = { fromObject: Struct.wrap, toObject: Struct.unwrap } as any;
+
 export interface FixtureServiceClient {
   /** Gets a list of sports, categories, tournaments based on upcoming fixtures for a period */
 
@@ -598,9 +644,19 @@ export interface FixtureServiceClient {
 
   getTournamentsMenu(request: GetSportMenuRequest): Observable<TournamentMenuResponse>;
 
+  /** Gets all Betradar markets */
+
+  getBetradarMarkets(request: Empty): Observable<CommonResponseArray>;
+
   /** Gets a list of available markets, markets are pulled peridocally from betradr API */
 
-  getMarkets(request: FilterBySportID): Observable<AllMarketResponse>;
+  getMarkets(request: GetMarketsRequest): Observable<CommonResponseArray>;
+
+  /** Gets a list of available markets, markets are pulled peridocally from betradr API */
+
+  saveMarket(request: SaveMarketRequest): Observable<CommonResponseObj>;
+
+  deleteMarket(request: DeleteMarketGroupRequest): Observable<CommonResponseObj>;
 
   /** GetTournaments - Gets a list of available tournaments, the tournaments are filterred by the supplied sportID */
 
@@ -700,9 +756,27 @@ export interface FixtureServiceController {
     request: GetSportMenuRequest,
   ): Promise<TournamentMenuResponse> | Observable<TournamentMenuResponse> | TournamentMenuResponse;
 
+  /** Gets all Betradar markets */
+
+  getBetradarMarkets(
+    request: Empty,
+  ): Promise<CommonResponseArray> | Observable<CommonResponseArray> | CommonResponseArray;
+
   /** Gets a list of available markets, markets are pulled peridocally from betradr API */
 
-  getMarkets(request: FilterBySportID): Promise<AllMarketResponse> | Observable<AllMarketResponse> | AllMarketResponse;
+  getMarkets(
+    request: GetMarketsRequest,
+  ): Promise<CommonResponseArray> | Observable<CommonResponseArray> | CommonResponseArray;
+
+  /** Gets a list of available markets, markets are pulled peridocally from betradr API */
+
+  saveMarket(
+    request: SaveMarketRequest,
+  ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
+
+  deleteMarket(
+    request: DeleteMarketGroupRequest,
+  ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
 
   /** GetTournaments - Gets a list of available tournaments, the tournaments are filterred by the supplied sportID */
 
@@ -839,7 +913,10 @@ export function FixtureServiceControllerMethods() {
       "getSportsMenu",
       "getCategoriesMenu",
       "getTournamentsMenu",
+      "getBetradarMarkets",
       "getMarkets",
+      "saveMarket",
+      "deleteMarket",
       "getTournaments",
       "getSports",
       "getLiveGamesCount",
