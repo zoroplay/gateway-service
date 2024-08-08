@@ -2,10 +2,10 @@ import {Inject, Injectable, OnModuleInit} from '@nestjs/common';
 import {
   AddFavouriteRequest,
   AddSpecifierRequest,
+  BetradarMarketResponse,
   CreateMarketGroupRequest,
   CreateOutcomeAliasRequest, DefaultSportMarketDTO,
   DeleteMarketGroupRequest,
-  DeleteSpecifierRequest,
   FetchMarketGroup,
   FilterByClientIDRequest,
   FilterByMatchID,
@@ -13,6 +13,7 @@ import {
   FixtureServiceClient,
   GetFixturesRequest,
   GetHighlightsRequest,
+  GetMarketResponse,
   GetMarketsRequest,
   GetSportMenuRequest,
   protobufPackage,
@@ -21,6 +22,7 @@ import {
   UpdateMarketRequest,
 } from 'src/interfaces/fixture.pb';
 import {ClientGrpc} from '@nestjs/microservices';
+import { firstValueFrom } from 'rxjs';
 
 @Injectable()
 export class FixtureService implements OnModuleInit {
@@ -33,15 +35,14 @@ export class FixtureService implements OnModuleInit {
       this.client.getService<FixtureServiceClient>(FIXTURE_SERVICE_NAME);
   }
 
-  GetMarkets(data: GetMarketsRequest) {
+  async GetMarkets(data: GetMarketsRequest): Promise<GetMarketResponse> {
 
     console.log("get markets for ", data);
-    return this.service.getMarkets(data);
+    return await firstValueFrom(this.service.getMarkets(data));
 
   }
 
   GetTournaments(sportID: number) {
-
     console.log('GetTournaments '+sportID);
     return this.service.getTournaments({sportID: sportID});
   }
@@ -51,9 +52,9 @@ export class FixtureService implements OnModuleInit {
     return this.service.getSports({});
   }
 
-  GetBetradarMarkets() {
+  async GetBetradarMarkets(): Promise<BetradarMarketResponse> {
     console.log('Bet Betradar Markets');
-    return this.service.getBetradarMarkets({});
+    return await firstValueFrom(this.service.getBetradarMarkets({}));
   }
 
 

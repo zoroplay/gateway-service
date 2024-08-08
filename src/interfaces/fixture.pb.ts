@@ -32,11 +32,51 @@ export interface CommonResponseObj {
   data?: { [key: string]: any } | undefined;
 }
 
-export interface CommonResponseArray {
+export interface GetMarketResponse {
+  status?: number | undefined;
+  success?: boolean | undefined;
+  message: string;
+  data: CustomMarket[];
+}
+
+export interface CustomMarket {
+  id: number;
+  /** Name of the market */
+  marketName: string;
+  /** Unique ID of this market */
+  marketID: number;
+  /** Market group ID */
+  groupID: string;
+  /** Market group ID */
+  displayName: string;
+  /** Market status, 0 - active, 1 - suspended, 2 - deactivated, 5 - handedover, only displaye markets with status 0 on the site */
+  status: number;
+  /** Market line */
+  specifier: string;
+  /** Market line */
+  priority: string;
+  /** is Market a popular ond */
+  isPopular: string;
+  /** Market description */
+  description: string;
+  /** Market description */
+  hasCashout: string;
+  /** Market description */
+  sportID: number;
+  /** Array of outcomes */
+  outcomes: OutcomeAlias[];
+}
+
+export interface BetradarMarketResponse {
   success: boolean;
   message: string;
   status: number;
-  data: { [key: string]: any }[];
+  data: BetradarMarketResponse_BetradarMarket[];
+}
+
+export interface BetradarMarketResponse_BetradarMarket {
+  marketID: string;
+  marketName: string;
 }
 
 export interface SaveTopTournamentRequest {
@@ -108,6 +148,8 @@ export interface SaveMarketRequest {
   enableCashout?: number | undefined;
   isDefault: number;
   id?: number | undefined;
+  priority?: number | undefined;
+  specifier?: string | undefined;
 }
 
 export interface MarketGroupResponse {
@@ -580,7 +622,7 @@ export interface CreateOutcomeAliasResponse {
 
 export interface OutcomeAlias {
   /** outcome name alias */
-  alias: string;
+  id: number;
   /** market name */
   marketName: string;
   /** outcome name */
@@ -591,6 +633,8 @@ export interface OutcomeAlias {
   outcomeID: string;
   /** Unique ID of this market */
   marketID: number;
+  codeWA: string;
+  codeEA: string;
 }
 
 export interface GetAllOutcomeAliasResponse {
@@ -646,11 +690,11 @@ export interface FixtureServiceClient {
 
   /** Gets all Betradar markets */
 
-  getBetradarMarkets(request: Empty): Observable<CommonResponseArray>;
+  getBetradarMarkets(request: Empty): Observable<BetradarMarketResponse>;
 
   /** Gets a list of available markets, markets are pulled peridocally from betradr API */
 
-  getMarkets(request: GetMarketsRequest): Observable<CommonResponseArray>;
+  getMarkets(request: GetMarketsRequest): Observable<GetMarketResponse>;
 
   /** Gets a list of available markets, markets are pulled peridocally from betradr API */
 
@@ -760,13 +804,13 @@ export interface FixtureServiceController {
 
   getBetradarMarkets(
     request: Empty,
-  ): Promise<CommonResponseArray> | Observable<CommonResponseArray> | CommonResponseArray;
+  ): Promise<BetradarMarketResponse> | Observable<BetradarMarketResponse> | BetradarMarketResponse;
 
   /** Gets a list of available markets, markets are pulled peridocally from betradr API */
 
   getMarkets(
     request: GetMarketsRequest,
-  ): Promise<CommonResponseArray> | Observable<CommonResponseArray> | CommonResponseArray;
+  ): Promise<GetMarketResponse> | Observable<GetMarketResponse> | GetMarketResponse;
 
   /** Gets a list of available markets, markets are pulled peridocally from betradr API */
 
