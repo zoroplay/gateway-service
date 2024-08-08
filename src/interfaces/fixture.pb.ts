@@ -601,17 +601,12 @@ export interface UpdateMarketRequest {
 
 export interface CreateOutcomeAliasRequest {
   clientID: number;
-  alias: string;
+  marketID: number;
+  internalMarketID: number;
   /** market name */
   marketName: string;
-  /** outcome name */
-  outcomeName: string;
-  /** specifier if any is available */
-  specifier: string;
-  /** outcomeID */
-  outcomeID: string;
-  /** Unique ID of this market */
-  marketID: number;
+  /** outcomes */
+  outcomes: OutcomeAlias[];
 }
 
 export interface CreateOutcomeAliasResponse {
@@ -622,7 +617,9 @@ export interface CreateOutcomeAliasResponse {
 
 export interface OutcomeAlias {
   /** outcome name alias */
-  id: number;
+  id?:
+    | number
+    | undefined;
   /** market name */
   marketName: string;
   /** outcome name */

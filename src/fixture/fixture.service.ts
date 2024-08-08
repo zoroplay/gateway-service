@@ -138,6 +138,7 @@ export class FixtureService implements OnModuleInit {
 
   createMarketGroup(data: CreateMarketGroupRequest) {
     console.log('createMarketGroup ');
+    
     return this.service.createMarketGroup(data);
   }
 

@@ -148,15 +148,19 @@ export class AdminFixtureController {
     }
   }
 
-  @Post('/setting/outcome/alias/create')
+  @Post(':client_id/markets/save-outcomes')
   @ApiOperation({
-    summary: 'Create outcome alias ',
-    description: 'This endpoint creates a new outcome alias',
+    summary: 'Save Market Outcomes ',
+    description: 'This endpoint is used to create or update market outcomes',
   })
   @ApiBody({ type: SwaggerCreateOutcomeAlias })
   @ApiOkResponse({ type: SwaggerCreateOutcomeAliasResponse })
-  createOutcomeAlias(@Body() data: CreateOutcomeAliasRequest) {
+  createOutcomeAlias(
+    @Body() data: CreateOutcomeAliasRequest,
+    @Param('client_id') clientID: number
+  ) {
     try {
+      data.clientID = clientID;
       return this.fixtureService.createOutcomeAlias(data);
     } catch (error) {
       console.error(error);
