@@ -60,6 +60,11 @@ import {
   FetchSalesReportRequest,
   SalesReportResponseArray,
   LastApprovedResponse,
+  CreatePawapayRequest,
+  FetchPawapayRequest,
+  PawapayCountryRequest,
+  PawapayToolkitRequest,
+  PawapayPredCorrRequest,
 } from '../interfaces/wallet.pb';
 import { ClientGrpc } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
@@ -350,5 +355,43 @@ export class WalletService {
     data: FetchSalesReportRequest,
   ): Promise<SalesReportResponseArray> {
     return await firstValueFrom(this.svc.cashbookFetchSalesReport(data));
+  }
+
+  async HandleCreatePawaPay(
+    data: CreatePawapayRequest,
+  ): Promise<CommonResponseObj> {
+    return await firstValueFrom(this.svc.handleCreatePawaPay(data));
+  }
+
+  async HandleFetchPawaPay(
+    data: FetchPawapayRequest,
+  ): Promise<CommonResponseArray> {
+    return await firstValueFrom(this.svc.handleFetchPawaPay(data));
+  }
+  async HandlePawaPayResendCallback(
+    data: FetchPawapayRequest,
+  ): Promise<CommonResponseObj> {
+    return await firstValueFrom(this.svc.handlePawaPayResendCallback(data));
+  }
+  async HandlePawaPayBalances(): Promise<CommonResponseArray> {
+    return await firstValueFrom(this.svc.handlePawaPayBalances({}));
+  }
+  async HandlePawaPayCountryBalances(
+    data: PawapayCountryRequest,
+  ): Promise<CommonResponseArray> {
+    return await firstValueFrom(this.svc.handlePawaPayCountryBalances(data));
+  }
+  async HandlePawaPayToolkit(
+    data: PawapayToolkitRequest,
+  ): Promise<CommonResponseArray> {
+    return await firstValueFrom(this.svc.handlePawaPayToolkit(data));
+  }
+  async HandlePawaPayActiveConf(): Promise<CommonResponseObj> {
+    return await firstValueFrom(this.svc.handlePawaPayActiveConf({}));
+  }
+  async HandlePawaPayPredCorr(
+    data: PawapayPredCorrRequest,
+  ): Promise<CommonResponseObj> {
+    return await firstValueFrom(this.svc.handlePawaPayPredCorr(data));
   }
 }

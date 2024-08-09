@@ -14,6 +14,20 @@ export interface HandlePinRequest {
   type: string;
 }
 
+export interface DailyTransactionsRequest {
+  userId: number;
+  normalSales?: number | undefined;
+  normalPayout?: number | undefined;
+  onlineSales?: number | undefined;
+  onlinePayout?: number | undefined;
+  cashIn?: number | undefined;
+  cashOut?: number | undefined;
+  expenses?: number | undefined;
+  openingbalance?: number | undefined;
+  closingbalance?: number | undefined;
+  date: string;
+}
+
 /** HandleTransfer */
 export interface HandleTransferRequest {
   pin: number;
@@ -689,6 +703,8 @@ export interface GetPaymentDataResponse {
   email: string;
   callbackUrl: string;
   siteUrl: string;
+  currency?: string | undefined;
+  country?: string | undefined;
 }
 
 export interface GetClientRequest {
@@ -962,6 +978,8 @@ export const IDENTITY_PACKAGE_NAME = "identity";
 wrappers[".google.protobuf.Struct"] = { fromObject: Struct.wrap, toObject: Struct.unwrap } as any;
 
 export interface IdentityServiceClient {
+  handleDailyTransactions(request: DailyTransactionsRequest): Observable<CommonResponseObj>;
+
   handlePin(request: HandlePinRequest): Observable<CommonResponseObj>;
 
   handleTransfer(request: HandleTransferRequest): Observable<CommonResponseObj>;
@@ -1122,6 +1140,10 @@ export interface IdentityServiceClient {
 }
 
 export interface IdentityServiceController {
+  handleDailyTransactions(
+    request: DailyTransactionsRequest,
+  ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
+
   handlePin(request: HandlePinRequest): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
 
   handleTransfer(
@@ -1408,6 +1430,7 @@ export interface IdentityServiceController {
 export function IdentityServiceControllerMethods() {
   return function (constructor: Function) {
     const grpcMethods: string[] = [
+      "handleDailyTransactions",
       "handlePin",
       "handleTransfer",
       "register",

@@ -97,6 +97,31 @@ export class SwaggerListDepositRequest {
   transactionId: string;
 }
 
+export class SwaggerPawapayPredCorrRequest {
+  @ApiProperty({ description: 'phone number with country code included' })
+  phoneNumber?: number;
+}
+
+export class SwaggerCreatePawaPayRequest {
+  @ApiProperty({ description: 'ID of User that requested the expense' })
+  userId?: number;
+
+  @ApiProperty({ description: 'ID of Client' })
+  clientId: number;
+
+  @ApiProperty({ description: 'Request Source' })
+  source: string;
+
+  @ApiProperty({ description: 'Request Amount' })
+  amount: number;
+
+  @ApiProperty({ description: 'deposit | payouts | refunds' })
+  action: string;
+
+  @ApiProperty({ description: 'if refund, send deposit ID for refund' })
+  depositId?: string;
+}
+
 export class SwaggerApproveExpenseRequest {
   @ApiProperty({ description: 'ID of Admin that requested the expense' })
   status: number;
@@ -293,6 +318,17 @@ export class SwaggerCashbookReponse {
   })
   data?: any;
 }
+export class SwaggerCommonResponseObj {
+  @ApiProperty({ description: 'Message' })
+  message: string;
+  @ApiProperty({ description: 'true || false' })
+  status: boolean;
+  @ApiProperty({ description: 'Array of users data' })
+  data?: any;
+  @ApiProperty({ description: 'error message' })
+  error?: string;
+}
+
 export class SwaggerDepositReponse {
   @ApiProperty({ description: 'Message' })
   message: string;

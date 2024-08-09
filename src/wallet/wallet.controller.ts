@@ -28,11 +28,14 @@ import {
   CashbookCreateCashInOutRequest,
   CashbookCreateExpenseRequest,
   CashbookCreateExpenseTypeRequest,
+  CreatePawapayRequest,
   FetchLastApprovedRequest,
+  FetchPawapayRequest,
   FetchReportRequest,
   GetBalanceRequest,
   HandleReportRequest,
   InitiateDepositRequest,
+  PawapayPredCorrRequest,
   UserTransactionRequest,
   VerifyBankAccountRequest,
   VerifyDepositRequest,
@@ -45,8 +48,10 @@ import {
   SwaggerApproveCashInOutRequest,
   SwaggerApproveExpenseRequest,
   SwaggerCashbookReponse,
+  SwaggerCommonResponseObj,
   SwaggerCreateCashInOutRequest,
   SwaggerCreateExpenseRequest,
+  SwaggerCreatePawaPayRequest,
   SwaggerDepositReponse,
   SwaggerFetchLastApprovedRequest,
   SwaggerFetchReportsRequest,
@@ -56,6 +61,7 @@ import {
   SwaggerInitiateDepositRequest,
   SwaggerListTransactionResponse,
   SwaggerListTransactions,
+  SwaggerPawapayPredCorrRequest,
   SwaggerVerifyBankAccountRequest,
   SwaggerVerifyDepositReponse,
   SwaggerWithdrawalRequest,
@@ -65,6 +71,7 @@ import { AuthGuard } from 'src/identity/auth/auth.guard';
 import { IAuthorizedRequest } from 'src/interfaces/authorized-request.interface';
 import { WalletService } from './wallet.service';
 import { FetchSalesReportRequest } from '../interfaces/wallet.pb';
+import { SwaggerCommonResponse } from 'src/identity/dto';
 
 @ApiTags('User Account APIs')
 @Controller('user/wallet')
@@ -645,7 +652,6 @@ export class WalletController {
       status: 1,
     });
   }
-
   @Get(':clientId/banks')
   @ApiOperation({
     summary: 'Fetch Banks',
@@ -659,5 +665,162 @@ export class WalletController {
   @ApiOkResponse({ type: SwaggerGetPaymentMethodResponse })
   fetchBanks(@Param() param: any, @Query() query) {
     return this.walletService.listBanks({ clientId: param.client_id });
+  }
+
+  @UseGuards(AuthGuard)
+  @Post('/pawapay-create/:action/:clientId')
+  @ApiOperation({
+    summary: 'handle reports for cashbook',
+    description: 'This endpoint to create/update cashbook reports',
+  })
+  @ApiParam({
+    name: 'clientId',
+    type: 'number',
+    description: 'Unique ID of the client',
+  })
+  @ApiParam({
+    name: 'action',
+    type: 'string',
+    description: 'deposit | payouts | refunds | bulk-payouts | cancel-payouts',
+  })
+  @ApiBody({ type: SwaggerCreatePawaPayRequest })
+  @ApiOkResponse({ type: SwaggerCommonResponseObj })
+  HandleCreatePawaPay(
+    @Body() body: CreatePawapayRequest,
+    @Param('clientId') clientId: number,
+    @Param('action') action: string,
+    @Req() req: IAuthorizedRequest,
+  ) {
+    return this.walletService.HandleCreatePawaPay({
+      ...body,
+      userId: req.user.id,
+      clientId,
+      action,
+      depositId: body.depositId ? body.depositId : null,
+    });
+  }
+
+  @UseGuards(AuthGuard)
+  @Get('/pawapay-fetch/:action/:actionId')
+  @ApiOperation({
+    summary: 'handle reports for cashbook',
+    description: 'This endpoint to create/update cashbook reports',
+  })
+  @ApiParam({
+    name: 'actionId',
+    type: 'string',
+    description: 'request action Id',
+  })
+  @ApiParam({
+    name: 'action',
+    type: 'string',
+    description: 'deposit | payouts | refunds',
+  })
+  @ApiOkResponse({ type: SwaggerCommonResponse })
+  HandleFetchPawaPay(
+    @Param('actionId') actionId: string,
+    @Param('action') action: string,
+  ) {
+    return this.walletService.HandleFetchPawaPay({
+      actionId,
+      action,
+    });
+  }
+
+  @UseGuards(AuthGuard)
+  @Get('/pawapay-callback/:action/:actionId')
+  @ApiOperation({
+    summary: 'handle reports for cashbook',
+    description: 'This endpoint to create/update cashbook reports',
+  })
+  @ApiParam({
+    name: 'actionId',
+    type: 'string',
+    description: 'request action Id',
+  })
+  @ApiParam({
+    name: 'action',
+    type: 'string',
+    description: 'deposit | payouts | refunds',
+  })
+  @ApiOkResponse({ type: SwaggerCommonResponseObj })
+  HandlePawaPayResendCallback(
+    @Param('actionId') actionId: string,
+    @Param('action') action: string,
+  ) {
+    return this.walletService.HandlePawaPayResendCallback({
+      actionId,
+      action,
+    });
+  }
+
+  @UseGuards(AuthGuard)
+  @Get('/pawapay/balance')
+  @ApiOperation({
+    summary: 'handle reports for cashbook',
+    description: 'This endpoint to create/update cashbook reports',
+  })
+  @ApiOkResponse({ type: SwaggerCommonResponse })
+  HandlePawaPayBalances() {
+    return this.walletService.HandlePawaPayBalances();
+  }
+
+  @UseGuards(AuthGuard)
+  @Get('/pawapay/balance/:country')
+  @ApiOperation({
+    summary: 'handle reports for cashbook',
+    description: 'This endpoint to create/update cashbook reports',
+  })
+  @ApiParam({
+    name: 'country',
+    type: 'string',
+    description: 'country 3-letter code NGN | GHC',
+  })
+  @ApiOkResponse({ type: SwaggerCommonResponse })
+  HandlePawaPayCountryBalances(@Param('country') country: string) {
+    return this.walletService.HandlePawaPayCountryBalances({
+      country,
+    });
+  }
+
+  @UseGuards(AuthGuard)
+  @Get('/pawapay-toolkit/:action')
+  @ApiOperation({
+    summary: 'fetch pawapay Toolkit',
+    description: 'This endpoint to fetch tolkit information',
+  })
+  @ApiParam({
+    name: 'action',
+    type: 'string',
+    description: 'availability | public-key',
+  })
+  @ApiOkResponse({ type: SwaggerCommonResponse })
+  HandlePawaPayToolkit(@Param('action') action: string) {
+    return this.walletService.HandlePawaPayToolkit({
+      action,
+    });
+  }
+
+  @UseGuards(AuthGuard)
+  @Get('/pawapay-active-conf')
+  @ApiOperation({
+    summary: 'fetch active configuration',
+    description: 'This endpoint to fetch active configuration',
+  })
+  @ApiOkResponse({ type: SwaggerCommonResponse })
+  HandlePawaPayActiveConf() {
+    return this.walletService.HandlePawaPayActiveConf();
+  }
+
+  @UseGuards(AuthGuard)
+  @Post('/pawapay-correspondent')
+  @ApiOperation({
+    summary: 'post requests for pawaypay correspondent',
+    description: 'This endpoint to handle pawapay correspondent',
+  })
+  @ApiBody({ type: SwaggerPawapayPredCorrRequest })
+  @ApiOkResponse({ type: SwaggerCommonResponseObj })
+  HandlePawaPayPredCorr(@Body() body: PawapayPredCorrRequest) {
+    return this.walletService.HandlePawaPayPredCorr(body);
   }
 }
