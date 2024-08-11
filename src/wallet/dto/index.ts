@@ -102,6 +102,19 @@ export class SwaggerPawapayPredCorrRequest {
   phoneNumber?: number;
 }
 
+export class SwaggerCreateBulkPawaPayRequest {
+  @ApiProperty({ description: 'ID of User that requested the expense' })
+  userId?: number;
+
+  @ApiProperty({ description: 'ID of Client' })
+  clientId: number;
+
+  @ApiProperty({ description: 'Request Source' })
+  source: string;
+
+  @ApiProperty({ description: 'Request Amount' })
+  amount: number[];
+}
 export class SwaggerCreatePawaPayRequest {
   @ApiProperty({ description: 'ID of User that requested the expense' })
   userId?: number;

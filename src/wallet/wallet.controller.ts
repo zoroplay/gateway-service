@@ -28,6 +28,7 @@ import {
   CashbookCreateCashInOutRequest,
   CashbookCreateExpenseRequest,
   CashbookCreateExpenseTypeRequest,
+  CreateBulkPawapayRequest,
   CreatePawapayRequest,
   FetchLastApprovedRequest,
   FetchPawapayRequest,
@@ -49,6 +50,7 @@ import {
   SwaggerApproveExpenseRequest,
   SwaggerCashbookReponse,
   SwaggerCommonResponseObj,
+  SwaggerCreateBulkPawaPayRequest,
   SwaggerCreateCashInOutRequest,
   SwaggerCreateExpenseRequest,
   SwaggerCreatePawaPayRequest,
@@ -668,6 +670,31 @@ export class WalletController {
   }
 
   @UseGuards(AuthGuard)
+  @Post('/pawapay-bulk-payout/:clientId')
+  @ApiOperation({
+    summary: 'handle reports for cashbook',
+    description: 'This endpoint to create/update cashbook reports',
+  })
+  @ApiParam({
+    name: 'clientId',
+    type: 'number',
+    description: 'Unique ID of the client',
+  })
+  @ApiBody({ type: SwaggerCreateBulkPawaPayRequest })
+  @ApiOkResponse({ type: SwaggerCommonResponseObj })
+  HandleCreateBulkPawaPay(
+    @Body() body: CreateBulkPawapayRequest,
+    @Param('clientId') clientId: number,
+    @Req() req: IAuthorizedRequest,
+  ) {
+    return this.walletService.HandleCreateBulkPawaPay({
+      ...body,
+      userId: req.user.id,
+      clientId,
+    });
+  }
+
+  @UseGuards(AuthGuard)
   @Post('/pawapay-create/:action/:clientId')
   @ApiOperation({
     summary: 'handle reports for cashbook',
@@ -762,6 +789,7 @@ export class WalletController {
   })
   @ApiOkResponse({ type: SwaggerCommonResponse })
   HandlePawaPayBalances() {
+    console.log(2344);
     return this.walletService.HandlePawaPayBalances();
   }
 
@@ -778,6 +806,7 @@ export class WalletController {
   })
   @ApiOkResponse({ type: SwaggerCommonResponse })
   HandlePawaPayCountryBalances(@Param('country') country: string) {
+    console.log(345);
     return this.walletService.HandlePawaPayCountryBalances({
       country,
     });
@@ -796,6 +825,7 @@ export class WalletController {
   })
   @ApiOkResponse({ type: SwaggerCommonResponse })
   HandlePawaPayToolkit(@Param('action') action: string) {
+    console.log(action);
     return this.walletService.HandlePawaPayToolkit({
       action,
     });

@@ -23,6 +23,13 @@ export interface CreatePawapayRequest {
   depositId?: string | undefined;
 }
 
+export interface CreateBulkPawapayRequest {
+  userId: number;
+  clientId: number;
+  source: string;
+  amount: number[];
+}
+
 export interface FetchPawapayRequest {
   action: string;
   actionId: string;
@@ -843,6 +850,8 @@ export interface WalletServiceClient {
 
   handleCreatePawaPay(request: CreatePawapayRequest): Observable<CommonResponseObj>;
 
+  handleCreateBulkPawaPay(request: CreateBulkPawapayRequest): Observable<CommonResponseArray>;
+
   handleFetchPawaPay(request: FetchPawapayRequest): Observable<CommonResponseArray>;
 
   handlePawaPayResendCallback(request: FetchPawapayRequest): Observable<CommonResponseObj>;
@@ -1059,6 +1068,10 @@ export interface WalletServiceController {
     request: CreatePawapayRequest,
   ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
 
+  handleCreateBulkPawaPay(
+    request: CreateBulkPawapayRequest,
+  ): Promise<CommonResponseArray> | Observable<CommonResponseArray> | CommonResponseArray;
+
   handleFetchPawaPay(
     request: FetchPawapayRequest,
   ): Promise<CommonResponseArray> | Observable<CommonResponseArray> | CommonResponseArray;
@@ -1260,6 +1273,7 @@ export function WalletServiceControllerMethods() {
       "cashbookFindAllCashOut",
       "cashbookFindAllBranchCashOut",
       "handleCreatePawaPay",
+      "handleCreateBulkPawaPay",
       "handleFetchPawaPay",
       "handlePawaPayResendCallback",
       "handlePawaPayBalances",
