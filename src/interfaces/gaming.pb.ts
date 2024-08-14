@@ -14,6 +14,7 @@ export interface PaginationDto {
 export interface FetchGamesRequest {
   clientId: number;
   categoryId?: number | undefined;
+  providerId?: number | undefined;
 }
 
 export interface Empty {

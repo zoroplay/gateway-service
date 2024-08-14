@@ -40,6 +40,13 @@ export interface SalesReportRequest {
   productType: string;
 }
 
+export interface NetworkSalesRequest {
+  userIds: string;
+  from: string;
+  to: string;
+  product: string;
+}
+
 export interface CommonResponseObj {
   status?: number | undefined;
   success?: boolean | undefined;
@@ -518,6 +525,8 @@ export interface BettingServiceClient {
 
   getSalesReport(request: SalesReportRequest): Observable<CommonResponseObj>;
 
+  getTotalSalesReport(request: NetworkSalesRequest): Observable<CommonResponseObj>;
+
   deletePlayerData(request: SettingsById): Observable<CommonResponseObj>;
 
   getCommissions(request: GetCommissionsRequest): Observable<CommonResponseObj>;
@@ -602,6 +611,10 @@ export interface BettingServiceController {
     request: SalesReportRequest,
   ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
 
+  getTotalSalesReport(
+    request: NetworkSalesRequest,
+  ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
+
   deletePlayerData(
     request: SettingsById,
   ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
@@ -642,6 +655,7 @@ export function BettingServiceControllerMethods() {
       "getRetailBets",
       "getRetailVBets",
       "getSalesReport",
+      "getTotalSalesReport",
       "deletePlayerData",
       "getCommissions",
       "ticketsReport",
