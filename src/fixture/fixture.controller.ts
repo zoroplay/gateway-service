@@ -356,6 +356,8 @@ export class FixtureController {
         sportID: query.sportID ? query.sportID : 1,
         period: query.period ? query.period : 'all',
         timeoffset: query.timeoffset ? query.timeoffset : 0,
+        startDate: query.start,
+        endDate: query.end,
       };
 
       return this.fixtureService.GetFixtures(rq);

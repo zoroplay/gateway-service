@@ -64,7 +64,7 @@ export class FixtureService implements OnModuleInit {
   }
 
   GetCategoryMenu(data: GetSportMenuRequest) {
-    console.log('GetCategoryMenu');
+    // console.log('GetCategoryMenu');
     return this.service.getCategoriesMenu(data);
   }
 
