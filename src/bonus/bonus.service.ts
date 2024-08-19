@@ -19,6 +19,7 @@ import {
   SettleBetRequest,
 } from 'src/interfaces/bonus.pb';
 import { ClientGrpc } from '@nestjs/microservices';
+import { firstValueFrom } from 'rxjs';
 
 @Injectable()
 export class BonusService implements OnModuleInit {
@@ -51,10 +52,10 @@ export class BonusService implements OnModuleInit {
     return this.service.fetchBonusReport(data);
   }
 
-  // CreateFirstDepositBonus(data: CreateFirstDepositBonusRequest) {
-  //   console.log('CreateFirstDepositBonus ');
-  //   // return this.service.createFirstDepositBonus(data);
-  // }
+  SearchBonus(data: GetBonusByClientID) {
+    console.log('search bonus ',data);
+    return firstValueFrom(this.service.searchBonus(data));
+  }
 
   // UpdateFirstDepositBonus(data: CreateFirstDepositBonusRequest) {
   //   console.log('UpdateFirstDepositBonus ');

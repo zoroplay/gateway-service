@@ -140,6 +140,22 @@ export class AdminBonusController {
     }
   }
 
+  @Get('/search')
+  @ApiOperation({
+    summary: 'Find bonus for select field',
+    description:
+      'This endpoint retrieves bonus id and name for select dropdown field',
+  })
+  @ApiQuery({ name: 'searchKey', description: 'Search key' })
+  @ApiQuery({ name: 'clientId', description: 'SBE Client ID' })
+  async findPlayersByUsername(
+    @Query('searchKey') searchKey: string,
+    @Query('clientId') clientId: number 
+  ) {
+    const res =  await this.bonusService.SearchBonus({searchKey, clientId});
+    return res.data;
+  }
+
   @Get('status/update')
   @ApiOperation({
     summary: 'Activate or Deactivate client bonus type ',

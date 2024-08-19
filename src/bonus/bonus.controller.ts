@@ -1,12 +1,9 @@
 import {
   Body,
   Controller,
-  Delete,
   Get,
-  Param,
   Patch,
   Post,
-  Put,
   Query,
   Req,
   UseGuards,
@@ -26,7 +23,6 @@ import {
   GetCampaignRequest,
   GetUserBonusRequest,
   RedeemCampaignBonusDto,
-  SettleBetRequest,
 } from 'src/interfaces/bonus.pb';
 import {
   SwaggerAwardBonusRequest,
@@ -35,7 +31,6 @@ import {
   SwaggerCreateBonusResponse,
   SwaggerGetUserBonusResponse,
   SwaggerRedeemCampaignBonusDto,
-  SwaggerSettleBonusBet,
   SwaggerValidateCampaignDTO,
   SwaggerValidateCampaignResponse,
 } from './dto';
