@@ -161,6 +161,8 @@ export interface PlaceCasinoBetRequest {
   source?: string | undefined;
   cashierTransactionId?: string | undefined;
   username?: string | undefined;
+  betType?: string | undefined;
+  bonusId?: number | undefined;
 }
 
 export interface CreditCasinoBetRequest {
@@ -393,6 +395,8 @@ export interface BetHistory {
   events: string;
   markets: string;
   betCategoryDesc: string;
+  hasCashout?: boolean | undefined;
+  bonusId?: string | undefined;
 }
 
 export interface BetHistoryResponse {
