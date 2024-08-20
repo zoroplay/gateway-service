@@ -395,8 +395,7 @@ export interface BetHistory {
   events: string;
   markets: string;
   betCategoryDesc: string;
-  hasCashout?: boolean | undefined;
-  bonusId?: string | undefined;
+  isBonusBet?: boolean | undefined;
 }
 
 export interface BetHistoryResponse {
