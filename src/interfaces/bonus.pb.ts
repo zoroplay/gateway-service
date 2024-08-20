@@ -29,6 +29,7 @@ export interface FirstDepositBonus {
   value: number;
   type: string;
   name: string;
+  gameId?: string | undefined;
 }
 
 export interface CreateReferralBonusRequest {
@@ -366,6 +367,8 @@ export interface BonusServiceClient {
 
   searchBonus(request: GetBonusByClientID): Observable<SearchBonusResponse>;
 
+  getActiveUserBonus(request: CheckDepositBonusRequest): Observable<CreateBonusResponse>;
+
   getBonus(request: GetBonusRequest): Observable<GetBonusResponse>;
 
   deleteBonus(request: DeleteBonusRequest): Observable<BonusResponse>;
@@ -422,6 +425,10 @@ export interface BonusServiceController {
     request: GetBonusByClientID,
   ): Promise<SearchBonusResponse> | Observable<SearchBonusResponse> | SearchBonusResponse;
 
+  getActiveUserBonus(
+    request: CheckDepositBonusRequest,
+  ): Promise<CreateBonusResponse> | Observable<CreateBonusResponse> | CreateBonusResponse;
+
   getBonus(request: GetBonusRequest): Promise<GetBonusResponse> | Observable<GetBonusResponse> | GetBonusResponse;
 
   deleteBonus(request: DeleteBonusRequest): Promise<BonusResponse> | Observable<BonusResponse> | BonusResponse;
@@ -474,6 +481,7 @@ export function BonusServiceControllerMethods() {
       "checkDepositBonus",
       "settleBet",
       "searchBonus",
+      "getActiveUserBonus",
       "getBonus",
       "deleteBonus",
       "getUserBonus",

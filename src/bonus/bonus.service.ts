@@ -112,6 +112,11 @@ export class BonusService implements OnModuleInit {
     return this.service.checkDepositBonus(data);
   }
 
+  getActiveBonus(data: CheckDepositBonusRequest) {
+    console.log('Get Active bonus', data);
+    return this.service.getActiveUserBonus(data);
+  }
+
   UpdateBonusStatus(data: BonusStatusRequest) {
     console.log('UpdateBonusStatus ');
     return this.service.updateBonusStatus(data);

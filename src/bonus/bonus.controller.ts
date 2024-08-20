@@ -112,6 +112,25 @@ export class BonusController {
     }
   }
 
+  @Get('get-active-bonus')
+  @ApiOperation({
+    summary: 'Get User Active Bonus',
+    description: 'This endpoint will check and return success true or false if there is an active bonus.',
+  })
+  @ApiQuery({ name: 'clientId', description: 'ID of the client' })
+  @ApiOkResponse({ type: SwaggerCheckFirstDepoistResponse })
+  GetActiveBonus(@Req() req: IAuthorizedRequest, @Query() query) {
+    try {
+      const body = {
+        clientId: query.client_id,
+        userId: req.user.id,
+      };
+      return this.bonusService.CheckFirstDeposit(body);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   @Patch('/status/update')
   @ApiOperation({
     summary: 'Activate or Deactivate client bonus type ',
