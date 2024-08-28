@@ -42,6 +42,7 @@ import {
   VerifyDepositRequest,
   WALLET_SERVICE_NAME,
   WalletServiceClient,
+  WayaQuickRequest,
   WithdrawRequest,
   protobufPackage,
 } from '../interfaces/wallet.pb';
@@ -95,6 +96,41 @@ export class WalletController {
     return this.walletService.CashbookVerifyFinalTransaction({
       ...body,
       branchId: req.user.id,
+    });
+  }
+
+  @UseGuards(AuthGuard)
+  @Post('/waya-quick/initiate-payment')
+  @ApiOperation({
+    summary: 'fetch last approved for branch',
+    description: 'This endpoint to fetch last approved reports',
+  })
+  @ApiBody({ type: SwaggerFetchLastApprovedRequest })
+  @ApiOkResponse({ type: SwaggerCashbookReponse })
+  HandleWayaQuickInit(
+    @Body() body: WayaQuickRequest,
+    @Req() req: IAuthorizedRequest,
+  ) {
+    return this.walletService.HandleWayaQuickInit({
+      ...body,
+      userId: req.user.id,
+    });
+  }
+  @UseGuards(AuthGuard)
+  @Post('/waya-quick/verify-payment')
+  @ApiOperation({
+    summary: 'fetch last approved for branch',
+    description: 'This endpoint to fetch last approved reports',
+  })
+  @ApiBody({ type: SwaggerFetchLastApprovedRequest })
+  @ApiOkResponse({ type: SwaggerCashbookReponse })
+  HandleWayaQuickVerify(
+    @Body() body: WayaQuickRequest,
+    @Req() req: IAuthorizedRequest,
+  ) {
+    return this.walletService.HandleWayaQuickVerify({
+      ...body,
+      userId: req.user.id,
     });
   }
 

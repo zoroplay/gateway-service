@@ -23,6 +23,13 @@ export interface CreatePawapayRequest {
   depositId?: string | undefined;
 }
 
+export interface WayaQuickRequest {
+  userId: number;
+  clientId: number;
+  transactionId?: string | undefined;
+  amount?: number | undefined;
+}
+
 export interface CreateBulkPawapayRequest {
   userId: number;
   clientId: number;
@@ -504,6 +511,7 @@ export interface WalletResponse {
 export interface GetBalanceRequest {
   userId: number;
   clientId: number;
+  wallet?: string | undefined;
 }
 
 /** credit user request payload */
@@ -866,6 +874,10 @@ export interface WalletServiceClient {
 
   handlePawaPayActiveConf(request: EmptyRequest): Observable<CommonResponseObj>;
 
+  handleWayaQuickInit(request: WayaQuickRequest): Observable<CommonResponseObj>;
+
+  handleWayaQuickVerify(request: WayaQuickRequest): Observable<CommonResponseObj>;
+
   getBalance(request: GetBalanceRequest): Observable<WalletResponse>;
 
   createWallet(request: CreateWalletRequest): Observable<WalletResponse>;
@@ -1100,6 +1112,14 @@ export interface WalletServiceController {
     request: EmptyRequest,
   ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
 
+  handleWayaQuickInit(
+    request: WayaQuickRequest,
+  ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
+
+  handleWayaQuickVerify(
+    request: WayaQuickRequest,
+  ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
+
   getBalance(request: GetBalanceRequest): Promise<WalletResponse> | Observable<WalletResponse> | WalletResponse;
 
   createWallet(request: CreateWalletRequest): Promise<WalletResponse> | Observable<WalletResponse> | WalletResponse;
@@ -1281,6 +1301,8 @@ export function WalletServiceControllerMethods() {
       "handlePawaPayPredCorr",
       "handlePawaPayToolkit",
       "handlePawaPayActiveConf",
+      "handleWayaQuickInit",
+      "handleWayaQuickVerify",
       "getBalance",
       "createWallet",
       "fetchBetRange",

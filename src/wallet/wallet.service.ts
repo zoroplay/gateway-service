@@ -66,6 +66,7 @@ import {
   PawapayToolkitRequest,
   PawapayPredCorrRequest,
   CreateBulkPawapayRequest,
+  WayaQuickRequest,
 } from '../interfaces/wallet.pb';
 import { ClientGrpc } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
@@ -356,6 +357,16 @@ export class WalletService {
     data: FetchSalesReportRequest,
   ): Promise<SalesReportResponseArray> {
     return await firstValueFrom(this.svc.cashbookFetchSalesReport(data));
+  }
+  async HandleWayaQuickInit(
+    data: WayaQuickRequest,
+  ): Promise<CommonResponseObj> {
+    return await firstValueFrom(this.svc.handleWayaQuickInit(data));
+  }
+  async HandleWayaQuickVerify(
+    data: WayaQuickRequest,
+  ): Promise<CommonResponseObj> {
+    return await firstValueFrom(this.svc.handleWayaQuickVerify(data));
   }
 
   async HandleCreatePawaPay(
