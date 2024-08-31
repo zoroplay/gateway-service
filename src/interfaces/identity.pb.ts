@@ -564,6 +564,7 @@ export interface UpdateUserRequest {
   promoCode?: string | undefined;
   trackingToken?: string | undefined;
   parentId?: string | undefined;
+  lga?: string | undefined;
 }
 
 /** user */
