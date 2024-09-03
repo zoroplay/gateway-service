@@ -464,6 +464,8 @@ export interface Outcome {
   status?: number | undefined;
   priority?: number | undefined;
   marketAlias?: string | undefined;
+  codeWA?: string | undefined;
+  codeEA?: string | undefined;
 }
 
 export interface AvailableMarket {
