@@ -57,7 +57,6 @@ export class UsersController {
     updatePassword(
       @Body() data: ResetPasswordRequest,
     ) {
-        console.log(data);
       return this.svc.resetPassword(data);
     }
 
