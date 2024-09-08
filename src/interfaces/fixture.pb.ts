@@ -475,6 +475,7 @@ export interface AvailableMarket {
   marketGroupID: string;
   outcomes: MarketOutcome[];
   sportID: number;
+  groupID: number;
 }
 
 export interface MarketGroup {
