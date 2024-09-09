@@ -41,7 +41,7 @@ export class SettingsController {
         @Body() body,
         @UploadedFiles() files: { logo?: Express.Multer.File, printLogo?: Express.Multer.File }
     ) {
-        console.log(files);
+        // console.log(files);
         // if (files.logo)
         //     body.logo = `${PATH_DOWNLOADED_FILE}/${files.logo.filename}`
 

@@ -28,37 +28,37 @@ export class GamingService implements OnModuleInit {
   }
 
   async createProvider(createDto: CreateProviderDto) {
-    console.log(createDto);
+    //(createDto);
     return firstValueFrom(this.service.createProvider(createDto));
   }
 
   async findAllProvider() {
-    console.log('finding all providers');
+    //('finding all providers');
     return firstValueFrom(this.service.findAllProviders({}));
   }
 
   async create(createGameDto: CreateGameDto) {
-    console.log(createGameDto);
+    //(createGameDto);
     return firstValueFrom(this.service.createGame(createGameDto));
   }
 
   async findAll() {
-    console.log('finding all games');
+    //('finding all games');
     return firstValueFrom(this.service.findAllGames({}));
   }
 
   async fetchGames(payload: FetchGamesRequest) {
-    console.log('fetch games');
+    //('fetch games');
     return firstValueFrom(this.service.fetchGames(payload));
   }
 
   async listCategories() {
-    console.log('fetch categories');
+    //('fetch categories');
     return firstValueFrom(this.service.fetchCategories({}));
   }
 
   async sync(syncGameDto: SyncGameDto) {
-    console.log('syncing games');
+    //('syncing games');
     const games = await firstValueFrom(this.service.syncGames(syncGameDto));
 
     return {
@@ -68,34 +68,34 @@ export class GamingService implements OnModuleInit {
 
 
   async startGame(request: StartGameDto) {
-    // console.log('start game', request);
+    // //('start game', request);
     const resp = await firstValueFrom(this.service.startGame(request));
 
     return resp;
   }
 
   async handleGamesCallback(request: CallbackGameDto) {
-    // console.log('service start');
-    // console.log(request);
+    // //('service start');
+    // //(request);
     const resp = await firstValueFrom(this.service.handleCallback(request));
 
     if (resp.success) {
-      console.log('service ended in success');
+      //('service ended in success');
     } else {
-      console.log('service ended in failure');
+      //('service ended in failure');
     }
-    console.log(resp);
+    //(resp);
     return resp;
   }
 
   async xpressLogin(data: XpressRequest) {
-    console.log('xpress login');
+    //('xpress login');
     return firstValueFrom(this.service.xpressLogin(data));
   }
 
 
   async xpressBalance(data: XpressRequest): Promise<XpressResponse> {
-    console.log('xpress balance');
+    //('xpress balance');
     const res = await firstValueFrom(this.service.xpressBalance(data));
     if (res.status) res.data.balance = parseFloat(res.data.balance.toFixed(2));
 
@@ -103,7 +103,7 @@ export class GamingService implements OnModuleInit {
   }
 
   async xpressCredit(data: XpressRequest) {
-    console.log('xpress credit');
+    //('xpress credit');
     const res = await firstValueFrom(this.service.xpressCredit(data));
     if (res.status) {
       res.data.balance = parseFloat(res.data.balance.toFixed(2));
@@ -113,7 +113,7 @@ export class GamingService implements OnModuleInit {
   }
 
   async xpressDebit(data: XpressRequest) {
-    console.log('xpress debit');
+    //('xpress debit');
     const res = await firstValueFrom(this.service.xpressDebit(data));
     if (res.status) {
       res.data.balance = parseFloat(res.data.balance.toFixed(2));
@@ -124,7 +124,7 @@ export class GamingService implements OnModuleInit {
 
   async xpressRollback(data: XpressRequest) {
     const res = await firstValueFrom(this.service.xpressRollback(data));
-    console.log('xpress rollback', res);
+    //('xpress rollback', res);
     if (res.status) {
       res.data.balance = parseFloat(res.data.balance.toFixed(2));
       res.data.oldBalance = parseFloat(res.data.oldBalance.toFixed(2));
@@ -133,7 +133,7 @@ export class GamingService implements OnModuleInit {
   }
 
   async xpressLogout(data: XpressRequest) {
-    console.log('xpress logout');
+    //('xpress logout');
     const res = await firstValueFrom(this.service.xpressLogout(data));
     if (res.status) res.data.balance = parseFloat(res.data.balance.toFixed(2));
     return res;

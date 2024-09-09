@@ -147,7 +147,7 @@ export class UsersController {
     @ApiParam({ name: 'id', description: 'Segment ID' })
     @ApiOkResponse({ type: SwaggerCommonResponse })
     getPlayers(@Param() param) {
-        console.log(param.id)
+        // console.log(param.id)
         return this.svc.getSegmentPlayers({segmentId: param.id});
     }
 

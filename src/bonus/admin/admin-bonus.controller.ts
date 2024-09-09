@@ -79,7 +79,7 @@ export class AdminBonusController {
   })
   @ApiOkResponse({ type: SwaggerFetchReportResponse })
   fetchBonus(@Query() query: FetchReportRequest) {
-    console.log('Fetch Bonus');
+    // console.log('Fetch Bonus');
 
     return this.bonusService.fetchBonusReport({
       bonusType: query.bonusType,

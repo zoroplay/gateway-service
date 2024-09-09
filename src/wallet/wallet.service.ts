@@ -96,14 +96,14 @@ export class WalletService {
   async listWithdrawals(
     request: ListWithdrawalRequests,
   ): Promise<ListWithdrawalRequestResponse> {
-    console.log('list withdrawals');
+    //('list withdrawals');
     return await firstValueFrom(this.svc.listWithdrawals(request));
   }
 
   async listDeposits(
     request: ListDepositRequests,
   ): Promise<PaginationResponse> {
-    console.log('list deposits');
+    //('list deposits');
     return await firstValueFrom(this.svc.listDeposits(request));
   }
 
@@ -158,12 +158,12 @@ export class WalletService {
   async getUserTransactions(
     data: UserTransactionRequest,
   ): Promise<UserTransactionResponse> {
-    console.log(data);
+    //(data);
     return await firstValueFrom(this.svc.userTransactions(data));
   }
 
   async creditUser(data: CreditUserRequest): Promise<WalletResponse> {
-    // console.log(data);
+    // //(data);
     return await firstValueFrom(this.svc.creditUser(data));
   }
 
@@ -178,7 +178,7 @@ export class WalletService {
   }
 
   async transferFunds(data: WalletTransferRequest): Promise<CommonResponseObj> {
-    console.log('transfer data', data);
+    //('transfer data', data);
     return await firstValueFrom(this.svc.walletTransfer(data));
   }
 
@@ -191,28 +191,28 @@ export class WalletService {
   async processShopDeposit(
     data: ProcessRetailTransaction,
   ): Promise<CommonResponseObj> {
-    console.log('process shop deposit', data);
+    //('process shop deposit', data);
     return await firstValueFrom(this.svc.processShopDeposit(data));
   }
 
   async validateWithdrawalCode(
     data: ValidateTransactionRequest,
   ): Promise<CommonResponseObj> {
-    console.log('validate withdrawal', data);
+    //('validate withdrawal', data);
     return await firstValueFrom(this.svc.validateWithdrawalCode(data));
   }
 
   async processShopWithdrawal(
     data: ProcessRetailTransaction,
   ): Promise<CommonResponseObj> {
-    console.log('process shop withdrawal', data);
+    //('process shop withdrawal', data);
     return await firstValueFrom(this.svc.processShopWithdrawal(data));
   }
 
   async getMoneyTransactions(
     data: GetTransactionsRequest
   ): Promise<CommonResponseObj> {
-    console.log("get money transaction", data);
+    //("get money transaction", data);
     return await firstValueFrom(this.svc.getMoneyTransaction(data));
   }
   // EXPENSES
