@@ -1147,6 +1147,8 @@ export interface IdentityServiceClient {
   payOutNormalBonus(request: PayNormalRequest): Observable<PayNormalResponse>;
 
   getNetworkSalesReport(request: GetNetworkSalesRequest): Observable<CommonResponseObj>;
+
+  getTrackierKeys(request: SingleItemRequest): Observable<CommonResponseObj>;
 }
 
 export interface IdentityServiceController {
@@ -1439,6 +1441,10 @@ export interface IdentityServiceController {
   getNetworkSalesReport(
     request: GetNetworkSalesRequest,
   ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
+
+  getTrackierKeys(
+    request: SingleItemRequest,
+  ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
 }
 
 export function IdentityServiceControllerMethods() {
@@ -1524,6 +1530,7 @@ export function IdentityServiceControllerMethods() {
       "calculateNormalBonus",
       "payOutNormalBonus",
       "getNetworkSalesReport",
+      "getTrackierKeys",
     ];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
