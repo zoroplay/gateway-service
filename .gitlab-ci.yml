@@ -13,7 +13,7 @@ cache:
 
 
 variables:
-  NEXT_VERSION: 0.0.5
+  NEXT_VERSION: 0.0.1
 
 
 
@@ -46,16 +46,16 @@ build:
     - main
 
 # Release Stage
-release:
-  stage: release
-  image: node:18
-  script:
-    - npm install
-    - npx semantic-release
-  only:
+#release:
+  #stage: release
+  #image: node:18
+  #script:
+  #  - npm install
+   # - npx semantic-release
+  #only:
     - main
-  variables:
-    GITHUB_TOKEN: $CI_JOB_TOKEN  # Ensure this token has the necessary permissions
+  #variables:
+   # GITHUB_TOKEN: $CI_JOB_TOKEN  # Ensure this token has the necessary permissions
 
 # Deploy Stage
 deploy:
