@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: sbe-gateway-ingress
+  namespace: sbe-gateway-service
+  annotations:
+   cert-manager.io/cluster-issuer: sbe-gateway-cert
+spec:
+  ingressClassName: kong
+  tls:
+    - hosts:
+       -  "sbegateway.etechdigital.com.ng"
+      secretName: sbe-info-tls
+  rules:
+    - host:  "sbegateway.etechdigital.com.ng"
+      http:
+        paths:
+         - path: /
+           pathType: ImplementationSpecific
+           backend:
+             service:
+              name: sbe-gateway-service
+              port:
+                number: 80
