@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import {
   Headers,
   Param,
@@ -6,30 +7,27 @@ import {
   Get,
   Post,
   Req,
+  Res,
+  HttpStatus,
+  Query,
+  RawBodyRequest,
+  HttpCode,
 } from '@nestjs/common';
 import {
   ApiBody,
   ApiHeader,
   ApiOkResponse,
   ApiParam,
+  ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
+import { Response } from 'express';
 import { GamingService } from './gaming.service';
 import {
-  CallbackGameDto,
-  CreateGameDto,
-  CreateProviderDto,
   StartGameDto,
-  SyncGameDto,
-} from './gaming.pb';
+} from 'src/interfaces/gaming.pb';
 import {
-  SwaggerOKGameArrayResponse,
   SwaggerOKGameResponse,
-  SwaggerSyncGameDto,
-  SwaggerCreateGameDto,
-  SwaggerOKProviderArrayResponse,
-  SwaggerCreateProviderDto,
-  SwaggerOKProviderResponse,
   SwaggerStartGameDto,
   SwaggerStartGameResponseDto,
 } from './dto';
@@ -39,67 +37,43 @@ import {
 export class GamingController {
   constructor(private readonly gamingService: GamingService) {}
 
-  @Get()
+  @Get('/:clientId/list')
   @ApiOkResponse({ type: [SwaggerOKGameResponse] })
-  findAll() {
-    try {
-      const resp = this.gamingService.findAll();
-      return resp;
-    } catch (error) {
-      console.error(error);
+  @ApiQuery({name: 'categoryId', description: 'Gaming category ID', required: false})
+  @ApiQuery({name: 'providerId', description: 'Gaming provider ID', required: false})
+  findAll(
+    @Query('categoryId') categoryId: number,
+    @Query('providerId') providerId: number,
+    @Param('clientId') clientId,
+  ) {
+    const payload = {
+      categoryId,
+      providerId,
+      clientId
     }
+    return this.gamingService.fetchGames(payload);
   }
 
-  @Post()
-  @ApiBody({ type: SwaggerCreateGameDto })
-  @ApiOkResponse({ type: SwaggerOKGameResponse })
-  create(@Body() createGameDto: CreateGameDto) {
-    return this.gamingService.create(createGameDto);
+  @Get('categories')
+  @ApiOkResponse({ type: [SwaggerOKGameResponse] })
+  getCategories() {
+    return this.gamingService.listCategories();
   }
 
-  @Get('/provider')
-  @ApiOkResponse({ type: [SwaggerOKProviderArrayResponse] })
-  findAllProvider() {
-    try {
-      const resp = this.gamingService.findAllProvider();
-      return resp;
-    } catch (error) {
-      console.error(error);
-    }
-  }
 
-  @Post('/provider')
-  @ApiBody({ type: SwaggerCreateProviderDto })
-  @ApiOkResponse({ type: SwaggerOKProviderResponse })
-  createProvider(@Body() createProviderDto: CreateProviderDto) {
-    return this.gamingService.createProvider(createProviderDto);
-  }
-
-  @Post('/sync')
-  @ApiBody({ type: SwaggerSyncGameDto })
-  @ApiOkResponse({ type: SwaggerOKGameArrayResponse })
-  syncGames(@Body() syncGameDto: SyncGameDto) {
-    try {
-      const resp = this.gamingService.sync(syncGameDto);
-      return resp;
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
-  @Post('/start')
+  @Post('/:clientId/start')
   @ApiBody({ type: SwaggerStartGameDto })
   @ApiOkResponse({ type: SwaggerStartGameResponseDto })
-  constructGameUrl(@Body() startGameDto: StartGameDto) {
-    try {
-      const resp = this.gamingService.startGame(startGameDto);
-      return resp;
-    } catch (error) {
-      console.error(error);
-    }
+  @ApiParam({name: 'clientId', description: 'SBE CLient ID'})
+  constructGameUrl(
+    @Body() startGameDto: StartGameDto,
+    @Param('clientId') clientId,
+  ) {
+    startGameDto.clientId = parseInt(clientId);
+    return this.gamingService.startGame(startGameDto);
   }
 
-  @Get('/:provider_id/callback')
+  @Get('/:clientId/:provider_id/callback')
   @ApiParam({ name: 'provider_id', type: 'string' })
   @ApiHeader({ name: 'X-Signature', description: 'Signature' })
   @ApiHeader({ name: 'X-SessionId', description: 'Session ID' })
@@ -112,23 +86,45 @@ export class GamingController {
   async handleCallbackGet(
     @Req() request,
     @Param('provider_id') provider,
+    @Param('clientId') clientId,
     @Headers() headers,
     @Body() data,
+    @Res() res: Response,
   ) {
     try {
-      return await this.gamingService.handleGamesCallback({
+      const response = await this.gamingService.handleGamesCallback({
         provider: provider,
         method: request.method,
         header: headers,
-        body: data,
+        body: JSON.stringify(data),
+        clientId,
       });
+      if (response.success === false) {
+        return res
+          .set({
+            'X-ErrorMessage': response.message,
+            'X-ErrorCode': `${HttpStatus.PROCESSING}`,
+          })
+          .json(response);
+      }
+      return res.json(response);
     } catch (error) {
       console.error(error);
+      return res
+        .set({
+          'X-ErrorMessage': error.message,
+          'X-ErrorCode': `${HttpStatus.INTERNAL_SERVER_ERROR}`,
+        })
+        .json({
+          message: error.message,
+          success: false,
+        });
     }
   }
 
-  @Post('/:provider_id/callback')
+  @Post('/:clientId/:provider_id/callback')
   @ApiParam({ name: 'provider_id', type: 'string' })
+  @ApiParam({ name: 'clientId', type: 'string' })
   @ApiHeader({ name: 'X-Signature', description: 'Signature' })
   @ApiHeader({ name: 'X-SessionId', description: 'Session ID' })
   @ApiHeader({ name: 'X-UserName', description: 'User Name' })
@@ -142,25 +138,44 @@ export class GamingController {
     description: 'Client External Key',
   })
   async handleCallbackPost(
-    @Req() request,
+    @Req() req: RawBodyRequest<Request>,
     @Param('provider_id') provider,
+    @Param('clientId') clientId,
     @Headers() headers,
-    @Body() data,
+    @Body() body,
+    @Res() res,
   ) {
+    // console.log(body);
+
     try {
-      return await this.gamingService.handleGamesCallback({
+      const response = await this.gamingService.handleGamesCallback({
         provider: provider,
-        method: request.method,
+        method: req.method,
         header: headers,
-        body: data,
-      });
+        body: JSON.stringify(body),
+        clientId
+      })
+      
+      return res.status(response.status).json(response.data);
+      
     } catch (error) {
       console.error(error);
+      return res
+        .status(HttpStatus.INTERNAL_SERVER_ERROR)
+        .send({
+          status: "error", 
+          error: {
+            scope: "internal",
+            no_refund: "1",
+            message: "Internal server error"
+          }
+        })
     }
   }
 
-  @Get('/:provider_id/callback/:action')
+  @Get('/:clientId/:provider_id/callback/:action')
   @ApiParam({ name: 'provider_id', type: 'string' })
+  @ApiParam({ name: 'clientId', type: 'string' })
   @ApiParam({ name: 'action', type: 'string' })
   @ApiHeader({ name: 'X-Signature', description: 'Signature' })
   @ApiHeader({ name: 'X-SessionId', description: 'Session ID' })
@@ -174,23 +189,52 @@ export class GamingController {
     @Req() request,
     @Param('action') action,
     @Param('provider_id') provider,
+    @Param('clientId') clientId,
     @Headers() headers,
     @Body() data,
+    @Res() res: Response,
   ) {
+    // console.log({
+    //   provider: provider,
+    //   action: action,
+    //   method: request.method,
+    //   header: headers,
+    //   body: data,
+    // });
     try {
-      return await this.gamingService.handleGamesCallback({
+      const response = await this.gamingService.handleGamesCallback({
         provider: provider,
         action: action,
         method: request.method,
         header: headers,
-        body: data,
+        body: Object.keys(data).length === 0 ? null : JSON.stringify(data),
+        clientId
       });
+      if (response.success === false) {
+        return res
+          .set({
+            'X-ErrorMessage': response.message,
+            'X-ErrorCode': `${response.status}`,
+          })
+          .json(response).status(HttpStatus.OK);
+      }
+      return res.json(response.data).status(HttpStatus.OK);
     } catch (error) {
       console.error(error);
+      return res
+        .set({
+          'X-ErrorMessage': error.message,
+          'X-ErrorCode': `${HttpStatus.INTERNAL_SERVER_ERROR}`,
+        })
+        .json({
+          message: error.message,
+          success: false,
+        });
     }
   }
 
-  @Post('/:provider_id/callback/:action')
+  @Post('/:clientId/:provider_id/callback/:action')
+  @ApiParam({ name: 'clientId', type: 'string' })
   @ApiParam({ name: 'provider_id', type: 'string' })
   @ApiParam({ name: 'action', type: 'string' })
   @ApiHeader({ name: 'X-Signature', description: 'Signature' })
@@ -200,24 +244,52 @@ export class GamingController {
     name: 'X-ClientExternalKey',
     description: 'Client External Key',
   })
-  @ApiBody({ type: SwaggerStartGameDto })
+  // @ApiBody({ type: SwaggerStartGameDto })
   async handleCallbackWithActionPost(
-    @Req() request,
     @Param('action') action,
     @Param('provider_id') provider,
+    @Param('clientId') clientId,
     @Headers() headers,
-    @Body() data,
+    @Req() req: RawBodyRequest<Request>,
+    @Res() res: Response,
   ) {
+    const rawBody = req.rawBody;
+    let body = rawBody.toString().replace(/\r?\n|\r/g, "");
+    body = body.replace(/\s/g, "");
+
     try {
-      return await this.gamingService.handleGamesCallback({
+      const response = await this.gamingService.handleGamesCallback({
         provider: provider,
         action: action,
-        method: request.method,
+        method: req.method,
         header: headers,
-        body: data,
+        body,
+        clientId
       });
+      if (response.success === false) {
+        return res
+          .set({
+            'X-ErrorMessage': response.message,
+            'X-ErrorCode': `${response.status}`,
+          })
+          .status(response.status)
+          .send(response)
+      } else {
+        console.log('response status is', response.status);
+        return res.status(response.status).send(response.data);
+      }
     } catch (error) {
       console.error(error);
+      return res
+        .set({
+          'X-ErrorMessage': error.message,
+          'X-ErrorCode': `${HttpStatus.INTERNAL_SERVER_ERROR}`,
+        })
+        .status(HttpStatus.INTERNAL_SERVER_ERROR)
+        .send({
+          message: error.message,
+          success: false,
+        })
     }
   }
 }

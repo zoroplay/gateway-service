@@ -6,9 +6,26 @@ import { Struct } from "./google/protobuf/struct.pb";
 
 export const protobufPackage = "gaming";
 
+export interface RegisterBonusRequest {
+  clientId: number;
+  gameId: string;
+  userId: string;
+  betMoney: number;
+  freeSpinsCount: number;
+  expireDate: string;
+  bonusId: number;
+  promoCode: string;
+}
+
 export interface PaginationDto {
   page: number;
   skip: number;
+}
+
+export interface FetchGamesRequest {
+  clientId: number;
+  categoryId?: number | undefined;
+  providerId?: number | undefined;
 }
 
 export interface Empty {
@@ -19,11 +36,12 @@ export interface SyncGameDto {
 }
 
 export interface CallbackGameDto {
+  clientId: number;
   provider: string;
   action?: string | undefined;
   method?: string | undefined;
   header: { [key: string]: any } | undefined;
-  body: { [key: string]: any } | undefined;
+  body?: string | undefined;
 }
 
 export interface FindOneGameDto {
@@ -69,6 +87,7 @@ export interface CreateGameDto {
   status: boolean;
   type: string;
   providerId: number;
+  bonusType: string;
 }
 
 export interface StartGameDto {
@@ -76,11 +95,13 @@ export interface StartGameDto {
   clientId: number;
   userId: number;
   username: string;
-  email: string;
+  email?: string | undefined;
   homeUrl?: string | undefined;
   depositUrl?: string | undefined;
   demo?: boolean | undefined;
   isMobile?: boolean | undefined;
+  authCode?: string | undefined;
+  balanceType?: string | undefined;
 }
 
 export interface StartGameResponse {
@@ -236,6 +257,7 @@ export interface EvolutionCallback {
 export interface CallbackResponse {
   success: boolean;
   message: string;
+  status?: number | undefined;
   data: { [key: string]: any } | undefined;
 }
 
@@ -287,6 +309,39 @@ export interface XpressData {
   transactionType?: string | undefined;
 }
 
+export interface CommonResponse {
+  status?: number | undefined;
+  success?: boolean | undefined;
+  message: string;
+  data?: { [key: string]: any } | undefined;
+}
+
+export interface SaveCategoryRequest {
+  clientId: number;
+  id?: number | undefined;
+  name: string;
+  imagePath?: string | undefined;
+}
+
+export interface Category {
+  id: number;
+  slug: string;
+  name: string;
+}
+
+export interface Categories {
+  data: Category[];
+}
+
+export interface MetaData {
+  page: number;
+  perPage: number;
+  total: number;
+  lastPage: number;
+  nextPage: number;
+  prevPage: number;
+}
+
 export const GAMING_PACKAGE_NAME = "gaming";
 
 wrappers[".google.protobuf.Struct"] = { fromObject: Struct.wrap, toObject: Struct.unwrap } as any;
@@ -296,6 +351,8 @@ export interface GamingServiceClient {
 
   findAllGames(request: Empty): Observable<Games>;
 
+  fetchGames(request: FetchGamesRequest): Observable<Games>;
+
   syncGames(request: SyncGameDto): Observable<Games>;
 
   findOneGame(request: FindOneGameDto): Observable<Game>;
@@ -304,15 +361,21 @@ export interface GamingServiceClient {
 
   removeGame(request: UpdateGameDto): Observable<Game>;
 
-  createProvider(request: CreateProviderDto): Observable<Provider>;
+  saveCategory(request: SaveCategoryRequest): Observable<CommonResponse>;
 
-  updateProvider(request: CreateProviderDto): Observable<Provider>;
+  fetchCategories(request: Empty): Observable<Categories>;
 
-  findOneProvider(request: FindOneGameDto): Observable<Provider>;
+  registerBonus(request: Empty): Observable<CommonResponse>;
 
-  removeProvider(request: CreateProviderDto): Observable<Provider>;
+  createProvider(request: CreateProviderDto): Observable<CommonResponse>;
 
-  findAllProviders(request: Empty): Observable<Providers>;
+  updateProvider(request: CreateProviderDto): Observable<CommonResponse>;
+
+  findOneProvider(request: FindOneGameDto): Observable<CommonResponse>;
+
+  removeProvider(request: CreateProviderDto): Observable<CommonResponse>;
+
+  findAllProviders(request: Empty): Observable<CommonResponse>;
 
   startGame(request: StartGameDto): Observable<StartGameResponse>;
 
@@ -338,6 +401,8 @@ export interface GamingServiceController {
 
   findAllGames(request: Empty): Promise<Games> | Observable<Games> | Games;
 
+  fetchGames(request: FetchGamesRequest): Promise<Games> | Observable<Games> | Games;
+
   syncGames(request: SyncGameDto): Promise<Games> | Observable<Games> | Games;
 
   findOneGame(request: FindOneGameDto): Promise<Game> | Observable<Game> | Game;
@@ -346,15 +411,21 @@ export interface GamingServiceController {
 
   removeGame(request: UpdateGameDto): Promise<Game> | Observable<Game> | Game;
 
-  createProvider(request: CreateProviderDto): Promise<Provider> | Observable<Provider> | Provider;
+  saveCategory(request: SaveCategoryRequest): Promise<CommonResponse> | Observable<CommonResponse> | CommonResponse;
 
-  updateProvider(request: CreateProviderDto): Promise<Provider> | Observable<Provider> | Provider;
+  fetchCategories(request: Empty): Promise<Categories> | Observable<Categories> | Categories;
 
-  findOneProvider(request: FindOneGameDto): Promise<Provider> | Observable<Provider> | Provider;
+  registerBonus(request: Empty): Promise<CommonResponse> | Observable<CommonResponse> | CommonResponse;
 
-  removeProvider(request: CreateProviderDto): Promise<Provider> | Observable<Provider> | Provider;
+  createProvider(request: CreateProviderDto): Promise<CommonResponse> | Observable<CommonResponse> | CommonResponse;
 
-  findAllProviders(request: Empty): Promise<Providers> | Observable<Providers> | Providers;
+  updateProvider(request: CreateProviderDto): Promise<CommonResponse> | Observable<CommonResponse> | CommonResponse;
+
+  findOneProvider(request: FindOneGameDto): Promise<CommonResponse> | Observable<CommonResponse> | CommonResponse;
+
+  removeProvider(request: CreateProviderDto): Promise<CommonResponse> | Observable<CommonResponse> | CommonResponse;
+
+  findAllProviders(request: Empty): Promise<CommonResponse> | Observable<CommonResponse> | CommonResponse;
 
   startGame(request: StartGameDto): Promise<StartGameResponse> | Observable<StartGameResponse> | StartGameResponse;
 
@@ -380,10 +451,14 @@ export function GamingServiceControllerMethods() {
     const grpcMethods: string[] = [
       "createGame",
       "findAllGames",
+      "fetchGames",
       "syncGames",
       "findOneGame",
       "updateGame",
       "removeGame",
+      "saveCategory",
+      "fetchCategories",
+      "registerBonus",
       "createProvider",
       "updateProvider",
       "findOneProvider",

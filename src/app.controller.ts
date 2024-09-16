@@ -1,5 +1,4 @@
 import { Body, Controller, Get, Param, Post, Req, Res, Headers } from '@nestjs/common';
-import { AppService } from './app.service';
 import { ApiBody, ApiParam, ApiTags } from '@nestjs/swagger';
 import { AuthService } from './identity/auth/auth.service';
 import { WalletService } from './wallet/wallet.service';
@@ -8,15 +7,9 @@ import { SwaggerGetUserByUsernmae } from './identity/dto';
 @Controller()
 export class AppController {
   constructor(
-    private readonly appService: AppService,
     private readonly authService: AuthService,
     private readonly walletService: WalletService
   ) {}
-
-  @Get()
-  getHello(): string {
-    return this.appService.getHello();
-  }
 
   @ApiTags('Webhooks')
   // @UseGuards(ClientAuthGuard)

@@ -1,26 +1,18 @@
-// import { Module } from '@nestjs/common';
-// import { RetailService } from './retail.service';
-// import { RetailController } from './retail.controller';
-// import { ClientsModule, Transport } from '@nestjs/microservices';
-// import { RETAIL_PACKAGE_NAME, protobufPackage } from './retail.pb';
-// import { join } from 'path';
+import { Module, forwardRef } from '@nestjs/common';
+import { RetailController } from './retail.controller';
+import { RetailAdminController } from './admin/retail.admin.controller';
+import { IdentityModule } from 'src/identity/identity.module';
+import { WalletModule } from 'src/wallet/wallet.module';
+import { BonusModule } from 'src/bonus/bonus.module';
+import { BettingModule } from 'src/betting/betting.module';
 
-// @Module({
-//   imports: [
-//     ClientsModule.register([
-//       {
-//         name: protobufPackage,
-//         transport: Transport.GRPC,
-//         options: {
-//           url: process.env.RETAIL_SERVICE_URL,
-//           package: RETAIL_PACKAGE_NAME,
-//           protoPath: join('node_modules/sbe-service-proto/proto/retail.proto'),
-//         },
-//       },
-//     ]),
-//   ],
-//   controllers: [RetailController],
-//   providers: [RetailService],
-//   exports: [RetailService],
-// })
-// export class RetailModule {}
+@Module({
+  imports: [
+    forwardRef(() => IdentityModule),
+    forwardRef(() => WalletModule),
+    forwardRef(() => BonusModule),
+    forwardRef(() => BettingModule),
+  ],
+  controllers: [RetailAdminController, RetailController],
+})
+export class RetailModule {}

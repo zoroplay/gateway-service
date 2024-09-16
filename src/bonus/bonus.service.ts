@@ -16,8 +16,10 @@ import {
   DeleteBonusRequest,
   FetchReportRequest,
   CheckDepositBonusRequest,
-} from './bonus.pb';
+  SettleBetRequest,
+} from 'src/interfaces/bonus.pb';
 import { ClientGrpc } from '@nestjs/microservices';
+import { firstValueFrom } from 'rxjs';
 
 @Injectable()
 export class BonusService implements OnModuleInit {
@@ -36,24 +38,24 @@ export class BonusService implements OnModuleInit {
   // }
 
   CreateBonus(data: CreateBonusRequest) {
-    console.log('CreateBonus ');
+    // console.log('CreateBonus ');
     return this.service.createBonus(data);
     // return this.service.createCashbackBonus(data);
   }
 
   UpdateBonus(data: CreateBonusRequest) {
-    console.log('UpdateCashbackBonus ');
+    // console.log('UpdateCashbackBonus ');
     return this.service.updateBonus(data);
   }
   fetchBonusReport(data: FetchReportRequest) {
-    console.log('FetchBonusReport');
+    // console.log('FetchBonusReport');
     return this.service.fetchBonusReport(data);
   }
 
-  // CreateFirstDepositBonus(data: CreateFirstDepositBonusRequest) {
-  //   console.log('CreateFirstDepositBonus ');
-  //   // return this.service.createFirstDepositBonus(data);
-  // }
+  SearchBonus(data: GetBonusByClientID) {
+    // console.log('search bonus ',data);
+    return firstValueFrom(this.service.searchBonus(data));
+  }
 
   // UpdateFirstDepositBonus(data: CreateFirstDepositBonusRequest) {
   //   console.log('UpdateFirstDepositBonus ');
@@ -91,62 +93,72 @@ export class BonusService implements OnModuleInit {
   // }
 
   GetBonus(data: GetBonusRequest) {
-    console.log('GetBonus ');
+    // console.log('GetBonus ');
     return this.service.getBonus(data);
   }
 
   GetUserBonus(data: GetUserBonusRequest) {
-    console.log('GetUserBonus ');
+    // console.log('GetUserBonus ');
     return this.service.getUserBonus(data);
   }
 
   AwardBonus(data: AwardBonusRequest) {
-    console.log('AwardBonus ', data);
+    // console.log('AwardBonus ', data);
     return this.service.awardBonus(data);
   }
 
   CheckFirstDeposit(data: CheckDepositBonusRequest) {
-    console.log('Check deposit bonus', data);
+    // console.log('Check deposit bonus', data);
     return this.service.checkDepositBonus(data);
   }
 
+  getActiveBonus(data: CheckDepositBonusRequest) {
+    // console.log('Get Active bonus', data);
+    return this.service.getActiveUserBonus(data);
+  }
+
   UpdateBonusStatus(data: BonusStatusRequest) {
-    console.log('UpdateBonusStatus ');
+    // console.log('UpdateBonusStatus ');
     return this.service.updateBonusStatus(data);
   }
 
   DeleteBonus(data: DeleteBonusRequest) {
-    console.log('DeleteBonus ');
+    // console.log('DeleteBonus ');
     return this.service.deleteBonus(data);
   }
 
   CreateCampaignBonus(data: CreateCampaignBonusDto) {
-    console.log('CreateCampaign ');
+    // console.log('CreateCampaign ');
     return this.service.createCampaignBonus(data);
   }
 
   UpdateCampaignBonus(data: UpdateCampaignBonusDto) {
-    console.log('UpdateCampaignBonus ');
+    // console.log('UpdateCampaignBonus ');
     return this.service.updateCampaignBonus(data);
   }
 
   DeleteCampaignBonus(data: DeleteBonusRequest) {
-    console.log('DeleteCampaignBonus ');
+    // console.log('DeleteCampaignBonus ');
     return this.service.deleteCampaignBonus(data);
   }
 
   RedeemCampaignBonus(data: RedeemCampaignBonusDto) {
-    console.log('RedeemCampaignBonus ');
+    // console.log('RedeemCampaignBonus ');
     return this.service.redeemCampaignBonus(data);
   }
 
   GetCampaignBonus(data: GetBonusByClientID) {
-    console.log('GetCampaignBonus ');
+    // console.log('GetCampaignBonus ');
     return this.service.getCampaignBonus(data);
   }
 
   GetCampaign(data: GetCampaignRequest) {
-    console.log('GetCampaign ');
+    // console.log('GetCampaign ');
     return this.service.getCampaign(data);
+  }
+
+  settleBet(data: SettleBetRequest) {
+    // console.log('Settle Bet request ');
+    return this.service.settleBet(data);
   }
 }

@@ -1,9 +1,9 @@
-import { Body, Controller, Delete, Get, HttpException, HttpStatus, Inject, Param, Patch, Post, Query, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpException, HttpStatus, Inject, Param, Patch, Post, Put, Query, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { ApiBody, ApiOkResponse, ApiOperation, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
-import { AddToSegmentRequest, ClientRequest, DeleteItemRequest, FetchPlayerSegmentRequest, GetSegmentPlayerRequest, GrantBonusRequest, IDENTITY_SERVICE_NAME, IdentityServiceClient, SaveSegmentRequest, protobufPackage } from '../identity.pb';
+import { AddToSegmentRequest, ClientRequest, DeleteItemRequest, FetchPlayerSegmentRequest, GrantBonusRequest, IDENTITY_SERVICE_NAME, IdentityServiceClient, ResetPasswordRequest, SaveSegmentRequest, protobufPackage } from 'src/interfaces/identity.pb';
 import { ClientGrpc } from '@nestjs/microservices';
 import { SwaggerAddToSegmentRequest, SwaggerGrantBonusToSegment, SwaggerSaveClientRequest, SwaggerSaveSegmentRequest } from '../dto/admin.dto';
-import { SwaggerCommonResponse } from '../dto';
+import { SwaggerChangePasswordRequest, SwaggerCommonResponse } from '../dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { PATH_DOWNLOADED_FILE, SUPPORTED_FILES, multerOptions } from 'src/uploads';
 import * as Excel from 'exceljs';
@@ -47,6 +47,18 @@ export class UsersController {
         // return this.svc.getClients({});
     }
 
+    @Put('/users/change-password')
+    @ApiOperation({
+      summary: 'Update User Password',
+      description: 'This endpoint lets you update/change user password',
+    })
+    @ApiBody({ type: SwaggerChangePasswordRequest })
+    @ApiOkResponse({ type: SwaggerCommonResponse })
+    updatePassword(
+      @Body() data: ResetPasswordRequest,
+    ) {
+      return this.svc.resetPassword(data);
+    }
 
     @Get('player-management/segments')
     @ApiOperation({
@@ -135,7 +147,7 @@ export class UsersController {
     @ApiParam({ name: 'id', description: 'Segment ID' })
     @ApiOkResponse({ type: SwaggerCommonResponse })
     getPlayers(@Param() param) {
-        console.log(param.id)
+        // console.log(param.id)
         return this.svc.getSegmentPlayers({segmentId: param.id});
     }
 

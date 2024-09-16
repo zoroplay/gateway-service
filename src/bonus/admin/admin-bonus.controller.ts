@@ -21,14 +21,13 @@ import { BonusService } from '../bonus.service';
 
 import {
   AwardBonusRequest,
-  BonusStatusRequest,
   CreateBonusRequest,
   CreateCampaignBonusDto,
-  DeleteBonusRequest,
   FetchReportRequest,
   GetBonusRequest,
+  SettleBetRequest,
   UpdateCampaignBonusDto,
-} from '../bonus.pb';
+} from 'src/interfaces/bonus.pb';
 import {
   SwaggerAllCampaignBonus,
   SwaggerAwardBonusRequest,
@@ -38,13 +37,14 @@ import {
   SwaggerCreateBonusResponse,
   SwaggerCreateCampaignBonus,
   SwaggerGetUserBonusResponse,
+  SwaggerSettleBonusBet,
   SwaggerUpdateCampaignBonus,
+  SwaggerValidateCampaignResponse,
 } from '../dto';
 import {
   SwaggerFetchReportResponse,
   SwaggerGetPaymentMethodResponse,
 } from 'src/wallet/dto';
-import { BonusServiceClient } from '../bonus.pb';
 
 @ApiTags('BackOffice APIs')
 @Controller('admin/bonus')
@@ -79,7 +79,7 @@ export class AdminBonusController {
   })
   @ApiOkResponse({ type: SwaggerFetchReportResponse })
   fetchBonus(@Query() query: FetchReportRequest) {
-    console.log('Fetch Bonus');
+    // console.log('Fetch Bonus');
 
     return this.bonusService.fetchBonusReport({
       bonusType: query.bonusType,
@@ -140,16 +140,40 @@ export class AdminBonusController {
     }
   }
 
-  @Patch('status/update')
+  @Get('/search')
+  @ApiOperation({
+    summary: 'Find bonus for select field',
+    description:
+      'This endpoint retrieves bonus id and name for select dropdown field',
+  })
+  @ApiQuery({ name: 'searchKey', description: 'Search key' })
+  @ApiQuery({ name: 'clientId', description: 'SBE Client ID' })
+  async findPlayersByUsername(
+    @Query('searchKey') searchKey: string,
+    @Query('clientId') clientId: number 
+  ) {
+    const res =  await this.bonusService.SearchBonus({searchKey, clientId});
+    return res.data;
+  }
+
+  @Get('status/update')
   @ApiOperation({
     summary: 'Activate or Deactivate client bonus type ',
     description: 'Use this endpoint to activate or deactivate a client bonus',
   })
-  @ApiBody({ type: SwaggerBonusStatusRequest })
+  @ApiQuery({ name: 'id', description: 'Bonus ID' })
+  @ApiQuery({ name: 'status', description: 'Bonus Status' })
   @ApiOkResponse({ type: SwaggerCreateBonusResponse })
-  UpdateBonusStatus(@Body() data: BonusStatusRequest) {
+  UpdateBonusStatus(
+    @Query('id') id: number,
+    @Query('status') status: number,
+  ) {
     try {
-      return this.bonusService.UpdateBonusStatus(data);
+      const payload = {
+        bonusId: id,
+        status
+      }
+      return this.bonusService.UpdateBonusStatus(payload);
     } catch (error) {
       console.error(error);
     }
@@ -213,11 +237,13 @@ export class AdminBonusController {
   @ApiParam({ name: 'id', description: 'Campaign id to be deleted' })
   @ApiQuery({ name: 'client_id', description: 'SBE client ID' })
   @ApiOkResponse({ type: SwaggerCreateBonusResponse })
-  DeleteCampaignBonus(@Query() query, @Param() param) {
+  DeleteCampaignBonus(
+    @Query('client_id') clientId: number, 
+    @Param('id') id: number) {
     try {
       const data = {
-        id: param.id,
-        clientId: query.client_id,
+        id,
+        clientId,
       };
       return this.bonusService.DeleteCampaignBonus(data);
     } catch (error) {
@@ -267,6 +293,22 @@ export class AdminBonusController {
       data.clientId = query.client_id;
 
       return this.bonusService.AwardBonus(data);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  @Post('/process-bet')
+  @ApiOperation({
+    summary: 'Process bet test',
+    description:
+      'This endpoint is use to test bet settlement',
+  })
+  @ApiBody({ type: SwaggerSettleBonusBet })
+  @ApiOkResponse({ type: SwaggerValidateCampaignResponse })
+  testBetSettlement(@Body() data: SettleBetRequest) {
+    try {
+      return this.bonusService.settleBet(data);
     } catch (error) {
       console.error(error);
     }

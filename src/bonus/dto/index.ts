@@ -581,6 +581,20 @@ export class SwaggerValidateCampaignDTO {
   promoCode: string;
 }
 
+export class SwaggerSettleBonusBet {
+  @ApiProperty({ description: 'ID of the client' })
+  clientId: number;
+
+  @ApiProperty({ description: 'Bet ID' })
+  betId: number;
+
+  @ApiProperty({ description: 'Bet Status' })
+  status: number;
+
+  @ApiProperty({ description: 'Winning amount' })
+  amount: number;
+}
+
 export class SwaggerValidateCampaignResponse {
   @ApiProperty({ description: 'Request status' })
   success: boolean;

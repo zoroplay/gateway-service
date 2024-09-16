@@ -3,7 +3,7 @@ import { WalletController } from './wallet.controller';
 import { WalletService } from './wallet.service';
 import { WalletAdminController } from './admin/wallet-admin.controller';
 import { ClientsModule, Transport } from '@nestjs/microservices';
-import { WALLET_PACKAGE_NAME, protobufPackage } from './wallet.pb';
+import { WALLET_PACKAGE_NAME, protobufPackage } from 'src/interfaces/wallet.pb';
 import { join } from 'path';
 import { IdentityModule } from 'src/identity/identity.module';
 

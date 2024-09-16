@@ -1,155 +1,192 @@
-// import { Body, Controller, Get, Patch, Post } from '@nestjs/common';
-// import { RetailService } from './retail.service';
-// import {
-//   ApiBody,
-//   ApiOkResponse,
-//   ApiOperation,
-//   ApiParam,
-//   ApiQuery,
-//   ApiTags,
-// } from '@nestjs/swagger';
-// import {
-//   AssignUserCommissionProfile,
-//   BonusGroups,
-//   CreateCommissionProfile,
-//   Empty,
-//   NormalRequest,
-//   PayPowerRequest,
-//   PowerRequest,
-//   PowerResponse,
-//   UpdateCommissionProfile,
-// } from './retail.pb';
-// import {
-//   SwaggerAssignUserCommissionProfile,
-//   SwaggerBonusGroupResponse,
-//   SwaggerBonusGroups,
-//   SwaggerCommissionProfileResponse,
-//   SwaggerCreateCommissionProfile,
-//   SwaggerNormalDataResponse,
-//   SwaggerNormalRequest,
-//   SwaggerNormalResponse,
-//   SwaggerPayPowerRequest,
-//   SwaggerPowerBonusResponse,
-//   SwaggerPowerRequest,
-//   SwaggerPowerResponse,
-//   SwaggerUpdateCommissionProfile,
-// } from './dto';
+/* eslint-disable prettier/prettier */
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Query,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
+import { RetailService } from './retail.service';
+import {
+  ApiBody,
+  ApiOkResponse,
+  ApiOperation,
+  ApiParam,
+  ApiQuery,
+  ApiTags,
+} from '@nestjs/swagger';
+import { AuthGuard } from 'src/identity/auth/auth.guard';
+import { WalletService } from 'src/wallet/wallet.service';
+import {
+  ProcessRetailTransaction,
+  ValidateTransactionRequest,
+  WalletTransferRequest,
+} from 'src/interfaces/wallet.pb';
+import {
+  SwaggerBetHistoryRequest,
+  SwaggerBetHistoryResponse,
+} from 'src/betting/dto';
+import {
+  BetHistoryRequest,
+  SalesReportRequest,
+} from 'src/interfaces/betting.pb';
+import { BettingService } from 'src/betting/betting.service';
+import { IAuthorizedRequest } from 'src/interfaces/authorized-request.interface';
 
-// @ApiTags('Retail APIs')
-// @Controller('retails')
-// export class RetailController {
-//   constructor(private readonly retailService: RetailService) {}
+@ApiTags('Retail APIs')
+@UseGuards(AuthGuard)
+@Controller('retail')
+export class RetailController {
+  constructor(
+    private readonly retailService: RetailService,
+    private readonly walletService: WalletService,
+    private readonly bettingService: BettingService,
+  ) {}
 
-//   @Get('/bonus-groups')
-//   @ApiOperation({
-//     summary: 'Get all retail bonus group',
-//     description:
-//       'Retail Bonus Group are parameters used to calculate power bonus commissions',
-//   })
-//   @ApiOkResponse({ type: [SwaggerBonusGroupResponse] })
-//   getBonusGroups(@Body() data: Empty) {
-//     return this.retailService.getBonusGroups(data);
-//   }
+  @Post(':clientId/fund-user')
+  @ApiOperation({
+    summary: 'Transfer Funds',
+    description: 'This endpoint is used to transfer funds between retail user',
+  })
+  @ApiParam({ name: 'clientId', description: 'SBE Client ID' })
+  // @ApiBody({ type: SwaggerUserDetailsRequest })
+  // @ApiOkResponse({ type: SwaggerCommonResponse })
+  fundUser(
+    @Body() body: WalletTransferRequest,
+    @Param('clientId') clientId: number,
+  ) {
+    body.clientId = clientId;
+    return this.walletService.transferFunds(body);
+  }
 
-//   @Post('/bonus-groups')
-//   @ApiOperation({
-//     summary: 'Create retail bonus groups',
-//     description:
-//       'Set Retail Bonus Group parameters used to calculate power bonus commissions',
-//   })
-//   @ApiBody({ type: SwaggerBonusGroups })
-//   @ApiOkResponse({ type: [SwaggerBonusGroupResponse] })
-//   createBonusGroups(@Body() data: BonusGroups) {
-//     return this.retailService.createBonusGroups(data);
-//   }
+  @Post(':clientId/wallet/deposit/validate')
+  @ApiOperation({
+    summary: 'Validate Deposit Code',
+    description: 'This endpoint is used to validate the deposit code on retail',
+  })
+  @ApiParam({ name: 'clientId', description: 'SBE Client ID' })
+  validateDepositCode(
+    @Body() body: ValidateTransactionRequest,
+    @Param('clientId') clientId: number,
+    @Req() req: IAuthorizedRequest,
+  ) {
+    body.clientId = clientId;
+    body.userId = req.user.id;
+    return this.walletService.validateDepositCode(body);
+  }
 
-//   @Get('/commission-profile')
-//   @ApiOperation({
-//     summary: 'Get all Commission Profile',
-//     description:
-//       'These are Profiles with parameters used in calculating commissions when bet is placed',
-//   })
-//   @ApiOkResponse({ type: [SwaggerCommissionProfileResponse] })
-//   getCommissionProfiles(@Body() data: Empty) {
-//     return this.retailService.getCommissionProfiles(data);
-//   }
+  @Get(':clientId/wallet/deposit/transfer/:id')
+  @ApiOperation({
+    summary: 'Process Transfer',
+    description: 'This endpoint is used to process deposit transfer',
+  })
+  @ApiParam({ name: 'clientId', description: 'SBE Client ID' })
+  @ApiParam({ name: 'id', description: 'Transaction ID' })
+  @ApiQuery({ name: 'role', description: 'User Role name' })
+  processTransfer(
+    @Param('clientId') clientId: number,
+    @Param('id') id: number,
+    @Query('role') role: string,
+    @Req() req: IAuthorizedRequest,
+  ) {
+    const payload: ProcessRetailTransaction = {
+      id,
+      clientId,
+      userId: req.user.id,
+      username: req.user.username,
+      userRole: role,
+    };
+    return this.walletService.processShopDeposit(payload);
+  }
 
-//   @Post('/commission-profile')
-//   @ApiOperation({
-//     summary: 'Create a Commission Profile',
-//     description:
-//       'These are Profiles with parameters used in calculating commissions when bet is placed',
-//   })
-//   @ApiBody({ type: SwaggerCreateCommissionProfile })
-//   @ApiOkResponse({ type: SwaggerCommissionProfileResponse })
-//   createCommissionProfile(@Body() data: CreateCommissionProfile) {
-//     return this.retailService.createCommissionProfile(data);
-//   }
+  @Post(':clientId/wallet/withdraw/validate')
+  @ApiOperation({
+    summary: 'Validate Withdrawal Code',
+    description:
+      'This endpoint is used to validate the withdrawal code on retail',
+  })
+  @ApiParam({ name: 'clientId', description: 'SBE Client ID' })
+  validateWithdrawCode(
+    @Body() body: ValidateTransactionRequest,
+    @Param('clientId') clientId: number,
+    @Req() req: IAuthorizedRequest,
+  ) {
+    body.clientId = clientId;
+    body.userId = req.user.id;
+    return this.walletService.validateWithdrawalCode(body);
+  }
 
-//   @Patch('/commission-profile')
-//   @ApiOperation({
-//     summary: 'Update a Commission Profile',
-//     description:
-//       'These are Profiles with parameters used in calculating commissions when bet is placed',
-//   })
-//   @ApiBody({ type: SwaggerUpdateCommissionProfile })
-//   @ApiOkResponse({ type: SwaggerCommissionProfileResponse })
-//   updateCommissionProfile(@Body() data: UpdateCommissionProfile) {
-//     return this.retailService.updateCommissionProfile(data);
-//   }
+  @Get(':clientId/wallet/withdraw/transfer/:id')
+  @ApiOperation({
+    summary: 'Process Withdrawal Request',
+    description: 'This endpoint is used to process withdrawal request',
+  })
+  @ApiParam({ name: 'clientId', description: 'SBE Client ID' })
+  @ApiParam({ name: 'id', description: 'Transaction ID' })
+  @ApiQuery({ name: 'role', description: 'User Role name' })
+  processWithdrawal(
+    @Param('clientId') clientId: number,
+    @Param('id') id: number,
+    @Query('role') role: string,
+    @Req() req: IAuthorizedRequest,
+  ) {
+    const payload: ProcessRetailTransaction = {
+      id,
+      clientId,
+      userId: req.user.id,
+      username: req.user.username,
+      userRole: role,
+    };
+    return this.walletService.processShopWithdrawal(payload);
+  }
 
-//   @Post('/commission-profile/assign-user')
-//   @ApiOperation({
-//     summary: 'Assign User a Commission Profile',
-//     description: 'These are Profiles links a Profile with a user',
-//   })
-//   @ApiBody({ type: SwaggerAssignUserCommissionProfile })
-//   @ApiOkResponse({ type: SwaggerCommissionProfileResponse })
-//   assignUserCommissionProfile(@Body() data: AssignUserCommissionProfile) {
-//     return this.retailService.assignUserCommissionProfile(data);
-//   }
+  @Post(':clientId/betlist')
+  @ApiOperation({
+    summary: 'Retrieve bet history of a retail user',
+    description:
+      'Retrieves bet history for a retail, date object can be passed to filter only bets for a specific day',
+  })
+  @ApiBody({ type: SwaggerBetHistoryRequest })
+  @ApiOkResponse({ type: SwaggerBetHistoryResponse })
+  BetHistory(
+    @Param('clientId') clientId: number,
+    @Query() query,
+    @Body() data: BetHistoryRequest,
+    @Req() req: IAuthorizedRequest,
+  ) {
+    try {
+      data.userId = req.user.id;
+      data.clientId = clientId;
+      data.page = query.page || 1;
 
-//   @Get('/power-bonus')
-//   @ApiOperation({
-//     summary: 'Get Agents Power Bonus List',
-//     description: 'These are monthly power bonus records per agent',
-//   })
-//   @ApiBody({ type: SwaggerPowerRequest })
-//   @ApiOkResponse({ type: SwaggerPowerBonusResponse })
-//   getPowerBonus(@Body() data: PowerRequest) {
-//     return this.retailService.getPowerBonus(data);
-//   }
+      return this.bettingService.getAgentBets(data);
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
-//   @Post('/power-bonus/pay')
-//   @ApiOperation({
-//     summary: 'Assign User a Commission Profile',
-//     description: 'These are Profiles links a Profile with a user',
-//   })
-//   @ApiBody({ type: SwaggerPayPowerRequest })
-//   @ApiOkResponse({ type: SwaggerPowerResponse })
-//   payOutPowerBonus(@Body() data: PayPowerRequest) {
-//     return this.retailService.payOutPowerBonus(data);
-//   }
-
-//   @Get('/normal-bonus')
-//   @ApiOperation({
-//     summary: 'Get Agents Power Bonus List',
-//     description: 'These are monthly power bonus records per agent',
-//   })
-//   @ApiBody({ type: SwaggerNormalRequest })
-//   @ApiOkResponse({ type: SwaggerNormalDataResponse })
-//   getNormalBonus(@Body() data: NormalRequest) {
-//     return this.retailService.getNormalBonus(data);
-//   }
-
-//   @Post('/normal-bonus/pay')
-//   @ApiOperation({
-//     summary: 'Assign User a Commission Profile',
-//     description: 'These are Profiles links a Profile with a user',
-//   })
-//   @ApiBody({ type: SwaggerNormalRequest })
-//   @ApiOkResponse({ type: SwaggerNormalDataResponse })
-//   payOutNormalBonus(@Body() data: NormalRequest) {
-//     return this.retailService.payOutNormalBonus(data);
-//   }
-// }
+  @Post(':clientId/reports/sales')
+  @ApiOperation({
+    summary: 'Retail Sales Report',
+    description: 'Retrieves sales report for a retail user',
+  })
+  @ApiBody({ type: SwaggerBetHistoryRequest })
+  @ApiOkResponse({ type: SwaggerBetHistoryResponse })
+  SalesReport(
+    @Param('clientId') clientId: number,
+    @Body() data: SalesReportRequest,
+    @Req() req: IAuthorizedRequest,
+  ) {
+    try {
+      data.userId = req.user.id;
+      data.clientId = clientId;
+      return this.bettingService.getSalesReport(data);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+}

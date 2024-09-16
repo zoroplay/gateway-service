@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { FixtureController } from './fixture.controller';
 import { FixtureService } from './fixture.service';
 import { ClientsModule, Transport } from '@nestjs/microservices';
-import { FIXTURE_PACKAGE_NAME, protobufPackage } from './fixture.pb';
+import { FIXTURE_PACKAGE_NAME, protobufPackage } from 'src/interfaces/fixture.pb';
 import 'dotenv/config';
 import { join } from 'path';
 import { AdminFixtureController } from './admin/admin-fixture.controller';

@@ -16,7 +16,7 @@ RUN apt-get update \
 
 RUN npm install
 RUN npm run proto:install
-RUN npm run proto:all
+# RUN npm run proto:all
 RUN npm run build
 EXPOSE 80
 CMD ["npm", "start"]

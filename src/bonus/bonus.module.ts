@@ -2,8 +2,7 @@ import { Module } from '@nestjs/common';
 import { BonusController } from './bonus.controller';
 import { BonusService } from './bonus.service';
 import { ClientsModule, Transport } from '@nestjs/microservices';
-import { BONUS_PACKAGE_NAME, protobufPackage } from './bonus.pb';
-import { BettingService } from '../betting/betting.service';
+import { BONUS_PACKAGE_NAME, protobufPackage } from 'src/interfaces/bonus.pb';
 import 'dotenv/config'
 import {join} from "path";
 import { AdminBonusController } from './admin/admin-bonus.controller';
