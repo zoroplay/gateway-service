@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: sbe-gateway-service
+  namespace: sbe-gateway-service
+spec:
+  selector:
+    app.kubernetes.io/name: sbe-gateway
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 5001
+  type: LoadBalancer
