@@ -176,16 +176,16 @@ export class SwaggerHighlightsResponse {
 
 export class SwaggerFixturesRequest {
 
-  @ApiProperty({ description: 'ID of the market' })
+  @ApiProperty({ description: 'ID of the market', required: false })
   marketID: number;
 
-  @ApiProperty({ description: 'Date range to fetch' })
+  @ApiProperty({ description: 'Date range to fetch available period options are (3hour | 6hour | 24hour | 72hour | today | tomorrow | today+tomorrow | week)', example: "today" })
   period: string;
 
-  @ApiProperty({ description: 'No of Fixtures to fetch' })
+  @ApiProperty({ description: 'No of Fixtures to fetch', required: false })
   limit: number;
 
-  @ApiProperty({ description: 'Specify device type' })
+  @ApiProperty({ description: 'Specify device type', required: false })
   source?: string;
 
   @ApiProperty({ description: 'filter markets by sport ID' })
@@ -193,6 +193,15 @@ export class SwaggerFixturesRequest {
 
   @ApiProperty({ description: 'GTM Time offset of the customer, default is 0, can either be a positive or negative integer' })
   timeoffset: number;
+
+  @ApiProperty({ description: 'Market specifier', required: false })
+  specifier: string;
+
+  @ApiProperty({ description: 'start date to filter fixture. Use this to get custom date range not available in the PEIROD options' })
+  startDate?: string;
+
+  @ApiProperty({ description: 'end date to filter fixture Use this to get custom date range not available in the PEIROD options' })
+  endDate?: string;
 }
 
 export class SwaggerTimeoffset {
@@ -329,11 +338,39 @@ export class SwaggerFixtureOdds {
 
 export class SwaggerUpdateMarketRequest {
 
-  @ApiProperty({ description: 'ID of the market e.g 18' })
+  @ApiProperty({ description: 'Client ID for markets to fetch' })
+  clientID : number;
+
+  @ApiProperty({ description: 'Sport ID of the market e.g 18' })
+  sportID : number;
+
+  @ApiProperty({ description: 'Betradar Market ID ' })
   marketID : number;
 
-  @ApiProperty({ description: 'Priority of the arrangement in the ui, the higher the value the higher the priority' })
-  priority: number;
+  @ApiProperty({ description: 'Market Group ID' })
+  groupID : number;
+
+  @ApiProperty({ description: 'Name of the custom market' })
+  name : string;
+
+  @ApiProperty({ description: 'Alternate Name for the market', required: false })
+  displayName?: string;
+
+  @ApiProperty({ description: 'Market description', required: false})
+  description?: string;
+
+  @ApiProperty({ description: 'Market status' })
+  status: number;
+
+  @ApiProperty({ description: 'ID of the market e.g 18', required: false})
+  enableCashout?: number;
+
+  @ApiProperty({ description: 'Priority of the arrangement in the ui, the higher the value the higher the priority', required: true})
+  priority?: number;
+
+  @ApiProperty({ description: 'ID of the market e.g 18', required: true })
+  isDefault?: number;
+  
 }
 
 export class SwaggerResponseString {
@@ -452,7 +489,7 @@ export class SwaggerMarketGroupResponse {
     type: [SwaggerMarketGroupData],
     description: 'Markets array',
   })
-  markets: SwaggerMarketGroupData[];
+  groups: SwaggerMarketGroupData[];
 }
 
 

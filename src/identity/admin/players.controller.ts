@@ -1,5 +1,4 @@
 import {
-  BadRequestException,
   Body,
   Controller,
   Get,
@@ -25,7 +24,7 @@ import {
   SearchPlayerRequest,
   UpdatePlayerDataRequest,
   protobufPackage,
-} from '../identity.pb';
+} from 'src/interfaces/identity.pb';
 import { ClientGrpc } from '@nestjs/microservices';
 import {
   SwaggerAdminCommonResponse,
@@ -38,7 +37,7 @@ import {
 import { SwaggerCommonResponse } from '../dto';
 import { SwaggerListTransactionResponse } from 'src/wallet/dto';
 import { WalletService } from 'src/wallet/wallet.service';
-import { SegmentFilterDTO } from 'src/identity/dto/create-player.dto';
+import { firstValueFrom } from 'rxjs';
 
 @ApiTags('BackOffice APIs')
 @Controller('admin/players')
@@ -117,14 +116,23 @@ export class PlayersController {
   })
   @ApiParam({ name: 'id', description: 'Player ID', example: 3 })
   @ApiQuery({ name: 'clientId', description: 'SBE Client ID' })
+  @ApiQuery({ name: 'page', description: 'Transaction Pagination' })
+  @ApiQuery({ name: 'page', description: 'Transaction Pagination' })
+  @ApiQuery({ name: 'startDate', description: 'Start Date' })
+  @ApiQuery({ name: 'endDate', description: 'End Date' })
   @ApiOkResponse({ type: SwaggerListTransactionResponse })
-  listTransactions(@Query() query: any, @Param() param: any) {
+  listTransactions(
+    @Query() query: any, 
+    @Param() param: any
+  ) {
     const payload = {
       userId: param.id,
       clientId: query.clientId,
-      startDate: '',
-      endDate: '',
+      startDate: query.startDate || '',
+      endDate: query.endDate || '',
+      page: query.page || 1
     };
+    
     return this.walletService.getUserTransactions(payload);
   }
 
@@ -156,5 +164,36 @@ export class PlayersController {
   async playerSegmentation(@Query() segmentFilteDto) {
     segmentFilteDto.page = segmentFilteDto.page || 1;
     return this.svc.fetchPlayerFilters(segmentFilteDto);
+  }
+
+  @Get('/get-select-dropdown')
+  @ApiOperation({
+    summary: 'Find users for select field',
+    description:
+      'This endpoint retrieves players id and username for select dropdown field',
+  })
+  @ApiQuery({ name: 'username', description: 'Search by username' })
+  @ApiQuery({ name: 'clientId', description: 'SBE Client ID' })
+  async findPlayersByUsername(
+    @Query('username') username: string,
+    @Query('clientId') clientId: number 
+  ) {
+    const res =  await firstValueFrom(this.svc.getUserIdandName({username, clientId}));
+    return res.data;
+  }
+
+  @Get('/update-status/:id')
+  @ApiOperation({
+    summary: 'Update Player Status',
+    description:
+      'This endpoint is used to update a user status',
+  })
+  @ApiQuery({ name: 'status', description: 'Status name' })
+  @ApiParam({ name: 'id', description: 'Player ID' })
+  async updatePlayerStatus(
+    @Query('status') status: number,
+    @Param('id') id: number
+  ) {
+    return await firstValueFrom(this.svc.updatePlayerStatus({userId: id, status}));
   }
 }

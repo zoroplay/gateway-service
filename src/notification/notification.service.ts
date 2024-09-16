@@ -7,7 +7,8 @@ import {
   SaveSettingsRequest,
   SendOtpRequest,
   VerifyOtpRequest,
-} from './noti.pb';
+  GetUserNotificationsRequest,
+} from 'src/interfaces/noti.pb';
 import { ClientGrpc } from '@nestjs/microservices';
 
 @Injectable()
@@ -33,7 +34,11 @@ export class NotificationService implements OnModuleInit {
   }
 
   saveSettings(data: SaveSettingsRequest) {
-    console.log('save settings');
+    // console.log('save settings');
     return this.service.saveSettings(data);
+  }
+  getUserNotifications(data: GetUserNotificationsRequest) {
+    // console.log('getUserNotifications');
+    return this.service.getUserNotifications(data);
   }
 }

@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { Injectable, Inject, OnModuleInit } from '@nestjs/common';
 import {
   GAMING_SERVICE_NAME,
@@ -7,14 +8,11 @@ import {
   SyncGameDto,
   StartGameDto,
   CallbackGameDto,
-  EvoplayCallback,
-  EvolutionCallback,
-  TadaCallback,
-  ShackEvolutionCallback,
-  SmartSoftCallback,
   CreateProviderDto,
   XpressRequest,
-} from './gaming.pb';
+  XpressResponse,
+  FetchGamesRequest,
+} from 'src/interfaces/gaming.pb';
 import { ClientGrpc } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
 
@@ -30,80 +28,122 @@ export class GamingService implements OnModuleInit {
   }
 
   async createProvider(createDto: CreateProviderDto) {
-    console.log(createDto);
+    //(createDto);
     return firstValueFrom(this.service.createProvider(createDto));
   }
 
   async findAllProvider() {
-    console.log('finding all providers');
+    //('finding all providers');
     return firstValueFrom(this.service.findAllProviders({}));
   }
 
   async create(createGameDto: CreateGameDto) {
-    console.log(createGameDto);
+    //(createGameDto);
     return firstValueFrom(this.service.createGame(createGameDto));
   }
 
   async findAll() {
-    console.log('finding all games');
+    //('finding all games');
     return firstValueFrom(this.service.findAllGames({}));
   }
 
+  async fetchGames(payload: FetchGamesRequest) {
+    //('fetch games');
+    return firstValueFrom(this.service.fetchGames(payload));
+  }
+
+  async listCategories() {
+    //('fetch categories');
+    return firstValueFrom(this.service.fetchCategories({}));
+  }
+
   async sync(syncGameDto: SyncGameDto) {
-    console.log('syncing games');
+    //('syncing games');
     const games = await firstValueFrom(this.service.syncGames(syncGameDto));
+
     return {
       games,
     };
   }
 
+
   async startGame(request: StartGameDto) {
+    // //('start game', request);
     const resp = await firstValueFrom(this.service.startGame(request));
+
     return resp;
   }
 
   async handleGamesCallback(request: CallbackGameDto) {
-    console.log('service start');
-    console.log(request);
+    // //('service start');
+    // //(request);
     const resp = await firstValueFrom(this.service.handleCallback(request));
-    console.log(resp);
+
     if (resp.success) {
-      console.log('service ended in success');
-      return resp.data;
+      //('service ended in success');
     } else {
-      console.log('service ended in failure');
-      return resp;
+      //('service ended in failure');
     }
+    //(resp);
+    return resp;
   }
 
   async xpressLogin(data: XpressRequest) {
-    console.log('xpress login');
+    //('xpress login');
     return firstValueFrom(this.service.xpressLogin(data));
   }
 
-  async xpressBalance(data: XpressRequest) {
-    const res = firstValueFrom(this.service.xpressBalance(data));
-    console.log('xpress balance', res);
+
+  async xpressBalance(data: XpressRequest): Promise<XpressResponse> {
+    //('xpress balance');
+    const res = await firstValueFrom(this.service.xpressBalance(data));
+    if (res.status) res.data.balance = parseFloat(res.data.balance.toFixed(2));
+
     return res;
   }
 
   async xpressCredit(data: XpressRequest) {
-    console.log('xpress credit');
-    return firstValueFrom(this.service.xpressCredit(data));
+    //('xpress credit');
+    const res = await firstValueFrom(this.service.xpressCredit(data));
+    if (res.status) {
+      res.data.balance = parseFloat(res.data.balance.toFixed(2));
+      res.data.oldBalance = parseFloat(res.data.oldBalance.toFixed(2));
+    }
+    return res;
   }
 
   async xpressDebit(data: XpressRequest) {
-    console.log('xpress debit');
-    return firstValueFrom(this.service.xpressDebit(data));
+    //('xpress debit');
+    const res = await firstValueFrom(this.service.xpressDebit(data));
+    if (res.status) {
+      res.data.balance = parseFloat(res.data.balance.toFixed(2));
+      res.data.oldBalance = parseFloat(res.data.oldBalance.toFixed(2));
+    }
+    return res;
   }
 
   async xpressRollback(data: XpressRequest) {
-    console.log('xpress rollback');
-    return firstValueFrom(this.service.xpressRollback(data));
+    const res = await firstValueFrom(this.service.xpressRollback(data));
+    //('xpress rollback', res);
+    if (res.status) {
+      res.data.balance = parseFloat(res.data.balance.toFixed(2));
+      res.data.oldBalance = parseFloat(res.data.oldBalance.toFixed(2));
+    }
+    return res;
   }
 
   async xpressLogout(data: XpressRequest) {
-    console.log('xpress logout');
-    return firstValueFrom(this.service.xpressLogout(data));
+    //('xpress logout');
+    const res = await firstValueFrom(this.service.xpressLogout(data));
+    if (res.status) res.data.balance = parseFloat(res.data.balance.toFixed(2));
+    return res;
   }
+
+  formatNumber (num) {
+    if (num > 0 && num % 1 === 0) {
+      return parseFloat(num + ".00");
+    } else {
+      return parseFloat(num.toFixed(2))
+    }
+  };
 }

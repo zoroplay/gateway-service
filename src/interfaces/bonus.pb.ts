@@ -1,8 +1,17 @@
 /* eslint-disable */
 import { GrpcMethod, GrpcStreamMethod } from "@nestjs/microservices";
+import { wrappers } from "protobufjs";
 import { Observable } from "rxjs";
+import { Struct } from "./google/protobuf/struct.pb";
 
 export const protobufPackage = "bonus";
+
+export interface CommonResponseObj {
+  status?: number | undefined;
+  success?: boolean | undefined;
+  message: string;
+  data?: { [key: string]: any } | undefined;
+}
 
 export interface CheckDepositBonusRequest {
   clientId: number;
@@ -20,6 +29,7 @@ export interface FirstDepositBonus {
   value: number;
   type: string;
   name: string;
+  gameId?: string | undefined;
 }
 
 export interface CreateReferralBonusRequest {
@@ -77,6 +87,7 @@ export interface CreateBonusRequest {
   minimumEntryAmount: number;
   maxAmount: number;
   product: string;
+  gameId?: string | undefined;
 }
 
 export interface CreateBonusResponse {
@@ -205,8 +216,7 @@ export interface HasBonusBetResponse {
 }
 
 export interface BonusStatusRequest {
-  clientId: number;
-  bonusType: string;
+  bonusId: number;
   status: number;
 }
 
@@ -226,10 +236,11 @@ export interface UpdateCampaignBonusDto {
   name: string;
   bonusCode: string;
   bonusId: number;
-  expiryDate: string;
+  startDate: string;
   id: number;
   affiliateIds?: string | undefined;
   trackierCampaignId?: string | undefined;
+  endDate: string;
 }
 
 export interface RedeemCampaignBonusDto {
@@ -244,7 +255,8 @@ export interface CampaignBonusData {
   name: string;
   bonusCode: string;
   bonus: CreateBonusRequest | undefined;
-  expiryDate: string;
+  startDate: string;
+  endDate: string;
 }
 
 export interface AllCampaignBonus {
@@ -253,6 +265,7 @@ export interface AllCampaignBonus {
 
 export interface GetBonusByClientID {
   clientId: number;
+  searchKey?: string | undefined;
 }
 
 export interface GetCampaignRequest {
@@ -321,10 +334,21 @@ export interface SettleBetRequest {
   amount?: number | undefined;
 }
 
+export interface SearchBonusResponse {
+  data: SearchBonusResponse_Bonus[];
+}
+
+export interface SearchBonusResponse_Bonus {
+  id: number;
+  name: string;
+}
+
 export interface EmptyResponse {
 }
 
 export const BONUS_PACKAGE_NAME = "bonus";
+
+wrappers[".google.protobuf.Struct"] = { fromObject: Struct.wrap, toObject: Struct.unwrap } as any;
 
 export interface BonusServiceClient {
   fetchBonusReport(request: FetchReportRequest): Observable<FetchReportResponse>;
@@ -339,7 +363,11 @@ export interface BonusServiceClient {
 
   checkDepositBonus(request: CheckDepositBonusRequest): Observable<CheckDepositBonusResponse>;
 
-  settleBet(request: SettleBetRequest): Observable<EmptyResponse>;
+  settleBet(request: SettleBetRequest): Observable<CommonResponseObj>;
+
+  searchBonus(request: GetBonusByClientID): Observable<SearchBonusResponse>;
+
+  getActiveUserBonus(request: CheckDepositBonusRequest): Observable<CreateBonusResponse>;
 
   getBonus(request: GetBonusRequest): Observable<GetBonusResponse>;
 
@@ -362,6 +390,8 @@ export interface BonusServiceClient {
   redeemCampaignBonus(request: RedeemCampaignBonusDto): Observable<CreateBonusResponse>;
 
   getCampaignBonus(request: GetBonusByClientID): Observable<AllCampaignBonus>;
+
+  deletePlayerData(request: GetBonusRequest): Observable<EmptyResponse>;
 }
 
 export interface BonusServiceController {
@@ -389,7 +419,15 @@ export interface BonusServiceController {
     request: CheckDepositBonusRequest,
   ): Promise<CheckDepositBonusResponse> | Observable<CheckDepositBonusResponse> | CheckDepositBonusResponse;
 
-  settleBet(request: SettleBetRequest): Promise<EmptyResponse> | Observable<EmptyResponse> | EmptyResponse;
+  settleBet(request: SettleBetRequest): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
+
+  searchBonus(
+    request: GetBonusByClientID,
+  ): Promise<SearchBonusResponse> | Observable<SearchBonusResponse> | SearchBonusResponse;
+
+  getActiveUserBonus(
+    request: CheckDepositBonusRequest,
+  ): Promise<CreateBonusResponse> | Observable<CreateBonusResponse> | CreateBonusResponse;
 
   getBonus(request: GetBonusRequest): Promise<GetBonusResponse> | Observable<GetBonusResponse> | GetBonusResponse;
 
@@ -428,6 +466,8 @@ export interface BonusServiceController {
   getCampaignBonus(
     request: GetBonusByClientID,
   ): Promise<AllCampaignBonus> | Observable<AllCampaignBonus> | AllCampaignBonus;
+
+  deletePlayerData(request: GetBonusRequest): Promise<EmptyResponse> | Observable<EmptyResponse> | EmptyResponse;
 }
 
 export function BonusServiceControllerMethods() {
@@ -440,6 +480,8 @@ export function BonusServiceControllerMethods() {
       "validateBetSelections",
       "checkDepositBonus",
       "settleBet",
+      "searchBonus",
+      "getActiveUserBonus",
       "getBonus",
       "deleteBonus",
       "getUserBonus",
@@ -451,6 +493,7 @@ export function BonusServiceControllerMethods() {
       "deleteCampaignBonus",
       "redeemCampaignBonus",
       "getCampaignBonus",
+      "deletePlayerData",
     ];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);

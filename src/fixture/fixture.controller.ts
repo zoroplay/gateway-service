@@ -1,12 +1,8 @@
 import {
-  Body,
   Controller,
-  Delete,
   Get,
   Logger,
   Param,
-  Post,
-  Put,
   Query,
 } from '@nestjs/common';
 import {
@@ -19,35 +15,18 @@ import {
 } from '@nestjs/swagger';
 import { FixtureService } from './fixture.service';
 import {
-  SwaggerAddSpecifierRequest,
   SwaggerAllMarketsResponse,
   SwaggerAllSportResponse,
   SwaggerAllTournamentResponse,
   SwaggerCountResponse,
-  SwaggerCreateMarketGroupRequest,
-  SwaggerCreateOutcomeAlias,
-  SwaggerCreateOutcomeAliasResponse,
-  SwaggerDefaultSportMarketDTO,
-  SwaggerDefaultSportMarketsDTO,
   SwaggerFixtureOdds,
   SwaggerFixturesRequest,
   SwaggerFixturesResponse,
   SwaggerHighlightsResponse,
-  SwaggerMarketGroupResponse,
-  SwaggerResponseString,
   SwaggerSportMenuRequest,
   SwaggerSportMenuResponse,
   SwaggerTimeoffset,
-  SwaggerUpdateMarketRequest,
 } from './dto';
-import {
-  AddFavouriteRequest,
-  AddSpecifierRequest,
-  CreateMarketGroupRequest,
-  CreateOutcomeAliasRequest,
-  DefaultSportMarketDTO,
-  UpdateMarketRequest,
-} from './fixture.pb';
 
 const logger = new Logger();
 
@@ -355,6 +334,93 @@ export class FixtureController {
       };
 
       return this.fixtureService.GetFixtures(rq);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  @Get('/fixtures/upcoming')
+  @ApiOperation({
+    summary: 'Get all upcoming fixtures by period ',
+    description:
+      'This endpoint gets matches with odds for the specified period',
+  })
+  @ApiQuery({ type: SwaggerFixturesRequest })
+  @ApiOkResponse({ type: SwaggerFixturesResponse })
+  GetFixturesByPeriod(@Param() params: any, @Query() query: any) {
+    try {
+      const rq = {
+        source: query.source ? query.source : 'web',
+        markets: query.markets ? query.markets : '',
+        limit: query.limit ? query.limit : 100,
+        sportID: query.sportID ? query.sportID : 1,
+        period: query.period ? query.period : 'all',
+        timeoffset: query.timeoffset ? query.timeoffset : 0,
+        startDate: query.start,
+        endDate: query.end,
+      };
+
+      return this.fixtureService.GetFixtures(rq);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  @Get('/retail/fixtures/:tournament_id')
+  @ApiOperation({
+    summary: 'Get all upcoming fixtures by tournament ',
+    description:
+      'This endpoint gets matches with odds for the supplied tournamentID',
+  })
+  @ApiParam({
+    name: 'tournament_id',
+    type: 'number',
+    description: ' Unique ID of the tournament',
+  })
+  @ApiQuery({ type: SwaggerFixturesRequest })
+  @ApiOkResponse({ type: SwaggerFixturesResponse })
+  GetRetailFixtures(@Param() params: any, @Query() query: any) {
+    try {
+      const rq = {
+        tournamentID: params.tournament_id ? parseInt(params.tournament_id) : 1,
+        source: query.source ? query.source : 'web',
+        markets: query.markets ? query.markets : '',
+        limit: query.limit ? query.limit : 100,
+        sportID: query.sportID ? query.sportID : 1,
+        period: query.period ? query.period : 'all',
+        timeoffset: query.timeoffset ? query.timeoffset : 0,
+        specifier: query.specifier || ''
+      };
+      return this.fixtureService.GetRetailFixtures(rq);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  @Get('/retail/fixture/:match_id')
+  @ApiOperation({
+    summary: 'Get all match odds ',
+    description:
+      'This endpoint gets odds for all the markets for the supplied matchID',
+  })
+  @ApiParam({
+    name: 'match_id',
+    type: 'number',
+    description: ' Unique ID of the match',
+  })
+  @ApiQuery({ type: SwaggerTimeoffset })
+  @ApiOkResponse({ type: SwaggerFixtureOdds })
+  GetRetailFixture(
+    @Param() params: any,
+    @Query() query: any
+  ) {
+    const timeoffset = query.timeoffset ? query.timeoffset : 0;
+
+    try {
+      return this.fixtureService.GetRetailFixture({
+        matchID: params.match_id,
+        timeoffset,
+      });
     } catch (error) {
       console.error(error);
     }

@@ -1,6 +1,6 @@
+/* eslint-disable prettier/prettier */
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty } from 'class-validator';
-import { PlayerBonusData } from 'src/identity/identity.pb';
+import { PlayerBonusData } from 'src/interfaces/identity.pb';
 
 export class SwaggerPaymentMethodRequest {
   @ApiProperty({ description: 'Client ID of the operator' })
@@ -97,6 +97,145 @@ export class SwaggerListDepositRequest {
   transactionId: string;
 }
 
+export class SwaggerApproveExpenseRequest {
+  @ApiProperty({ description: 'ID of Admin that requested the expense' })
+  status: number;
+
+  @ApiProperty({ description: 'ID of Admin to verify the expense' })
+  verifiedBy: number;
+
+  @ApiProperty({ description: 'Id of expense in case of update' })
+  expenseId: number;
+
+  @ApiProperty({ description: 'Expense Amount' })
+  amount: number;
+
+  @ApiProperty({ description: 'Comment for expense' })
+  comment: string;
+}
+
+export class SwaggerHandleReportsRequest {
+  @ApiProperty({ description: 'ID of branch' })
+  branchId: number;
+
+  @ApiProperty({ description: 'Opening for the day' })
+  openingBalance: number;
+
+  @ApiProperty({ description: 'Closing for the day' })
+  closingBalance: number;
+
+  @ApiProperty({ description: 'Online payouts for the day' })
+  onlinePayouts: number;
+
+  @ApiProperty({ description: 'Online sales for the day' })
+  onlineSales: number;
+
+  @ApiProperty({ description: 'Normal payouts for the day' })
+  normalSales: number;
+
+  @ApiProperty({ description: 'Normal sales for the day' })
+  normalPayouts: number;
+
+  @ApiProperty({ description: 'Other payouts for the day' })
+  otherPayouts: number;
+
+  @ApiProperty({ description: 'Other sales for the day' })
+  otherSales: number;
+
+  @ApiProperty({ description: 'Cashins for the day' })
+  cashin: number;
+
+  @ApiProperty({ description: 'cashouts for the day' })
+  cashout: number;
+
+  @ApiProperty({ description: 'Approved Expenses for the day' })
+  expense: number;
+
+  @ApiProperty({ description: 'date' })
+  date: string;
+
+  @ApiProperty({ description: 'ClientID' })
+  clientId: number;
+}
+
+export class SwaggerFetchSalesReportRequest {
+  @ApiProperty({ description: 'ID of Branch with reports' })
+  branchId: number;
+
+  @ApiProperty({ description: 'ClientID' })
+  clientId: number;
+
+  @ApiProperty({ description: 'status of sales report' })
+  status: number;
+}
+
+export class SwaggerFetchLastApprovedRequest {
+  @ApiProperty({ description: 'ID of Branch with reports' })
+  branchId: number;
+
+  @ApiProperty({ description: 'ClientID' })
+  clientId: number;
+}
+
+export class SwaggerFetchReportsRequest {
+  @ApiProperty({ description: 'ClientID' })
+  clientId: number;
+
+  @ApiProperty({ description: 'ID of Branch with reports' })
+  userId: number;
+
+  @ApiProperty({ description: 'date' })
+  date: string;
+}
+
+export class SwaggerApproveCashInOutRequest {
+  @ApiProperty({ description: 'ID of Admin that requested the cashin?cashout' })
+  status: number;
+
+  @ApiProperty({ description: 'ID of Branch toverify the cashin/cashut' })
+  verifiedBy: number;
+
+  @ApiProperty({ description: 'Id of cashin/cashout in case of update' })
+  id: number;
+}
+
+export class SwaggerCreateCashInOutRequest {
+  @ApiProperty({ description: 'ID of Admin that requested the cashin?cashout' })
+  userId: number;
+
+  @ApiProperty({ description: 'Branch Id ' })
+  branchId: number;
+
+  @ApiProperty({ description: 'Id of cashin/cashout in case of update' })
+  id!: number;
+
+  @ApiProperty({ description: 'Cashin/Cashout Amount' })
+  amount: number;
+
+  @ApiProperty({ description: 'Comment for cashin/cashout' })
+  comment: string;
+
+  @ApiProperty({ description: 'ClientID' })
+  clientId: number;
+}
+
+export class SwaggerCreateExpenseRequest {
+  @ApiProperty({ description: 'ID of Expense Type' })
+  expenseTypeId: number;
+
+  @ApiProperty({ description: 'Branch Id ' })
+  branchId: number;
+
+  @ApiProperty({ description: 'Id of expense during an update' })
+  id!: number;
+
+  @ApiProperty({ description: 'Expense Amount' })
+  amount: number;
+
+  @ApiProperty({ description: 'Comment for cashin/cashout' })
+  comment: string;
+}
+
 export class SwaggerInitiateDepositRequest {
   @ApiProperty({ description: 'Client ID of the operator' })
   clientId: number;
@@ -142,6 +281,18 @@ export class SwaggerWithdrawalRequest {
   type?: string;
 }
 
+export class SwaggerCashbookReponse {
+  @ApiProperty({ description: 'Message' })
+  message: string;
+
+  @ApiProperty({ description: 'Request Status (true or false)' })
+  success: boolean;
+
+  @ApiProperty({
+    description: 'Data object containing cashbook response',
+  })
+  data?: any;
+}
 export class SwaggerDepositReponse {
   @ApiProperty({ description: 'Message' })
   message: string;

@@ -1,13 +1,13 @@
 import { Body, Controller, Get, Param, Post, Put, Query, Req } from '@nestjs/common';
-import { ApiBody, ApiOkResponse, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
-import { ListDepositRequests, ListWithdrawalRequests, PaymentMethodRequest, UpdateWithdrawalRequest } from '../wallet.pb';
+import { ApiBody, ApiOkResponse, ApiOperation, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { GetTransactionsRequest, ListDepositRequests, ListWithdrawalRequests, PaymentMethodRequest, UpdateWithdrawalRequest } from 'src/interfaces/wallet.pb';
 import { SwaggerFundTransfer, SwaggerGetPaymentMethodResponse, SwaggerListDepositRequest, SwaggerListWithdrawalRequests, SwaggerPaymentMethodRequest, SwaggerPaymentMethodResponse, SwaggerUpdateWithdrawalRequest } from '../dto';
+
 import { WalletService } from '../wallet.service';
 
 @ApiTags('BackOffice APIs')
 @Controller('admin/wallet')
 export class WalletAdminController {
-
     constructor(private readonly walletService: WalletService) {}
 
     @Post('/payment-methods')
@@ -129,5 +129,50 @@ export class WalletAdminController {
     }
 
 
+    @Post(':clientId/get-money-transactions')
+    @ApiOperation({
+        summary: 'Get admin money transactions',
+        description: 'This endpoint is used to fetch money transactions',
+    })
+    @ApiBody({type: SwaggerFundTransfer})
+    @ApiParam({name: 'clientId', description: 'SBE Client ID'})
+    @ApiQuery({name: 'page', description: 'Current Page'})
+    @ApiQuery({name: 'limit', description: 'No of Records'})
+    @ApiOkResponse({ type: SwaggerPaymentMethodResponse })
+    getMoneyTransactions(
+        @Body() body: GetTransactionsRequest,
+        @Query() query, 
+        @Param('clientId') clientId: number,
+    ) {
+        body.page = query.page || 1;
+        body.limit = query.limit || 100
+        body.clientId = clientId;
 
+        return this.walletService.getMoneyTransactions(body)
+       
+    }
+
+
+    @Post(':clientId/get-system-transactions')
+    @ApiOperation({
+        summary: 'Get admin system transactions',
+        description: 'This endpoint is used to fetch system transactions',
+    })
+    @ApiBody({type: SwaggerFundTransfer})
+    @ApiParam({name: 'clientId', description: 'SBE Client ID'})
+    @ApiQuery({name: 'page', description: 'Current Page'})
+    @ApiQuery({name: 'limit', description: 'No of Records'})
+    @ApiOkResponse({ type: SwaggerPaymentMethodResponse })
+    getSystemTransactions(
+        @Body() body: GetTransactionsRequest,
+        @Query() query, 
+        @Param('clientId') clientId: number,
+    ) {
+        body.page = query.page || 1;
+        body.limit = query.limit || 100
+        body.clientId = clientId;
+
+        // return this.walletService.getSystemTransactions(body)
+       
+    }
 }

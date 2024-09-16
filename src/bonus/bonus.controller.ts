@@ -1,12 +1,9 @@
 import {
   Body,
   Controller,
-  Delete,
   Get,
-  Param,
   Patch,
   Post,
-  Put,
   Query,
   Req,
   UseGuards,
@@ -26,7 +23,7 @@ import {
   GetCampaignRequest,
   GetUserBonusRequest,
   RedeemCampaignBonusDto,
-} from './bonus.pb';
+} from 'src/interfaces/bonus.pb';
 import {
   SwaggerAwardBonusRequest,
   SwaggerBonusStatusRequest,
@@ -115,6 +112,25 @@ export class BonusController {
     }
   }
 
+  @Get('get-active-bonus')
+  @ApiOperation({
+    summary: 'Get User Active Bonus',
+    description: 'This endpoint will check and return success true or false if there is an active bonus.',
+  })
+  @ApiQuery({ name: 'clientId', description: 'ID of the client' })
+  @ApiOkResponse({ type: SwaggerCheckFirstDepoistResponse })
+  GetActiveBonus(@Req() req: IAuthorizedRequest, @Query() query) {
+    try {
+      const body = {
+        clientId: query.client_id,
+        userId: req.user.id,
+      };
+      return this.bonusService.CheckFirstDeposit(body);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   @Patch('/status/update')
   @ApiOperation({
     summary: 'Activate or Deactivate client bonus type ',
@@ -160,4 +176,5 @@ export class BonusController {
       console.error(error);
     }
   }
+
 }

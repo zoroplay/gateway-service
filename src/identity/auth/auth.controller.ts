@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import {
   Body,
   Controller,
@@ -10,18 +11,41 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import {
-  LoginRequest, CreateUserRequest, UpdateUserRequest, ChangePasswordRequest, ResetPasswordRequest, GetUserByUsernameRequest,
-} from '../identity.pb';
-import { ApiBody, ApiOkResponse, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
-import { LoginDTO, SwaggerChangePasswordRequest, SwaggerCommonResponse, SwaggerRegisterRequest, SwaggerResetPasswordRequest, SwaggerUserDetailsRequest, VerifyUsernameDTO  } from '../dto';
+  LoginRequest,
+  CreateUserRequest,
+  UpdateUserRequest,
+  ChangePasswordRequest,
+  ResetPasswordRequest,
+  GetUserByUsernameRequest,
+  HandlePinRequest,
+  HandleTransferRequest,
+} from 'src/interfaces/identity.pb';
+import {
+  ApiBody,
+  ApiOkResponse,
+  ApiOperation,
+  ApiParam,
+  ApiTags,
+} from '@nestjs/swagger';
+import {
+  LoginDTO,
+  SwaggerChangePasswordRequest,
+  SwaggerCommonResponse,
+  SwaggerHandlePinRequest,
+  SwaggerHandleTransferRequest,
+  SwaggerRegisterRequest,
+  SwaggerResetPasswordRequest,
+  SwaggerUserDetailsRequest,
+  VerifyUsernameDTO,
+} from '../dto';
 import { AuthGuard } from './auth.guard';
 import { IAuthorizedRequest } from 'src/interfaces/authorized-request.interface';
 import { AuthService } from './auth.service';
+import { NotificationService } from 'src/notification/notification.service';
 
 @ApiTags('Auth APIs')
 @Controller('auth')
 export class AuthController {
-
   constructor(private readonly authService: AuthService) {}
 
   @Post('/register')
@@ -65,12 +89,55 @@ export class AuthController {
   })
   @ApiBody({ type: SwaggerUserDetailsRequest })
   @ApiOkResponse({ type: SwaggerCommonResponse })
-  updateUser(
-    @Body() data: UpdateUserRequest,
-    @Req() req: IAuthorizedRequest
-  ) {
+  updateUser(@Body() data: UpdateUserRequest, @Req() req: IAuthorizedRequest) {
     data.userId = req.user.id;
     return this.authService.updateUser(data);
+  }
+
+  @UseGuards(AuthGuard)
+  @Put('/initiate-transfer/:client_id')
+  @ApiOperation({
+    summary: 'transfer amount to user',
+    description: 'This endpoint logs in a user',
+  })
+  @ApiBody({ type: SwaggerHandleTransferRequest })
+  @ApiParam({
+    name: 'client_id',
+    type: 'number',
+    description: ' Unique ID of the client',
+  })
+  @ApiOkResponse({ type: SwaggerCommonResponse })
+  handleTransfer(
+    @Body() data: HandleTransferRequest,
+    @Req() req: IAuthorizedRequest,
+    @Param('client_id') param: number,
+  ) {
+    return this.authService.handleTransfer({
+      ...data,
+      fromUserId: req.user.id,
+      clientId: param,
+    });
+  }
+
+  @UseGuards(AuthGuard)
+  @Put('/handle/pin/:action')
+  @ApiOperation({
+    summary: 'create/update user pin',
+    description: 'This endpoint logs in a user',
+  })
+  @ApiBody({ type: SwaggerHandlePinRequest })
+  @ApiOkResponse({ type: SwaggerCommonResponse })
+  handlePin(
+    @Body() data: HandlePinRequest,
+    @Req() req: IAuthorizedRequest,
+    @Param('action') param,
+  ) {
+    data.userId = req.user.id;
+    return this.authService.handlePin({
+      ...data,
+      userId: req.user.id,
+      type: param,
+    });
   }
 
   @UseGuards(AuthGuard)
@@ -85,13 +152,31 @@ export class AuthController {
     description: ' Unique ID of the client',
   })
   @ApiOkResponse({ type: SwaggerCommonResponse })
-  getAuthDetails(
-    @Req() req: IAuthorizedRequest, 
-    @Param() param
-  ) {
-    return this.authService.getUserDetails({clientId: param.client_id, userId: req.user.id});
+  getAuthDetails(@Req() req: IAuthorizedRequest, @Param() param) {
+    return this.authService.getUserDetails({
+      clientId: param.client_id,
+      userId: req.user.id,
+    });
   }
 
+  @Get('/globalvariables/:client_id')
+  @ApiOperation({
+    summary: 'get client variables',
+    description:
+      'This endpoint retrieves the global variables of the SBE client',
+  })
+  @ApiParam({
+    name: 'client_id',
+    type: 'number',
+    description: ' Unique ID of the client',
+  })
+  @ApiOkResponse({ type: SwaggerCommonResponse })
+  getGlobalVariables(@Param() param) {
+    return this.authService.getVariables({
+      clientId: param.client_id,
+      category: null,
+    });
+  }
 
   @UseGuards(AuthGuard)
   @Put('/update/password')
@@ -103,12 +188,11 @@ export class AuthController {
   @ApiOkResponse({ type: SwaggerCommonResponse })
   updatePassword(
     @Body() data: ChangePasswordRequest,
-    @Req() req: IAuthorizedRequest
+    @Req() req: IAuthorizedRequest,
   ) {
     data.userId = req.user.id;
     return this.authService.changePassword(data);
   }
-
 
   @Patch('/update/reset-password')
   @ApiOperation({
@@ -117,9 +201,7 @@ export class AuthController {
   })
   @ApiBody({ type: SwaggerResetPasswordRequest })
   @ApiOkResponse({ type: SwaggerCommonResponse })
-  resetPassword(
-    @Body() data: ResetPasswordRequest,
-  ) {
+  resetPassword(@Body() data: ResetPasswordRequest) {
     return this.authService.resetPassword(data);
   }
 }

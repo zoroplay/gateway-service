@@ -7,7 +7,9 @@ import { HttpExceptionFilter } from './filter/http-exception.filter';
 const logger = new Logger('Main');
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+    rawBody: true
+  });
 
   app.setGlobalPrefix('/api/v2');
 
