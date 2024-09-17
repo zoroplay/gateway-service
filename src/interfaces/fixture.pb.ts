@@ -589,6 +589,8 @@ export interface FixtureWithOutcomes {
   eventTime: string;
   sportName: string;
   categoryID: string;
+  /** Unique Print ID of the match (internal ID) */
+  printID: number;
 }
 
 export interface ResponseString {
