@@ -375,7 +375,13 @@ export class SwaggerUpdateMarketRequest {
 
 export class SwaggerResponseString {
 
-  @ApiProperty({ description: 'Action status' })
+  @ApiProperty({description: 'action status'})
+  success: boolean;
+
+  @ApiProperty({description: 'Server response message'})
+  message: string;
+  
+  @ApiProperty({ description: 'Request status' })
   status: string;
 }
 
