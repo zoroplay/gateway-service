@@ -6,6 +6,10 @@ import { Struct } from "./google/protobuf/struct.pb";
 
 export const protobufPackage = "fixture";
 
+export interface UpdateSportsMenuOrderRequest {
+  data: { [key: string]: any } | undefined;
+}
+
 export interface CommonResponse {
   success: boolean;
   message: string;
@@ -781,6 +785,10 @@ export interface FixtureServiceClient {
   saveTopTournament(request: SaveTopTournamentRequest): Observable<CommonResponse>;
 
   removeTopTournament(request: DeleteMarketGroupRequest): Observable<CommonResponse>;
+
+  getSportsTournamentMenu(request: Empty): Observable<CommonResponseObj>;
+
+  updateSportsMenuOrder(request: UpdateSportsMenuOrderRequest): Observable<CommonResponse>;
 }
 
 export interface FixtureServiceController {
@@ -951,6 +959,14 @@ export interface FixtureServiceController {
   removeTopTournament(
     request: DeleteMarketGroupRequest,
   ): Promise<CommonResponse> | Observable<CommonResponse> | CommonResponse;
+
+  getSportsTournamentMenu(
+    request: Empty,
+  ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
+
+  updateSportsMenuOrder(
+    request: UpdateSportsMenuOrderRequest,
+  ): Promise<CommonResponse> | Observable<CommonResponse> | CommonResponse;
 }
 
 export function FixtureServiceControllerMethods() {
@@ -992,6 +1008,8 @@ export function FixtureServiceControllerMethods() {
       "getTopTournaments",
       "saveTopTournament",
       "removeTopTournament",
+      "getSportsTournamentMenu",
+      "updateSportsMenuOrder",
     ];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);

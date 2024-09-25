@@ -21,35 +21,24 @@ import { FixtureService } from '../fixture.service';
 import {
   AddFavouriteResponse,
   SwaggerAddSpecifierRequest,
-  SwaggerAllMarketsResponse,
   SwaggerAllSportResponse,
-  SwaggerAllTournamentResponse,
-  SwaggerCountResponse,
   SwaggerCreateMarketGroupRequest,
   SwaggerCreateOutcomeAlias,
   SwaggerCreateOutcomeAliasResponse,
   SwaggerDefaultSportMarketDTO,
   SwaggerDefaultSportMarketsDTO,
-  SwaggerFixtureOdds,
-  SwaggerFixturesRequest,
-  SwaggerFixturesResponse,
-  SwaggerHighlightsResponse,
   SwaggerMarketGroupResponse,
   SwaggerResponseString,
-  SwaggerSportMenuRequest,
-  SwaggerSportMenuResponse,
-  SwaggerTimeoffset,
   SwaggerUpdateMarketRequest,
 } from '../dto';
 import {
-  AddFavouriteRequest,
   AddSpecifierRequest,
   CreateMarketGroupRequest,
   CreateOutcomeAliasRequest,
   DefaultSportMarketDTO,
   SaveMarketRequest,
   SaveTopTournamentRequest,
-  UpdateMarketRequest,
+  UpdateSportsMenuOrderRequest,
 } from 'src/interfaces/fixture.pb';
 import { SwaggerCommonResponse } from 'src/identity/dto';
 
@@ -351,31 +340,26 @@ export class AdminFixtureController {
     }
   }
 
-  // @Post('/sports/default-market')
-  // @ApiOperation({
-  //   summary: 'Create default sport market',
-  //   description: 'This endpoint creates Create default sport market',
-  // })
-  // @ApiBody({ type: SwaggerDefaultSportMarketDTO })
-  // @ApiOkResponse({ type: SwaggerResponseString })
-  // createDefaultSportMarket(@Body() data: DefaultSportMarketDTO) {
-  //   try {
-  //     return this.fixtureService.createDefaultSportMarket(data);
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // }
-
-  @Put('/sports/default-market')
+  @Get('/get-menu')
   @ApiOperation({
-    summary: 'Update default sport market',
+    summary: 'Get All Sports Menu',
+    description: 'This endpoint fetches all Sports, Categories and Tournaments',
+  })
+  // @ApiBody({ type: SwaggerDefaultSportMarketDTO })
+  @ApiOkResponse({ type: SwaggerResponseString })
+  fetchSportsMenu() {
+    return this.fixtureService.getSportTournamentMenu();
+  }
+
+  @Put('/update/sports-menu')
+  @ApiOperation({
+    summary: 'Update sports menu order',
     description: 'This endpoint updates default sport market',
   })
-  @ApiBody({ type: SwaggerDefaultSportMarketDTO })
   @ApiOkResponse({ type: SwaggerResponseString })
-  updateDefaultSportMarket(@Body() data: DefaultSportMarketDTO) {
+  updateDefaultSportMarket(@Body() data: UpdateSportsMenuOrderRequest) {
     try {
-      return this.fixtureService.updateDefaultSportMarket(data);
+      return this.fixtureService.updateSportsTournamentMenu(data);
     } catch (error) {
       console.error(error);
     }
