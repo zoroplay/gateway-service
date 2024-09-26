@@ -15,6 +15,12 @@ export interface CommonResponse {
   message: string;
 }
 
+export interface GetSportTournamentResponse {
+  success: boolean;
+  message: string;
+  menu?: string | undefined;
+}
+
 export interface TopTournamentData {
   id: number;
   sportID: number;
@@ -34,6 +40,13 @@ export interface CommonResponseObj {
   message: string;
   status: number;
   data?: { [key: string]: any } | undefined;
+}
+
+export interface CommonResponseArray {
+  success: boolean;
+  message: string;
+  status: number;
+  data: { [key: string]: any }[];
 }
 
 export interface GetMarketResponse {
@@ -786,7 +799,7 @@ export interface FixtureServiceClient {
 
   removeTopTournament(request: DeleteMarketGroupRequest): Observable<CommonResponse>;
 
-  getSportsTournamentMenu(request: Empty): Observable<CommonResponseObj>;
+  getSportsTournamentMenu(request: Empty): Observable<GetSportTournamentResponse>;
 
   updateSportsMenuOrder(request: UpdateSportsMenuOrderRequest): Observable<CommonResponse>;
 }
@@ -962,7 +975,7 @@ export interface FixtureServiceController {
 
   getSportsTournamentMenu(
     request: Empty,
-  ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
+  ): Promise<GetSportTournamentResponse> | Observable<GetSportTournamentResponse> | GetSportTournamentResponse;
 
   updateSportsMenuOrder(
     request: UpdateSportsMenuOrderRequest,

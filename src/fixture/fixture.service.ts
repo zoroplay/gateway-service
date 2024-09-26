@@ -214,6 +214,7 @@ export class FixtureService implements OnModuleInit {
   deleteTopTournamnet(data: DeleteMarketGroupRequest) {
     //('remove top tournament');
     return this.service.removeTopTournament(data);
+  
   }
 
   saveTopTournament(data: SaveTopTournamentRequest) {
@@ -223,7 +224,7 @@ export class FixtureService implements OnModuleInit {
 
   getSportTournamentMenu() {
     //('save top tournament ');
-    return this.service.getSportsTournamentMenu({});
+    return firstValueFrom(this.service.getSportsTournamentMenu({}));
   }
 
   updateSportsTournamentMenu(data: UpdateSportsMenuOrderRequest) {
