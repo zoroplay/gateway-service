@@ -357,11 +357,13 @@ export class AdminFixtureController {
     description: 'This endpoint updates default sport market',
   })
   @ApiOkResponse({ type: SwaggerResponseString })
-  updateDefaultSportMarket(@Body() data: UpdateSportsMenuOrderRequest) {
+  updateDefaultSportMarket(@Body() body) {
     try {
-      return this.fixtureService.updateSportsTournamentMenu(data);
+      const data = JSON.stringify(body.data);
+      return this.fixtureService.updateSportsTournamentMenu({data});
     } catch (error) {
       console.error(error);
+
     }
   }
 
