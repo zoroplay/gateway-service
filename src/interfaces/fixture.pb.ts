@@ -7,7 +7,7 @@ import { Struct } from "./google/protobuf/struct.pb";
 export const protobufPackage = "fixture";
 
 export interface UpdateSportsMenuOrderRequest {
-  data: { [key: string]: any } | undefined;
+  data: string;
 }
 
 export interface CommonResponse {
