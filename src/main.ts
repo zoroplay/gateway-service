@@ -22,8 +22,8 @@ async function bootstrap() {
     .build();
 
   app.enableCors();
-  app.use(json({ limit: '50mb' }));
-  app.use(urlencoded({ extended: true, limit: '50mb' }));
+  // app.use(json({ limit: '50mb' }));
+  // app.use(urlencoded({ extended: true, limit: '50mb' }));
   app.useGlobalFilters(new HttpExceptionFilter());
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
 
