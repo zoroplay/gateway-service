@@ -6,9 +6,19 @@ import { Struct } from "./google/protobuf/struct.pb";
 
 export const protobufPackage = "fixture";
 
+export interface UpdateSportsMenuOrderRequest {
+  data: string;
+}
+
 export interface CommonResponse {
   success: boolean;
   message: string;
+}
+
+export interface GetSportTournamentResponse {
+  success: boolean;
+  message: string;
+  menu?: string | undefined;
 }
 
 export interface TopTournamentData {
@@ -30,6 +40,13 @@ export interface CommonResponseObj {
   message: string;
   status: number;
   data?: { [key: string]: any } | undefined;
+}
+
+export interface CommonResponseArray {
+  success: boolean;
+  message: string;
+  status: number;
+  data: { [key: string]: any }[];
 }
 
 export interface GetMarketResponse {
@@ -589,6 +606,8 @@ export interface FixtureWithOutcomes {
   eventTime: string;
   sportName: string;
   categoryID: string;
+  /** Unique Print ID of the match (internal ID) */
+  printID: number;
 }
 
 export interface ResponseString {
@@ -779,6 +798,10 @@ export interface FixtureServiceClient {
   saveTopTournament(request: SaveTopTournamentRequest): Observable<CommonResponse>;
 
   removeTopTournament(request: DeleteMarketGroupRequest): Observable<CommonResponse>;
+
+  getSportsTournamentMenu(request: Empty): Observable<GetSportTournamentResponse>;
+
+  updateSportsMenuOrder(request: UpdateSportsMenuOrderRequest): Observable<CommonResponse>;
 }
 
 export interface FixtureServiceController {
@@ -949,6 +972,14 @@ export interface FixtureServiceController {
   removeTopTournament(
     request: DeleteMarketGroupRequest,
   ): Promise<CommonResponse> | Observable<CommonResponse> | CommonResponse;
+
+  getSportsTournamentMenu(
+    request: Empty,
+  ): Promise<GetSportTournamentResponse> | Observable<GetSportTournamentResponse> | GetSportTournamentResponse;
+
+  updateSportsMenuOrder(
+    request: UpdateSportsMenuOrderRequest,
+  ): Promise<CommonResponse> | Observable<CommonResponse> | CommonResponse;
 }
 
 export function FixtureServiceControllerMethods() {
@@ -990,6 +1021,8 @@ export function FixtureServiceControllerMethods() {
       "getTopTournaments",
       "saveTopTournament",
       "removeTopTournament",
+      "getSportsTournamentMenu",
+      "updateSportsMenuOrder",
     ];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);

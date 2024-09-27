@@ -2,7 +2,6 @@
 stages:
   - test
   - build
-  - release
   - deploy
 
 # Cache dependencies to speed up builds
@@ -11,24 +10,28 @@ cache:
   paths:
     - node_modules/
 
-
 variables:
-  NEXT_VERSION: 0.0.2
-
-
+  NEXT_VERSION: 0.0.1
+  IDENTITY_SERVICE_URL: 134.122.17.21:9011
+  FIXTURE_SERVICE_URL: 134.122.17.21:9003
+  BETTING_SERVICE_URL: 134.122.17.21:9001
+  WALLET_SERVICE_URL: 134.122.17.21:9013
+  NOTIFICATION_SERVICE_URL: 134.122.17.21:9009
+  BONUS_SERVICE_URL: 134.122.17.21:9006
+  GAMING_SERVICE_URL: 134.122.17.21:9015
 
 # Test Stage
 test:
   stage: test
   image: node:18
+
   script:
     - echo "Running tests..."
-    - npm install
-    - npm test  # Run tests to validate code
+    - yarn install
+    - yarn run test  # Run your test suite here
+
   only:
     - main
-
-
 
 # Build Stage
 build:
@@ -38,24 +41,23 @@ build:
     - docker:dind # Docker-in-Docker service to build Docker images
   before_script:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
-  script:
-    - echo "Building Docker image..."
-    - docker build -t $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME .
-    - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
-  only:
-    - main
 
-# Release Stage
-#release:
-  #stage: release
-  #image: node:18
-  #script:
-  #  - npm install
-   # - npx semantic-release
-  #only:
-    - main
-  #variables:
-   # GITHUB_TOKEN: $CI_JOB_TOKEN  # Ensure this token has the necessary permissions
+  script:
+    - echo "Building Docker image with the following service URLs:"
+    - echo IDENTITY_SERVICE_URL ...... $IDENTITY_SERVICE_URL
+    - echo FIXTURE_SERVICE_URL  ...... $FIXTURE_SERVICE_URL
+    - echo BETTING_SERVICE_URL ....... $BETTING_SERVICE_URL
+    - echo WALLET_SERVICE_URL ........ $WALLET_SERVICE_URL
+    - echo NOTIFICATION_SERVICE_URL ...... $NOTIFICATION_SERVICE_URL
+    - echo BONUS_SERVICE_URL  ........$BONUS_SERVICE_URL
+    - echo GAMING_SERVICE_URL   ......$GAMING_SERVICE_URL
+    - docker login $CI_REGISTRY -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD
+    - docker build -t $CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$NEXT_VERSION .
+    - docker push $CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$NEXT_VERSION
+    - echo "Finished building docker image"
+
+  only:
+    - dev
 
 # Deploy Stage
 deploy:
@@ -70,6 +72,17 @@ deploy:
     - docker pull $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
     - docker stop gatewayservice || true  # Stop any existing container
     - docker rm gatewayservice || true    # Remove the container if it exists
-    - docker run -d --name gatewayservice -p 80:80 $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
+    - docker run -d --name gatewayservice -p 80:80 \
+      -e IDENTITY_SERVICE_URL="$IDENTITY_SERVICE_URL" \
+      -e FIXTURE_SERVICE_URL="$FIXTURE_SERVICE_URL" \
+      -e BETTING_SERVICE_URL="$BETTING_SERVICE_URL" \
+      -e WALLET_SERVICE_URL="$WALLET_SERVICE_URL" \
+      -e NOTIFICATION_SERVICE_URL="$NOTIFICATION_SERVICE_URL" \
+      -e BONUS_SERVICE_URL="$BONUS_SERVICE_URL" \
+      -e GAMING_SERVICE_URL="$GAMING_SERVICE_URL" \
+      $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
+
   only:
     - main
+
+    #job finished ...

@@ -20,6 +20,7 @@ import {
   SaveMarketRequest,
   SaveTopTournamentRequest,
   UpdateMarketRequest,
+  UpdateSportsMenuOrderRequest,
 } from 'src/interfaces/fixture.pb';
 import {ClientGrpc} from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
@@ -172,21 +173,16 @@ export class FixtureService implements OnModuleInit {
   }
 
   deleteMarket(data: DeleteMarketGroupRequest) {
-
     //('delete market ');
     return this.service.deleteMarket(data);
-
   }
 
   saveMarket(data: SaveMarketRequest) {
-
     //('save market ');
     return this.service.saveMarket(data);
-
   }
 
   updateDefaultSportMarket(data: DefaultSportMarketDTO) {
-
     //('updateDefaultSportMarket ');
     return this.service.updateDefaultSportMarket(data);
 
@@ -218,6 +214,7 @@ export class FixtureService implements OnModuleInit {
   deleteTopTournamnet(data: DeleteMarketGroupRequest) {
     //('remove top tournament');
     return this.service.removeTopTournament(data);
+  
   }
 
   saveTopTournament(data: SaveTopTournamentRequest) {
@@ -225,4 +222,13 @@ export class FixtureService implements OnModuleInit {
     return this.service.saveTopTournament(data);
   }
 
+  getSportTournamentMenu() {
+    //('save top tournament ');
+    return firstValueFrom(this.service.getSportsTournamentMenu({}));
+  }
+
+  updateSportsTournamentMenu(data: UpdateSportsMenuOrderRequest) {
+    //('update sports tournament ');
+    return this.service.updateSportsMenuOrder(data);
+  }
 }
