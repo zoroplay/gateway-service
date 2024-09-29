@@ -66,6 +66,9 @@ import {
   PawapayToolkitRequest,
   PawapayPredCorrRequest,
   CreateBulkPawapayRequest,
+  WayaBankRequest,
+  Pitch90RegisterUrlRequest,
+  Pitch90TransactionRequest,
 } from '../interfaces/wallet.pb';
 import { ClientGrpc } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
@@ -399,5 +402,25 @@ export class WalletService {
     data: PawapayPredCorrRequest,
   ): Promise<CommonResponseObj> {
     return await firstValueFrom(this.svc.handlePawaPayPredCorr(data));
+  }
+  async HandleCreateVirtualAccount(
+    data: WayaBankRequest,
+  ): Promise<CommonResponseObj> {
+    return await firstValueFrom(this.svc.createVirtualAccount(data));
+  }
+  async WayabankAccountEnquiry(
+    data: WayaBankRequest,
+  ): Promise<CommonResponseObj> {
+    return await firstValueFrom(this.svc.wayabankAccountEnquiry(data));
+  }
+  async Pitch90RegisterUrl(
+    data: Pitch90RegisterUrlRequest,
+  ): Promise<CommonResponseObj> {
+    return await firstValueFrom(this.svc.pitch90RegisterUrl(data));
+  }
+  async Pitch90Transaction(
+    data: Pitch90TransactionRequest,
+  ): Promise<CommonResponseObj> {
+    return await firstValueFrom(this.svc.pitch90Transaction(data));
   }
 }

@@ -97,6 +97,26 @@ export class SwaggerListDepositRequest {
   transactionId: string;
 }
 
+export class SwaggerPitch90RegisterUrlRequest {
+  @ApiProperty({
+    description: 'The url where the push notifications will be sent',
+  })
+  url: number;
+  @ApiProperty({ description: 'payment | withdrawal | stkstatus' })
+  action: string;
+}
+export class SwaggerPitch90TransactionRequest {
+  @ApiProperty({ description: 'ID of User that requested the expense' })
+  userId?: number;
+  @ApiProperty({ description: 'ID of Client' })
+  clientId: number;
+  @ApiProperty({ description: 'Request Amount' })
+  amount: number;
+  @ApiProperty({ description: 'deposit | withdrawal' })
+  action: string;
+  @ApiProperty({ description: 'Source of transaction' })
+  source: string;
+}
 export class SwaggerPawapayPredCorrRequest {
   @ApiProperty({ description: 'phone number with country code included' })
   phoneNumber?: number;
