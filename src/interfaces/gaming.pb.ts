@@ -102,6 +102,7 @@ export interface StartGameDto {
   isMobile?: boolean | undefined;
   authCode?: string | undefined;
   balanceType?: string | undefined;
+  language?: string | undefined;
 }
 
 export interface StartGameResponse {
