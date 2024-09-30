@@ -50,17 +50,38 @@ export class SwaggerStartGameDto {
     example: 'smart-soft',
   })
   providerSlug: string;
+
   @ApiProperty({
     description: 'Start as a Demo',
     example: false,
   })
   demo: boolean;
+
   @ApiProperty({
     description: 'It is a mobile device',
     example: false,
   })
   isMobile: boolean;
+
+  @ApiProperty({
+    description: 'language to load game',
+    example: 'en',
+  })
+  language: string;
+
+  @ApiProperty({
+    description: 'language to load game',
+    example: '123456',
+  })
+  authCode: string;
+
+  @ApiProperty({
+    description: 'language to load game',
+    example: 'casino',
+  })
+  balanceType: string;
 }
+
 
 export class SwaggerStartGameResponseDto {
   @ApiProperty({
