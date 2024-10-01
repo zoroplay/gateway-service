@@ -70,6 +70,11 @@ export class GamingController {
     @Param('clientId') clientId,
   ) {
     startGameDto.clientId = parseInt(clientId);
+
+    // Set default language if it is not provided
+    if (!startGameDto.language) {
+      startGameDto.language = 'en';
+    }
     return this.gamingService.startGame(startGameDto);
   }
 
