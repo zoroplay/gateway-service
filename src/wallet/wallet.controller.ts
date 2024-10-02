@@ -901,7 +901,7 @@ export class WalletController {
     });
   }
   @UseGuards(AuthGuard)
-  @Post('/bet777-transaction/:clientId')
+  @Post('/bet777-transaction/:action/:clientId')
   @ApiOperation({
     summary: 'post request to initiate transaction with bet777',
     description: 'This endpoint to handle transaction on bet777',
@@ -911,10 +911,16 @@ export class WalletController {
     type: 'number',
     description: '',
   })
+  @ApiParam({
+    name: 'action',
+    type: 'string',
+    description: 'deposit | withdrawal',
+  })
   @ApiBody({ type: SwaggerPitch90TransactionRequest })
   @ApiOkResponse({ type: SwaggerCommonResponseObj })
   Pitch90Transaction(
     @Param('clientId') clientId: number,
+    @Param('action') action: string,
     @Body() body: Pitch90TransactionRequest,
     @Req() req: IAuthorizedRequest,
   ) {
@@ -922,18 +928,27 @@ export class WalletController {
       ...body,
       userId: req.user.id,
       clientId,
+      action,
     });
   }
 
   @UseGuards(AuthGuard)
-  @Post('/bet777-register-url/:clientId')
+  @Post('/bet777-register-url/:action/:clientId')
   @ApiOperation({
     summary: 'post request to register url for push notification',
     description: 'This endpoint to handle push notifications',
   })
+  @ApiParam({
+    name: 'action',
+    type: 'string',
+    description: 'payment | withdrawal | stkstatus',
+  })
   @ApiBody({ type: SwaggerPitch90RegisterUrlRequest })
   @ApiOkResponse({ type: SwaggerCommonResponseObj })
-  Pitch90RegisterUrl(@Body() param: Pitch90RegisterUrlRequest) {
-    return this.walletService.Pitch90RegisterUrl(param);
+  Pitch90RegisterUrl(
+    @Body() param: Pitch90RegisterUrlRequest,
+    @Param('action') action: string,
+  ) {
+    return this.walletService.Pitch90RegisterUrl({ ...param, action });
   }
 }
