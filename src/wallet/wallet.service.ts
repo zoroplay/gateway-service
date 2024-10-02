@@ -1,4 +1,4 @@
-
+/* eslint-disable prettier/prettier */
 import { Inject, Injectable } from '@nestjs/common';
 
 import {
@@ -61,10 +61,19 @@ import {
   FetchSalesReportRequest,
   SalesReportResponseArray,
   LastApprovedResponse,
-  GetTransactionsRequest
+  CreatePawapayRequest,
+  FetchPawapayRequest,
+  PawapayCountryRequest,
+  PawapayToolkitRequest,
+  PawapayPredCorrRequest,
+  CreateBulkPawapayRequest,
+  WayaBankRequest,
+  Pitch90RegisterUrlRequest,
+  Pitch90TransactionRequest,
+  GetTransactionsRequest,
 } from '../interfaces/wallet.pb';
-import { ClientGrpc } from "@nestjs/microservices";
-import { firstValueFrom } from "rxjs";
+import { ClientGrpc } from '@nestjs/microservices';
+import { firstValueFrom } from 'rxjs';
 
 @Injectable()
 export class WalletService {
@@ -210,7 +219,7 @@ export class WalletService {
   }
 
   async getMoneyTransactions(
-    data: GetTransactionsRequest
+    data: GetTransactionsRequest,
   ): Promise<CommonResponseObj> {
     //("get money transaction", data);
     return await firstValueFrom(this.svc.getMoneyTransaction(data));
@@ -352,5 +361,68 @@ export class WalletService {
     data: FetchSalesReportRequest,
   ): Promise<SalesReportResponseArray> {
     return await firstValueFrom(this.svc.cashbookFetchSalesReport(data));
+  }
+
+  async HandleCreatePawaPay(
+    data: CreatePawapayRequest,
+  ): Promise<CommonResponseObj> {
+    return await firstValueFrom(this.svc.handleCreatePawaPay(data));
+  }
+  async HandleCreateBulkPawaPay(
+    data: CreateBulkPawapayRequest,
+  ): Promise<CommonResponseObj> {
+    return await firstValueFrom(this.svc.handleCreateBulkPawaPay(data));
+  }
+
+  async HandleFetchPawaPay(
+    data: FetchPawapayRequest,
+  ): Promise<CommonResponseArray> {
+    return await firstValueFrom(this.svc.handleFetchPawaPay(data));
+  }
+  async HandlePawaPayResendCallback(
+    data: FetchPawapayRequest,
+  ): Promise<CommonResponseObj> {
+    return await firstValueFrom(this.svc.handlePawaPayResendCallback(data));
+  }
+  async HandlePawaPayBalances(): Promise<CommonResponseArray> {
+    return await firstValueFrom(this.svc.handlePawaPayBalances({}));
+  }
+  async HandlePawaPayCountryBalances(
+    data: PawapayCountryRequest,
+  ): Promise<CommonResponseArray> {
+    return await firstValueFrom(this.svc.handlePawaPayCountryBalances(data));
+  }
+  async HandlePawaPayToolkit(
+    data: PawapayToolkitRequest,
+  ): Promise<CommonResponseArray> {
+    return await firstValueFrom(this.svc.handlePawaPayToolkit(data));
+  }
+  async HandlePawaPayActiveConf(): Promise<CommonResponseObj> {
+    return await firstValueFrom(this.svc.handlePawaPayActiveConf({}));
+  }
+  async HandlePawaPayPredCorr(
+    data: PawapayPredCorrRequest,
+  ): Promise<CommonResponseObj> {
+    return await firstValueFrom(this.svc.handlePawaPayPredCorr(data));
+  }
+  async HandleCreateVirtualAccount(
+    data: WayaBankRequest,
+  ): Promise<CommonResponseObj> {
+    return await firstValueFrom(this.svc.createVirtualAccount(data));
+  }
+  async WayabankAccountEnquiry(
+    data: WayaBankRequest,
+  ): Promise<CommonResponseObj> {
+    return await firstValueFrom(this.svc.wayabankAccountEnquiry(data));
+  }
+  async Pitch90RegisterUrl(
+    data: Pitch90RegisterUrlRequest,
+  ): Promise<CommonResponseObj> {
+    return await firstValueFrom(this.svc.pitch90RegisterUrl(data));
+  }
+  async Pitch90Transaction(
+    data: Pitch90TransactionRequest,
+  ): Promise<CommonResponseObj> {
+    return await firstValueFrom(this.svc.pitch90Transaction(data));
   }
 }
