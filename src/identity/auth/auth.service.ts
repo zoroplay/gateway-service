@@ -21,7 +21,6 @@ import {
   ChangePasswordRequest,
   ResetPasswordRequest,
   GetSettingsRequest,
-  CommonResponseArray,
   CommonResponseObj,
   HandlePinRequest,
   HandleTransferRequest,

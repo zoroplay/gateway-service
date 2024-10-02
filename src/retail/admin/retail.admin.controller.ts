@@ -11,7 +11,7 @@ import { IAuthorizedRequest } from 'src/interfaces/authorized-request.interface'
   } from '../dto';
 import { RetailService } from '../retail.service';
 import { AuthService } from 'src/identity/auth/auth.service';
-import { AssignUserCommissionProfile, CommissionProfile, CreateUserRequest, GetAgentUsersRequest } from 'src/interfaces/identity.pb';
+import { AssignUserCommissionProfile, CommissionProfile, CreateUserRequest, GetAgentUsersRequest, GetNetworkSalesRequest } from 'src/interfaces/identity.pb';
 import { BetHistoryRequest, GetCommissionsRequest, GetVirtualBetsRequest } from 'src/interfaces/betting.pb';
 import { BettingService } from 'src/betting/betting.service';
 
@@ -287,6 +287,26 @@ export class RetailAdminController {
         // data.page = query.page || 1;
         // data.perPage = query.limit || 100
         return this.bettingService.getCommissions(data);
+    }
+
+    @Post(':clientId/get-network-sales')
+    @ApiOperation({
+        summary: 'Get Network Sales',
+        description: 'This endpoint returns virtual bets for an agent',
+    })
+    @ApiParam({name: 'clientId', description: 'SBE Client ID'})
+    @ApiQuery({name: 'page', description: 'Current Page'})
+    @ApiQuery({name: 'limit', description: 'No of Records'})
+    @ApiOkResponse({ type: SwaggerCommissionProfileResponse })
+    getNetworkSales(
+        @Param('clientId') clientId: number,
+        @Query() query, 
+        @Body() data: GetNetworkSalesRequest,
+    ) {
+        data.clientId = clientId;
+        // data.page = query.page || 1;
+        // data.perPage = query.limit || 100
+        return this.retailService.getSalesReport(data);
     }
 
   // @Get('/bonus-groups')

@@ -6,11 +6,29 @@ import { Struct } from "./google/protobuf/struct.pb";
 
 export const protobufPackage = "betting";
 
+export interface GetTicketsRequest {
+  userId: number;
+  clientId: number;
+  from: string;
+  to: string;
+  status: string;
+  page: number;
+  perPage: number;
+  betslipId: string;
+  username: string;
+  gameId?: string | undefined;
+  ticketType?: string | undefined;
+  betType?: string | undefined;
+  amountRange?: string | undefined;
+  groupType?: string | undefined;
+}
+
 export interface GetCommissionsRequest {
   clientId: number;
   provider: string;
   from: string;
   to: string;
+  page: number;
 }
 
 export interface SalesReportRequest {
@@ -20,6 +38,13 @@ export interface SalesReportRequest {
   from: string;
   to: string;
   productType: string;
+}
+
+export interface NetworkSalesRequest {
+  userIds: string;
+  from: string;
+  to: string;
+  product: string;
 }
 
 export interface CommonResponseObj {
@@ -136,6 +161,8 @@ export interface PlaceCasinoBetRequest {
   source?: string | undefined;
   cashierTransactionId?: string | undefined;
   username?: string | undefined;
+  betType?: string | undefined;
+  bonusId?: number | undefined;
 }
 
 export interface CreditCasinoBetRequest {
@@ -222,6 +249,7 @@ export interface UpdateBetRequest {
   status: string;
   entityType: string;
   clientId: number;
+  selectionId?: number | undefined;
 }
 
 export interface UpdateBetResponse {
@@ -283,6 +311,7 @@ export interface BetSlip {
   eventDate: string;
   eventPrefix: string;
   isBonus?: boolean | undefined;
+  id?: number | undefined;
 }
 
 export interface Combo {
@@ -342,6 +371,8 @@ export interface BetSlipHistory {
   eventDate: string;
   selectionId: string;
   eventPrefix: string;
+  score: string;
+  htScore: string;
 }
 
 export interface BetHistory {
@@ -368,6 +399,8 @@ export interface BetHistory {
   events: string;
   markets: string;
   betCategoryDesc: string;
+  isBonusBet?: boolean | undefined;
+  pendingGames?: number | undefined;
 }
 
 export interface BetHistoryResponse {
@@ -500,9 +533,13 @@ export interface BettingServiceClient {
 
   getSalesReport(request: SalesReportRequest): Observable<CommonResponseObj>;
 
+  getTotalSalesReport(request: NetworkSalesRequest): Observable<CommonResponseObj>;
+
   deletePlayerData(request: SettingsById): Observable<CommonResponseObj>;
 
   getCommissions(request: GetCommissionsRequest): Observable<CommonResponseObj>;
+
+  ticketsReport(request: GetTicketsRequest): Observable<CommonResponseObj>;
 }
 
 export interface BettingServiceController {
@@ -582,12 +619,20 @@ export interface BettingServiceController {
     request: SalesReportRequest,
   ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
 
+  getTotalSalesReport(
+    request: NetworkSalesRequest,
+  ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
+
   deletePlayerData(
     request: SettingsById,
   ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
 
   getCommissions(
     request: GetCommissionsRequest,
+  ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
+
+  ticketsReport(
+    request: GetTicketsRequest,
   ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
 }
 
@@ -618,8 +663,10 @@ export function BettingServiceControllerMethods() {
       "getRetailBets",
       "getRetailVBets",
       "getSalesReport",
+      "getTotalSalesReport",
       "deletePlayerData",
       "getCommissions",
+      "ticketsReport",
     ];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);

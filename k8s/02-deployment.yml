@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sbe-gateway-service
+  namespace: sbe-gateway-service
+spec:
+  replicas: 3  # Increased replicas for high availability
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: sbe-gateway
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: sbe-gateway
+    spec:
+      imagePullSecrets:
+        - name: regcred
+      containers:
+        - name: sbe-gateway-container
+          image: "etech001/sbe-gateway-service:0.0.1"
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 3000
+              protocol: TCP
+          resources:
+            limits:
+              cpu: "2000m"
+              memory: "1024Mi"
+            requests:
+              cpu: "1000m"
+              memory: "512Mi"
+          

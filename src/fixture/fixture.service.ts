@@ -2,22 +2,28 @@ import {Inject, Injectable, OnModuleInit} from '@nestjs/common';
 import {
   AddFavouriteRequest,
   AddSpecifierRequest,
+  BetradarMarketResponse,
   CreateMarketGroupRequest,
   CreateOutcomeAliasRequest, DefaultSportMarketDTO,
   DeleteMarketGroupRequest,
-  DeleteSpecifierRequest,
+  FetchMarketGroup,
   FilterByClientIDRequest,
   FilterByMatchID,
   FIXTURE_SERVICE_NAME,
   FixtureServiceClient,
   GetFixturesRequest,
   GetHighlightsRequest,
+  GetMarketResponse,
+  GetMarketsRequest,
   GetSportMenuRequest,
   protobufPackage,
+  SaveMarketRequest,
   SaveTopTournamentRequest,
   UpdateMarketRequest,
+  UpdateSportsMenuOrderRequest,
 } from 'src/interfaces/fixture.pb';
 import {ClientGrpc} from '@nestjs/microservices';
+import { firstValueFrom } from 'rxjs';
 
 @Injectable()
 export class FixtureService implements OnModuleInit {
@@ -30,65 +36,69 @@ export class FixtureService implements OnModuleInit {
       this.client.getService<FixtureServiceClient>(FIXTURE_SERVICE_NAME);
   }
 
-  GetMarkets(sportID: number) {
+  async GetMarkets(data: GetMarketsRequest): Promise<GetMarketResponse> {
 
-    console.log("get markets for "+sportID);
-    return this.service.getMarkets({sportID: sportID});
+    // //("get markets for ", data);
+    return await firstValueFrom(this.service.getMarkets(data));
 
   }
 
   GetTournaments(sportID: number) {
-
-    console.log('GetTournaments '+sportID);
+    // //('GetTournaments '+sportID);
     return this.service.getTournaments({sportID: sportID});
   }
 
   GetSports() {
-    console.log('GetSports');
+    //('GetSports');
     return this.service.getSports({});
+  }
+
+  async GetBetradarMarkets(): Promise<BetradarMarketResponse> {
+    //('Bet Betradar Markets');
+    return await firstValueFrom(this.service.getBetradarMarkets({}));
   }
 
 
   GetSportsMenu(data: GetSportMenuRequest) {
-    console.log('GetSportsMenu');
+    //('GetSportsMenu');
     return this.service.getSportsMenu(data);
   }
 
   GetCategoryMenu(data: GetSportMenuRequest) {
-    console.log('GetCategoryMenu');
+    // //('GetCategoryMenu');
     return this.service.getCategoriesMenu(data);
   }
 
   GetTournamentMenu(data: GetSportMenuRequest) {
-    console.log('GetTournamentMenu');
+    //('GetTournamentMenu');
     return this.service.getTournamentsMenu(data);
   }
 
   GetLiveGamesCount(sportID: number) {
 
-    console.log('GetLiveGamesCount ');
+    //('GetLiveGamesCount ');
     return this.service.getLiveGamesCount({sportID: sportID});
   }
 
   GetHighlights(data: GetHighlightsRequest) {
 
-    console.log('GetHighlights ');
+    //('GetHighlights ');
     return this.service.getHighlights(data);
   }
 
   GetLiveHighlights(data: GetHighlightsRequest) {
 
-    console.log('GetLiveHighlights ');
+    //('GetLiveHighlights ');
     return this.service.getLiveHighlights(data);
   }
 
   GetFixtures(data: GetFixturesRequest) {
-    console.log('GetFixturesByTournamentOrCategory');
+    //('GetFixturesByTournamentOrCategory');
     return this.service.getFixtures(data);
   }
 
   GetRetailFixtures(data: GetFixturesRequest) {
-    console.log('Get Retail Fixtures');
+    //('Get Retail Fixtures');
     return this.service.getRetailFixtures(data);
   }
 
@@ -97,141 +107,128 @@ export class FixtureService implements OnModuleInit {
   }
 
   GetFixtureWithOdds(matchID: number,timeoffset: number) {
-    console.log('GetFixtureWithOdds ');
+    //('GetFixtureWithOdds ');
     return this.service.getFixtureWithOdds({matchID: matchID, timeoffset: timeoffset});
   }
 
   UpdateMarketPriority(data: UpdateMarketRequest) {
-    console.log('UpdateMarketPriority ');
+    //('UpdateMarketPriority ');
     return this.service.updateMarketPriority(data);
   }
 
   createOutcomeAlias(data: CreateOutcomeAliasRequest) {
-    console.log('CreateOutcomeAlias ');
+    //('CreateOutcomeAlias ');
     return this.service.createOutcomeAlias(data);
   }
 
-
   updateOutcomeAlias(data: CreateOutcomeAliasRequest) {
-
-    console.log('updateOutcomeAlias ');
+    //('updateOutcomeAlias ');
     return this.service.updateOutcomeAlias(data);
-
   }
 
   deleteOutcomeAlias(data: CreateOutcomeAliasRequest) {
-
-    console.log('deleteOutcomeAlias ');
+    //('deleteOutcomeAlias ');
     return this.service.deleteOutcomeAlias(data);
-
   }
 
   findAllOutcomeAlias(clientID: number) {
-
-    console.log('findAllOutcomeAlias ');
+    //('findAllOutcomeAlias ');
     return this.service.getAllOutcomeAlias({clientID: clientID});
-
   }
-
-
-
-
 
 
   createMarketGroup(data: CreateMarketGroupRequest) {
-
-    console.log('createMarketGroup ');
+    //('createMarketGroup ');
+    
     return this.service.createMarketGroup(data);
-
   }
 
   updateMarketGroup(data: CreateMarketGroupRequest) {
-
-    console.log('updateMarketGroup ');
+    //('updateMarketGroup ');
     return this.service.updateMarketGroup(data);
-
   }
 
   deleteMarketGroup(data: DeleteMarketGroupRequest) {
-
-    console.log('createMarketGroup ');
+    //('createMarketGroup ');
     return this.service.deleteMarketGroup(data);
-
   }
 
-  getAllMarketGroup(clientID: number) {
-
-    console.log('getAllMarketGroup ');
-    return this.service.getAllMarketGroup({clientID: clientID});
-
+  getAllMarketGroup(data: FetchMarketGroup) {
+    //('getAllMarketGroup ', data);
+    return this.service.getAllMarketGroup(data);
   }
 
   addMarketGroupSpecifier(data: AddSpecifierRequest) {
 
-    console.log('addMarketGroupSpecifier ');
+    //('addMarketGroupSpecifier ');
     return this.service.addMarketGroupSpecifier(data);
 
   }
 
   updateMarketGroupSpecifier(data: AddSpecifierRequest) {
 
-    console.log('updateMarketGroupSpecifier ');
+    //('updateMarketGroupSpecifier ');
     return this.service.updateMarketGroupSpecifier(data);
 
   }
 
-  deleteMarketGroupSpecifier(data: DeleteSpecifierRequest) {
-
-    console.log('deleteMarketGroupSpecifier ');
-    return this.service.deleteMarketGroupSpecifier(data);
-
+  deleteMarket(data: DeleteMarketGroupRequest) {
+    //('delete market ');
+    return this.service.deleteMarket(data);
   }
 
-  createDefaultSportMarket(data: DefaultSportMarketDTO) {
-
-    console.log('createDefaultSportMarket ');
-    return this.service.createDefaultSportMarket(data);
-
+  saveMarket(data: SaveMarketRequest) {
+    //('save market ');
+    return this.service.saveMarket(data);
   }
 
   updateDefaultSportMarket(data: DefaultSportMarketDTO) {
-
-    console.log('updateDefaultSportMarket ');
+    //('updateDefaultSportMarket ');
     return this.service.updateDefaultSportMarket(data);
 
   }
 
   getDefaultSportMarket() {
 
-    console.log('getDefaultSportMarket ');
+    //('getDefaultSportMarket ');
     return this.service.getDefaultSportMarket({});
 
   }
 
   deleteDefaultSportMarket(sportID: number) {
-    console.log('deleteDefaultSportMarket ');
+    //('deleteDefaultSportMarket ');
     return this.service.deleteDefaultSportMarket({id: sportID});
   }
 
 
   saveFavourite(data: AddFavouriteRequest) {
-    console.log('add favourite ');
+    //('add favourite ');
     return this.service.addFavourites(data);
   }
 
   getTopTournament(data: FilterByClientIDRequest) {
-    console.log('get top tournament ');
+    //('get top tournament ');
     return this.service.getTopTournaments(data);
   }
 
   deleteTopTournamnet(data: DeleteMarketGroupRequest) {
-    console.log('remove top tournament');
+    //('remove top tournament');
     return this.service.removeTopTournament(data);
+  
   }
 
   saveTopTournament(data: SaveTopTournamentRequest) {
-    console.log('save top tournament ');
+    //('save top tournament ');
     return this.service.saveTopTournament(data);
   }
 
+  getSportTournamentMenu() {
+    //('save top tournament ');
+    return firstValueFrom(this.service.getSportsTournamentMenu({}));
+  }
+
+  updateSportsTournamentMenu(data: UpdateSportsMenuOrderRequest) {
+    //('update sports tournament ');
+    return this.service.updateSportsMenuOrder(data);
+  }
 }

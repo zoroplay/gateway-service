@@ -1,4 +1,4 @@
-FROM node:18
+FROM node:20
 RUN mkdir -p /app
 WORKDIR /app
 COPY . .
@@ -14,9 +14,9 @@ RUN apt-get update \
 # Copy the bitbucket private key to your docker image
 #COPY ./github_ssh_key /opt/my-app
 
-RUN npm install
-RUN npm run proto:install
+RUN yarn install
+RUN yarn proto:install
 # RUN npm run proto:all
-RUN npm run build
+RUN yarn build
 EXPOSE 80
 CMD ["npm", "start"]

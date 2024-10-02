@@ -25,6 +25,7 @@ import {
   CreateCampaignBonusDto,
   FetchReportRequest,
   GetBonusRequest,
+  SettleBetRequest,
   UpdateCampaignBonusDto,
 } from 'src/interfaces/bonus.pb';
 import {
@@ -36,7 +37,9 @@ import {
   SwaggerCreateBonusResponse,
   SwaggerCreateCampaignBonus,
   SwaggerGetUserBonusResponse,
+  SwaggerSettleBonusBet,
   SwaggerUpdateCampaignBonus,
+  SwaggerValidateCampaignResponse,
 } from '../dto';
 import {
   SwaggerFetchReportResponse,
@@ -76,7 +79,7 @@ export class AdminBonusController {
   })
   @ApiOkResponse({ type: SwaggerFetchReportResponse })
   fetchBonus(@Query() query: FetchReportRequest) {
-    console.log('Fetch Bonus');
+    // console.log('Fetch Bonus');
 
     return this.bonusService.fetchBonusReport({
       bonusType: query.bonusType,
@@ -135,6 +138,22 @@ export class AdminBonusController {
     } catch (error) {
       console.error(error);
     }
+  }
+
+  @Get('/search')
+  @ApiOperation({
+    summary: 'Find bonus for select field',
+    description:
+      'This endpoint retrieves bonus id and name for select dropdown field',
+  })
+  @ApiQuery({ name: 'searchKey', description: 'Search key' })
+  @ApiQuery({ name: 'clientId', description: 'SBE Client ID' })
+  async findPlayersByUsername(
+    @Query('searchKey') searchKey: string,
+    @Query('clientId') clientId: number 
+  ) {
+    const res =  await this.bonusService.SearchBonus({searchKey, clientId});
+    return res.data;
   }
 
   @Get('status/update')
@@ -274,6 +293,22 @@ export class AdminBonusController {
       data.clientId = query.client_id;
 
       return this.bonusService.AwardBonus(data);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  @Post('/process-bet')
+  @ApiOperation({
+    summary: 'Process bet test',
+    description:
+      'This endpoint is use to test bet settlement',
+  })
+  @ApiBody({ type: SwaggerSettleBonusBet })
+  @ApiOkResponse({ type: SwaggerValidateCampaignResponse })
+  testBetSettlement(@Body() data: SettleBetRequest) {
+    try {
+      return this.bonusService.settleBet(data);
     } catch (error) {
       console.error(error);
     }

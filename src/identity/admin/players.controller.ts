@@ -173,8 +173,12 @@ export class PlayersController {
       'This endpoint retrieves players id and username for select dropdown field',
   })
   @ApiQuery({ name: 'username', description: 'Search by username' })
-  async findPlayersByUsername(@Query('username') username: string ) {
-    const res =  await firstValueFrom(this.svc.getUserIdandName({username}));
+  @ApiQuery({ name: 'clientId', description: 'SBE Client ID' })
+  async findPlayersByUsername(
+    @Query('username') username: string,
+    @Query('clientId') clientId: number 
+  ) {
+    const res =  await firstValueFrom(this.svc.getUserIdandName({username, clientId}));
     return res.data;
   }
 

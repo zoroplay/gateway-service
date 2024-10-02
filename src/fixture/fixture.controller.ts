@@ -339,6 +339,33 @@ export class FixtureController {
     }
   }
 
+  @Get('/fixtures/upcoming')
+  @ApiOperation({
+    summary: 'Get all upcoming fixtures by period ',
+    description:
+      'This endpoint gets matches with odds for the specified period',
+  })
+  @ApiQuery({ type: SwaggerFixturesRequest })
+  @ApiOkResponse({ type: SwaggerFixturesResponse })
+  GetFixturesByPeriod(@Param() params: any, @Query() query: any) {
+    try {
+      const rq = {
+        source: query.source ? query.source : 'web',
+        markets: query.markets ? query.markets : '',
+        limit: query.limit ? query.limit : 100,
+        sportID: query.sportID ? query.sportID : 1,
+        period: query.period ? query.period : 'all',
+        timeoffset: query.timeoffset ? query.timeoffset : 0,
+        startDate: query.start,
+        endDate: query.end,
+      };
+
+      return this.fixtureService.GetFixtures(rq);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   @Get('/retail/fixtures/:tournament_id')
   @ApiOperation({
     summary: 'Get all upcoming fixtures by tournament ',

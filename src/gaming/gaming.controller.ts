@@ -39,13 +39,16 @@ export class GamingController {
 
   @Get('/:clientId/list')
   @ApiOkResponse({ type: [SwaggerOKGameResponse] })
-  @ApiQuery({name: 'categoryId', description: 'Gaming category ID'})
+  @ApiQuery({name: 'categoryId', description: 'Gaming category ID', required: false})
+  @ApiQuery({name: 'providerId', description: 'Gaming provider ID', required: false})
   findAll(
     @Query('categoryId') categoryId: number,
+    @Query('providerId') providerId: number,
     @Param('clientId') clientId,
   ) {
     const payload = {
       categoryId,
+      providerId,
       clientId
     }
     return this.gamingService.fetchGames(payload);

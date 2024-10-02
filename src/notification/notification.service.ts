@@ -34,11 +34,11 @@ export class NotificationService implements OnModuleInit {
   }
 
   saveSettings(data: SaveSettingsRequest) {
-    console.log('save settings');
+    // console.log('save settings');
     return this.service.saveSettings(data);
   }
   getUserNotifications(data: GetUserNotificationsRequest) {
-    console.log('getUserNotifications');
+    // console.log('getUserNotifications');
     return this.service.getUserNotifications(data);
   }
 }
