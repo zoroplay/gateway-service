@@ -901,10 +901,10 @@ export class WalletController {
     });
   }
   @UseGuards(AuthGuard)
-  @Post('/pitch90-transaction/:clientId')
+  @Post('/bet777-transaction/:clientId')
   @ApiOperation({
-    summary: 'post request to initiate transaction with pitch90',
-    description: 'This endpoint to handle transaction on pitch90',
+    summary: 'post request to initiate transaction with bet777',
+    description: 'This endpoint to handle transaction on bet777',
   })
   @ApiParam({
     name: 'clientId',
@@ -926,7 +926,7 @@ export class WalletController {
   }
 
   @UseGuards(AuthGuard)
-  @Post('/pitch90-register-url/:clientId')
+  @Post('/bet777-register-url/:clientId')
   @ApiOperation({
     summary: 'post request to register url for push notification',
     description: 'This endpoint to handle push notifications',
