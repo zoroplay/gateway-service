@@ -27,7 +27,7 @@ test:
 
   script:
     - echo "Running tests..."
-    - yarn install --frozen-lockfile  # Install dependencies without modifying lockfile
+    - yarn install 
     - yarn run test  # Run your test suite here
     - echo "Running Semantic Release..."
     - npx semantic-release  # Run Semantic Release to analyze commits and trigger a version bump if necessary
