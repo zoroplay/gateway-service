@@ -18,6 +18,7 @@ variables:
   BONUS_SERVICE_URL: 134.122.17.21:9006
   GAMING_SERVICE_URL: 134.122.17.21:9015
   GITHUB_TOKEN: $GITHUB_TOKEN # Store this in GitLab CI/CD Variables
+  NEXT_VERSION: "1.0.0" # Update this dynamically or through semantic-release
 
 # Test Stage
 test:
@@ -27,7 +28,7 @@ test:
   before_script:
     - git config --global url."https://$GITHUB_TOKEN@github.com/".insteadOf "https://github.com/"
     - echo "Setting up environment variables for test phase..."
-    - npm install -g yarn@1.22.22
+    # No need to install yarn globally, use the existing yarn in the image
 
   script:
     - echo "Running tests..."
@@ -92,4 +93,3 @@ deploy:
 
   only:
     - main
-
