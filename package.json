@@ -27,7 +27,8 @@
     "proto:bonus": "protoc --plugin=node_modules/.bin/protoc-gen-ts_proto.cmd -I=./node_modules/sbe-service-proto/proto --ts_proto_out=src/interfaces/ node_modules/sbe-service-proto/proto/bonus.proto --ts_proto_opt=nestJs=true --ts_proto_opt=fileSuffix=.pb",
     "proto:noti": "protoc --plugin=node_modules/.bin/protoc-gen-ts_proto -I=./node_modules/sbe-service-proto/proto --ts_proto_out=src/interfaces/ node_modules/sbe-service-proto/proto/noti.proto --ts_proto_opt=nestJs=true --ts_proto_opt=fileSuffix=.pb",
     "proto:wallet": "protoc --plugin=node_modules/.bin/protoc-gen-ts_proto.cmd -I=./node_modules/sbe-service-proto/proto --ts_proto_out=src/interfaces/ node_modules/sbe-service-proto/proto/wallet.proto --ts_proto_opt=nestJs=true --ts_proto_opt=fileSuffix=.pb",
-    "proto:all": "yarn proto:identity && yarn proto:wallet && yarn proto:betting && yarn proto:fixture && yarn proto:bonus && yarn proto:gaming && yarn proto:noti"
+    "proto:all": "yarn proto:identity && yarn proto:wallet && yarn proto:betting && yarn proto:fixture && yarn proto:bonus && yarn proto:gaming && yarn proto:noti",
+    "release": "semantic-release"
   },
   "dependencies": {
     "@grpc/grpc-js": "^1.9.5",
@@ -98,5 +99,8 @@
     ],
     "coverageDirectory": "../coverage",
     "testEnvironment": "node"
+  },
+  "release": {
+    "branches": ["main"]
   }
 }

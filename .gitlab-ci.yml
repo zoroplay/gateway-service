@@ -20,15 +20,22 @@ variables:
   BONUS_SERVICE_URL: 134.122.17.21:9006
   GAMING_SERVICE_URL: 134.122.17.21:9015
 
+
+
 # Test Stage
 test:
   stage: test
   image: node:18
 
+  before_script:
+    - echo "Setting up environment variables for test phase..."
+    - yarn install
+
   script:
     - echo "Running tests..."
-    - yarn install
     - yarn run test  # Run your test suite here
+    - echo "Running Semantic Release..."
+    - npx semantic-release  # Run Semantic Release to analyze commits and trigger a version bump if necessary
 
   only:
     - main
@@ -85,4 +92,4 @@ deploy:
   only:
     - main
 
-    #job finished ...
+
