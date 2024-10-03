@@ -23,7 +23,8 @@ test:
   before_script:
     - git config --global url."https://$GITHUB_TOKEN@github.com/".insteadOf "https://github.com/"
     - echo "Setting up environment variables for test phase..."
-    # No need to install yarn globally, use the existing yarn in the image
+     - yarn proto:all 
+    
 
   script:
     - echo "Running tests..."
