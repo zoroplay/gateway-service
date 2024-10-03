@@ -13,7 +13,7 @@ variables:
   BONUS_SERVICE_URL: 134.122.17.21:9006
   GAMING_SERVICE_URL: 134.122.17.21:9015
   GITHUB_TOKEN: $GITHUB_TOKEN # Store this in GitLab CI/CD Variables
-  NEXT_VERSION: "1.0.0" # Update this dynamically or through semantic-release
+  
 
 # Test Stage
 test:
