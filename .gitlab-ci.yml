@@ -19,13 +19,14 @@ variables:
   NOTIFICATION_SERVICE_URL: 134.122.17.21:9009
   BONUS_SERVICE_URL: 134.122.17.21:9006
   GAMING_SERVICE_URL: 134.122.17.21:9015
+  GH_TOKEN: $CI_JOB_TOKEN
 
 
 
 # Test Stage
 test:
   stage: test
-  image: node:18
+  image: node:20
 
   before_script:
     - echo "Setting up environment variables for test phase..."
