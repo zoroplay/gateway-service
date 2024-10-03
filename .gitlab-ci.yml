@@ -3,11 +3,6 @@ stages:
   - build
   - deploy
 
-# Cache dependencies to speed up builds
-cache:
-  key: npm-cache
-  paths:
-    - node_modules/
 
 variables:
   IDENTITY_SERVICE_URL: 134.122.17.21:9011
