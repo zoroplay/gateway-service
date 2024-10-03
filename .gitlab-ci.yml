@@ -29,8 +29,11 @@ test:
   image: node:20
 
   before_script:
+    - git config --global url."https://$GITHUB_TOKEN@github.com/"
     - echo "Setting up environment variables for test phase..."
-    - yarn install
+    - npm install -g yarn@1.22.22
+    
+    
 
   script:
     - echo "Running tests..."
