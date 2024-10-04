@@ -30,25 +30,24 @@ test:
     - yarn proto:all  # Generate protobuf files before running the tests
     
     # Create temporary tsconfig for tests
-- |
-  echo '{
-    "compilerOptions": {
-      "module": "commonjs",
-      "target": "es2017",
-      "baseUrl": "./",
-      "paths": {
-        "src/*": ["./src/*"]
-      },
-      "allowSyntheticDefaultImports": true,
-      "emitDecoratorMetadata": true,
-      "experimentalDecorators": true,
-      "skipLibCheck": true,
-      "strictNullChecks": false,
-      "noImplicitAny": false,
-      "noFallthroughCasesInSwitch": false
-    }
-  }' > tsconfig.test.json  # Temporary tsconfig for testing
-
+    - |
+      echo '{
+        "compilerOptions": {
+          "module": "commonjs",
+          "target": "es2017",
+          "baseUrl": "./",
+          "paths": {
+            "src/*": ["./src/*"]
+          },
+          "allowSyntheticDefaultImports": true,
+          "emitDecoratorMetadata": true,
+          "experimentalDecorators": true,
+          "skipLibCheck": true,
+          "strictNullChecks": false,
+          "noImplicitAny": false,
+          "noFallthroughCasesInSwitch": false
+        }
+      }' > tsconfig.test.json  # Temporary tsconfig for testing
 
   script:
     - echo "Running tests..."
