@@ -3,7 +3,6 @@ stages:
   - build
   - deploy
 
-
 variables:
   IDENTITY_SERVICE_URL: 134.122.17.21:9011
   FIXTURE_SERVICE_URL: 134.122.17.21:9003
@@ -12,8 +11,7 @@ variables:
   NOTIFICATION_SERVICE_URL: 134.122.17.21:9009
   BONUS_SERVICE_URL: 134.122.17.21:9006
   GAMING_SERVICE_URL: 134.122.17.21:9015
-  GITHUB_TOKEN: $GITHUB_TOKEN # Store this in GitLab CI/CD Variables
-
+  GITHUB_TOKEN: $GITHUB_TOKEN  # Store this in GitLab CI/CD Variables
 
 # Test Stage
 test:
@@ -23,12 +21,11 @@ test:
   before_script:
     - git config --global url."https://$GITHUB_TOKEN@github.com/".insteadOf "https://github.com/"
     - echo "Setting up environment variables for test phase..."
-     - yarn proto:all 
+    - yarn install
+    - yarn proto:all  # Ensure proto files are generated before testing
     
-
   script:
     - echo "Running tests..."
-    - yarn install 
     - yarn run test  # Run your test suite here
     - echo "Running Semantic Release..."
     - npx semantic-release  # Run Semantic Release to analyze commits and trigger a version bump if necessary
@@ -41,7 +38,7 @@ build:
   stage: build
   image: docker:latest
   services:
-    - docker:dind # Docker-in-Docker service to build Docker images
+    - docker:dind  # Docker-in-Docker service to build Docker images
 
   before_script:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
@@ -55,12 +52,13 @@ build:
     - echo "NOTIFICATION_SERVICE_URL ...... $NOTIFICATION_SERVICE_URL"
     - echo "BONUS_SERVICE_URL  ........ $BONUS_SERVICE_URL"
     - echo "GAMING_SERVICE_URL   ...... $GAMING_SERVICE_URL"
-    - docker build -t $CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$NEXT_VERSION .
-    - docker push $CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$NEXT_VERSION
+    - export DOCKER_IMAGE_TAG=$(git rev-parse --short HEAD)  # You can also use CI_COMMIT_SHA or branch name
+    - docker build -t $CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$DOCKER_IMAGE_TAG .
+    - docker push $CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$DOCKER_IMAGE_TAG
     - echo "Finished building docker image"
 
   only:
-    - dev
+    - main
 
 # Deploy Stage
 deploy:
@@ -73,8 +71,9 @@ deploy:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
 
   script:
+    - export DOCKER_IMAGE_TAG=$(git rev-parse --short HEAD)  # Ensure consistent tag usage
     - echo "Deploying Docker container..."
-    - docker pull $CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$NEXT_VERSION
+    - docker pull $CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$DOCKER_IMAGE_TAG
     - docker stop gatewayservice || true  # Stop any existing container
     - docker rm gatewayservice || true    # Remove the container if it exists
     - docker run -d --name gatewayservice -p 80:80 \
@@ -85,7 +84,7 @@ deploy:
       -e NOTIFICATION_SERVICE_URL="$NOTIFICATION_SERVICE_URL" \
       -e BONUS_SERVICE_URL="$BONUS_SERVICE_URL" \
       -e GAMING_SERVICE_URL="$GAMING_SERVICE_URL" \
-      $CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME
+      $CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$DOCKER_IMAGE_TAG
    
   only:
     - main
