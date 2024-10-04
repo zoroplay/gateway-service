@@ -53,7 +53,7 @@ test:
 
   script:
     - echo "Running tests..."
-    - jest --config jest.config.js --tsconfig tsconfig.test.json  # Use the temporary tsconfig for Jest
+    - jest --config jest.config.js   # Use the temporary tsconfig for Jest
     - echo "Running Semantic Release..."
     - npx semantic-release  # Run Semantic Release to analyze commits and trigger a version bump if necessary
 
