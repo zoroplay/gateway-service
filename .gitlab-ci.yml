@@ -26,9 +26,12 @@ test:
     - npx semantic-release  # Run your tests
 
 # Build Stage
-build:
+bbuild:
   stage: build
-  image: node:20  # Use Node.js 20 for building and running Semantic Release
+  image: docker:latest
+  services:
+    - docker:dind  # Docker-in-Docker service to build Docker images
+
   before_script:
     - echo "Logging into Docker registry..."
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
