@@ -16,67 +16,54 @@ variables:
 # Test Stage
 test:
   stage: test
-  image: node:20
+  image: node:20  # Use Node.js 20 for testing
   script:
     - echo "Configuring Git..."
     - git config --global user.name "zoroplay"
     - git config --global user.email "sportsbookengine@gmail.com"
     - git remote set-url origin https://github.com/zoroplay/gateway-service.git
-    
+
+    - echo "Installing dependencies..."
+    - npm install  # Ensure dependencies are installed
     - echo "Running tests..."
-    - echo "Running Semantic Release..."
-    - npx semantic-release  # Run Semantic Release to analyze commits and trigger a version bump if necessary
-  only:
-    - main
+    - npm test  # Run your tests
 
 # Build Stage
 build:
   stage: build
-  image: docker:latest
-  services:
-    - docker:dind  # Docker-in-Docker service to build Docker images
+  image: node:20  # Use Node.js 20 for building and running Semantic Release
   before_script:
+    - echo "Logging into Docker registry..."
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
   script:
-    - echo "Building Docker image with the following service URLs:"
-    - echo "IDENTITY_SERVICE_URL ...... $IDENTITY_SERVICE_URL"
-    - echo "FIXTURE_SERVICE_URL  ...... $FIXTURE_SERVICE_URL"
-    - echo "BETTING_SERVICE_URL ....... $BETTING_SERVICE_URL"
-    - echo "WALLET_SERVICE_URL ........ $WALLET_SERVICE_URL"
-    - echo "NOTIFICATION_SERVICE_URL ...... $NOTIFICATION_SERVICE_URL"
-    - echo "BONUS_SERVICE_URL  ........ $BONUS_SERVICE_URL"
-    - echo "GAMING_SERVICE_URL   ...... $GAMING_SERVICE_URL"
-
-    # Run Semantic Release to update version
     - echo "Running Semantic Release..."
-    - npx semantic-release
-
+    - npx semantic-release  # Run Semantic Release to analyze commits and trigger a version bump if necessary
+    
     # Get the new version from package.json after semantic-release
     - export VERSION=$(node -p "require('./package.json').version")
 
-    # Tag Docker image with new version
-    - export DOCKER_IMAGE_TAG="$VERSION"
-    - docker build -t "$CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$DOCKER_IMAGE_TAG" .
-    - docker push "$CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$DOCKER_IMAGE_TAG" || { echo "Docker push failed"; exit 1; }
-    - echo "$VERSION"
+    # Log the new version
+    - echo "Building Docker image with version $VERSION"
+    
+    # Build and push Docker image with the new version
+    - docker build -t "$CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$VERSION" .
+    - docker push "$CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$VERSION" || { echo "Docker push failed"; exit 1; }
+    - echo "Finished building Docker image with tag $VERSION"
 
   only:
     - main
 
-
-
 # Deploy Stage
 deploy:
   stage: deploy
-  image: docker:latest
+  image: docker:latest  # Use Docker for deployment
   services:
-    - docker:dind
+    - docker:dind  # Docker-in-Docker service for deploying Docker containers
   before_script:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
   script:
-    - export DOCKER_IMAGE_TAG=$(git rev-parse --short HEAD)-$(date +%Y%m%d%H%M)  # Same tag used in build stage
     - echo "Deploying Docker container..."
-    - docker pull "$CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$DOCKER_IMAGE_TAG"
+    - docker pull "$CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$VERSION"  # Use the version from the build stage
     - docker stop gatewayservice || true  # Stop any existing container
     - docker rm gatewayservice || true    # Remove the container if it exists
     - docker run -d --name gatewayservice -p 80:80 \
@@ -87,6 +74,6 @@ deploy:
       -e NOTIFICATION_SERVICE_URL="$NOTIFICATION_SERVICE_URL" \
       -e BONUS_SERVICE_URL="$BONUS_SERVICE_URL" \
       -e GAMING_SERVICE_URL="$GAMING_SERVICE_URL" \
-      "$CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$DOCKER_IMAGE_TAG"
+      "$CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$VERSION"
   only:
     - main
