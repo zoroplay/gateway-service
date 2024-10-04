@@ -23,9 +23,6 @@ test:
     - git config --global user.email "sportsbookengine@gmail.com"
     - git remote set-url origin https://github.com/zoroplay/gateway-service.git
 
-    - echo "Installing dependencies..."
-    - npm install  # Ensure dependencies are installed
-    - echo "Running tests..."
     - npx semantic-release  # Run your tests
 
 # Build Stage
