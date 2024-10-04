@@ -28,21 +28,18 @@ test:
 # Build Stage
 build:
   stage: build
-  image: docker:latest  # Use Docker image
+  image: node:20  # Use Node.js with Docker in Docker
   services:
     - docker:dind  # Docker-in-Docker service to build Docker images
 
   before_script:
-    - echo "Installing Node.js and npm in Docker image..."
-    - apt-get update && apt-get install -y nodejs npm  # Install Node.js in docker image
-    - echo "Node.js and npm installed"
     - echo "Logging into Docker registry..."
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
 
   script:
     - echo "Running Semantic Release..."
     - npx semantic-release  # Run Semantic Release to analyze commits and trigger a version bump
-
+    
     # Get the new version from package.json after semantic-release
     - export VERSION=$(node -p "require('./package.json').version")
 
