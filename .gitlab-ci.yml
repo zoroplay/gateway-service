@@ -46,14 +46,24 @@ build:
     - echo "NOTIFICATION_SERVICE_URL ...... $NOTIFICATION_SERVICE_URL"
     - echo "BONUS_SERVICE_URL  ........ $BONUS_SERVICE_URL"
     - echo "GAMING_SERVICE_URL   ...... $GAMING_SERVICE_URL"
-    
-    # Tag Docker image with short commit hash and timestamp
-    - export DOCKER_IMAGE_TAG=$(git rev-parse --short HEAD)-$(date +%Y%m%d%H%M)  
+
+    # Run Semantic Release to update version
+    - echo "Running Semantic Release..."
+    - npx semantic-release
+
+    # Get the new version from package.json after semantic-release
+    - export VERSION=$(node -p "require('./package.json').version")
+
+    # Tag Docker image with new version
+    - export DOCKER_IMAGE_TAG="$VERSION"
     - docker build -t "$CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$DOCKER_IMAGE_TAG" .
-    - docker push "$CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$DOCKER_IMAGE_TAG"
-    - echo "Finished building Docker image"
+    - docker push "$CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$DOCKER_IMAGE_TAG" || { echo "Docker push failed"; exit 1; }
+    - echo "$VERSION"
+
   only:
     - main
+
+
 
 # Deploy Stage
 deploy:
