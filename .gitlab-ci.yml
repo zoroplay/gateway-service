@@ -13,21 +13,21 @@ variables:
   GAMING_SERVICE_URL: 134.122.17.21:9015
   GITHUB_TOKEN: $GITHUB_TOKEN  # Store this in GitLab CI/CD Variables
 
-
 # Test Stage
 test:
   stage: test
   image: node:20
-
-
   script:
+    - echo "Configuring Git..."
+    - git config --global user.name "zoroplay"
+    - git config --global user.email "sportsbookengine@gmail.com"
+    - git remote set-url origin https://$GITHUB_TOKEN@github.com/zoroplay/gateway.git
+    
     - echo "Running tests..."
     - echo "Running Semantic Release..."
     - npx semantic-release  # Run Semantic Release to analyze commits and trigger a version bump if necessary
-
   only:
     - main
-
 
 # Build Stage
 build:
@@ -35,10 +35,8 @@ build:
   image: docker:latest
   services:
     - docker:dind  # Docker-in-Docker service to build Docker images
-
   before_script:
-    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
-
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
   script:
     - echo "Building Docker image with the following service URLs:"
     - echo "IDENTITY_SERVICE_URL ...... $IDENTITY_SERVICE_URL"
@@ -51,10 +49,9 @@ build:
     
     # Tag Docker image with short commit hash and timestamp
     - export DOCKER_IMAGE_TAG=$(git rev-parse --short HEAD)-$(date +%Y%m%d%H%M)  
-    - docker build -t $CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$DOCKER_IMAGE_TAG .
-    - docker push $CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$DOCKER_IMAGE_TAG
-    - echo "Finished building docker image"
-
+    - docker build -t "$CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$DOCKER_IMAGE_TAG" .
+    - docker push "$CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$DOCKER_IMAGE_TAG"
+    - echo "Finished building Docker image"
   only:
     - main
 
@@ -64,14 +61,12 @@ deploy:
   image: docker:latest
   services:
     - docker:dind
-
   before_script:
-    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
-
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
   script:
     - export DOCKER_IMAGE_TAG=$(git rev-parse --short HEAD)-$(date +%Y%m%d%H%M)  # Same tag used in build stage
     - echo "Deploying Docker container..."
-    - docker pull $CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$DOCKER_IMAGE_TAG
+    - docker pull "$CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$DOCKER_IMAGE_TAG"
     - docker stop gatewayservice || true  # Stop any existing container
     - docker rm gatewayservice || true    # Remove the container if it exists
     - docker run -d --name gatewayservice -p 80:80 \
@@ -82,7 +77,6 @@ deploy:
       -e NOTIFICATION_SERVICE_URL="$NOTIFICATION_SERVICE_URL" \
       -e BONUS_SERVICE_URL="$BONUS_SERVICE_URL" \
       -e GAMING_SERVICE_URL="$GAMING_SERVICE_URL" \
-      $CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$DOCKER_IMAGE_TAG
-
+      "$CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$DOCKER_IMAGE_TAG"
   only:
     - main
