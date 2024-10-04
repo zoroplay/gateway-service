@@ -30,6 +30,11 @@ get-new-version:
   - npx semantic-release --dry-run
   - ls -la
   - cat .VERSION
+  artifacts:
+    paths:
+      - .VERSION
+    expire_in: "90 days"
+
   
 
 # Test Stage
