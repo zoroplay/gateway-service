@@ -21,7 +21,7 @@ test:
     - echo "Configuring Git..."
     - git config --global user.name "zoroplay"
     - git config --global user.email "sportsbookengine@gmail.com"
-    - git remote set-url origin https://$GITHUB_TOKEN@github.com/zoroplay/gateway.git
+    - git remote set-url origin https://github.com/zoroplay/gateway-service.git
     
     - echo "Running tests..."
     - echo "Running Semantic Release..."

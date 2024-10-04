@@ -5,6 +5,10 @@
   "author": "",
   "private": true,
   "license": "UNLICENSED",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/gateway.git" // Replace with your actual GitHub username/repo
+  },
   "scripts": {
     "prebuild": "rimraf dist",
     "build": "nest build",
@@ -14,7 +18,7 @@
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
-    "test": "jest",
+    "test": "jest --config jest.config.js", // Ensure Jest runs with the specified config
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
@@ -101,6 +105,7 @@
     "testEnvironment": "node"
   },
   "release": {
-    "branches": ["main"]
+    "branches": ["main"],
+    "repositoryUrl": "https://github.com/zoroplay/gateway.git" 
   }
 }
