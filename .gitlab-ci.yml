@@ -26,7 +26,7 @@ test:
     - echo "Installing dependencies..."
     - npm install  # Ensure dependencies are installed
     - echo "Running tests..."
-    - npm test  # Run your tests
+    - npx semantic-release  # Run your tests
 
 # Build Stage
 build:
