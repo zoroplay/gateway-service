@@ -23,6 +23,7 @@ variables:
 
 get-new-version:
   stage: version
+  image: node:20
   script:
   - echo "Setting new version..."
   - yarn install
