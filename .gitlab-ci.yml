@@ -7,7 +7,6 @@ stages:
 default:
   image: docker:24.0.5
 
-
 services:
   - docker:24.0.5-dind
 
@@ -25,56 +24,51 @@ get-new-version:
   stage: version
   image: node:20
   script:
-  - echo "Setting new version..."
-  - yarn install
-  - npx semantic-release --dry-run
-  - ls -la
-  - cat .VERSION
+    - echo "Setting new version..."
+    - yarn install
+    - npx semantic-release --dry-run
+    - echo $VERSION > .VERSION  # Save the version to a file
   artifacts:
     paths:
       - .VERSION
     expire_in: "90 days"
 
-  
-
 # Test Stage
 test:
   stage: test
+  dependencies:
+    - get-new-version  # Ensure that test stage depends on version stage and gets the .VERSION file
   script:
-    - echo "Configuring Git..."
-    - git config --global user.name "zoroplay"
-    - git config --global user.email "sportsbookengine@gmail.com"
-    - git remote set-url origin https://github.com/zoroplay/gateway-service.git
-    - cat .VERSION
+    - cat .VERSION  # Output the version for debugging
 
 # Build Stage
 build:
   stage: build
+  dependencies:
+    - get-new-version  # Ensure we get the version file from the version stage
   before_script:
     - echo "Logging into Docker registry..."
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
-
+    - export VERSION=$(cat .VERSION)  # Load the version from the .VERSION file
   script:
-   
-    # Build and push Docker image with the new version
+    - echo "Building Docker image with version $VERSION"
     - docker build -t "$CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$VERSION" .
     - docker push "$CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$VERSION" || { echo "Docker push failed"; exit 1; }
     - echo "Finished building Docker image with tag $VERSION"
-
   only:
     - main
 
-  
 # Deploy Stage
 deploy:
   stage: deploy
+  dependencies:
+    - build  # Ensure we have the version from the build stage
   before_script:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
-
+    - export VERSION=$(cat .VERSION)  # Load the version from the .VERSION file
   script:
-    - source .env  # Load the version from the build stage
-    - echo "Deploying Docker container..."
-    - docker pull "$CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$VERSION"  # Use the version from the build stage
+    - echo "Deploying Docker container with version $VERSION"
+    - docker pull "$CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$VERSION"  # Pull the built Docker image
     - docker stop gatewayservice || true  # Stop any existing container
     - docker rm gatewayservice || true    # Remove the container if it exists
     - docker run -d --name gatewayservice -p 80:80 \
@@ -86,6 +80,5 @@ deploy:
       -e BONUS_SERVICE_URL="$BONUS_SERVICE_URL" \
       -e GAMING_SERVICE_URL="$GAMING_SERVICE_URL" \
       "$CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$VERSION"
-
   only:
     - main
