@@ -11,7 +11,7 @@ variables:
   NOTIFICATION_SERVICE_URL: 134.122.17.21:9009
   BONUS_SERVICE_URL: 134.122.17.21:9006
   GAMING_SERVICE_URL: 134.122.17.21:9015
-  GITHUB_TOKEN: $GITHUB_TOKEN  # Store this in GitLab CI/CD Variables
+  GITHUB_TOKEN: $GITHUB_TOKEN  
 
 # Test Stage
 test:
@@ -22,13 +22,13 @@ test:
     - git config --global url."https://$GITHUB_TOKEN@github.com/".insteadOf "https://github.com/"
     - echo "Setting up environment variables for test phase..."
     - yarn install
-    - yarn proto:all  # Ensure proto files are generated before testing
+    - yarn proto:all  
     
   script:
     - echo "Running tests..."
-    - yarn run test  # Run your test suite here
+    - yarn run test 
     - echo "Running Semantic Release..."
-    - npx semantic-release  # Run Semantic Release to analyze commits and trigger a version bump if necessary
+    - npx semantic-release  
 
   only:
     - main
@@ -38,7 +38,7 @@ build:
   stage: build
   image: docker:latest
   services:
-    - docker:dind  # Docker-in-Docker service to build Docker images
+    - docker:dind  
 
   before_script:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
@@ -52,7 +52,7 @@ build:
     - echo "NOTIFICATION_SERVICE_URL ...... $NOTIFICATION_SERVICE_URL"
     - echo "BONUS_SERVICE_URL  ........ $BONUS_SERVICE_URL"
     - echo "GAMING_SERVICE_URL   ...... $GAMING_SERVICE_URL"
-    - export DOCKER_IMAGE_TAG=$(git rev-parse --short HEAD)  # You can also use CI_COMMIT_SHA or branch name
+    - export DOCKER_IMAGE_TAG=$(git rev-parse --short HEAD)  
     - docker build -t $CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$DOCKER_IMAGE_TAG .
     - docker push $CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$DOCKER_IMAGE_TAG
     - echo "Finished building docker image"
@@ -71,11 +71,11 @@ deploy:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
 
   script:
-    - export DOCKER_IMAGE_TAG=$(git rev-parse --short HEAD)  # Ensure consistent tag usage
+    - export DOCKER_IMAGE_TAG=$(git rev-parse --short HEAD)  
     - echo "Deploying Docker container..."
     - docker pull $CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$DOCKER_IMAGE_TAG
-    - docker stop gatewayservice || true  # Stop any existing container
-    - docker rm gatewayservice || true    # Remove the container if it exists
+    - docker stop gatewayservice || true  
+    - docker rm gatewayservice || true    
     - docker run -d --name gatewayservice -p 80:80 \
       -e IDENTITY_SERVICE_URL="$IDENTITY_SERVICE_URL" \
       -e FIXTURE_SERVICE_URL="$FIXTURE_SERVICE_URL" \
