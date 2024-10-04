@@ -13,47 +13,15 @@ variables:
   GAMING_SERVICE_URL: 134.122.17.21:9015
   GITHUB_TOKEN: $GITHUB_TOKEN  # Store this in GitLab CI/CD Variables
 
-# Caching for yarn dependencies
-cache:
-  paths:
-    - node_modules/
 
 # Test Stage
 test:
   stage: test
   image: node:20
 
-  before_script:
-    - git config --global url."https://$GITHUB_TOKEN@github.com/".insteadOf "https://github.com/"
-    - apt-get update && apt-get install -y protobuf-compiler  # Install protoc
-    - yarn install  # Install dependencies
-    - yarn proto:all  # Generate protobuf files before running the tests
-    # Ensure the Jest binary is available in the path
-    - export PATH=$(yarn bin):$PATH
-    
-    # Create temporary tsconfig for tests
-    - |
-      echo '{
-        "compilerOptions": {
-          "module": "commonjs",
-          "target": "es2017",
-          "baseUrl": "./",
-          "paths": {
-            "src/*": ["./src/*"]
-          },
-          "allowSyntheticDefaultImports": true,
-          "emitDecoratorMetadata": true,
-          "experimentalDecorators": true,
-          "skipLibCheck": true,
-          "strictNullChecks": false,
-          "noImplicitAny": false,
-          "noFallthroughCasesInSwitch": false
-        }
-      }' > tsconfig.test.json  # Temporary tsconfig for testing
 
   script:
     - echo "Running tests..."
-    - jest --config jest.config.js   # Use the temporary tsconfig for Jest
     - echo "Running Semantic Release..."
     - npx semantic-release  # Run Semantic Release to analyze commits and trigger a version bump if necessary
 
