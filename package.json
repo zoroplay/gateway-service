@@ -106,6 +106,6 @@
   },
   "release": {
     "branches": ["main"],
-    "repositoryUrl": "https://github.com/zoroplay/gateway.git" 
+    "repositoryUrl": "https://github.com/zoroplay/gateway-service.git" 
   }
 }
