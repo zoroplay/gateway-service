@@ -1,7 +1,15 @@
 stages:
+  - version
   - test
   - build
   - deploy
+
+default:
+  image: docker:24.0.5
+
+
+services:
+  - docker:24.0.5-dind
 
 variables:
   IDENTITY_SERVICE_URL: 134.122.17.21:9011
@@ -13,39 +21,35 @@ variables:
   GAMING_SERVICE_URL: 134.122.17.21:9015
   GITHUB_TOKEN: $GITHUB_TOKEN  # Store this in GitLab CI/CD Variables
 
+get-new-version:
+  stage: version
+  script:
+  - echo "Setting new version..."
+  - yarn install
+  - npx semantic-release --dry-run
+  - ls -la
+  - cat .VERSION
+  
+
 # Test Stage
 test:
   stage: test
-  image: node:20  # Use Node.js 20 for testing and semantic-release
   script:
     - echo "Configuring Git..."
     - git config --global user.name "zoroplay"
     - git config --global user.email "sportsbookengine@gmail.com"
     - git remote set-url origin https://github.com/zoroplay/gateway-service.git
-    - echo "Running Semantic Release..."
-    - npx semantic-release  # Run semantic-release for versioning
+    - cat .VERSION
 
 # Build Stage
 build:
   stage: build
-  image: node:20  # Use Node.js with Docker in Docker
-  services:
-    - docker:dind  # Docker-in-Docker service to build Docker images
-
   before_script:
     - echo "Logging into Docker registry..."
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
 
   script:
-    - echo "Running Semantic Release..."
-    - npx semantic-release  # Run Semantic Release to analyze commits and trigger a version bump
-    
-    # Get the new version from package.json after semantic-release
-    - export VERSION=$(node -p "require('./package.json').version")
-
-    # Log the new version
-    - echo "Building Docker image with version $VERSION"
-    
+   
     # Build and push Docker image with the new version
     - docker build -t "$CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$VERSION" .
     - docker push "$CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$VERSION" || { echo "Docker push failed"; exit 1; }
@@ -54,17 +58,10 @@ build:
   only:
     - main
 
-  artifacts:
-    reports:
-      dotenv: .env  # Save the version for the deploy stage
-
+  
 # Deploy Stage
 deploy:
   stage: deploy
-  image: docker:latest  # Use Docker for deployment
-  services:
-    - docker:dind  # Docker-in-Docker service for deploying Docker containers
-
   before_script:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
 
