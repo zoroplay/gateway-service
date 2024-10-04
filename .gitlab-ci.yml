@@ -16,29 +16,33 @@ variables:
 # Test Stage
 test:
   stage: test
-  image: node:20  # Use Node.js 20 for testing
+  image: node:20  # Use Node.js 20 for testing and semantic-release
   script:
     - echo "Configuring Git..."
     - git config --global user.name "zoroplay"
     - git config --global user.email "sportsbookengine@gmail.com"
     - git remote set-url origin https://github.com/zoroplay/gateway-service.git
-    - echo "installing semantic release"
-    - npx semantic-release  # Run your tests
+    - echo "Running Semantic Release..."
+    - npx semantic-release  # Run semantic-release for versioning
 
 # Build Stage
-bbuild:
+build:
   stage: build
-  image: docker:latest
+  image: docker:latest  # Use Docker image
   services:
     - docker:dind  # Docker-in-Docker service to build Docker images
 
   before_script:
+    - echo "Installing Node.js and npm in Docker image..."
+    - apt-get update && apt-get install -y nodejs npm  # Install Node.js in docker image
+    - echo "Node.js and npm installed"
     - echo "Logging into Docker registry..."
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
+
   script:
     - echo "Running Semantic Release..."
-    - npx semantic-release  # Run Semantic Release to analyze commits and trigger a version bump if necessary
-    
+    - npx semantic-release  # Run Semantic Release to analyze commits and trigger a version bump
+
     # Get the new version from package.json after semantic-release
     - export VERSION=$(node -p "require('./package.json').version")
 
@@ -53,15 +57,22 @@ bbuild:
   only:
     - main
 
+  artifacts:
+    reports:
+      dotenv: .env  # Save the version for the deploy stage
+
 # Deploy Stage
 deploy:
   stage: deploy
   image: docker:latest  # Use Docker for deployment
   services:
     - docker:dind  # Docker-in-Docker service for deploying Docker containers
+
   before_script:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
+
   script:
+    - source .env  # Load the version from the build stage
     - echo "Deploying Docker container..."
     - docker pull "$CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$VERSION"  # Use the version from the build stage
     - docker stop gatewayservice || true  # Stop any existing container
@@ -75,5 +86,6 @@ deploy:
       -e BONUS_SERVICE_URL="$BONUS_SERVICE_URL" \
       -e GAMING_SERVICE_URL="$GAMING_SERVICE_URL" \
       "$CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$VERSION"
+
   only:
     - main
