@@ -52,10 +52,13 @@ build:
     - echo "Logging into Docker registry..."
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
   script:
-    - chmod +x build.sh  # Ensure the script is executable
-    - ./build.sh         # Run the bash script
+    - cd $CI_PROJECT_DIR  # Ensure you're in the correct directory
+    - ls -al  # Debug: Check if the build.sh script exists
+    - chmod +x build.sh  # Make sure the script is executable
+    - ./build.sh  # Run the build script
   only:
     - main
+
 
 # Deploy Stage
 deploy:
