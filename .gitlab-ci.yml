@@ -1,8 +1,10 @@
+
 stages:
   - version
   - test
   - build
   - deploy
+
 
 default:
   image: docker:24.0.5
@@ -49,7 +51,9 @@ build:
   before_script:
     - echo "Logging into Docker registry..."
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
-    - export VERSION=$(cat .VERSION)  # Load the version from the .VERSION file
+    - if [ ! -f .VERSION ]; then echo "ERROR: .VERSION file is missing"; exit 1; fi  # Ensure the .VERSION file exists
+    - export VERSION=$(cat .VERSION)
+    - if [ -z "$VERSION" ]; then echo "ERROR: Version is empty"; exit 1; fi  # Ensure the VERSION is not empty
   script:
     - echo "Building Docker image with version $VERSION"
     - docker build -t "$CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$VERSION" .
@@ -57,6 +61,7 @@ build:
     - echo "Finished building Docker image with tag $VERSION"
   only:
     - main
+
 
 # Deploy Stage
 deploy:
