@@ -28,16 +28,18 @@ get-new-version:
   stage: version
   image: node:20
   script:
-      - echo "Setting new version..."
-      - yarn install
-      - npx semantic-release --dry-run
-      - echo $VERSION > .VERSION
-      - ls -la
-      - cat .VERSION #
+    - echo "Fetching latest from remote..."
+    - git fetch origin main
+    - git reset --hard origin/main
+    - echo "Running semantic-release..."
+    - yarn install
+    - npx semantic-release --dry-run
+    - echo $VERSION > .VERSION  # Save the version to a file
   artifacts:
     paths:
-      - .VERSION
+      - .VERSION  # Ensure .VERSION file is saved as an artifact
     expire_in: "90 days"
+
 
 # Test Stage
 test:
