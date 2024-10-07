@@ -7,7 +7,8 @@ module.exports = {
       [
         '@semantic-release/exec',
         {
-          verifyReleaseCmd: 'echo NEXT_VERSION=${nextRelease.version} >> .VERSION',
+          verifyReleaseCmd: 'echo NEXT_VERSION=${nextRelease.version} > .VERSION',
+
         },
       ],
       [
