@@ -23,14 +23,17 @@ variables:
   GAMING_SERVICE_URL: 134.122.17.21:9015
   GITHUB_TOKEN: $GITHUB_TOKEN  # Store this in GitLab CI/CD Variables
 
+
 get-new-version:
   stage: version
   image: node:20
   script:
-    - echo "Setting new version..."
-    - yarn install
-    - npx semantic-release --dry-run
-    - echo $VERSION > .VERSION  # Save the version to a file
+      - echo "Setting new version..."
+      - yarn install
+      - npx semantic-release --dry-run
+      - echo $VERSION > .VERSION
+      - ls -la
+      - cat .VERSION #
   artifacts:
     paths:
       - .VERSION
