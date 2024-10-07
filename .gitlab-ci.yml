@@ -53,9 +53,6 @@ build:
     - echo "Logging into Docker registry..."
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
   script:
-    - if [ ! -f .VERSION ]; then echo "ERROR: .VERSION file is missing"; exit 1; fi  # Ensure the .VERSION file exists
-    - export VERSION=$(cat .VERSION)
-    - if [ -z "$VERSION" ]; then echo "ERROR: Version is empty"; exit 1; fi  # Ensure the VERSION is not empty
     - echo "Building Docker image with version $VERSION"
     - docker build -t "$CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$VERSION" .
     - docker push "$CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$VERSION" || { echo "Docker push failed"; exit 1; }
