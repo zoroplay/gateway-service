@@ -30,11 +30,16 @@ get-new-version:
     - git reset --hard origin/main
     - echo "Running semantic-release..."
     - yarn install
-    - npx semantic-release --dry-run
-    - echo "NEXT_VERSION=$(npx semantic-release --dry-run | grep -oP '(?<=The next release version is ).*')" > .VERSION
+    - NEXT_VERSION=$(npx semantic-release --dry-run | grep -oP '(?<=The next release version is ).*')
+    - echo "Extracted NEXT_VERSION: $NEXT_VERSION"
+    - if [ -z "$NEXT_VERSION" ]; then
+        echo "Error: Failed to extract NEXT_VERSION! Exiting...";
+        exit 1;
+      fi
+    - echo "NEXT_VERSION=$NEXT_VERSION" > .VERSION
   artifacts:
     paths:
-      - .VERSION  # Ensure .VERSION file is saved as an artifact
+      - .VERSION
     expire_in: "90 days"
   only:
     - main
@@ -57,11 +62,11 @@ build-application:
     - ls -la
     - cat .VERSION
     - export $(cat .VERSION | xargs)  # Load the NEXT_VERSION from .VERSION
-    - echo "Building Docker image with version:$NEXT_VERSION"  # Corrected variable usage
-    - echo $CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME
+    - if [ -z "$NEXT_VERSION" ]; then echo "NEXT_VERSION is empty! Exiting..."; exit 1; fi
+    - echo "Building Docker image with version:$NEXT_VERSION"
     - docker login $CI_REGISTRY -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD
-    - docker build -t $CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$NEXT_VERSION .  # Corrected variable usage
-    - docker push $CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$NEXT_VERSION  # Corrected variable usage
+    - docker build -t $CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$NEXT_VERSION .
+    - docker push $CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$NEXT_VERSION
     - echo "Finished building Docker image"
   only:
     - main
