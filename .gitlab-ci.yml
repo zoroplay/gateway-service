@@ -39,6 +39,8 @@ get-new-version:
     paths:
       - .VERSION  # Ensure .VERSION file is saved as an artifact
     expire_in: "90 days"
+  only :
+    - main
 
 
 # Test Stage
@@ -48,6 +50,8 @@ test:
     - get-new-version  # Ensure that test stage depends on version stage and gets the .VERSION file
   script:
     - cat .VERSION  # Output the version for debugging
+  only :
+    - main
 
 # Build Stage
 
@@ -72,6 +76,8 @@ build-application:
       - docker build -t $CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$NEXT_VERSION .
       - docker push $CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$NEXT_VERSION
       - echo "Finished building docker image"
+   only :
+       - main
 
 
 release-application:
@@ -83,6 +89,8 @@ release-application:
       - yarn install
       - npx semantic-release
       - cat .VERSION
+   only :
+     - main
 
 
 
