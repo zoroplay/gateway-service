@@ -6,7 +6,7 @@ stages:
   - release
   - deploy
 
-# gitlab/github int
+
 default:
   image: docker:24.0.5
 
