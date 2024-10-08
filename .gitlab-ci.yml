@@ -57,11 +57,11 @@ build-application:
     - ls -la
     - cat .VERSION
     - export $(cat .VERSION | xargs)  # Load the NEXT_VERSION from .VERSION
-    - echo "Building Docker image with version:NEXT_VERSION"
+    - echo "Building Docker image with version:$NEXT_VERSION"  # Corrected variable usage
     - echo $CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME
     - docker login $CI_REGISTRY -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD
-    - docker build -t $CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:NEXT_VERSION .
-    - docker push $CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:NEXT_VERSION
+    - docker build -t $CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$NEXT_VERSION .  # Corrected variable usage
+    - docker push $CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$NEXT_VERSION  # Corrected variable usage
     - echo "Finished building Docker image"
   only:
     - main
@@ -70,13 +70,18 @@ release-application:
   stage: release
   image: node:20
   variables:
-    GL_TOKEN: $GL_TOKEN
+    GL_TOKEN: $GL_TOKEN  # Make sure GL_TOKEN is defined in GitLab CI/CD settings
   script: 
-    - yarn install
-    - npx semantic-release  # This should create the actual release
-    - cat .VERSION  # Output .VERSION for debugging
+    - yarn install  # Install dependencies
+    - npx semantic-release  # Perform the release and create a new version
+    - cat .VERSION  # Output the version for debugging purposes
+  artifacts:
+    paths:
+      - .VERSION  # Ensure the .VERSION file is available for later stages
+    expire_in: '90 days'  # Keep the artifact for 90 days
   only:
     - main
+
 
 deploy:
   stage: deploy
@@ -101,3 +106,8 @@ deploy:
       "$CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$VERSION"
   only:
     - main
+  artifacts:
+    paths:
+      - .VERSION  # Ensure the .VERSION file is available for use
+    expire_in: '90 days'
+
