@@ -98,7 +98,7 @@ release-application:
 deploy:
   stage: deploy
   dependencies:
-    - build  # Ensure we have the version from the build stage
+    - build-application  # Ensure we have the version from the build stage
   before_script:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
     - export VERSION=$(cat .VERSION)  # Load the version from the .VERSION file
