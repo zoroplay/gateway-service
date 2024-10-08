@@ -30,20 +30,14 @@ get-new-version:
     - git reset --hard origin/main
     - echo "Running semantic-release..."
     - yarn install
-    - NEXT_VERSION=$(npx semantic-release --dry-run | grep -oP '(?<=The next release version is ).*')
-    - echo "Extracted NEXT_VERSION: $NEXT_VERSION"
-    - if [ -z "$NEXT_VERSION" ]; then
-        echo "Error: Failed to extract NEXT_VERSION! Exiting...";
-        exit 1;
-      fi
-    - echo "NEXT_VERSION=$NEXT_VERSION" > .VERSION
+    - npx semantic-release --dry-run
+    - echo "NEXT_VERSION=$(npx semantic-release --dry-run | grep -oP '(?<=The next release version is ).*')" > .VERSION
   artifacts:
     paths:
-      - .VERSION
+      - .VERSION  # Ensure .VERSION file is saved as an artifact
     expire_in: "90 days"
   only:
     - main
-
 test:
   stage: test
   dependencies:
