@@ -1,11 +1,9 @@
-
 stages:
   - version
   - test
   - build
   - release
   - deploy
-
 
 default:
   image: docker:24.0.5
@@ -23,7 +21,6 @@ variables:
   GAMING_SERVICE_URL: 134.122.17.21:9015
   GITHUB_TOKEN: $GITHUB_TOKEN  # Store this in GitLab CI/CD Variables
 
-
 get-new-version:
   stage: version
   image: node:20
@@ -34,67 +31,53 @@ get-new-version:
     - echo "Running semantic-release..."
     - yarn install
     - npx semantic-release --dry-run
-    - echo $VERSION > .VERSION  # Save the version to a file
+    - echo "NEXT_VERSION=$(npx semantic-release --dry-run | grep -oP '(?<=The next release version is ).*')" > .VERSION
   artifacts:
     paths:
       - .VERSION  # Ensure .VERSION file is saved as an artifact
     expire_in: "90 days"
-  only :
+  only:
     - main
 
-
-# Test Stage
 test:
   stage: test
   dependencies:
     - get-new-version  # Ensure that test stage depends on version stage and gets the .VERSION file
   script:
     - cat .VERSION  # Output the version for debugging
-  only :
+  only:
     - main
 
-# Build Stage
-
 build-application:
-   stage: build
-   
-   script: 
-      - echo "we are building the application" && ls -la
-      - cat .VERSION
-      - export $(cat .VERSION | xargs)
-      - echo $NEXT_VERSION
-      # - |
-      #    echo "variable values are"
-      #    CI_REGISTRY  ------ $CI_REGISTRY
-      #    CI_REGISTRY  ------ $$CI_REGISTRY
-      #    CI_PROJECT_NAME ------ $CI_PROJECT_NAME
-
-      - echo $CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME
-
-
-      - docker login $CI_REGISTRY -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD
-      - docker build -t $CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$NEXT_VERSION .
-      - docker push $CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$NEXT_VERSION
-      - echo "Finished building docker image"
-   only :
-       - main
-
+  stage: build
+  dependencies:
+    - get-new-version  # Ensure we get .VERSION file from the previous stage
+  script: 
+    - echo "We are building the application"
+    - ls -la
+    - cat .VERSION
+    - export $(cat .VERSION | xargs)  # Load the NEXT_VERSION from .VERSION
+    - echo "Building Docker image with version:$NEXT_VERSION"
+    - echo $CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME
+    - docker login $CI_REGISTRY -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD
+    - docker build -t $CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$NEXT_VERSION .
+    - docker push $CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$NEXT_VERSION
+    - echo "Finished building Docker image"
+  only:
+    - main
 
 release-application:
-   stage: release
-   image: node:20
-   variables:
-     GL_TOKEN: $GL_TOKEN
-   script: 
-      - yarn install
-      - npx semantic-release
-      - cat .VERSION
-   only :
-     - main
+  stage: release
+  image: node:20
+  variables:
+    GL_TOKEN: $GL_TOKEN
+  script: 
+    - yarn install
+    - npx semantic-release  # This should create the actual release
+    - cat .VERSION  # Output .VERSION for debugging
+  only:
+    - main
 
-
-
-# Deploy Stage
 deploy:
   stage: deploy
   dependencies:
