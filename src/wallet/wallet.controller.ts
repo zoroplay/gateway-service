@@ -132,6 +132,23 @@ export class WalletController {
       branchId: req.user.id,
     });
   }
+  @UseGuards(AuthGuard)
+  @Get('/cashbook/branch/monthly-report')
+  @ApiOperation({
+    summary: 'monthly report for branch',
+    description: 'This endpoint to fetch monthly reports',
+  })
+  @ApiQuery({ type: SwaggerFetchSalesReportRequest })
+  @ApiOkResponse({ type: SwaggerCashbookReponse })
+  CashbookFetchMonthlyShopReport(
+    @Query() body: FetchReportRequest,
+    @Req() req: IAuthorizedRequest,
+  ) {
+    return this.walletService.CashbookFetchMonthlyShopReport({
+      ...body,
+      userId: req.user.id,
+    });
+  }
 
   @UseGuards(AuthGuard)
   @Get('/cashbook/fetch-report')

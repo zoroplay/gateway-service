@@ -362,6 +362,11 @@ export class WalletService {
   ): Promise<SalesReportResponseArray> {
     return await firstValueFrom(this.svc.cashbookFetchSalesReport(data));
   }
+  async CashbookFetchMonthlyShopReport(
+    data: FetchReportRequest,
+  ): Promise<CommonResponseObj> {
+    return await firstValueFrom(this.svc.cashbookFetchMonthlyShopReport(data));
+  }
 
   async HandleCreatePawaPay(
     data: CreatePawapayRequest,

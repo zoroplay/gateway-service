@@ -1,10 +1,10 @@
 /* eslint-disable */
-import { GrpcMethod, GrpcStreamMethod } from '@nestjs/microservices';
-import { wrappers } from 'protobufjs';
-import { Observable } from 'rxjs';
-import { Struct } from './google/protobuf/struct.pb';
+import { GrpcMethod, GrpcStreamMethod } from "@nestjs/microservices";
+import { wrappers } from "protobufjs";
+import { Observable } from "rxjs";
+import { Struct } from "./google/protobuf/struct.pb";
 
-export const protobufPackage = 'wallet';
+export const protobufPackage = "wallet";
 
 export interface PawapayToolkitRequest {
   action: string;
@@ -186,7 +186,8 @@ export interface ValidateTransactionRequest {
   userRole?: string | undefined;
 }
 
-export interface EmptyRequest {}
+export interface EmptyRequest {
+}
 
 export interface BranchRequest {
   clientId: number;
@@ -817,205 +818,114 @@ export interface MetaData {
   prevPage: number;
 }
 
-export const WALLET_PACKAGE_NAME = 'wallet';
+export const WALLET_PACKAGE_NAME = "wallet";
 
-wrappers['.google.protobuf.Struct'] = {
-  fromObject: Struct.wrap,
-  toObject: Struct.unwrap,
-} as any;
+wrappers[".google.protobuf.Struct"] = { fromObject: Struct.wrap, toObject: Struct.unwrap } as any;
 
 export interface WalletServiceClient {
-  cashbookVerifyFinalTransaction(
-    request: FetchLastApprovedRequest,
-  ): Observable<CommonResponseObj>;
+  cashbookVerifyFinalTransaction(request: FetchLastApprovedRequest): Observable<CommonResponseObj>;
 
-  cashbookFetchLastApproved(
-    request: FetchLastApprovedRequest,
-  ): Observable<LastApprovedResponse>;
+  cashbookFetchLastApproved(request: FetchLastApprovedRequest): Observable<LastApprovedResponse>;
 
-  cashbookFetchSalesReport(
-    request: FetchSalesReportRequest,
-  ): Observable<SalesReportResponseArray>;
+  cashbookFetchSalesReport(request: FetchSalesReportRequest): Observable<SalesReportResponseArray>;
 
-  cashbookFetchReport(
-    request: FetchReportRequest,
-  ): Observable<FetchReportResponse>;
+  cashbookFetchReport(request: FetchReportRequest): Observable<FetchReportResponse>;
 
-  cashbookHandleReport(
-    request: HandleReportRequest,
-  ): Observable<LastApprovedResponseObj>;
+  cashbookHandleReport(request: HandleReportRequest): Observable<LastApprovedResponseObj>;
 
-  cashbookApproveExpense(
-    request: CashbookApproveExpenseRequest,
-  ): Observable<ExpenseSingleResponse>;
+  cashbookFetchMonthlyShopReport(request: FetchReportRequest): Observable<CommonResponseObj>;
 
-  cashbookCreateExpense(
-    request: CashbookCreateExpenseRequest,
-  ): Observable<ExpenseSingleResponse>;
+  cashbookApproveExpense(request: CashbookApproveExpenseRequest): Observable<ExpenseSingleResponse>;
 
-  cashbookFindAllExpense(
-    request: EmptyRequest,
-  ): Observable<ExpenseRepeatedResponse>;
+  cashbookCreateExpense(request: CashbookCreateExpenseRequest): Observable<ExpenseSingleResponse>;
 
-  cashbookFindOneExpense(
-    request: CashbookIdRequest,
-  ): Observable<ExpenseSingleResponse>;
+  cashbookFindAllExpense(request: EmptyRequest): Observable<ExpenseRepeatedResponse>;
 
-  cashbookDeleteOneExpense(
-    request: CashbookIdRequest,
-  ): Observable<ExpenseSingleResponse>;
+  cashbookFindOneExpense(request: CashbookIdRequest): Observable<ExpenseSingleResponse>;
 
-  cashbookUpdateOneExpense(
-    request: CashbookCreateExpenseRequest,
-  ): Observable<ExpenseSingleResponse>;
+  cashbookDeleteOneExpense(request: CashbookIdRequest): Observable<ExpenseSingleResponse>;
 
-  cashbookFindAllBranchExpense(
-    request: BranchRequest,
-  ): Observable<ExpenseRepeatedResponse>;
+  cashbookUpdateOneExpense(request: CashbookCreateExpenseRequest): Observable<ExpenseSingleResponse>;
 
-  cashbookCreateExpenseType(
-    request: CashbookCreateExpenseTypeRequest,
-  ): Observable<ExpenseTypeSingleResponse>;
+  cashbookFindAllBranchExpense(request: BranchRequest): Observable<ExpenseRepeatedResponse>;
 
-  cashbookFindAllExpenseType(
-    request: EmptyRequest,
-  ): Observable<ExpenseTypeRepeatedResponse>;
+  cashbookCreateExpenseType(request: CashbookCreateExpenseTypeRequest): Observable<ExpenseTypeSingleResponse>;
 
-  cashbookApproveCashIn(
-    request: CashbookApproveCashInOutRequest,
-  ): Observable<CashInOutSingleResponse>;
+  cashbookFindAllExpenseType(request: EmptyRequest): Observable<ExpenseTypeRepeatedResponse>;
 
-  cashbookCreateCashIn(
-    request: CashbookCreateCashInOutRequest,
-  ): Observable<CashInOutSingleResponse>;
+  cashbookApproveCashIn(request: CashbookApproveCashInOutRequest): Observable<CashInOutSingleResponse>;
 
-  cashbookUpdateCashIn(
-    request: CashbookCreateCashInOutRequest,
-  ): Observable<CashInOutSingleResponse>;
+  cashbookCreateCashIn(request: CashbookCreateCashInOutRequest): Observable<CashInOutSingleResponse>;
 
-  cashbookDeleteOneCashIn(
-    request: CashbookIdRequest,
-  ): Observable<CashInOutSingleResponse>;
+  cashbookUpdateCashIn(request: CashbookCreateCashInOutRequest): Observable<CashInOutSingleResponse>;
 
-  cashbookFindOneCashIn(
-    request: CashbookIdRequest,
-  ): Observable<CashInOutSingleResponse>;
+  cashbookDeleteOneCashIn(request: CashbookIdRequest): Observable<CashInOutSingleResponse>;
 
-  cashbookFindAllCashIn(
-    request: EmptyRequest,
-  ): Observable<CashInOutRepeatedResponse>;
+  cashbookFindOneCashIn(request: CashbookIdRequest): Observable<CashInOutSingleResponse>;
 
-  cashbookFindAllBranchCashIn(
-    request: BranchRequest,
-  ): Observable<CashInOutRepeatedResponse>;
+  cashbookFindAllCashIn(request: EmptyRequest): Observable<CashInOutRepeatedResponse>;
 
-  findAllBranchApprovedCashinWDate(
-    request: BranchRequest,
-  ): Observable<CashInOutRepeatedResponse>;
+  cashbookFindAllBranchCashIn(request: BranchRequest): Observable<CashInOutRepeatedResponse>;
 
-  findAllBranchPendingCashinWDate(
-    request: BranchRequest,
-  ): Observable<CashInOutRepeatedResponse>;
+  findAllBranchApprovedCashinWDate(request: BranchRequest): Observable<CashInOutRepeatedResponse>;
 
-  cashbookApproveCashOut(
-    request: CashbookApproveCashInOutRequest,
-  ): Observable<CashInOutSingleResponse>;
+  findAllBranchPendingCashinWDate(request: BranchRequest): Observable<CashInOutRepeatedResponse>;
 
-  cashbookCreateCashOut(
-    request: CashbookCreateCashInOutRequest,
-  ): Observable<CashInOutSingleResponse>;
+  cashbookApproveCashOut(request: CashbookApproveCashInOutRequest): Observable<CashInOutSingleResponse>;
 
-  cashbookUpdateCashOut(
-    request: CashbookCreateCashInOutRequest,
-  ): Observable<CashInOutSingleResponse>;
+  cashbookCreateCashOut(request: CashbookCreateCashInOutRequest): Observable<CashInOutSingleResponse>;
 
-  cashbookDeleteOneCashOut(
-    request: CashbookIdRequest,
-  ): Observable<CashInOutSingleResponse>;
+  cashbookUpdateCashOut(request: CashbookCreateCashInOutRequest): Observable<CashInOutSingleResponse>;
 
-  cashbookFindOneCashOut(
-    request: CashbookIdRequest,
-  ): Observable<CashInOutSingleResponse>;
+  cashbookDeleteOneCashOut(request: CashbookIdRequest): Observable<CashInOutSingleResponse>;
 
-  cashbookFindAllCashOut(
-    request: EmptyRequest,
-  ): Observable<CashInOutRepeatedResponse>;
+  cashbookFindOneCashOut(request: CashbookIdRequest): Observable<CashInOutSingleResponse>;
 
-  cashbookFindAllBranchCashOut(
-    request: BranchRequest,
-  ): Observable<CashInOutRepeatedResponse>;
+  cashbookFindAllCashOut(request: EmptyRequest): Observable<CashInOutRepeatedResponse>;
 
-  handleCreatePawaPay(
-    request: CreatePawapayRequest,
-  ): Observable<CommonResponseObj>;
+  cashbookFindAllBranchCashOut(request: BranchRequest): Observable<CashInOutRepeatedResponse>;
 
-  handleCreateBulkPawaPay(
-    request: CreateBulkPawapayRequest,
-  ): Observable<CommonResponseArray>;
+  handleCreatePawaPay(request: CreatePawapayRequest): Observable<CommonResponseObj>;
 
-  handleFetchPawaPay(
-    request: FetchPawapayRequest,
-  ): Observable<CommonResponseArray>;
+  handleCreateBulkPawaPay(request: CreateBulkPawapayRequest): Observable<CommonResponseArray>;
 
-  handlePawaPayResendCallback(
-    request: FetchPawapayRequest,
-  ): Observable<CommonResponseObj>;
+  handleFetchPawaPay(request: FetchPawapayRequest): Observable<CommonResponseArray>;
+
+  handlePawaPayResendCallback(request: FetchPawapayRequest): Observable<CommonResponseObj>;
 
   handlePawaPayBalances(request: EmptyRequest): Observable<CommonResponseArray>;
 
-  handlePawaPayCountryBalances(
-    request: PawapayCountryRequest,
-  ): Observable<CommonResponseArray>;
+  handlePawaPayCountryBalances(request: PawapayCountryRequest): Observable<CommonResponseArray>;
 
-  handlePawaPayPredCorr(
-    request: PawapayPredCorrRequest,
-  ): Observable<CommonResponseObj>;
+  handlePawaPayPredCorr(request: PawapayPredCorrRequest): Observable<CommonResponseObj>;
 
-  handlePawaPayToolkit(
-    request: PawapayToolkitRequest,
-  ): Observable<CommonResponseArray>;
+  handlePawaPayToolkit(request: PawapayToolkitRequest): Observable<CommonResponseArray>;
 
   handlePawaPayActiveConf(request: EmptyRequest): Observable<CommonResponseObj>;
 
   createVirtualAccount(request: WayaBankRequest): Observable<CommonResponseObj>;
 
-  wayabankAccountEnquiry(
-    request: WayaBankRequest,
-  ): Observable<CommonResponseObj>;
+  wayabankAccountEnquiry(request: WayaBankRequest): Observable<CommonResponseObj>;
 
-  pitch90Transaction(
-    request: Pitch90TransactionRequest,
-  ): Observable<CommonResponseObj>;
+  pitch90Transaction(request: Pitch90TransactionRequest): Observable<CommonResponseObj>;
 
-  pitch90RegisterUrl(
-    request: Pitch90RegisterUrlRequest,
-  ): Observable<CommonResponseObj>;
+  pitch90RegisterUrl(request: Pitch90RegisterUrlRequest): Observable<CommonResponseObj>;
 
   handleWayaQuickInit(request: WayaQuickRequest): Observable<CommonResponseObj>;
 
-  handleWayaQuickVerify(
-    request: WayaQuickRequest,
-  ): Observable<CommonResponseObj>;
+  handleWayaQuickVerify(request: WayaQuickRequest): Observable<CommonResponseObj>;
 
   getBalance(request: GetBalanceRequest): Observable<WalletResponse>;
 
   createWallet(request: CreateWalletRequest): Observable<WalletResponse>;
 
-  fetchBetRange(
-    request: FetchBetRangeRequest,
-  ): Observable<FetchBetRangeResponse>;
+  fetchBetRange(request: FetchBetRangeRequest): Observable<FetchBetRangeResponse>;
 
-  fetchPlayerDeposit(
-    request: FetchPlayerDepositRequest,
-  ): Observable<WalletResponse>;
+  fetchPlayerDeposit(request: FetchPlayerDepositRequest): Observable<WalletResponse>;
 
-  fetchDepositRange(
-    request: FetchDepositRangeRequest,
-  ): Observable<FetchDepositRangeResponse>;
+  fetchDepositRange(request: FetchDepositRangeRequest): Observable<FetchDepositRangeResponse>;
 
-  fetchDepositCount(
-    request: FetchDepositCountRequest,
-  ): Observable<FetchDepositCountResponse>;
+  fetchDepositCount(request: FetchDepositCountRequest): Observable<FetchDepositCountResponse>;
 
   creditUser(request: CreditUserRequest): Observable<WalletResponse>;
 
@@ -1023,99 +933,61 @@ export interface WalletServiceClient {
 
   debitUser(request: DebitUserRequest): Observable<WalletResponse>;
 
-  inititateDeposit(
-    request: InitiateDepositRequest,
-  ): Observable<InitiateDepositResponse>;
+  inititateDeposit(request: InitiateDepositRequest): Observable<InitiateDepositResponse>;
 
-  verifyDeposit(
-    request: VerifyDepositRequest,
-  ): Observable<VerifyDepositResponse>;
+  verifyDeposit(request: VerifyDepositRequest): Observable<VerifyDepositResponse>;
 
   requestWithdrawal(request: WithdrawRequest): Observable<WithdrawResponse>;
 
-  verifyBankAccount(
-    request: VerifyBankAccountRequest,
-  ): Observable<VerifyBankAccountResponse>;
+  verifyBankAccount(request: VerifyBankAccountRequest): Observable<VerifyBankAccountResponse>;
 
   listBanks(request: EmptyRequest): Observable<CommonResponseArray>;
 
-  getTransactions(
-    request: GetTransactionRequest,
-  ): Observable<GetTransactionResponse>;
+  getTransactions(request: GetTransactionRequest): Observable<GetTransactionResponse>;
 
-  getPaymentMethods(
-    request: GetPaymentMethodRequest,
-  ): Observable<GetPaymentMethodResponse>;
+  getPaymentMethods(request: GetPaymentMethodRequest): Observable<GetPaymentMethodResponse>;
 
-  savePaymentMethod(
-    request: PaymentMethodRequest,
-  ): Observable<PaymentMethodResponse>;
+  savePaymentMethod(request: PaymentMethodRequest): Observable<PaymentMethodResponse>;
 
   paystackWebhook(request: PaystackWebhookRequest): Observable<WebhookResponse>;
 
   monnifyWebhook(request: MonnifyWebhookRequest): Observable<WebhookResponse>;
 
-  opayDepositWebhook(
-    request: OpayWebhookRequest,
-  ): Observable<OpayWebhookResponse>;
+  opayDepositWebhook(request: OpayWebhookRequest): Observable<OpayWebhookResponse>;
 
-  opayLookUpWebhook(
-    request: OpayWebhookRequest,
-  ): Observable<OpayWebhookResponse>;
+  opayLookUpWebhook(request: OpayWebhookRequest): Observable<OpayWebhookResponse>;
 
-  listWithdrawals(
-    request: ListWithdrawalRequests,
-  ): Observable<ListWithdrawalRequestResponse>;
+  listWithdrawals(request: ListWithdrawalRequests): Observable<ListWithdrawalRequestResponse>;
 
   listDeposits(request: ListDepositRequests): Observable<PaginationResponse>;
 
-  userTransactions(
-    request: UserTransactionRequest,
-  ): Observable<UserTransactionResponse>;
+  userTransactions(request: UserTransactionRequest): Observable<UserTransactionResponse>;
 
-  updateWithdrawal(
-    request: UpdateWithdrawalRequest,
-  ): Observable<CommonResponseObj>;
+  updateWithdrawal(request: UpdateWithdrawalRequest): Observable<CommonResponseObj>;
 
   getPlayerWalletData(request: GetBalanceRequest): Observable<PlayerWalletData>;
 
   deletePlayerData(request: IdRequest): Observable<CommonResponseObj>;
 
-  getUserAccounts(
-    request: GetBalanceRequest,
-  ): Observable<GetUserAccountsResponse>;
+  getUserAccounts(request: GetBalanceRequest): Observable<GetUserAccountsResponse>;
 
-  getNetworkBalance(
-    request: GetNetworkBalanceRequest,
-  ): Observable<GetNetworkBalanceResponse>;
+  getNetworkBalance(request: GetNetworkBalanceRequest): Observable<GetNetworkBalanceResponse>;
 
-  getMoneyTransaction(
-    request: GetTransactionsRequest,
-  ): Observable<CommonResponseObj>;
+  getMoneyTransaction(request: GetTransactionsRequest): Observable<CommonResponseObj>;
 
-  getSystemTransaction(
-    request: GetTransactionsRequest,
-  ): Observable<CommonResponseObj>;
+  getSystemTransaction(request: GetTransactionsRequest): Observable<CommonResponseObj>;
 
   /** RETAIL SERVICES */
 
   walletTransfer(request: WalletTransferRequest): Observable<CommonResponseObj>;
 
-  validateDepositCode(
-    request: ValidateTransactionRequest,
-  ): Observable<CommonResponseObj>;
+  validateDepositCode(request: ValidateTransactionRequest): Observable<CommonResponseObj>;
 
-  processShopDeposit(
-    request: ProcessRetailTransaction,
-  ): Observable<CommonResponseObj>;
+  processShopDeposit(request: ProcessRetailTransaction): Observable<CommonResponseObj>;
 
-  validateWithdrawalCode(
-    request: ValidateTransactionRequest,
-  ): Observable<CommonResponseObj>;
+  validateWithdrawalCode(request: ValidateTransactionRequest): Observable<CommonResponseObj>;
 
-  processShopWithdrawal(
-    request: ProcessRetailTransaction,
-  ): Observable<CommonResponseObj>;
+  processShopWithdrawal(request: ProcessRetailTransaction): Observable<CommonResponseObj>;
 
   debitAgentBalance(request: DebitUserRequest): Observable<CommonResponseObj>;
 }
@@ -1123,333 +995,195 @@ export interface WalletServiceClient {
 export interface WalletServiceController {
   cashbookVerifyFinalTransaction(
     request: FetchLastApprovedRequest,
-  ):
-    | Promise<CommonResponseObj>
-    | Observable<CommonResponseObj>
-    | CommonResponseObj;
+  ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
 
   cashbookFetchLastApproved(
     request: FetchLastApprovedRequest,
-  ):
-    | Promise<LastApprovedResponse>
-    | Observable<LastApprovedResponse>
-    | LastApprovedResponse;
+  ): Promise<LastApprovedResponse> | Observable<LastApprovedResponse> | LastApprovedResponse;
 
   cashbookFetchSalesReport(
     request: FetchSalesReportRequest,
-  ):
-    | Promise<SalesReportResponseArray>
-    | Observable<SalesReportResponseArray>
-    | SalesReportResponseArray;
+  ): Promise<SalesReportResponseArray> | Observable<SalesReportResponseArray> | SalesReportResponseArray;
 
   cashbookFetchReport(
     request: FetchReportRequest,
-  ):
-    | Promise<FetchReportResponse>
-    | Observable<FetchReportResponse>
-    | FetchReportResponse;
+  ): Promise<FetchReportResponse> | Observable<FetchReportResponse> | FetchReportResponse;
 
   cashbookHandleReport(
     request: HandleReportRequest,
-  ):
-    | Promise<LastApprovedResponseObj>
-    | Observable<LastApprovedResponseObj>
-    | LastApprovedResponseObj;
+  ): Promise<LastApprovedResponseObj> | Observable<LastApprovedResponseObj> | LastApprovedResponseObj;
+
+  cashbookFetchMonthlyShopReport(
+    request: FetchReportRequest,
+  ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
 
   cashbookApproveExpense(
     request: CashbookApproveExpenseRequest,
-  ):
-    | Promise<ExpenseSingleResponse>
-    | Observable<ExpenseSingleResponse>
-    | ExpenseSingleResponse;
+  ): Promise<ExpenseSingleResponse> | Observable<ExpenseSingleResponse> | ExpenseSingleResponse;
 
   cashbookCreateExpense(
     request: CashbookCreateExpenseRequest,
-  ):
-    | Promise<ExpenseSingleResponse>
-    | Observable<ExpenseSingleResponse>
-    | ExpenseSingleResponse;
+  ): Promise<ExpenseSingleResponse> | Observable<ExpenseSingleResponse> | ExpenseSingleResponse;
 
   cashbookFindAllExpense(
     request: EmptyRequest,
-  ):
-    | Promise<ExpenseRepeatedResponse>
-    | Observable<ExpenseRepeatedResponse>
-    | ExpenseRepeatedResponse;
+  ): Promise<ExpenseRepeatedResponse> | Observable<ExpenseRepeatedResponse> | ExpenseRepeatedResponse;
 
   cashbookFindOneExpense(
     request: CashbookIdRequest,
-  ):
-    | Promise<ExpenseSingleResponse>
-    | Observable<ExpenseSingleResponse>
-    | ExpenseSingleResponse;
+  ): Promise<ExpenseSingleResponse> | Observable<ExpenseSingleResponse> | ExpenseSingleResponse;
 
   cashbookDeleteOneExpense(
     request: CashbookIdRequest,
-  ):
-    | Promise<ExpenseSingleResponse>
-    | Observable<ExpenseSingleResponse>
-    | ExpenseSingleResponse;
+  ): Promise<ExpenseSingleResponse> | Observable<ExpenseSingleResponse> | ExpenseSingleResponse;
 
   cashbookUpdateOneExpense(
     request: CashbookCreateExpenseRequest,
-  ):
-    | Promise<ExpenseSingleResponse>
-    | Observable<ExpenseSingleResponse>
-    | ExpenseSingleResponse;
+  ): Promise<ExpenseSingleResponse> | Observable<ExpenseSingleResponse> | ExpenseSingleResponse;
 
   cashbookFindAllBranchExpense(
     request: BranchRequest,
-  ):
-    | Promise<ExpenseRepeatedResponse>
-    | Observable<ExpenseRepeatedResponse>
-    | ExpenseRepeatedResponse;
+  ): Promise<ExpenseRepeatedResponse> | Observable<ExpenseRepeatedResponse> | ExpenseRepeatedResponse;
 
   cashbookCreateExpenseType(
     request: CashbookCreateExpenseTypeRequest,
-  ):
-    | Promise<ExpenseTypeSingleResponse>
-    | Observable<ExpenseTypeSingleResponse>
-    | ExpenseTypeSingleResponse;
+  ): Promise<ExpenseTypeSingleResponse> | Observable<ExpenseTypeSingleResponse> | ExpenseTypeSingleResponse;
 
   cashbookFindAllExpenseType(
     request: EmptyRequest,
-  ):
-    | Promise<ExpenseTypeRepeatedResponse>
-    | Observable<ExpenseTypeRepeatedResponse>
-    | ExpenseTypeRepeatedResponse;
+  ): Promise<ExpenseTypeRepeatedResponse> | Observable<ExpenseTypeRepeatedResponse> | ExpenseTypeRepeatedResponse;
 
   cashbookApproveCashIn(
     request: CashbookApproveCashInOutRequest,
-  ):
-    | Promise<CashInOutSingleResponse>
-    | Observable<CashInOutSingleResponse>
-    | CashInOutSingleResponse;
+  ): Promise<CashInOutSingleResponse> | Observable<CashInOutSingleResponse> | CashInOutSingleResponse;
 
   cashbookCreateCashIn(
     request: CashbookCreateCashInOutRequest,
-  ):
-    | Promise<CashInOutSingleResponse>
-    | Observable<CashInOutSingleResponse>
-    | CashInOutSingleResponse;
+  ): Promise<CashInOutSingleResponse> | Observable<CashInOutSingleResponse> | CashInOutSingleResponse;
 
   cashbookUpdateCashIn(
     request: CashbookCreateCashInOutRequest,
-  ):
-    | Promise<CashInOutSingleResponse>
-    | Observable<CashInOutSingleResponse>
-    | CashInOutSingleResponse;
+  ): Promise<CashInOutSingleResponse> | Observable<CashInOutSingleResponse> | CashInOutSingleResponse;
 
   cashbookDeleteOneCashIn(
     request: CashbookIdRequest,
-  ):
-    | Promise<CashInOutSingleResponse>
-    | Observable<CashInOutSingleResponse>
-    | CashInOutSingleResponse;
+  ): Promise<CashInOutSingleResponse> | Observable<CashInOutSingleResponse> | CashInOutSingleResponse;
 
   cashbookFindOneCashIn(
     request: CashbookIdRequest,
-  ):
-    | Promise<CashInOutSingleResponse>
-    | Observable<CashInOutSingleResponse>
-    | CashInOutSingleResponse;
+  ): Promise<CashInOutSingleResponse> | Observable<CashInOutSingleResponse> | CashInOutSingleResponse;
 
   cashbookFindAllCashIn(
     request: EmptyRequest,
-  ):
-    | Promise<CashInOutRepeatedResponse>
-    | Observable<CashInOutRepeatedResponse>
-    | CashInOutRepeatedResponse;
+  ): Promise<CashInOutRepeatedResponse> | Observable<CashInOutRepeatedResponse> | CashInOutRepeatedResponse;
 
   cashbookFindAllBranchCashIn(
     request: BranchRequest,
-  ):
-    | Promise<CashInOutRepeatedResponse>
-    | Observable<CashInOutRepeatedResponse>
-    | CashInOutRepeatedResponse;
+  ): Promise<CashInOutRepeatedResponse> | Observable<CashInOutRepeatedResponse> | CashInOutRepeatedResponse;
 
   findAllBranchApprovedCashinWDate(
     request: BranchRequest,
-  ):
-    | Promise<CashInOutRepeatedResponse>
-    | Observable<CashInOutRepeatedResponse>
-    | CashInOutRepeatedResponse;
+  ): Promise<CashInOutRepeatedResponse> | Observable<CashInOutRepeatedResponse> | CashInOutRepeatedResponse;
 
   findAllBranchPendingCashinWDate(
     request: BranchRequest,
-  ):
-    | Promise<CashInOutRepeatedResponse>
-    | Observable<CashInOutRepeatedResponse>
-    | CashInOutRepeatedResponse;
+  ): Promise<CashInOutRepeatedResponse> | Observable<CashInOutRepeatedResponse> | CashInOutRepeatedResponse;
 
   cashbookApproveCashOut(
     request: CashbookApproveCashInOutRequest,
-  ):
-    | Promise<CashInOutSingleResponse>
-    | Observable<CashInOutSingleResponse>
-    | CashInOutSingleResponse;
+  ): Promise<CashInOutSingleResponse> | Observable<CashInOutSingleResponse> | CashInOutSingleResponse;
 
   cashbookCreateCashOut(
     request: CashbookCreateCashInOutRequest,
-  ):
-    | Promise<CashInOutSingleResponse>
-    | Observable<CashInOutSingleResponse>
-    | CashInOutSingleResponse;
+  ): Promise<CashInOutSingleResponse> | Observable<CashInOutSingleResponse> | CashInOutSingleResponse;
 
   cashbookUpdateCashOut(
     request: CashbookCreateCashInOutRequest,
-  ):
-    | Promise<CashInOutSingleResponse>
-    | Observable<CashInOutSingleResponse>
-    | CashInOutSingleResponse;
+  ): Promise<CashInOutSingleResponse> | Observable<CashInOutSingleResponse> | CashInOutSingleResponse;
 
   cashbookDeleteOneCashOut(
     request: CashbookIdRequest,
-  ):
-    | Promise<CashInOutSingleResponse>
-    | Observable<CashInOutSingleResponse>
-    | CashInOutSingleResponse;
+  ): Promise<CashInOutSingleResponse> | Observable<CashInOutSingleResponse> | CashInOutSingleResponse;
 
   cashbookFindOneCashOut(
     request: CashbookIdRequest,
-  ):
-    | Promise<CashInOutSingleResponse>
-    | Observable<CashInOutSingleResponse>
-    | CashInOutSingleResponse;
+  ): Promise<CashInOutSingleResponse> | Observable<CashInOutSingleResponse> | CashInOutSingleResponse;
 
   cashbookFindAllCashOut(
     request: EmptyRequest,
-  ):
-    | Promise<CashInOutRepeatedResponse>
-    | Observable<CashInOutRepeatedResponse>
-    | CashInOutRepeatedResponse;
+  ): Promise<CashInOutRepeatedResponse> | Observable<CashInOutRepeatedResponse> | CashInOutRepeatedResponse;
 
   cashbookFindAllBranchCashOut(
     request: BranchRequest,
-  ):
-    | Promise<CashInOutRepeatedResponse>
-    | Observable<CashInOutRepeatedResponse>
-    | CashInOutRepeatedResponse;
+  ): Promise<CashInOutRepeatedResponse> | Observable<CashInOutRepeatedResponse> | CashInOutRepeatedResponse;
 
   handleCreatePawaPay(
     request: CreatePawapayRequest,
-  ):
-    | Promise<CommonResponseObj>
-    | Observable<CommonResponseObj>
-    | CommonResponseObj;
+  ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
 
   handleCreateBulkPawaPay(
     request: CreateBulkPawapayRequest,
-  ):
-    | Promise<CommonResponseArray>
-    | Observable<CommonResponseArray>
-    | CommonResponseArray;
+  ): Promise<CommonResponseArray> | Observable<CommonResponseArray> | CommonResponseArray;
 
   handleFetchPawaPay(
     request: FetchPawapayRequest,
-  ):
-    | Promise<CommonResponseArray>
-    | Observable<CommonResponseArray>
-    | CommonResponseArray;
+  ): Promise<CommonResponseArray> | Observable<CommonResponseArray> | CommonResponseArray;
 
   handlePawaPayResendCallback(
     request: FetchPawapayRequest,
-  ):
-    | Promise<CommonResponseObj>
-    | Observable<CommonResponseObj>
-    | CommonResponseObj;
+  ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
 
   handlePawaPayBalances(
     request: EmptyRequest,
-  ):
-    | Promise<CommonResponseArray>
-    | Observable<CommonResponseArray>
-    | CommonResponseArray;
+  ): Promise<CommonResponseArray> | Observable<CommonResponseArray> | CommonResponseArray;
 
   handlePawaPayCountryBalances(
     request: PawapayCountryRequest,
-  ):
-    | Promise<CommonResponseArray>
-    | Observable<CommonResponseArray>
-    | CommonResponseArray;
+  ): Promise<CommonResponseArray> | Observable<CommonResponseArray> | CommonResponseArray;
 
   handlePawaPayPredCorr(
     request: PawapayPredCorrRequest,
-  ):
-    | Promise<CommonResponseObj>
-    | Observable<CommonResponseObj>
-    | CommonResponseObj;
+  ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
 
   handlePawaPayToolkit(
     request: PawapayToolkitRequest,
-  ):
-    | Promise<CommonResponseArray>
-    | Observable<CommonResponseArray>
-    | CommonResponseArray;
+  ): Promise<CommonResponseArray> | Observable<CommonResponseArray> | CommonResponseArray;
 
   handlePawaPayActiveConf(
     request: EmptyRequest,
-  ):
-    | Promise<CommonResponseObj>
-    | Observable<CommonResponseObj>
-    | CommonResponseObj;
+  ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
 
   createVirtualAccount(
     request: WayaBankRequest,
-  ):
-    | Promise<CommonResponseObj>
-    | Observable<CommonResponseObj>
-    | CommonResponseObj;
+  ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
 
   wayabankAccountEnquiry(
     request: WayaBankRequest,
-  ):
-    | Promise<CommonResponseObj>
-    | Observable<CommonResponseObj>
-    | CommonResponseObj;
+  ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
 
   pitch90Transaction(
     request: Pitch90TransactionRequest,
-  ):
-    | Promise<CommonResponseObj>
-    | Observable<CommonResponseObj>
-    | CommonResponseObj;
+  ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
 
   pitch90RegisterUrl(
     request: Pitch90RegisterUrlRequest,
-  ):
-    | Promise<CommonResponseObj>
-    | Observable<CommonResponseObj>
-    | CommonResponseObj;
+  ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
 
   handleWayaQuickInit(
     request: WayaQuickRequest,
-  ):
-    | Promise<CommonResponseObj>
-    | Observable<CommonResponseObj>
-    | CommonResponseObj;
+  ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
 
   handleWayaQuickVerify(
     request: WayaQuickRequest,
-  ):
-    | Promise<CommonResponseObj>
-    | Observable<CommonResponseObj>
-    | CommonResponseObj;
+  ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
 
-  getBalance(
-    request: GetBalanceRequest,
-  ): Promise<WalletResponse> | Observable<WalletResponse> | WalletResponse;
+  getBalance(request: GetBalanceRequest): Promise<WalletResponse> | Observable<WalletResponse> | WalletResponse;
 
-  createWallet(
-    request: CreateWalletRequest,
-  ): Promise<WalletResponse> | Observable<WalletResponse> | WalletResponse;
+  createWallet(request: CreateWalletRequest): Promise<WalletResponse> | Observable<WalletResponse> | WalletResponse;
 
   fetchBetRange(
     request: FetchBetRangeRequest,
-  ):
-    | Promise<FetchBetRangeResponse>
-    | Observable<FetchBetRangeResponse>
-    | FetchBetRangeResponse;
+  ): Promise<FetchBetRangeResponse> | Observable<FetchBetRangeResponse> | FetchBetRangeResponse;
 
   fetchPlayerDeposit(
     request: FetchPlayerDepositRequest,
@@ -1457,85 +1191,49 @@ export interface WalletServiceController {
 
   fetchDepositRange(
     request: FetchDepositRangeRequest,
-  ):
-    | Promise<FetchDepositRangeResponse>
-    | Observable<FetchDepositRangeResponse>
-    | FetchDepositRangeResponse;
+  ): Promise<FetchDepositRangeResponse> | Observable<FetchDepositRangeResponse> | FetchDepositRangeResponse;
 
   fetchDepositCount(
     request: FetchDepositCountRequest,
-  ):
-    | Promise<FetchDepositCountResponse>
-    | Observable<FetchDepositCountResponse>
-    | FetchDepositCountResponse;
+  ): Promise<FetchDepositCountResponse> | Observable<FetchDepositCountResponse> | FetchDepositCountResponse;
 
-  creditUser(
-    request: CreditUserRequest,
-  ): Promise<WalletResponse> | Observable<WalletResponse> | WalletResponse;
+  creditUser(request: CreditUserRequest): Promise<WalletResponse> | Observable<WalletResponse> | WalletResponse;
 
-  awardBonusWinning(
-    request: CreditUserRequest,
-  ): Promise<WalletResponse> | Observable<WalletResponse> | WalletResponse;
+  awardBonusWinning(request: CreditUserRequest): Promise<WalletResponse> | Observable<WalletResponse> | WalletResponse;
 
-  debitUser(
-    request: DebitUserRequest,
-  ): Promise<WalletResponse> | Observable<WalletResponse> | WalletResponse;
+  debitUser(request: DebitUserRequest): Promise<WalletResponse> | Observable<WalletResponse> | WalletResponse;
 
   inititateDeposit(
     request: InitiateDepositRequest,
-  ):
-    | Promise<InitiateDepositResponse>
-    | Observable<InitiateDepositResponse>
-    | InitiateDepositResponse;
+  ): Promise<InitiateDepositResponse> | Observable<InitiateDepositResponse> | InitiateDepositResponse;
 
   verifyDeposit(
     request: VerifyDepositRequest,
-  ):
-    | Promise<VerifyDepositResponse>
-    | Observable<VerifyDepositResponse>
-    | VerifyDepositResponse;
+  ): Promise<VerifyDepositResponse> | Observable<VerifyDepositResponse> | VerifyDepositResponse;
 
   requestWithdrawal(
     request: WithdrawRequest,
-  ):
-    | Promise<WithdrawResponse>
-    | Observable<WithdrawResponse>
-    | WithdrawResponse;
+  ): Promise<WithdrawResponse> | Observable<WithdrawResponse> | WithdrawResponse;
 
   verifyBankAccount(
     request: VerifyBankAccountRequest,
-  ):
-    | Promise<VerifyBankAccountResponse>
-    | Observable<VerifyBankAccountResponse>
-    | VerifyBankAccountResponse;
+  ): Promise<VerifyBankAccountResponse> | Observable<VerifyBankAccountResponse> | VerifyBankAccountResponse;
 
   listBanks(
     request: EmptyRequest,
-  ):
-    | Promise<CommonResponseArray>
-    | Observable<CommonResponseArray>
-    | CommonResponseArray;
+  ): Promise<CommonResponseArray> | Observable<CommonResponseArray> | CommonResponseArray;
 
   getTransactions(
     request: GetTransactionRequest,
-  ):
-    | Promise<GetTransactionResponse>
-    | Observable<GetTransactionResponse>
-    | GetTransactionResponse;
+  ): Promise<GetTransactionResponse> | Observable<GetTransactionResponse> | GetTransactionResponse;
 
   getPaymentMethods(
     request: GetPaymentMethodRequest,
-  ):
-    | Promise<GetPaymentMethodResponse>
-    | Observable<GetPaymentMethodResponse>
-    | GetPaymentMethodResponse;
+  ): Promise<GetPaymentMethodResponse> | Observable<GetPaymentMethodResponse> | GetPaymentMethodResponse;
 
   savePaymentMethod(
     request: PaymentMethodRequest,
-  ):
-    | Promise<PaymentMethodResponse>
-    | Observable<PaymentMethodResponse>
-    | PaymentMethodResponse;
+  ): Promise<PaymentMethodResponse> | Observable<PaymentMethodResponse> | PaymentMethodResponse;
 
   paystackWebhook(
     request: PaystackWebhookRequest,
@@ -1547,244 +1245,174 @@ export interface WalletServiceController {
 
   opayDepositWebhook(
     request: OpayWebhookRequest,
-  ):
-    | Promise<OpayWebhookResponse>
-    | Observable<OpayWebhookResponse>
-    | OpayWebhookResponse;
+  ): Promise<OpayWebhookResponse> | Observable<OpayWebhookResponse> | OpayWebhookResponse;
 
   opayLookUpWebhook(
     request: OpayWebhookRequest,
-  ):
-    | Promise<OpayWebhookResponse>
-    | Observable<OpayWebhookResponse>
-    | OpayWebhookResponse;
+  ): Promise<OpayWebhookResponse> | Observable<OpayWebhookResponse> | OpayWebhookResponse;
 
   listWithdrawals(
     request: ListWithdrawalRequests,
-  ):
-    | Promise<ListWithdrawalRequestResponse>
-    | Observable<ListWithdrawalRequestResponse>
-    | ListWithdrawalRequestResponse;
+  ): Promise<ListWithdrawalRequestResponse> | Observable<ListWithdrawalRequestResponse> | ListWithdrawalRequestResponse;
 
   listDeposits(
     request: ListDepositRequests,
-  ):
-    | Promise<PaginationResponse>
-    | Observable<PaginationResponse>
-    | PaginationResponse;
+  ): Promise<PaginationResponse> | Observable<PaginationResponse> | PaginationResponse;
 
   userTransactions(
     request: UserTransactionRequest,
-  ):
-    | Promise<UserTransactionResponse>
-    | Observable<UserTransactionResponse>
-    | UserTransactionResponse;
+  ): Promise<UserTransactionResponse> | Observable<UserTransactionResponse> | UserTransactionResponse;
 
   updateWithdrawal(
     request: UpdateWithdrawalRequest,
-  ):
-    | Promise<CommonResponseObj>
-    | Observable<CommonResponseObj>
-    | CommonResponseObj;
+  ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
 
   getPlayerWalletData(
     request: GetBalanceRequest,
-  ):
-    | Promise<PlayerWalletData>
-    | Observable<PlayerWalletData>
-    | PlayerWalletData;
+  ): Promise<PlayerWalletData> | Observable<PlayerWalletData> | PlayerWalletData;
 
-  deletePlayerData(
-    request: IdRequest,
-  ):
-    | Promise<CommonResponseObj>
-    | Observable<CommonResponseObj>
-    | CommonResponseObj;
+  deletePlayerData(request: IdRequest): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
 
   getUserAccounts(
     request: GetBalanceRequest,
-  ):
-    | Promise<GetUserAccountsResponse>
-    | Observable<GetUserAccountsResponse>
-    | GetUserAccountsResponse;
+  ): Promise<GetUserAccountsResponse> | Observable<GetUserAccountsResponse> | GetUserAccountsResponse;
 
   getNetworkBalance(
     request: GetNetworkBalanceRequest,
-  ):
-    | Promise<GetNetworkBalanceResponse>
-    | Observable<GetNetworkBalanceResponse>
-    | GetNetworkBalanceResponse;
+  ): Promise<GetNetworkBalanceResponse> | Observable<GetNetworkBalanceResponse> | GetNetworkBalanceResponse;
 
   getMoneyTransaction(
     request: GetTransactionsRequest,
-  ):
-    | Promise<CommonResponseObj>
-    | Observable<CommonResponseObj>
-    | CommonResponseObj;
+  ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
 
   getSystemTransaction(
     request: GetTransactionsRequest,
-  ):
-    | Promise<CommonResponseObj>
-    | Observable<CommonResponseObj>
-    | CommonResponseObj;
+  ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
 
   /** RETAIL SERVICES */
 
   walletTransfer(
     request: WalletTransferRequest,
-  ):
-    | Promise<CommonResponseObj>
-    | Observable<CommonResponseObj>
-    | CommonResponseObj;
+  ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
 
   validateDepositCode(
     request: ValidateTransactionRequest,
-  ):
-    | Promise<CommonResponseObj>
-    | Observable<CommonResponseObj>
-    | CommonResponseObj;
+  ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
 
   processShopDeposit(
     request: ProcessRetailTransaction,
-  ):
-    | Promise<CommonResponseObj>
-    | Observable<CommonResponseObj>
-    | CommonResponseObj;
+  ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
 
   validateWithdrawalCode(
     request: ValidateTransactionRequest,
-  ):
-    | Promise<CommonResponseObj>
-    | Observable<CommonResponseObj>
-    | CommonResponseObj;
+  ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
 
   processShopWithdrawal(
     request: ProcessRetailTransaction,
-  ):
-    | Promise<CommonResponseObj>
-    | Observable<CommonResponseObj>
-    | CommonResponseObj;
+  ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
 
   debitAgentBalance(
     request: DebitUserRequest,
-  ):
-    | Promise<CommonResponseObj>
-    | Observable<CommonResponseObj>
-    | CommonResponseObj;
+  ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
 }
 
 export function WalletServiceControllerMethods() {
   return function (constructor: Function) {
     const grpcMethods: string[] = [
-      'cashbookVerifyFinalTransaction',
-      'cashbookFetchLastApproved',
-      'cashbookFetchSalesReport',
-      'cashbookFetchReport',
-      'cashbookHandleReport',
-      'cashbookApproveExpense',
-      'cashbookCreateExpense',
-      'cashbookFindAllExpense',
-      'cashbookFindOneExpense',
-      'cashbookDeleteOneExpense',
-      'cashbookUpdateOneExpense',
-      'cashbookFindAllBranchExpense',
-      'cashbookCreateExpenseType',
-      'cashbookFindAllExpenseType',
-      'cashbookApproveCashIn',
-      'cashbookCreateCashIn',
-      'cashbookUpdateCashIn',
-      'cashbookDeleteOneCashIn',
-      'cashbookFindOneCashIn',
-      'cashbookFindAllCashIn',
-      'cashbookFindAllBranchCashIn',
-      'findAllBranchApprovedCashinWDate',
-      'findAllBranchPendingCashinWDate',
-      'cashbookApproveCashOut',
-      'cashbookCreateCashOut',
-      'cashbookUpdateCashOut',
-      'cashbookDeleteOneCashOut',
-      'cashbookFindOneCashOut',
-      'cashbookFindAllCashOut',
-      'cashbookFindAllBranchCashOut',
-      'handleCreatePawaPay',
-      'handleCreateBulkPawaPay',
-      'handleFetchPawaPay',
-      'handlePawaPayResendCallback',
-      'handlePawaPayBalances',
-      'handlePawaPayCountryBalances',
-      'handlePawaPayPredCorr',
-      'handlePawaPayToolkit',
-      'handlePawaPayActiveConf',
-      'createVirtualAccount',
-      'wayabankAccountEnquiry',
-      'pitch90Transaction',
-      'pitch90RegisterUrl',
-
-      'handleWayaQuickInit',
-      'handleWayaQuickVerify',
-      'getBalance',
-      'createWallet',
-      'fetchBetRange',
-      'fetchPlayerDeposit',
-      'fetchDepositRange',
-      'fetchDepositCount',
-      'creditUser',
-      'awardBonusWinning',
-      'debitUser',
-      'inititateDeposit',
-      'verifyDeposit',
-      'requestWithdrawal',
-      'verifyBankAccount',
-      'listBanks',
-      'getTransactions',
-      'getPaymentMethods',
-      'savePaymentMethod',
-      'paystackWebhook',
-      'monnifyWebhook',
-      'opayDepositWebhook',
-      'opayLookUpWebhook',
-      'listWithdrawals',
-      'listDeposits',
-      'userTransactions',
-      'updateWithdrawal',
-      'getPlayerWalletData',
-      'deletePlayerData',
-      'getUserAccounts',
-      'getNetworkBalance',
-      'getMoneyTransaction',
-      'getSystemTransaction',
-      'walletTransfer',
-      'validateDepositCode',
-      'processShopDeposit',
-      'validateWithdrawalCode',
-      'processShopWithdrawal',
-      'debitAgentBalance',
+      "cashbookVerifyFinalTransaction",
+      "cashbookFetchLastApproved",
+      "cashbookFetchSalesReport",
+      "cashbookFetchReport",
+      "cashbookHandleReport",
+      "cashbookFetchMonthlyShopReport",
+      "cashbookApproveExpense",
+      "cashbookCreateExpense",
+      "cashbookFindAllExpense",
+      "cashbookFindOneExpense",
+      "cashbookDeleteOneExpense",
+      "cashbookUpdateOneExpense",
+      "cashbookFindAllBranchExpense",
+      "cashbookCreateExpenseType",
+      "cashbookFindAllExpenseType",
+      "cashbookApproveCashIn",
+      "cashbookCreateCashIn",
+      "cashbookUpdateCashIn",
+      "cashbookDeleteOneCashIn",
+      "cashbookFindOneCashIn",
+      "cashbookFindAllCashIn",
+      "cashbookFindAllBranchCashIn",
+      "findAllBranchApprovedCashinWDate",
+      "findAllBranchPendingCashinWDate",
+      "cashbookApproveCashOut",
+      "cashbookCreateCashOut",
+      "cashbookUpdateCashOut",
+      "cashbookDeleteOneCashOut",
+      "cashbookFindOneCashOut",
+      "cashbookFindAllCashOut",
+      "cashbookFindAllBranchCashOut",
+      "handleCreatePawaPay",
+      "handleCreateBulkPawaPay",
+      "handleFetchPawaPay",
+      "handlePawaPayResendCallback",
+      "handlePawaPayBalances",
+      "handlePawaPayCountryBalances",
+      "handlePawaPayPredCorr",
+      "handlePawaPayToolkit",
+      "handlePawaPayActiveConf",
+      "createVirtualAccount",
+      "wayabankAccountEnquiry",
+      "pitch90Transaction",
+      "pitch90RegisterUrl",
+      "handleWayaQuickInit",
+      "handleWayaQuickVerify",
+      "getBalance",
+      "createWallet",
+      "fetchBetRange",
+      "fetchPlayerDeposit",
+      "fetchDepositRange",
+      "fetchDepositCount",
+      "creditUser",
+      "awardBonusWinning",
+      "debitUser",
+      "inititateDeposit",
+      "verifyDeposit",
+      "requestWithdrawal",
+      "verifyBankAccount",
+      "listBanks",
+      "getTransactions",
+      "getPaymentMethods",
+      "savePaymentMethod",
+      "paystackWebhook",
+      "monnifyWebhook",
+      "opayDepositWebhook",
+      "opayLookUpWebhook",
+      "listWithdrawals",
+      "listDeposits",
+      "userTransactions",
+      "updateWithdrawal",
+      "getPlayerWalletData",
+      "deletePlayerData",
+      "getUserAccounts",
+      "getNetworkBalance",
+      "getMoneyTransaction",
+      "getSystemTransaction",
+      "walletTransfer",
+      "validateDepositCode",
+      "processShopDeposit",
+      "validateWithdrawalCode",
+      "processShopWithdrawal",
+      "debitAgentBalance",
     ];
     for (const method of grpcMethods) {
-      const descriptor: any = Reflect.getOwnPropertyDescriptor(
-        constructor.prototype,
-        method,
-      );
-      GrpcMethod('WalletService', method)(
-        constructor.prototype[method],
-        method,
-        descriptor,
-      );
+      const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
+      GrpcMethod("WalletService", method)(constructor.prototype[method], method, descriptor);
     }
     const grpcStreamMethods: string[] = [];
     for (const method of grpcStreamMethods) {
-      const descriptor: any = Reflect.getOwnPropertyDescriptor(
-        constructor.prototype,
-        method,
-      );
-      GrpcStreamMethod('WalletService', method)(
-        constructor.prototype[method],
-        method,
-        descriptor,
-      );
+      const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
+      GrpcStreamMethod("WalletService", method)(constructor.prototype[method], method, descriptor);
     }
   };
 }
 
-export const WALLET_SERVICE_NAME = 'WalletService';
+export const WALLET_SERVICE_NAME = "WalletService";
