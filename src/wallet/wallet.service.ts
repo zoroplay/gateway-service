@@ -71,6 +71,7 @@ import {
   Pitch90RegisterUrlRequest,
   Pitch90TransactionRequest,
   GetTransactionsRequest,
+  FetchUsersWithdrawalRequest,
 } from '../interfaces/wallet.pb';
 import { ClientGrpc } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
@@ -429,5 +430,10 @@ export class WalletService {
     data: Pitch90TransactionRequest,
   ): Promise<CommonResponseObj> {
     return await firstValueFrom(this.svc.pitch90Transaction(data));
+  }
+  async FetchUsersWithdrawal(
+    data: FetchUsersWithdrawalRequest,
+  ): Promise<CommonResponseArray> {
+    return await firstValueFrom(this.svc.fetchUsersWithdrawal(data));
   }
 }
