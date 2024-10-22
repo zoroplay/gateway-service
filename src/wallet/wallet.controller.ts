@@ -135,6 +135,22 @@ export class WalletController {
     });
   }
   @UseGuards(AuthGuard)
+  @Get('/cashbook/branch/current-report')
+  @ApiOperation({
+    summary: 'current day report for branch',
+    description: 'This endpoint to fetch current reports',
+  })
+  @ApiOkResponse({ type: SwaggerCashbookReponse })
+  CurrentReport(
+    @Query() body: FetchReportRequest,
+    @Req() req: IAuthorizedRequest,
+  ) {
+    return this.walletService.CurrentReport({
+      ...body,
+      userId: req.user.id,
+    });
+  }
+  @UseGuards(AuthGuard)
   @Get('/cashbook/branch/monthly-report')
   @ApiOperation({
     summary: 'monthly report for branch',
