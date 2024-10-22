@@ -31,6 +31,7 @@ import {
   CreatePawapayRequest,
   FetchLastApprovedRequest,
   FetchReportRequest,
+  FetchUsersWithdrawalRequest,
   GetBalanceRequest,
   HandleReportRequest,
   InitiateDepositRequest,
@@ -55,6 +56,7 @@ import {
   SwaggerFetchLastApprovedRequest,
   SwaggerFetchReportsRequest,
   SwaggerFetchSalesReportRequest,
+  SwaggerFetchUsersWithdrawalRequest,
   SwaggerGetPaymentMethodResponse,
   SwaggerHandleReportsRequest,
   SwaggerInitiateDepositRequest,
@@ -967,5 +969,24 @@ export class WalletController {
     @Param('action') action: string,
   ) {
     return this.walletService.Pitch90RegisterUrl({ ...param, action });
+  }
+
+  @UseGuards(AuthGuard)
+  @Get('/withdraw-history/:clientId')
+  @ApiOperation({
+    summary: 'get request to fetch logged in users withdraw-history',
+    description: 'This endpoint to fetch users withdrawal history information',
+  })
+  @ApiParam({
+    name: 'clientId',
+    type: 'string',
+    description: 'client id',
+  })
+  @ApiOkResponse({ type: SwaggerCommonResponse })
+  FetchUsersWithdrawal(
+    @Body() param: FetchUsersWithdrawalRequest,
+    @Param('clientId') clientId: number,
+  ) {
+    return this.walletService.FetchUsersWithdrawal({ ...param, clientId });
   }
 }

@@ -23,6 +23,11 @@ export interface CreatePawapayRequest {
   depositId?: string | undefined;
 }
 
+export interface FetchUsersWithdrawalRequest {
+  userId: number;
+  clientId: number;
+}
+
 export interface WayaBankRequest {
   userId: number;
   clientId: number;
@@ -915,6 +920,8 @@ export interface WalletServiceClient {
 
   handleWayaQuickVerify(request: WayaQuickRequest): Observable<CommonResponseObj>;
 
+  fetchUsersWithdrawal(request: FetchUsersWithdrawalRequest): Observable<CommonResponseArray>;
+
   getBalance(request: GetBalanceRequest): Observable<WalletResponse>;
 
   createWallet(request: CreateWalletRequest): Observable<WalletResponse>;
@@ -1177,6 +1184,10 @@ export interface WalletServiceController {
     request: WayaQuickRequest,
   ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
 
+  fetchUsersWithdrawal(
+    request: FetchUsersWithdrawalRequest,
+  ): Promise<CommonResponseArray> | Observable<CommonResponseArray> | CommonResponseArray;
+
   getBalance(request: GetBalanceRequest): Promise<WalletResponse> | Observable<WalletResponse> | WalletResponse;
 
   createWallet(request: CreateWalletRequest): Promise<WalletResponse> | Observable<WalletResponse> | WalletResponse;
@@ -1365,6 +1376,7 @@ export function WalletServiceControllerMethods() {
       "pitch90RegisterUrl",
       "handleWayaQuickInit",
       "handleWayaQuickVerify",
+      "fetchUsersWithdrawal",
       "getBalance",
       "createWallet",
       "fetchBetRange",

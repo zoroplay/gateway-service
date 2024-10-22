@@ -97,6 +97,12 @@ export class SwaggerListDepositRequest {
   transactionId: string;
 }
 
+export class SwaggerFetchUsersWithdrawalRequest {
+  @ApiProperty({ description: 'ID of User that requested the expense' })
+  userId?: number;
+  @ApiProperty({ description: 'ID of Client' })
+  clientId: number;
+}
 export class SwaggerPitch90RegisterUrlRequest {
   @ApiProperty({
     description: 'The url where the push notifications will be sent',
