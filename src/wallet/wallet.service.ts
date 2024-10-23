@@ -336,6 +336,9 @@ export class WalletService {
   ): Promise<CashInOutRepeatedResponse> {
     return await firstValueFrom(this.svc.cashbookFindAllBranchCashOut(data));
   }
+  async CurrentReport(data: FetchReportRequest): Promise<CommonResponseObj> {
+    return await firstValueFrom(this.svc.currentReport(data));
+  }
   async CashbookFetchReport(
     data: FetchReportRequest,
   ): Promise<FetchReportResponse> {
