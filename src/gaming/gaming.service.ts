@@ -95,54 +95,53 @@ export class GamingService implements OnModuleInit {
 
 
   async xpressBalance(data: XpressRequest): Promise<XpressResponse> {
-    ('xpress balance');
+    //('xpress balance');
     const res = await firstValueFrom(this.service.xpressBalance(data));
-    console.log(res.data.balance)
-    if (res.status && !this.isPrecise(res.data.balance)) res.data.balance = parseFloat(res.data.balance.toFixed(2));
+    const response: any = {...res};
+    if (res.status) response.data.balance = parseFloat(res.data.balance);
 
-    return res;
+    return response;
   }
 
   async xpressCredit(data: XpressRequest) {
     //('xpress credit');
     const res = await firstValueFrom(this.service.xpressCredit(data));
+    const response: any = {...res};
     if (res.status) {
-      if(!this.isPrecise(res.data.balance)) res.data.balance = parseFloat(res.data.balance.toFixed(2))
-      if(!this.isPrecise(res.data.oldBalance)) res.data.oldBalance =  parseFloat(res.data.oldBalance.toFixed(2))
+      response.data.balance = parseFloat(res.data.balance);
+      response.data.oldBalance = parseFloat(res.data.oldBalance);
     }
-    return res;
+    return response;
   }
 
   async xpressDebit(data: XpressRequest) {
     //('xpress debit');
     const res = await firstValueFrom(this.service.xpressDebit(data));
+    const response: any = {...res};
     if (res.status) {
-      if(!this.isPrecise(res.data.balance)) res.data.balance = parseFloat(res.data.balance.toFixed(2))
-      if(!this.isPrecise(res.data.oldBalance)) res.data.oldBalance =  parseFloat(res.data.oldBalance.toFixed(2))
+      response.data.balance = parseFloat(res.data.balance);
+      response.data.oldBalance = parseFloat(res.data.oldBalance);
     }
-    return res;
+    return response;
   }
 
   async xpressRollback(data: XpressRequest) {
     const res = await firstValueFrom(this.service.xpressRollback(data));
-    //('xpress rollback', res);
+    const response: any = {...res};
     if (res.status) {
-      if(!this.isPrecise(res.data.balance)) res.data.balance = parseFloat(res.data.balance.toFixed(2))
-      if(!this.isPrecise(res.data.oldBalance)) res.data.oldBalance =  parseFloat(res.data.oldBalance.toFixed(2))
+      response.data.balance = parseFloat(res.data.balance);
+      response.data.oldBalance = parseFloat(res.data.oldBalance);
     }
-    return res;
+    return response;
   }
 
   async xpressLogout(data: XpressRequest) {
     //('xpress logout');
     const res = await firstValueFrom(this.service.xpressLogout(data));
-    if (res.status && !this.isPrecise(res.data.balance)) res.data.balance = parseFloat(res.data.balance.toFixed(2));
-    return res;
-  }
+    const response: any = {...res};
+    if (res.status) response.data.balance = parseFloat(res.data.balance);
 
-  isPrecise(num){
-    const res = String(num).split(".")[1]?.length == 2;
-    return res;
+    return response;
   }
 
   formatNumber (num) {
