@@ -97,7 +97,7 @@ export class GamingService implements OnModuleInit {
   async xpressBalance(data: XpressRequest): Promise<XpressResponse> {
     //('xpress balance');
     const res = await firstValueFrom(this.service.xpressBalance(data));
-    if (res.status) res.data.balance = parseFloat(res.data.balance.toFixed(2));
+    if (res.status && !this.isPrecise(res.data.balance)) res.data.balance = parseFloat(res.data.balance.toFixed(2));
 
     return res;
   }
@@ -106,8 +106,8 @@ export class GamingService implements OnModuleInit {
     //('xpress credit');
     const res = await firstValueFrom(this.service.xpressCredit(data));
     if (res.status) {
-      res.data.balance = parseFloat(res.data.balance.toFixed(2));
-      res.data.oldBalance = parseFloat(res.data.oldBalance.toFixed(2));
+      if(!this.isPrecise(res.data.balance)) res.data.balance = parseFloat(res.data.balance.toFixed(2))
+      if(!this.isPrecise(res.data.oldBalance)) res.data.oldBalance =  parseFloat(res.data.oldBalance.toFixed(2))
     }
     return res;
   }
@@ -116,8 +116,8 @@ export class GamingService implements OnModuleInit {
     //('xpress debit');
     const res = await firstValueFrom(this.service.xpressDebit(data));
     if (res.status) {
-      res.data.balance = parseFloat(res.data.balance.toFixed(2));
-      res.data.oldBalance = parseFloat(res.data.oldBalance.toFixed(2));
+      if(!this.isPrecise(res.data.balance)) res.data.balance = parseFloat(res.data.balance.toFixed(2))
+      if(!this.isPrecise(res.data.oldBalance)) res.data.oldBalance =  parseFloat(res.data.oldBalance.toFixed(2))
     }
     return res;
   }
@@ -126,8 +126,8 @@ export class GamingService implements OnModuleInit {
     const res = await firstValueFrom(this.service.xpressRollback(data));
     //('xpress rollback', res);
     if (res.status) {
-      res.data.balance = parseFloat(res.data.balance.toFixed(2));
-      res.data.oldBalance = parseFloat(res.data.oldBalance.toFixed(2));
+      if(!this.isPrecise(res.data.balance)) res.data.balance = parseFloat(res.data.balance.toFixed(2))
+      if(!this.isPrecise(res.data.oldBalance)) res.data.oldBalance =  parseFloat(res.data.oldBalance.toFixed(2))
     }
     return res;
   }
@@ -135,8 +135,12 @@ export class GamingService implements OnModuleInit {
   async xpressLogout(data: XpressRequest) {
     //('xpress logout');
     const res = await firstValueFrom(this.service.xpressLogout(data));
-    if (res.status) res.data.balance = parseFloat(res.data.balance.toFixed(2));
+    if (res.status && !this.isPrecise(res.data.balance)) res.data.balance = parseFloat(res.data.balance.toFixed(2));
     return res;
+  }
+
+  isPrecise(num){
+    return String(num).split(".")[1]?.length == 2;
   }
 
   formatNumber (num) {

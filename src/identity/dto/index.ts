@@ -45,6 +45,9 @@ export class SwaggerRegisterRequest {
 
   @ApiProperty({ description: 'Promo code for bonus' })
   promoCode?: string;
+
+  @ApiProperty({ description: 'Trackier token' })
+  trackingToken?: string;
 }
 
 export class SwaggerHandleTransferRequest {
