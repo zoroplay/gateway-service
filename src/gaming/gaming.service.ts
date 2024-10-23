@@ -95,8 +95,9 @@ export class GamingService implements OnModuleInit {
 
 
   async xpressBalance(data: XpressRequest): Promise<XpressResponse> {
-    //('xpress balance');
+    ('xpress balance');
     const res = await firstValueFrom(this.service.xpressBalance(data));
+    console.log(res.data.balance)
     if (res.status && !this.isPrecise(res.data.balance)) res.data.balance = parseFloat(res.data.balance.toFixed(2));
 
     return res;
@@ -140,7 +141,8 @@ export class GamingService implements OnModuleInit {
   }
 
   isPrecise(num){
-    return String(num).split(".")[1]?.length == 2;
+    const res = String(num).split(".")[1]?.length == 2;
+    return res;
   }
 
   formatNumber (num) {
