@@ -90,7 +90,11 @@ export class GamingService implements OnModuleInit {
 
   async xpressLogin(data: XpressRequest) {
     //('xpress login');
-    return firstValueFrom(this.service.xpressLogin(data));
+    const res = await firstValueFrom(this.service.xpressLogin(data));
+    const response: any = {...res};
+    if (res.status) response.data.balance = parseFloat(res.data.balance);
+
+    return response;
   }
 
 
