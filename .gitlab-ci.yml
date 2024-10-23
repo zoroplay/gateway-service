@@ -31,7 +31,8 @@ get-new-version:
     - echo "Running semantic-release..."
     - yarn install
     - npx semantic-release --dry-run
-    - echo "NEXT_VERSION=$(npx semantic-release --dry-run | grep -oP '(?<=The next release version is ).*')" > .VERSION
+    - cat .VERSION
+    # - echo "NEXT_VERSION=$(npx semantic-release --dry-run | grep -oP '(?<=The next release version is ).*')" > .VERSION
   artifacts:
     paths:
       - .VERSION  # Ensure .VERSION file is saved as an artifact

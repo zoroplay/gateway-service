@@ -1,3 +1,4 @@
+/* eslint-disable quotes */
 module.exports = {
   branches: ['main'],
   plugins: [
@@ -7,8 +8,7 @@ module.exports = {
     [
       '@semantic-release/exec',
       {
-        // Ensure that we overwrite .VERSION instead of appending
-        verifyReleaseCmd: 'echo "Releasing version ${nextRelease.version}" && echo NEXT_VERSION=${nextRelease.version} > .VERSION',
+        verifyReleaseCmd: 'echo NEXT_VERSION=${nextRelease.version} >> .VERSION',
       },
     ],
     [
@@ -17,6 +17,7 @@ module.exports = {
         assets: 'release/*.tgz',
       },
     ],
+
     [
       '@semantic-release/npm',
       {
