@@ -231,4 +231,12 @@ export class FixtureService implements OnModuleInit {
     //('update sports tournament ');
     return this.service.updateSportsMenuOrder(data);
   }
+
+  getActiveGames(data) {
+    return this.service.getActiveGamesMarkets(data);
+  }
+
+  validateSelections(body) {
+    return this.service.validateSelections(body);
+  }
 }

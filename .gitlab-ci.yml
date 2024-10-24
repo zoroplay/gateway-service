@@ -1,17 +1,17 @@
-# Define stages
 stages:
+  - version
   - test
   - build
+  - release
   - deploy
 
-# Cache dependencies to speed up builds
-cache:
-  key: npm-cache
-  paths:
-    - node_modules/
+default:
+  image: docker:24.0.5
+
+services:
+  - docker:24.0.5-dind
 
 variables:
-  NEXT_VERSION: 0.0.1
   IDENTITY_SERVICE_URL: 134.122.17.21:9011
   FIXTURE_SERVICE_URL: 134.122.17.21:9003
   BETTING_SERVICE_URL: 134.122.17.21:9001
@@ -19,57 +19,80 @@ variables:
   NOTIFICATION_SERVICE_URL: 134.122.17.21:9009
   BONUS_SERVICE_URL: 134.122.17.21:9006
   GAMING_SERVICE_URL: 134.122.17.21:9015
+  GITHUB_TOKEN: $GITHUB_TOKEN  # Store this in GitLab CI/CD Variables
 
-# Test Stage
+get-new-version:
+  stage: version
+  image: node:20
+  script:
+    - echo "Fetching latest from remote..."
+    - git fetch origin main
+    - git reset --hard origin/main
+    - echo "Running semantic-release..."
+    - yarn install
+    - npx semantic-release --dry-run
+    - cat .VERSION
+    # - echo "NEXT_VERSION=$(npx semantic-release --dry-run | grep -oP '(?<=The next release version is ).*')" > .VERSION
+  artifacts:
+    paths:
+      - .VERSION  # Ensure .VERSION file is saved as an artifact
+    expire_in: "90 days"
+  only:
+    - main
 test:
   stage: test
-  image: node:18
-
+  dependencies:
+    - get-new-version  # Ensure that test stage depends on version stage and gets the .VERSION file
   script:
-    - echo "Running tests..."
-    - yarn install
-    - yarn run test  # Run your test suite here
-
+    - cat .VERSION  # Output the version for debugging
   only:
     - main
 
-# Build Stage
-build:
+build-application:
   stage: build
-  image: docker:latest
-  services:
-    - docker:dind # Docker-in-Docker service to build Docker images
-  before_script:
-    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
-
-  script:
-    - echo "Building Docker image with the following service URLs:"
-    - echo IDENTITY_SERVICE_URL ...... $IDENTITY_SERVICE_URL
-    - echo FIXTURE_SERVICE_URL  ...... $FIXTURE_SERVICE_URL
-    - echo BETTING_SERVICE_URL ....... $BETTING_SERVICE_URL
-    - echo WALLET_SERVICE_URL ........ $WALLET_SERVICE_URL
-    - echo NOTIFICATION_SERVICE_URL ...... $NOTIFICATION_SERVICE_URL
-    - echo BONUS_SERVICE_URL  ........$BONUS_SERVICE_URL
-    - echo GAMING_SERVICE_URL   ......$GAMING_SERVICE_URL
+  dependencies:
+    - get-new-version  # Ensure we get .VERSION file from the previous stage
+  script: 
+    - echo "We are building the application"
+    - ls -la
+    - cat .VERSION
+    - export $(cat .VERSION | xargs)  # Load the NEXT_VERSION from .VERSION
+    - if [ -z "$NEXT_VERSION" ]; then echo "NEXT_VERSION is empty! Exiting..."; exit 1; fi
+    - echo "Building Docker image with version:$NEXT_VERSION"
     - docker login $CI_REGISTRY -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD
     - docker build -t $CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$NEXT_VERSION .
     - docker push $CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$NEXT_VERSION
-    - echo "Finished building docker image"
-
+    - echo "Finished building Docker image"
   only:
-    - dev
+    - main
 
-# Deploy Stage
+release-application:
+  stage: release
+  image: node:20
+  variables:
+    GL_TOKEN: $GL_TOKEN  # Make sure GL_TOKEN is defined in GitLab CI/CD settings
+  script: 
+    - yarn install  # Install dependencies
+    - npx semantic-release  # Perform the release and create a new version
+    - cat .VERSION  # Output the version for debugging purposes
+  artifacts:
+    paths:
+      - .VERSION  # Ensure the .VERSION file is available for later stages
+    expire_in: '90 days'  # Keep the artifact for 90 days
+  only:
+    - main
+
+
 deploy:
   stage: deploy
-  image: docker:latest
-  services:
-    - docker:dind
+  dependencies:
+    - build-application  # Ensure we have the version from the build stage
   before_script:
-    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
+    - export VERSION=$(cat .VERSION)  # Load the version from the .VERSION file
   script:
-    - echo "Deploying Docker container..."
-    - docker pull $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
+    - echo "Deploying Docker container with version $VERSION"
+    - docker pull "$CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$VERSION"  # Pull the built Docker image
     - docker stop gatewayservice || true  # Stop any existing container
     - docker rm gatewayservice || true    # Remove the container if it exists
     - docker run -d --name gatewayservice -p 80:80 \
@@ -80,9 +103,11 @@ deploy:
       -e NOTIFICATION_SERVICE_URL="$NOTIFICATION_SERVICE_URL" \
       -e BONUS_SERVICE_URL="$BONUS_SERVICE_URL" \
       -e GAMING_SERVICE_URL="$GAMING_SERVICE_URL" \
-      $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
-
+      "$CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$VERSION"
   only:
     - main
+  artifacts:
+    paths:
+      - .VERSION  # Ensure the .VERSION file is available for use
+    expire_in: '90 days'
 
-    #job finished ...
