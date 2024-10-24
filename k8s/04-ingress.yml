@@ -9,10 +9,10 @@ spec:
   ingressClassName: kong
   tls:
     - hosts:
-       -  "sbegateway.etechdigital.com.ng"
+       -  "api.prod.etechdigital.com.ng"
       secretName: sbe-info-tls
   rules:
-    - host:  "sbegateway.etechdigital.com.ng"
+    - host:  "api.prod.etechdigital.com.ng"
       http:
         paths:
          - path: /

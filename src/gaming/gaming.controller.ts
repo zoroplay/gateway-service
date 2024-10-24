@@ -54,6 +54,21 @@ export class GamingController {
     return this.gamingService.fetchGames(payload);
   }
 
+  @Get('/:clientId/game-list')
+  @ApiOkResponse({ type: [SwaggerOKGameResponse] })
+  @ApiQuery({name: 'gameName', description: 'Game title in the DB', required: false})
+  fetchGamesByName(
+    @Query('gameName') gameName: string,
+    @Param('clientId') clientId: number = 4,
+  ) {
+    const payload = {
+      gameName,
+      clientId
+    }
+    return this.gamingService.fetchGamesByName(payload);
+  }
+  
+
   @Get('categories')
   @ApiOkResponse({ type: [SwaggerOKGameResponse] })
   getCategories() {
@@ -78,6 +93,7 @@ export class GamingController {
     return this.gamingService.startGame(startGameDto);
   }
 
+  
   @Get('/:clientId/:provider_id/callback')
   @ApiParam({ name: 'provider_id', type: 'string' })
   @ApiHeader({ name: 'X-Signature', description: 'Signature' })
