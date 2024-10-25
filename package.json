@@ -52,7 +52,7 @@
     "reflect-metadata": "^0.2.1",
     "rimraf": "^5.0.5",
     "rxjs": "^7.8.1",
-    "sbe-service-proto": "git+https://github.com/zoroplay/sbe-service-proto.git",
+    "sbe-service-proto": "git+https://github.com/zoroplay/sbe-service-proto.git#staging",
     "swagger-ui-express": "^5.0.0"
   },
   "devDependencies": {
