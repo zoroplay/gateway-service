@@ -35,7 +35,7 @@ RUN apt-get update \
 # Copy the bitbucket private key to your docker image
 #COPY ./github_ssh_key /opt/my-app
 
-RUN yarn install
+RUN yarn cache clean && yarn install
 RUN yarn proto:install
 # RUN npm run proto:all
 RUN yarn build
