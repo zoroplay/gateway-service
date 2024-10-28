@@ -22,40 +22,49 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import {
-  BranchRequest,
   CashbookApproveCashInOutRequest,
   CashbookApproveExpenseRequest,
   CashbookCreateCashInOutRequest,
   CashbookCreateExpenseRequest,
   CashbookCreateExpenseTypeRequest,
+  CreateBulkPawapayRequest,
+  CreatePawapayRequest,
   FetchLastApprovedRequest,
   FetchReportRequest,
+  FetchUsersWithdrawalRequest,
   GetBalanceRequest,
   HandleReportRequest,
   InitiateDepositRequest,
+  PawapayPredCorrRequest,
+  Pitch90RegisterUrlRequest,
+  Pitch90TransactionRequest,
   UserTransactionRequest,
   VerifyBankAccountRequest,
   VerifyDepositRequest,
-  WALLET_SERVICE_NAME,
-  WalletServiceClient,
   WithdrawRequest,
-  protobufPackage,
 } from '../interfaces/wallet.pb';
 import {
   SwaggerApproveCashInOutRequest,
   SwaggerApproveExpenseRequest,
   SwaggerCashbookReponse,
+  SwaggerCommonResponseObj,
+  SwaggerCreateBulkPawaPayRequest,
   SwaggerCreateCashInOutRequest,
   SwaggerCreateExpenseRequest,
+  SwaggerCreatePawaPayRequest,
   SwaggerDepositReponse,
   SwaggerFetchLastApprovedRequest,
   SwaggerFetchReportsRequest,
   SwaggerFetchSalesReportRequest,
+  SwaggerFetchUsersWithdrawalRequest,
   SwaggerGetPaymentMethodResponse,
   SwaggerHandleReportsRequest,
   SwaggerInitiateDepositRequest,
   SwaggerListTransactionResponse,
   SwaggerListTransactions,
+  SwaggerPawapayPredCorrRequest,
+  SwaggerPitch90RegisterUrlRequest,
+  SwaggerPitch90TransactionRequest,
   SwaggerVerifyBankAccountRequest,
   SwaggerVerifyDepositReponse,
   SwaggerWithdrawalRequest,
@@ -65,6 +74,7 @@ import { AuthGuard } from 'src/identity/auth/auth.guard';
 import { IAuthorizedRequest } from 'src/interfaces/authorized-request.interface';
 import { WalletService } from './wallet.service';
 import { FetchSalesReportRequest } from '../interfaces/wallet.pb';
+import { SwaggerCommonResponse } from 'src/identity/dto';
 
 @ApiTags('User Account APIs')
 @Controller('user/wallet')
@@ -122,6 +132,40 @@ export class WalletController {
     return this.walletService.CashbookFetchSalesReport({
       ...body,
       branchId: req.user.id,
+    });
+  }
+  @UseGuards(AuthGuard)
+  @Get('/cashbook/branch/current-report/:client')
+  @ApiOperation({
+    summary: 'current day report for branch',
+    description: 'This endpoint to fetch current reports',
+  })
+  @ApiOkResponse({ type: SwaggerCashbookReponse })
+  CurrentReport(
+    @Param('clientId') clientId: number,
+   @Req() req: IAuthorizedRequest,
+  ) {
+    return this.walletService.CurrentReport({
+      clientId,
+      userId: req.user.id,
+      date:''
+    });
+  }
+  @UseGuards(AuthGuard)
+  @Get('/cashbook/branch/monthly-report')
+  @ApiOperation({
+    summary: 'monthly report for branch',
+    description: 'This endpoint to fetch monthly reports',
+  })
+  @ApiQuery({ type: SwaggerFetchSalesReportRequest })
+  @ApiOkResponse({ type: SwaggerCashbookReponse })
+  CashbookFetchMonthlyShopReport(
+    @Query() body: FetchReportRequest,
+    @Req() req: IAuthorizedRequest,
+  ) {
+    return this.walletService.CashbookFetchMonthlyShopReport({
+      ...body,
+      userId: req.user.id,
     });
   }
 
@@ -645,7 +689,6 @@ export class WalletController {
       status: 1,
     });
   }
-
   @Get(':clientId/banks')
   @ApiOperation({
     summary: 'Fetch Banks',
@@ -659,5 +702,308 @@ export class WalletController {
   @ApiOkResponse({ type: SwaggerGetPaymentMethodResponse })
   fetchBanks(@Param() param: any, @Query() query) {
     return this.walletService.listBanks({ clientId: param.client_id });
+  }
+
+  @UseGuards(AuthGuard)
+  @Post('/pawapay-bulk-payout/:clientId')
+  @ApiOperation({
+    summary: 'handle bulk-payouts request for pawapay',
+    description: 'This endpoint to handle pawaypay bulk-payouts requests',
+  })
+  @ApiParam({
+    name: 'clientId',
+    type: 'number',
+    description: 'Unique ID of the client',
+  })
+  @ApiBody({ type: SwaggerCreateBulkPawaPayRequest })
+  @ApiOkResponse({ type: SwaggerCommonResponseObj })
+  HandleCreateBulkPawaPay(
+    @Body() body: CreateBulkPawapayRequest,
+    @Param('clientId') clientId: number,
+    @Req() req: IAuthorizedRequest,
+  ) {
+    return this.walletService.HandleCreateBulkPawaPay({
+      ...body,
+      userId: req.user.id,
+      clientId,
+    });
+  }
+
+  @UseGuards(AuthGuard)
+  @Post('/pawapay-create/:action/:clientId')
+  @ApiOperation({
+    summary:
+      'handle deposit/payouts/refunds/cancel-payouts request for pawapay',
+    description: 'This endpoint to handle pawaypay requests',
+  })
+  @ApiParam({
+    name: 'clientId',
+    type: 'number',
+    description: 'Unique ID of the client',
+  })
+  @ApiParam({
+    name: 'action',
+    type: 'string',
+    description: 'deposit | payouts | refunds | cancel-payouts',
+  })
+  @ApiBody({ type: SwaggerCreatePawaPayRequest })
+  @ApiOkResponse({ type: SwaggerCommonResponseObj })
+  HandleCreatePawaPay(
+    @Body() body: CreatePawapayRequest,
+    @Param('clientId') clientId: number,
+    @Param('action') action: string,
+    @Req() req: IAuthorizedRequest,
+  ) {
+    return this.walletService.HandleCreatePawaPay({
+      ...body,
+      userId: req.user.id,
+      clientId,
+      action,
+      depositId: body.depositId ? body.depositId : null,
+    });
+  }
+
+  @UseGuards(AuthGuard)
+  @Get('/pawapay-fetch/:action/:actionId')
+  @ApiOperation({
+    summary:
+      'Get payouts/deposit/refund status and details by the actionId from your initial payout request',
+    description: 'A list with at most one Payout/Deposit/Refund is returned',
+  })
+  @ApiParam({
+    name: 'actionId',
+    type: 'string',
+    description: 'request action Id',
+  })
+  @ApiParam({
+    name: 'action',
+    type: 'string',
+    description: 'deposit | payouts | refunds',
+  })
+  @ApiOkResponse({ type: SwaggerCommonResponse })
+  HandleFetchPawaPay(
+    @Param('actionId') actionId: string,
+    @Param('action') action: string,
+  ) {
+    return this.walletService.HandleFetchPawaPay({
+      actionId,
+      action,
+    });
+  }
+
+  @UseGuards(AuthGuard)
+  @Get('/pawapay-callback/:action/:actionId')
+  @ApiOperation({
+    summary:
+      'Resends the callback for a payout/deposit/refund to your configured callback UR',
+    description:
+      'The payout/deposit/refund must have reached a final state. The callback delivery has to have failed already.',
+  })
+  @ApiParam({
+    name: 'actionId',
+    type: 'string',
+    description: 'request action Id',
+  })
+  @ApiParam({
+    name: 'action',
+    type: 'string',
+    description: 'deposit | payouts | refunds',
+  })
+  @ApiOkResponse({ type: SwaggerCommonResponseObj })
+  HandlePawaPayResendCallback(
+    @Param('actionId') actionId: string,
+    @Param('action') action: string,
+  ) {
+    return this.walletService.HandlePawaPayResendCallback({
+      actionId,
+      action,
+    });
+  }
+
+  @UseGuards(AuthGuard)
+  @Get('/pawapay/balance')
+  @ApiOperation({
+    summary: 'check balance',
+    description:
+      'Allows you to get the list of wallets and their balances configured for your account',
+  })
+  @ApiOkResponse({ type: SwaggerCommonResponse })
+  HandlePawaPayBalances() {
+    return this.walletService.HandlePawaPayBalances();
+  }
+
+  @UseGuards(AuthGuard)
+  @Get('/pawapay/balance/:country')
+  @ApiOperation({
+    summary: 'check country balance fror pawapay',
+    description:
+      'Allows you to get the wallet balances for a specific country configured for your account',
+  })
+  @ApiParam({
+    name: 'country',
+    type: 'string',
+    description: 'country 3-letter code NGN | GHC',
+  })
+  @ApiOkResponse({ type: SwaggerCommonResponse })
+  HandlePawaPayCountryBalances(@Param('country') country: string) {
+    console.log(345);
+    return this.walletService.HandlePawaPayCountryBalances({
+      country,
+    });
+  }
+
+  @UseGuards(AuthGuard)
+  @Get('/pawapay-toolkit/:action')
+  @ApiOperation({
+    summary: 'fetch pawapay Toolkit',
+    description: 'This endpoint to fetch toolkit information',
+  })
+  @ApiParam({
+    name: 'action',
+    type: 'string',
+    description: 'availability | public-key',
+  })
+  @ApiOkResponse({ type: SwaggerCommonResponse })
+  HandlePawaPayToolkit(@Param('action') action: string) {
+    console.log(action);
+    return this.walletService.HandlePawaPayToolkit({
+      action,
+    });
+  }
+
+  @UseGuards(AuthGuard)
+  @Get('/pawapay-active-conf')
+  @ApiOperation({
+    summary: 'fetch active configuration',
+    description: 'This endpoint to fetch active configuration',
+  })
+  @ApiOkResponse({ type: SwaggerCommonResponse })
+  HandlePawaPayActiveConf() {
+    return this.walletService.HandlePawaPayActiveConf();
+  }
+
+  @UseGuards(AuthGuard)
+  @Post('/pawapay-correspondent')
+  @ApiOperation({
+    summary: 'post requests for pawaypay correspondent',
+    description: 'Phone number must e in the format of +260 763-456789',
+  })
+  @ApiBody({ type: SwaggerPawapayPredCorrRequest })
+  @ApiOkResponse({ type: SwaggerCommonResponseObj })
+  HandlePawaPayPredCorr(@Body() body: PawapayPredCorrRequest) {
+    return this.walletService.HandlePawaPayPredCorr(body);
+  }
+  @UseGuards(AuthGuard)
+  @Post('/virtual-account/:clientId')
+  @ApiOperation({
+    summary: 'post requests to create virtual account',
+    description: 'This endpoint to handle creating a virtual account',
+  })
+  @ApiParam({
+    name: 'clientId',
+    type: 'number',
+    description: '',
+  })
+  @ApiOkResponse({ type: SwaggerCommonResponseObj })
+  HandleCreateVirtualAccount(
+    @Param('clientId') clientId: number,
+    @Req() req: IAuthorizedRequest,
+  ) {
+    return this.walletService.HandleCreateVirtualAccount({
+      userId: req.user.id,
+      clientId,
+    });
+  }
+  @UseGuards(AuthGuard)
+  @Get('/virtual-account/:clientId')
+  @ApiOperation({
+    summary: 'get requests to fetch virtual account',
+    description: 'This endpoint to handle fetching a virtual account',
+  })
+  @ApiParam({
+    name: 'clientId',
+    type: 'number',
+    description: '',
+  })
+  @ApiBody({ type: SwaggerPawapayPredCorrRequest })
+  @ApiOkResponse({ type: SwaggerCommonResponseObj })
+  WayabankAccountEnquiry(
+    @Param('clientId') clientId: number,
+    @Req() req: IAuthorizedRequest,
+  ) {
+    return this.walletService.WayabankAccountEnquiry({
+      userId: req.user.id,
+      clientId,
+    });
+  }
+  @UseGuards(AuthGuard)
+  @Post('/pitch90-transaction/:action/:clientId')
+  @ApiOperation({
+    summary: 'post request to initiate transaction with bet777',
+    description: 'This endpoint to handle transaction on bet777',
+  })
+  @ApiParam({
+    name: 'clientId',
+    type: 'number',
+    description: '',
+  })
+  @ApiParam({
+    name: 'action',
+    type: 'string',
+    description: 'deposit | withdrawal',
+  })
+  @ApiBody({ type: SwaggerPitch90TransactionRequest })
+  @ApiOkResponse({ type: SwaggerCommonResponseObj })
+  Pitch90Transaction(
+    @Param('clientId') clientId: number,
+    @Param('action') action: string,
+    @Body() body: Pitch90TransactionRequest,
+    @Req() req: IAuthorizedRequest,
+  ) {
+    return this.walletService.Pitch90Transaction({
+      ...body,
+      userId: req.user.id,
+      clientId,
+      action,
+    });
+  }
+
+  @UseGuards(AuthGuard)
+  @Post('/pitch90-register-url/:action/:clientId')
+  @ApiOperation({
+    summary: 'post request to register url for push notification',
+    description: 'This endpoint to handle push notifications',
+  })
+  @ApiParam({
+    name: 'action',
+    type: 'string',
+    description: 'payment | withdrawal | stkstatus',
+  })
+  @ApiBody({ type: SwaggerPitch90RegisterUrlRequest })
+  @ApiOkResponse({ type: SwaggerCommonResponseObj })
+  Pitch90RegisterUrl(
+    @Body() param: Pitch90RegisterUrlRequest,
+    @Param('action') action: string,
+  ) {
+    return this.walletService.Pitch90RegisterUrl({ ...param, action });
+  }
+
+  @UseGuards(AuthGuard)
+  @Get('/withdraw-history/:clientId')
+  @ApiOperation({
+    summary: 'get request to fetch logged in users withdraw-history',
+    description: 'This endpoint to fetch users withdrawal history information',
+  })
+  @ApiParam({
+    name: 'clientId',
+    type: 'string',
+    description: 'client id',
+  })
+  @ApiOkResponse({ type: SwaggerCommonResponse })
+  FetchUsersWithdrawal(
+    @Body() param: FetchUsersWithdrawalRequest,
+    @Param('clientId') clientId: number,
+  ) {
+    return this.walletService.FetchUsersWithdrawal({ ...param, clientId });
   }
 }

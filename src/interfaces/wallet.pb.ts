@@ -23,6 +23,29 @@ export interface CreatePawapayRequest {
   depositId?: string | undefined;
 }
 
+export interface FetchUsersWithdrawalRequest {
+  userId: number;
+  clientId: number;
+}
+
+export interface WayaBankRequest {
+  userId: number;
+  clientId: number;
+}
+
+export interface Pitch90TransactionRequest {
+  userId: number;
+  clientId: number;
+  amount: number;
+  action: string;
+  source: string;
+}
+
+export interface Pitch90RegisterUrlRequest {
+  action: string;
+  url: number;
+}
+
 export interface WayaQuickRequest {
   userId: number;
   clientId: number;
@@ -584,6 +607,15 @@ export interface Transaction {
   link?: string | undefined;
 }
 
+export interface SearchTransactionsRequest {
+  clientId: number;
+  userId: number;
+  accountNumber: string;
+  page: number;
+  size: number;
+  fromDate: string;
+}
+
 export interface VerifyBankAccountRequest {
   clientId: number;
   userId: number;
@@ -806,6 +838,10 @@ export interface WalletServiceClient {
 
   cashbookHandleReport(request: HandleReportRequest): Observable<LastApprovedResponseObj>;
 
+  cashbookFetchMonthlyShopReport(request: FetchReportRequest): Observable<CommonResponseObj>;
+
+  currentReport(request: FetchReportRequest): Observable<CommonResponseObj>;
+
   cashbookApproveExpense(request: CashbookApproveExpenseRequest): Observable<ExpenseSingleResponse>;
 
   cashbookCreateExpense(request: CashbookCreateExpenseRequest): Observable<ExpenseSingleResponse>;
@@ -874,9 +910,19 @@ export interface WalletServiceClient {
 
   handlePawaPayActiveConf(request: EmptyRequest): Observable<CommonResponseObj>;
 
+  createVirtualAccount(request: WayaBankRequest): Observable<CommonResponseObj>;
+
+  wayabankAccountEnquiry(request: WayaBankRequest): Observable<CommonResponseObj>;
+
+  pitch90Transaction(request: Pitch90TransactionRequest): Observable<CommonResponseObj>;
+
+  pitch90RegisterUrl(request: Pitch90RegisterUrlRequest): Observable<CommonResponseObj>;
+
   handleWayaQuickInit(request: WayaQuickRequest): Observable<CommonResponseObj>;
 
   handleWayaQuickVerify(request: WayaQuickRequest): Observable<CommonResponseObj>;
+
+  fetchUsersWithdrawal(request: FetchUsersWithdrawalRequest): Observable<CommonResponseArray>;
 
   getBalance(request: GetBalanceRequest): Observable<WalletResponse>;
 
@@ -975,6 +1021,14 @@ export interface WalletServiceController {
   cashbookHandleReport(
     request: HandleReportRequest,
   ): Promise<LastApprovedResponseObj> | Observable<LastApprovedResponseObj> | LastApprovedResponseObj;
+
+  cashbookFetchMonthlyShopReport(
+    request: FetchReportRequest,
+  ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
+
+  currentReport(
+    request: FetchReportRequest,
+  ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
 
   cashbookApproveExpense(
     request: CashbookApproveExpenseRequest,
@@ -1112,6 +1166,22 @@ export interface WalletServiceController {
     request: EmptyRequest,
   ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
 
+  createVirtualAccount(
+    request: WayaBankRequest,
+  ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
+
+  wayabankAccountEnquiry(
+    request: WayaBankRequest,
+  ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
+
+  pitch90Transaction(
+    request: Pitch90TransactionRequest,
+  ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
+
+  pitch90RegisterUrl(
+    request: Pitch90RegisterUrlRequest,
+  ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
+
   handleWayaQuickInit(
     request: WayaQuickRequest,
   ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
@@ -1119,6 +1189,10 @@ export interface WalletServiceController {
   handleWayaQuickVerify(
     request: WayaQuickRequest,
   ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
+
+  fetchUsersWithdrawal(
+    request: FetchUsersWithdrawalRequest,
+  ): Promise<CommonResponseArray> | Observable<CommonResponseArray> | CommonResponseArray;
 
   getBalance(request: GetBalanceRequest): Promise<WalletResponse> | Observable<WalletResponse> | WalletResponse;
 
@@ -1267,6 +1341,8 @@ export function WalletServiceControllerMethods() {
       "cashbookFetchSalesReport",
       "cashbookFetchReport",
       "cashbookHandleReport",
+      "cashbookFetchMonthlyShopReport",
+      "currentReport",
       "cashbookApproveExpense",
       "cashbookCreateExpense",
       "cashbookFindAllExpense",
@@ -1301,8 +1377,13 @@ export function WalletServiceControllerMethods() {
       "handlePawaPayPredCorr",
       "handlePawaPayToolkit",
       "handlePawaPayActiveConf",
+      "createVirtualAccount",
+      "wayabankAccountEnquiry",
+      "pitch90Transaction",
+      "pitch90RegisterUrl",
       "handleWayaQuickInit",
       "handleWayaQuickVerify",
+      "fetchUsersWithdrawal",
       "getBalance",
       "createWallet",
       "fetchBetRange",
