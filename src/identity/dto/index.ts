@@ -1,6 +1,7 @@
 /* eslint-disable prettier/prettier */
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty } from 'class-validator';
+import { ValidateSelectionResponse_Data } from 'src/interfaces/fixture.pb';
 
 export class LoginDTO {
   @ApiProperty({ description: 'SBE Platform Client ID' })
@@ -44,6 +45,9 @@ export class SwaggerRegisterRequest {
 
   @ApiProperty({ description: 'Promo code for bonus' })
   promoCode?: string;
+
+  @ApiProperty({ description: 'Trackier token' })
+  trackingToken?: string;
 }
 
 export class SwaggerHandleTransferRequest {
@@ -133,6 +137,16 @@ export class SwaggerCommonResponse {
   data?: [];
   @ApiProperty({ description: 'error message' })
   error?: string;
+}
+
+export class SwaggerValidateSelectionResponse {
+  @ApiProperty({ description: 'Message' })
+  message: string;
+  @ApiProperty({ description: 'true || false' })
+  success: boolean;
+  @ApiProperty({ description: 'Array of users data' })
+  data?: ValidateSelectionResponse_Data
+
 }
 
 export class SwaggerChangePasswordRequest {

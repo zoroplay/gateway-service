@@ -211,6 +211,19 @@ export class SwaggerTimeoffset {
 
 }
 
+export class SwaggerValidateSelection {
+
+  @ApiProperty({ description: 'OutcomeID of market selections' })
+  outcomeID: number;
+  @ApiProperty({ description: 'Retail game ID' })
+  gameID: number;
+  @ApiProperty({ description: 'Market ID of market' })
+  marketID: number;
+  @ApiProperty({ description: 'Market specifier of market selections' })
+  specifier: string;
+
+}
+
 export class SwaggerFixturesResponse {
   fixtures: any;
   
@@ -374,6 +387,18 @@ export class SwaggerUpdateMarketRequest {
 }
 
 export class SwaggerResponseString {
+
+  @ApiProperty({description: 'action status'})
+  success: boolean;
+
+  @ApiProperty({description: 'Server response message'})
+  message: string;
+  
+  @ApiProperty({ description: 'Request status' })
+  status: string;
+}
+
+export class SwaggerResponseActiveGames {
 
   @ApiProperty({description: 'action status'})
   success: boolean;

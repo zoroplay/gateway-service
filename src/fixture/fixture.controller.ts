@@ -1,8 +1,10 @@
 import {
+  Body,
   Controller,
   Get,
   Logger,
   Param,
+  Post,
   Query,
 } from '@nestjs/common';
 import {
@@ -26,7 +28,10 @@ import {
   SwaggerSportMenuRequest,
   SwaggerSportMenuResponse,
   SwaggerTimeoffset,
+  SwaggerValidateSelection,
 } from './dto';
+import { SwaggerCommonResponse, SwaggerValidateSelectionResponse } from 'src/identity/dto';
+import { ValidateSelectionRequests } from 'src/interfaces/fixture.pb';
 
 const logger = new Logger();
 
@@ -421,6 +426,47 @@ export class FixtureController {
         matchID: params.match_id,
         timeoffset,
       });
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+
+  @Get('/retail/get-active-games')
+  @ApiOperation({
+    summary: 'Get active games and markets ',
+    description:
+      'This endpoint gets active games and markets for cashier',
+  })
+  @ApiQuery({ type: SwaggerTimeoffset })
+  @ApiOkResponse({ type: SwaggerCommonResponse })
+  GetActiveGames(
+    @Query() query: any
+  ) {
+    const timeoffset = query.timeoffset ? query.timeoffset : 0;
+
+    try {
+      return this.fixtureService.getActiveGames({
+        timeoffset,
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  @Post('/retail/validate-selections')
+  @ApiOperation({
+    summary: 'Validate retail bet selections',
+    description:
+      'This endpoint validates cashier selections before placing bet',
+  })
+  @ApiBody({ type: SwaggerValidateSelection, description: 'submit as an array' })
+  @ApiOkResponse({ type: SwaggerValidateSelectionResponse })
+  ValidateSelections(
+    @Body() data: ValidateSelectionRequests
+  ) {
+    try {
+      return this.fixtureService.validateSelections(data);
     } catch (error) {
       console.error(error);
     }
