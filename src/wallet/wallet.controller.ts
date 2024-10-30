@@ -143,12 +143,12 @@ export class WalletController {
   @ApiOkResponse({ type: SwaggerCashbookReponse })
   CurrentReport(
     @Param('clientId') clientId: number,
-   @Req() req: IAuthorizedRequest,
+    @Req() req: IAuthorizedRequest,
   ) {
     return this.walletService.CurrentReport({
       clientId,
       userId: req.user.id,
-      date:''
+      date: '',
     });
   }
   @UseGuards(AuthGuard)
