@@ -35,6 +35,7 @@ import {
   GetBalanceRequest,
   HandleReportRequest,
   InitiateDepositRequest,
+  PawapayCountryRequest,
   PawapayPredCorrRequest,
   Pitch90RegisterUrlRequest,
   Pitch90TransactionRequest,
@@ -764,7 +765,7 @@ export class WalletController {
   }
 
   @UseGuards(AuthGuard)
-  @Get('/pawapay-fetch/:action/:actionId')
+  @Get('/pawapay-fetch/:action/:actionId/:clientId')
   @ApiOperation({
     summary:
       'Get payouts/deposit/refund status and details by the actionId from your initial payout request',
@@ -780,19 +781,26 @@ export class WalletController {
     type: 'string',
     description: 'deposit | payouts | refunds',
   })
+  @ApiParam({
+    name: 'clientId',
+    type: 'number',
+    description: 'Unique ID of the client',
+  })
   @ApiOkResponse({ type: SwaggerCommonResponse })
   HandleFetchPawaPay(
     @Param('actionId') actionId: string,
     @Param('action') action: string,
+    @Param('clientId') clientId: number,
   ) {
     return this.walletService.HandleFetchPawaPay({
       actionId,
       action,
+      clientId,
     });
   }
 
   @UseGuards(AuthGuard)
-  @Get('/pawapay-callback/:action/:actionId')
+  @Get('/pawapay-callback/:action/:actionId/:clientId')
   @ApiOperation({
     summary:
       'Resends the callback for a payout/deposit/refund to your configured callback UR',
@@ -809,35 +817,55 @@ export class WalletController {
     type: 'string',
     description: 'deposit | payouts | refunds',
   })
+  @ApiParam({
+    name: 'clientId',
+    type: 'number',
+    description: 'Unique ID of the client',
+  })
   @ApiOkResponse({ type: SwaggerCommonResponseObj })
   HandlePawaPayResendCallback(
     @Param('actionId') actionId: string,
     @Param('action') action: string,
+    @Param('clientId') clientId: number,
   ) {
     return this.walletService.HandlePawaPayResendCallback({
       actionId,
       action,
+      clientId,
     });
   }
 
   @UseGuards(AuthGuard)
-  @Get('/pawapay/balance')
+  @Get('/pawapay/balance/:clientId')
   @ApiOperation({
     summary: 'check balance',
     description:
       'Allows you to get the list of wallets and their balances configured for your account',
   })
+  @ApiParam({
+    name: 'clientId',
+    type: 'number',
+    description: 'Unique ID of the client',
+  })
   @ApiOkResponse({ type: SwaggerCommonResponse })
-  HandlePawaPayBalances() {
-    return this.walletService.HandlePawaPayBalances();
+  HandlePawaPayBalances(@Param('clientId') clientId: number) {
+    return this.walletService.HandlePawaPayBalances({
+      clientId,
+      country: '',
+    });
   }
 
   @UseGuards(AuthGuard)
-  @Get('/pawapay/balance/:country')
+  @Get('/pawapay/balance/:country/:clientId')
   @ApiOperation({
     summary: 'check country balance fror pawapay',
     description:
       'Allows you to get the wallet balances for a specific country configured for your account',
+  })
+  @ApiParam({
+    name: 'clientId',
+    type: 'number',
+    description: 'Unique ID of the client',
   })
   @ApiParam({
     name: 'country',
@@ -845,15 +873,19 @@ export class WalletController {
     description: 'country 3-letter code NGN | GHC',
   })
   @ApiOkResponse({ type: SwaggerCommonResponse })
-  HandlePawaPayCountryBalances(@Param('country') country: string) {
+  HandlePawaPayCountryBalances(
+    @Param('country') country: string,
+    @Param('clientId') clientId: number,
+  ) {
     console.log(345);
     return this.walletService.HandlePawaPayCountryBalances({
       country,
+      clientId,
     });
   }
 
   @UseGuards(AuthGuard)
-  @Get('/pawapay-toolkit/:action')
+  @Get('/pawapay-toolkit/:action/:clientId')
   @ApiOperation({
     summary: 'fetch pawapay Toolkit',
     description: 'This endpoint to fetch toolkit information',
@@ -864,10 +896,14 @@ export class WalletController {
     description: 'availability | public-key',
   })
   @ApiOkResponse({ type: SwaggerCommonResponse })
-  HandlePawaPayToolkit(@Param('action') action: string) {
+  HandlePawaPayToolkit(
+    @Param('action') action: string,
+    @Param('clientId') clientId: number,
+  ) {
     console.log(action);
     return this.walletService.HandlePawaPayToolkit({
       action,
+      clientId,
     });
   }
 
@@ -878,8 +914,11 @@ export class WalletController {
     description: 'This endpoint to fetch active configuration',
   })
   @ApiOkResponse({ type: SwaggerCommonResponse })
-  HandlePawaPayActiveConf() {
-    return this.walletService.HandlePawaPayActiveConf();
+  HandlePawaPayActiveConf(@Param('clientId') clientId: number) {
+    return this.walletService.HandlePawaPayActiveConf({
+      clientId,
+      country: '',
+    });
   }
 
   @UseGuards(AuthGuard)

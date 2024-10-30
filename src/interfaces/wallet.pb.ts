@@ -14,10 +14,12 @@ export const protobufPackage = "wallet";
 
 export interface PawapayToolkitRequest {
   action: string;
+  clientId: number;
 }
 
 export interface PawapayPredCorrRequest {
   phoneNumber: string;
+  clientId: number;
 }
 
 export interface CreatePawapayRequest {
@@ -71,9 +73,11 @@ export interface CreateBulkPawapayRequest {
 export interface FetchPawapayRequest {
   action: string;
   actionId: string;
+  clientId: number;
 }
 
 export interface PawapayCountryRequest {
+  clientId: number;
   country: string;
 }
 
@@ -908,7 +912,7 @@ export interface WalletServiceClient {
 
   handlePawaPayResendCallback(request: FetchPawapayRequest): Observable<CommonResponseObj>;
 
-  handlePawaPayBalances(request: EmptyRequest): Observable<CommonResponseArray>;
+  handlePawaPayBalances(request: PawapayCountryRequest): Observable<CommonResponseArray>;
 
   handlePawaPayCountryBalances(request: PawapayCountryRequest): Observable<CommonResponseArray>;
 
@@ -916,7 +920,7 @@ export interface WalletServiceClient {
 
   handlePawaPayToolkit(request: PawapayToolkitRequest): Observable<CommonResponseArray>;
 
-  handlePawaPayActiveConf(request: EmptyRequest): Observable<CommonResponseObj>;
+  handlePawaPayActiveConf(request: PawapayCountryRequest): Observable<CommonResponseObj>;
 
   createVirtualAccount(request: WayaBankRequest): Observable<CommonResponseObj>;
 
@@ -1155,7 +1159,7 @@ export interface WalletServiceController {
   ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
 
   handlePawaPayBalances(
-    request: EmptyRequest,
+    request: PawapayCountryRequest,
   ): Promise<CommonResponseArray> | Observable<CommonResponseArray> | CommonResponseArray;
 
   handlePawaPayCountryBalances(
@@ -1171,7 +1175,7 @@ export interface WalletServiceController {
   ): Promise<CommonResponseArray> | Observable<CommonResponseArray> | CommonResponseArray;
 
   handlePawaPayActiveConf(
-    request: EmptyRequest,
+    request: PawapayCountryRequest,
   ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
 
   createVirtualAccount(
