@@ -84,21 +84,19 @@ export class WalletAdminController {
     })
     @ApiBody({type: SwaggerUpdateWithdrawalRequest})
     @ApiOkResponse({ type: SwaggerPaymentMethodResponse })
-    async updateWithdrawals(
+    updateWithdrawals(
         @Body() body: UpdateWithdrawalRequest,
         @Query() query,
         @Req() req,
     ) {
-        console.log(body)
 
-        const resp = await this.walletService.updateWithdrawal({
+        return this.walletService.updateWithdrawal({
             clientId: body.clientId, 
             withdrawalId: body.withdrawalId,
             action: body.action,
             comment: body.action,
             updatedBy: ''
         });
-        console.log(resp);
     }
 
 
