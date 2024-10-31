@@ -89,6 +89,7 @@ export class WalletAdminController {
         @Query() query,
         @Req() req,
     ) {
+        console.log(body)
 
         const resp = this.walletService.updateWithdrawal({
             clientId: body.clientId, 
