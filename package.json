@@ -25,7 +25,7 @@
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "proto:install": "yarn add git+https://github.com/zoroplay/sbe-service-proto.git",
     "proto:identity": "protoc --plugin=node_modules/.bin/protoc-gen-ts_proto.cmd -I=./node_modules/sbe-service-proto/proto --ts_proto_out=src/interfaces/ node_modules/sbe-service-proto/proto/identity.proto --ts_proto_opt=nestJs=true --ts_proto_opt=fileSuffix=.pb",
-    "proto:gaming": "protoc --plugin=node_modules/.bin/protoc-gen-ts_proto -I=./node_modules/sbe-service-proto/proto --ts_proto_out=src/interfaces/ node_modules/sbe-service-proto/proto/gaming.proto --ts_proto_opt=nestJs=true --ts_proto_opt=fileSuffix=.pb",
+    "proto:gaming": "protoc --plugin=node_modules/.bin/protoc-gen-ts_proto.cmd -I=./node_modules/sbe-service-proto/proto --ts_proto_out=src/interfaces/ node_modules/sbe-service-proto/proto/gaming.proto --ts_proto_opt=nestJs=true --ts_proto_opt=fileSuffix=.pb",
     "proto:betting": "protoc --plugin=node_modules/.bin/protoc-gen-ts_proto -I=./node_modules/sbe-service-proto/proto --ts_proto_out=src/interfaces/ node_modules/sbe-service-proto/proto/betting.proto --ts_proto_opt=nestJs=true --ts_proto_opt=fileSuffix=.pb",
     "proto:fixture": "protoc --plugin=node_modules/.bin/protoc-gen-ts_proto -I=./node_modules/sbe-service-proto/proto --ts_proto_out=src/interfaces/ node_modules/sbe-service-proto/proto/fixture.proto --ts_proto_opt=nestJs=true --ts_proto_opt=fileSuffix=.pb",
     "proto:bonus": "protoc --plugin=node_modules/.bin/protoc-gen-ts_proto.cmd -I=./node_modules/sbe-service-proto/proto --ts_proto_out=src/interfaces/ node_modules/sbe-service-proto/proto/bonus.proto --ts_proto_opt=nestJs=true --ts_proto_opt=fileSuffix=.pb",
@@ -84,7 +84,7 @@
     "ts-jest": "^29.1.2",
     "ts-loader": "^9.5.1",
     "ts-node": "^10.9.2",
-    "ts-proto": "^1.157.0",
+    "ts-proto": "^1.181.2",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.3.3"
   },

@@ -159,6 +159,9 @@ export class SwaggerCreatePawaPayRequest {
 
   @ApiProperty({ description: 'if refund, send deposit ID for refund' })
   depositId?: string;
+
+  @ApiProperty({ description: 'operator to handle request' })
+  operator?: string;
 }
 
 export class SwaggerApproveExpenseRequest {

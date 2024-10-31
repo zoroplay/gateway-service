@@ -393,8 +393,10 @@ export class WalletService {
   ): Promise<CommonResponseObj> {
     return await firstValueFrom(this.svc.handlePawaPayResendCallback(data));
   }
-  async HandlePawaPayBalances(): Promise<CommonResponseArray> {
-    return await firstValueFrom(this.svc.handlePawaPayBalances({}));
+  async HandlePawaPayBalances(
+    data: PawapayCountryRequest,
+  ): Promise<CommonResponseArray> {
+    return await firstValueFrom(this.svc.handlePawaPayBalances(data));
   }
   async HandlePawaPayCountryBalances(
     data: PawapayCountryRequest,
@@ -406,8 +408,10 @@ export class WalletService {
   ): Promise<CommonResponseArray> {
     return await firstValueFrom(this.svc.handlePawaPayToolkit(data));
   }
-  async HandlePawaPayActiveConf(): Promise<CommonResponseObj> {
-    return await firstValueFrom(this.svc.handlePawaPayActiveConf({}));
+  async HandlePawaPayActiveConf(
+    data: PawapayCountryRequest,
+  ): Promise<CommonResponseObj> {
+    return await firstValueFrom(this.svc.handlePawaPayActiveConf(data));
   }
   async HandlePawaPayPredCorr(
     data: PawapayPredCorrRequest,
