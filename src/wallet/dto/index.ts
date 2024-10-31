@@ -97,6 +97,73 @@ export class SwaggerListDepositRequest {
   transactionId: string;
 }
 
+export class SwaggerFetchUsersWithdrawalRequest {
+  @ApiProperty({ description: 'ID of User that requested the expense' })
+  userId?: number;
+  @ApiProperty({ description: 'ID of Client' })
+  clientId: number;
+}
+export class SwaggerPitch90RegisterUrlRequest {
+  @ApiProperty({
+    description: 'The url where the push notifications will be sent',
+  })
+  url: number;
+  @ApiProperty({ description: 'payment | withdrawal | stkstatus' })
+  action: string;
+}
+export class SwaggerPitch90TransactionRequest {
+  @ApiProperty({ description: 'ID of User that requested the expense' })
+  userId?: number;
+  @ApiProperty({ description: 'ID of Client' })
+  clientId: number;
+  @ApiProperty({ description: 'Request Amount' })
+  amount: number;
+  @ApiProperty({ description: 'deposit | withdrawal' })
+  action: string;
+  @ApiProperty({ description: 'Source of transaction' })
+  source: string;
+}
+export class SwaggerPawapayPredCorrRequest {
+  @ApiProperty({ description: 'phone number with country code included' })
+  phoneNumber?: number;
+}
+
+export class SwaggerCreateBulkPawaPayRequest {
+  @ApiProperty({ description: 'ID of User that requested the expense' })
+  userId?: number;
+
+  @ApiProperty({ description: 'ID of Client' })
+  clientId: number;
+
+  @ApiProperty({ description: 'Request Source' })
+  source: string;
+
+  @ApiProperty({ description: 'Request Amount' })
+  amount: number[];
+}
+export class SwaggerCreatePawaPayRequest {
+  @ApiProperty({ description: 'ID of User that requested the expense' })
+  userId?: number;
+
+  @ApiProperty({ description: 'ID of Client' })
+  clientId: number;
+
+  @ApiProperty({ description: 'Request Source' })
+  source: string;
+
+  @ApiProperty({ description: 'Request Amount' })
+  amount: number;
+
+  @ApiProperty({ description: 'deposit | payouts | refunds' })
+  action: string;
+
+  @ApiProperty({ description: 'if refund, send deposit ID for refund' })
+  depositId?: string;
+
+  @ApiProperty({ description: 'operator to handle request' })
+  operator?: string;
+}
+
 export class SwaggerApproveExpenseRequest {
   @ApiProperty({ description: 'ID of Admin that requested the expense' })
   status: number;
@@ -293,6 +360,17 @@ export class SwaggerCashbookReponse {
   })
   data?: any;
 }
+export class SwaggerCommonResponseObj {
+  @ApiProperty({ description: 'Message' })
+  message: string;
+  @ApiProperty({ description: 'true || false' })
+  status: boolean;
+  @ApiProperty({ description: 'Array of users data' })
+  data?: any;
+  @ApiProperty({ description: 'error message' })
+  error?: string;
+}
+
 export class SwaggerDepositReponse {
   @ApiProperty({ description: 'Message' })
   message: string;

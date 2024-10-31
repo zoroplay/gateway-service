@@ -3,47 +3,52 @@ import { IsNotEmpty } from 'class-validator';
 
 export class SwaggerSendSMSRequest {
   @ApiProperty({ description: 'ID' })
-  msisdn: number;
+  msisdn: string;
 
   @ApiProperty({ description: 'ID of the sender' })
-  senderID: number;
+  senderID: string;
 
   @ApiProperty({ description: 'Text tp be sent' })
-  text: number;
+  text: string;
 
   @ApiProperty({ description: 'ID' })
-  mode: number;
+  mode: string;
 
   @ApiProperty({ description: 'ID of the sender' })
-  name: number;
+  name: string;
 
   @ApiProperty({ description: 'Text tp be sent' })
-  from: number;
+  from: string;
 
   @ApiProperty({ description: 'ID' })
   status: number;
+
+  @ApiProperty({ description: 'Phone numbers of the receiver' })
+  phoneNumbers: string[];
 
   @ApiProperty({ description: 'ID of the sender' })
   lists: string[];
 
   @ApiProperty({ description: 'Text tp be sent' })
-  schedule: number;
+  schedule: string;
 
   @ApiProperty({ description: 'ID of the sender' })
-  channel: number;
+  channel: string;
 
   @ApiProperty({ description: 'Text tp be sent' })
-  campaignType: number;
+  campaignType: string;
+
+  @ApiProperty({ description: 'SBE Client ID' })
+  clientID: number;
 }
 
 export class SwaggerSendSMSResponse {
   @ApiProperty({ description: 'Message' })
   message: number;
 
-  @ApiProperty({ description: 'Request status'})
-  status: boolean
+  @ApiProperty({ description: 'Request status' })
+  status: boolean;
 }
-
 
 export class SwaggerSendOtpRequest {
   @ApiProperty({ description: 'SBE Client ID' })
@@ -120,7 +125,7 @@ export class GettSmsSettingsResponse {
   @ApiProperty({ description: 'Request Status (true or false)' })
   status: boolean;
 
-  data: SMSSetting[]
+  data: SMSSetting[];
 }
 
 interface SMSSetting {

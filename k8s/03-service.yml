@@ -7,7 +7,8 @@ spec:
   selector:
     app.kubernetes.io/name: sbe-gateway
   ports:
-  - protocol: TCP
-    port: 80
-    targetPort: 5001
-  type: LoadBalancer
+  - port: 80
+    protocol: TCP
+    targetPort: http
+    name: http
+  type: ClusterIP

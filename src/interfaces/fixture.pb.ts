@@ -6,6 +6,90 @@ import { Struct } from "./google/protobuf/struct.pb";
 
 export const protobufPackage = "fixture";
 
+export interface ValidateSelectionRequests {
+  data: ValidateSelectionRequests_ValidateSelection[];
+}
+
+export interface ValidateSelectionRequests_ValidateSelection {
+  outcomeID: number;
+  gameID: number;
+  marketID: number;
+  specifier: string;
+}
+
+export interface ValidateSelectionResponse {
+  success: boolean;
+  message: string;
+  data?: ValidateSelectionResponse_Data | undefined;
+}
+
+export interface ValidateSelectionResponse_Data {
+  rejected: ValidateSelectionResponse_Data_RejectedData[];
+  accepted: ValidateSelectionResponse_Data_AcceptedData[];
+}
+
+export interface ValidateSelectionResponse_Data_RejectedData {
+  matchID: number;
+  eventName?: string | undefined;
+  outcomeID: number;
+  marketID: number;
+}
+
+export interface ValidateSelectionResponse_Data_AcceptedData {
+  /** tournament name */
+  tournament: string;
+  /** Unique ID of the sport */
+  sportID: string;
+  /** Unique ID of the fixture (will always be between 1000 and 99999) */
+  gameID: string;
+  /** fixture name e.g ABC FC vs Yanga FC */
+  name: string;
+  /** Unique ID of the match (Betradar ID) */
+  matchID: string;
+  /** Match date */
+  date: string;
+  /** Fixture country code */
+  categoryName: string;
+  /** Away team name */
+  sportName: string;
+  /** market name */
+  marketName: string;
+  /** outcome name */
+  outcomeName: string;
+  /** specifier if any is available */
+  specifier: string;
+  /** outcomeID */
+  outcomeID: string;
+  /** current odds */
+  odds: string;
+  /** wether odd is active or deactivated, 1 - ACtive, 0 - Deactivated */
+  active: number;
+  /** ID of the producer that send the odds */
+  producerID: number;
+  /** Unique ID of this market */
+  marketID: number;
+}
+
+export interface GetActiveMarketResponse {
+  success: boolean;
+  message: string;
+  status: number;
+  data?: GetActiveMarketResponse_Data | undefined;
+}
+
+export interface GetActiveMarketResponse_Data {
+  games: string[];
+  activeMarkets: ActiveMarket[];
+}
+
+export interface ActiveMarket {
+  outcomeID: number;
+  marketID: number;
+  name: string;
+  code: string;
+  specifier: string;
+}
+
 export interface UpdateSportsMenuOrderRequest {
   data: string;
 }
@@ -802,6 +886,10 @@ export interface FixtureServiceClient {
   getSportsTournamentMenu(request: Empty): Observable<GetSportTournamentResponse>;
 
   updateSportsMenuOrder(request: UpdateSportsMenuOrderRequest): Observable<CommonResponse>;
+
+  getActiveGamesMarkets(request: FilterByMatchID): Observable<GetActiveMarketResponse>;
+
+  validateSelections(request: ValidateSelectionRequests): Observable<ValidateSelectionResponse>;
 }
 
 export interface FixtureServiceController {
@@ -980,6 +1068,14 @@ export interface FixtureServiceController {
   updateSportsMenuOrder(
     request: UpdateSportsMenuOrderRequest,
   ): Promise<CommonResponse> | Observable<CommonResponse> | CommonResponse;
+
+  getActiveGamesMarkets(
+    request: FilterByMatchID,
+  ): Promise<GetActiveMarketResponse> | Observable<GetActiveMarketResponse> | GetActiveMarketResponse;
+
+  validateSelections(
+    request: ValidateSelectionRequests,
+  ): Promise<ValidateSelectionResponse> | Observable<ValidateSelectionResponse> | ValidateSelectionResponse;
 }
 
 export function FixtureServiceControllerMethods() {
@@ -1023,6 +1119,8 @@ export function FixtureServiceControllerMethods() {
       "removeTopTournament",
       "getSportsTournamentMenu",
       "updateSportsMenuOrder",
+      "getActiveGamesMarkets",
+      "validateSelections",
     ];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
