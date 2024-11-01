@@ -1033,6 +1033,13 @@ export class WalletController {
     summary: 'get request to fetch logged in users withdraw-history',
     description: 'This endpoint to fetch users withdrawal history information',
   })
+  @ApiQuery({
+    name: 'pending',
+    type: 'string',
+    description:
+      'pending key to determine whether to return users pending requests',
+    example: 'mobile',
+  })
   @ApiParam({
     name: 'clientId',
     type: 'string',
@@ -1042,7 +1049,13 @@ export class WalletController {
   FetchUsersWithdrawal(
     @Body() param: FetchUsersWithdrawalRequest,
     @Param('clientId') clientId: number,
+    @Query('pending') pending?: string,
   ) {
-    return this.walletService.FetchUsersWithdrawal({ ...param, clientId });
+    const isPending = pending === 'true';
+    return this.walletService.FetchUsersWithdrawal({
+      ...param,
+      clientId,
+      pending: isPending,
+    });
   }
 }
