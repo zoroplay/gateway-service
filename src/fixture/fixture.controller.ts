@@ -466,7 +466,7 @@ export class FixtureController {
     @Body() data: ValidateSelectionRequests
   ) {
     try {
-      return this.fixtureService.validateSelections(data);
+      return this.fixtureService.validateSelections({data});
     } catch (error) {
       console.error(error);
     }
