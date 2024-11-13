@@ -445,7 +445,7 @@ export class SwaggerUpdateWithdrawalRequest {
   clientId: number;
   @ApiProperty({ description: 'Withdrawal Request ID' })
   withdrawalId: number;
-  @ApiProperty({ description: 'Update action' })
+  @ApiProperty({ description: 'approve | cancel' })
   action: string;
   @ApiProperty({ description: 'Comment if rejected' })
   comment: string;
