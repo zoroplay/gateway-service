@@ -14,6 +14,7 @@ import { AuthService } from 'src/identity/auth/auth.service';
 import { AssignUserCommissionProfile, CommissionProfile, CreateUserRequest, GetAgentUsersRequest, GetNetworkSalesRequest } from 'src/interfaces/identity.pb';
 import { BetHistoryRequest, GetCommissionsRequest, GetVirtualBetsRequest } from 'src/interfaces/betting.pb';
 import { BettingService } from 'src/betting/betting.service';
+import { SwaggerBetHistoryRequest, SwaggerPayoutCommission } from 'src/betting/dto';
 
 @ApiTags('BackOffice APIs')
 @Controller('admin/retail')
@@ -308,6 +309,26 @@ export class RetailAdminController {
         // data.perPage = query.limit || 100
         return this.retailService.getSalesReport(data);
     }
+
+    @Post(':clientId/commissions/pay')
+    @ApiOperation({
+        summary: 'Payout Commissions',
+        description: 'This endpoints submits commissions to be paid out',
+    })
+    @ApiBody({ type: SwaggerBetHistoryRequest })
+    @ApiOkResponse({ type: SwaggerPayoutCommission })
+    PayoutCommission(
+        @Param('clientId') clientId: number,
+        @Body() data,
+    ) {
+    try {
+      // data.userId = req.user.id;
+      data.clientId = clientId;
+      return this.retailService.payoutCommission(data);
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
   // @Get('/bonus-groups')
   // @ApiOperation({

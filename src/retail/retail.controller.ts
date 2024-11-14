@@ -10,7 +10,6 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { RetailService } from './retail.service';
 import {
   ApiBody,
   ApiOkResponse,
@@ -29,7 +28,6 @@ import {
 import {
   SwaggerBetHistoryRequest,
   SwaggerBetHistoryResponse,
-  SwaggerPayoutCommission,
 } from 'src/betting/dto';
 import {
   BetHistoryRequest,
@@ -43,7 +41,6 @@ import { IAuthorizedRequest } from 'src/interfaces/authorized-request.interface'
 @Controller('retail')
 export class RetailController {
   constructor(
-    private readonly retailService: RetailService,
     private readonly walletService: WalletService,
     private readonly bettingService: BettingService,
   ) {}
@@ -186,26 +183,6 @@ export class RetailController {
       data.userId = req.user.id;
       data.clientId = clientId;
       return this.bettingService.getSalesReport(data);
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
-  @Post(':clientId/commissions/pay')
-  @ApiOperation({
-    summary: 'Payout Commissions',
-    description: 'This endpoints submits commissions to be paid out',
-  })
-  @ApiBody({ type: SwaggerBetHistoryRequest })
-  @ApiOkResponse({ type: SwaggerPayoutCommission })
-  PayoutCommission(
-    @Param('clientId') clientId: number,
-    @Body() data,
-  ) {
-    try {
-      // data.userId = req.user.id;
-      data.clientId = clientId;
-      return this.retailService.payoutCommission(data);
     } catch (error) {
       console.error(error);
     }
