@@ -1,7 +1,7 @@
 import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { ClientGrpc } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
-import { AssignUserCommissionProfile, CommissionProfile, GetCommissionsRequest, GetNetworkSalesRequest, IDENTITY_SERVICE_NAME, IdentityServiceClient, SingleItemRequest, protobufPackage } from 'src/interfaces/identity.pb';
+import { AssignUserCommissionProfile, CommissionProfile, GetCommissionsRequest, GetNetworkSalesRequest, IDENTITY_SERVICE_NAME, IdentityServiceClient, PayoutCommissionRequest, SingleItemRequest, protobufPackage } from 'src/interfaces/identity.pb';
 
 @Injectable()
 export class RetailService implements OnModuleInit {
@@ -67,6 +67,10 @@ export class RetailService implements OnModuleInit {
 
   getSalesReport(data: GetNetworkSalesRequest) {
     return this.service.getNetworkSalesReport(data);
+  }
+
+  payoutCommission(data: PayoutCommissionRequest) {
+    return this.service.payoutCommission(data);
   }
     // Bonus Groups
   // getBonusGroups(data: Empty) {
