@@ -115,4 +115,9 @@ export class BettingService implements OnModuleInit {
     //console.log('get commission retport ');
     return this.service.getCommissions(data);
   }
+
+  getShopUserCommissions(data: SalesReportRequest) {
+    //console.log('get commission retport ');
+    return this.service.getShopUserCommissions(data);
+  }
 }
