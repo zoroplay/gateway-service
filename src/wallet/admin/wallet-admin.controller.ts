@@ -90,6 +90,8 @@ export class WalletAdminController {
         @Req() req,
     ) {
 
+        console.log(body);
+
         return this.walletService.updateWithdrawal({
             clientId: body.clientId, 
             withdrawalId: body.withdrawalId,
