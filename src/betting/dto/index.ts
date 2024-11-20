@@ -406,6 +406,70 @@ export class SwaggerBetHistory {
   statusDescription: string;
 }
 
+
+export class SwaggerPayoutCommission {
+
+  @ApiProperty({
+    description: 'Total Sales',
+  })
+  totalSales: number;
+
+  @ApiProperty({
+    description: 'Commission provider type (sports, casino, virutal)',
+  })
+  provider: string;
+
+  @ApiProperty({
+    description: 'Commission start date',
+  })
+  startDate: string;
+
+  @ApiProperty({
+    description: 'Commission end date',
+  })
+  endDate: string;
+
+  @ApiProperty({
+    description: 'SBE operator client ID',
+  })
+  clientId: number;
+
+  @ApiProperty({
+    description: 'Agent user ID to receive commission',
+  })
+  userId: number;
+
+  @ApiProperty({
+    description: 'Total no of tickets',
+  })
+  totalTickets: number;
+
+  @ApiProperty({
+    description: 'Total amount won',
+  })
+  totalWon: number;
+
+  @ApiProperty({
+    description: 'Profit for the period',
+  })
+  profit: number;
+
+  @ApiProperty({
+    description: 'Net profit for the period',
+  })
+  net: string;
+
+  @ApiProperty({
+    description: 'Commission amount',
+  })
+  commission: number;
+
+  @ApiProperty({
+    description: 'Commission profile ID',
+  })
+  commissionId: number;
+}
+
 export class SwaggerBetHistoryResponse {
 
   @ApiProperty({
