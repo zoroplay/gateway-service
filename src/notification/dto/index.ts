@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty } from 'class-validator';
+import { IsNotEmpty, IsOptional } from 'class-validator';
 
 export class SwaggerSendSMSRequest {
   @ApiProperty({ description: 'ID' })
@@ -35,6 +35,9 @@ export class SwaggerSendSMSRequest {
   @ApiProperty({ description: 'ID of the sender' })
   channel: string;
 
+  @ApiProperty({ description: 'operator of the reciever' })
+  operator: string;
+
   @ApiProperty({ description: 'Text tp be sent' })
   campaignType: string;
 
@@ -58,6 +61,10 @@ export class SwaggerSendOtpRequest {
   @ApiProperty({ description: 'Phone number' })
   @IsNotEmpty()
   phoneNumber: string;
+
+  @ApiProperty({ description: 'Operator', example: 'VODACOM'})
+  @IsOptional()
+  operator: string;
 }
 
 export class SwaggerVerifyOtpRequest {
