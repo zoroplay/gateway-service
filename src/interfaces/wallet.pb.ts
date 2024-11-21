@@ -35,6 +35,7 @@ export interface CreatePawapayRequest {
 export interface FetchUsersWithdrawalRequest {
   userId: number;
   clientId: number;
+  pending?: boolean | undefined;
 }
 
 export interface WayaBankRequest {

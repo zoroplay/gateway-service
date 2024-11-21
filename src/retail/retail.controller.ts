@@ -10,7 +10,6 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { RetailService } from './retail.service';
 import {
   ApiBody,
   ApiOkResponse,
@@ -36,15 +35,16 @@ import {
 } from 'src/interfaces/betting.pb';
 import { BettingService } from 'src/betting/betting.service';
 import { IAuthorizedRequest } from 'src/interfaces/authorized-request.interface';
+import { RetailService } from './retail.service';
 
 @ApiTags('Retail APIs')
 @UseGuards(AuthGuard)
 @Controller('retail')
 export class RetailController {
   constructor(
-    private readonly retailService: RetailService,
     private readonly walletService: WalletService,
     private readonly bettingService: BettingService,
+    private readonly retailService: RetailService,
   ) {}
 
   @Post(':clientId/fund-user')
@@ -185,6 +185,27 @@ export class RetailController {
       data.userId = req.user.id;
       data.clientId = clientId;
       return this.bettingService.getSalesReport(data);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  @Post(':clientId/reports/commission')
+  @ApiOperation({
+    summary: 'Retail Commission Report',
+    description: 'Retrieves commission report for a retail user',
+  })
+  @ApiBody({ type: SwaggerBetHistoryRequest })
+  @ApiOkResponse({ type: SwaggerBetHistoryResponse })
+  CommissionReport(
+    @Param('clientId') clientId: number,
+    @Body() data: SalesReportRequest,
+    @Req() req: IAuthorizedRequest,
+  ) {
+    try {
+      data.userId = req.user.id;
+      data.clientId = clientId;
+      return this.bettingService.getShopUserCommissions(data);
     } catch (error) {
       console.error(error);
     }
