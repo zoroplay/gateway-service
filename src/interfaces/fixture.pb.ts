@@ -39,19 +39,20 @@ export interface ValidateSelectionResponse_Data_RejectedData {
   eventName?: string | undefined;
   outcomeID: number;
   marketID: number;
+  gameID: number;
 }
 
 export interface ValidateSelectionResponse_Data_AcceptedData {
   /** tournament name */
   tournament: string;
   /** Unique ID of the sport */
-  sportID: string;
+  sportID: number;
   /** Unique ID of the fixture (will always be between 1000 and 99999) */
-  gameID: string;
+  gameID: number;
   /** fixture name e.g ABC FC vs Yanga FC */
   name: string;
   /** Unique ID of the match (Betradar ID) */
-  matchID: string;
+  matchID: number;
   /** Match date */
   date: string;
   /** Fixture country code */
@@ -76,6 +77,7 @@ export interface ValidateSelectionResponse_Data_AcceptedData {
   marketID: number;
   homeTeam: string;
   awayTeam: string;
+  eventID: number;
 }
 
 export interface GetActiveMarketResponse {
