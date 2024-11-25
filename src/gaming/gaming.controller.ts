@@ -24,9 +24,11 @@ import {
 import { Response } from 'express';
 import { GamingService } from './gaming.service';
 import {
+  FindOneCategoryDto,
   StartGameDto,
 } from 'src/interfaces/gaming.pb';
 import {
+  FindCategoryDto,
   SwaggerOKGameResponse,
   SwaggerStartGameDto,
   SwaggerStartGameResponseDto,

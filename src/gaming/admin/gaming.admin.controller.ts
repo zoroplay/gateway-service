@@ -2,31 +2,37 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Post,
+  Put,
+  Query,
 } from '@nestjs/common';
 import {
   ApiBody,
   ApiOkResponse,
-  ApiParam,
   ApiQuery,
-  ApiTags,
+  ApiTags
 } from '@nestjs/swagger';
-import { GamingService } from '../gaming.service';
 import {
   CreateGameDto,
   CreateProviderDto,
+  FindOneCategoryDto,
+  SaveCategoryRequest,
   SyncGameDto,
 } from 'src/interfaces/gaming.pb';
 import {
+  FindCategoryDto,
+  SaveCategoryRequestDto,
+  SwaggerCreateGameDto,
+  SwaggerCreateProviderDto,
   SwaggerOKGameArrayResponse,
   SwaggerOKGameResponse,
-  SwaggerSyncGameDto,
-  SwaggerCreateGameDto,
   SwaggerOKProviderArrayResponse,
-  SwaggerCreateProviderDto,
   SwaggerOKProviderResponse,
+  SwaggerSyncGameDto
 } from '../dto';
+import { GamingService } from '../gaming.service';
 
 @ApiTags('BackOffice APIs')
 @Controller('admin/games')
@@ -45,6 +51,38 @@ export class GamingAdminController {
   getCategories() {
     return this.gamingService.listCategories();
   }
+
+  @Get('category')
+  @ApiQuery({ name: 'id', type: String })
+  @ApiOkResponse({ type: [SwaggerOKGameResponse] })
+  findOneCategory(@Query('id') id: string) {
+  const payload: FindOneCategoryDto = { id: parseInt(id, 10) }; // Ensure it matches the expected structure
+  return this.gamingService.findOneCategory(payload);
+}
+  
+  @Post('/add-category')
+  @ApiBody({ type: SaveCategoryRequestDto })
+  @ApiOkResponse({ type: [SwaggerOKGameResponse] })
+  saveCategory(@Body() payload: SaveCategoryRequest) {
+    return this.gamingService.saveCategory(payload);
+  }
+
+  @Put('/update-category')
+  @ApiBody({ type: SaveCategoryRequestDto })
+  @ApiOkResponse({ type: [SwaggerOKGameResponse] })
+  updateCategory(@Body() payload: SaveCategoryRequest) {
+    return this.gamingService.updateCategory(payload);
+  }
+
+  @Delete('category')
+  @ApiQuery({ name: 'id', type: String, description: 'ID of the category to delete' })
+  @ApiOkResponse({ description: 'Category deleted successfully' })
+  deleteCategory(@Query('id') id: string) {
+    console.log('Received ID for deletion:', id);
+    const payload: FindOneCategoryDto = { id: parseInt(id, 10) }; // Wrap id in DTO
+    return this.gamingService.deleteCategory(payload);
+  }
+  
 
   @Post()
   @ApiBody({ type: SwaggerCreateGameDto })

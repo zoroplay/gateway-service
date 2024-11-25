@@ -339,3 +339,41 @@ export class SwaggerCreateGameDto {
 //   })
 //   Portalname: string;
 // }
+
+
+export class SaveCategoryRequestDto {
+  @ApiProperty({
+    description: 'The ID of the client associated with the category.',
+    example: 123,
+  })
+  clientId: number;
+
+  @ApiProperty({
+    description: 'The unique ID of the category (optional).',
+    example: 1,
+    required: false,
+  })
+  id?: number;
+
+
+  @ApiProperty({
+    description: 'The name of the category.',
+    example: 'Electronics',
+  })
+  name: string;
+
+  @ApiProperty({
+    description: 'The image path for the category (optional).',
+    example: '/images/category/electronics.png',
+    required: false,
+  })
+  imagePath?: string;
+}
+
+export class FindCategoryDto {
+  @ApiProperty({
+    description: 'The unique ID of the category to retrieve.',
+    example: 1,
+  })
+  id: number;
+}
