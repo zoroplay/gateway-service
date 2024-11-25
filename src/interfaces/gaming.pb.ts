@@ -342,6 +342,10 @@ export interface Categories {
   data: Category[];
 }
 
+export interface FindOneCategoryDto {
+  id: number;
+}
+
 export interface MetaData {
   page: number;
   perPage: number;
@@ -372,9 +376,15 @@ export interface GamingServiceClient {
 
   removeGame(request: UpdateGameDto): Observable<Game>;
 
-  saveCategory(request: SaveCategoryRequest): Observable<CommonResponse>;
+  saveCategory(request: SaveCategoryRequest): Observable<Category>;
 
   fetchCategories(request: Empty): Observable<Categories>;
+
+  findOneCategory(request: FindOneCategoryDto): Observable<Category>;
+
+  updateCategory(request: SaveCategoryRequest): Observable<Category>;
+
+  deleteCategory(request: FindOneCategoryDto): Observable<Empty>;
 
   registerBonus(request: Empty): Observable<CommonResponse>;
 
@@ -424,9 +434,15 @@ export interface GamingServiceController {
 
   removeGame(request: UpdateGameDto): Promise<Game> | Observable<Game> | Game;
 
-  saveCategory(request: SaveCategoryRequest): Promise<CommonResponse> | Observable<CommonResponse> | CommonResponse;
+  saveCategory(request: SaveCategoryRequest): Promise<Category> | Observable<Category> | Category;
 
   fetchCategories(request: Empty): Promise<Categories> | Observable<Categories> | Categories;
+
+  findOneCategory(request: FindOneCategoryDto): Promise<Category> | Observable<Category> | Category;
+
+  updateCategory(request: SaveCategoryRequest): Promise<Category> | Observable<Category> | Category;
+
+  deleteCategory(request: FindOneCategoryDto): Promise<Empty> | Observable<Empty> | Empty;
 
   registerBonus(request: Empty): Promise<CommonResponse> | Observable<CommonResponse> | CommonResponse;
 
@@ -472,6 +488,9 @@ export function GamingServiceControllerMethods() {
       "removeGame",
       "saveCategory",
       "fetchCategories",
+      "findOneCategory",
+      "updateCategory",
+      "deleteCategory",
       "registerBonus",
       "createProvider",
       "updateProvider",
