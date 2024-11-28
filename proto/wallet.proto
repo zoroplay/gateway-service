@@ -15,7 +15,10 @@ service WalletService {
   rpc GetTransactions (GetTransactionRequest) returns (GetTransactionResponse) {}
   rpc GetPaymentMethods (GetPaymentMethodRequest) returns (GetPaymentMethodResponse) {}
   rpc SavePaymentMethod (PaymentMethodRequest) returns (PaymentMethodResponse) {}
+  
 }
+
+
 
 message PaymentMethodRequest {
   int32 clientId = 1;

@@ -129,6 +129,13 @@ export class WalletService {
     return await firstValueFrom(this.svc.inititateDeposit(data));
   }
 
+
+  // async inititateFluterWaveDeposit(
+  //   data: InitiateDepositRequest,
+  // ): Promise<InitiateDepositResponse> {
+  //   return await firstValueFrom(this.svc.(data));
+  // }
+
   async verifyDeposit(
     data: VerifyDepositRequest,
   ): Promise<VerifyDepositResponse> {
