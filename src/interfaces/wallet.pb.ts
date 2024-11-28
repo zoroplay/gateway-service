@@ -2,6 +2,7 @@
 // versions:
 //   protoc-gen-ts_proto  v1.181.2
 //   protoc               v5.28.2
+//   protoc               v3.21.12
 // source: wallet.proto
 
 /* eslint-disable */
