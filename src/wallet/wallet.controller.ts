@@ -35,10 +35,9 @@ import {
   GetBalanceRequest,
   HandleReportRequest,
   InitiateDepositRequest,
-  PawapayCountryRequest,
   PawapayPredCorrRequest,
-  Pitch90RegisterUrlRequest,
-  Pitch90TransactionRequest,
+  StkRegisterUrlRequest,
+  StkTransactionRequest,
   UserTransactionRequest,
   VerifyBankAccountRequest,
   VerifyDepositRequest,
@@ -57,7 +56,6 @@ import {
   SwaggerFetchLastApprovedRequest,
   SwaggerFetchReportsRequest,
   SwaggerFetchSalesReportRequest,
-  SwaggerFetchUsersWithdrawalRequest,
   SwaggerGetPaymentMethodResponse,
   SwaggerHandleReportsRequest,
   SwaggerInitiateDepositRequest,
@@ -975,43 +973,11 @@ export class WalletController {
       clientId,
     });
   }
-  @UseGuards(AuthGuard)
-  @Post('/pitch90-transaction/:action/:clientId')
-  @ApiOperation({
-    summary: 'post request to initiate transaction with bet777',
-    description: 'This endpoint to handle transaction on bet777',
-  })
-  @ApiParam({
-    name: 'clientId',
-    type: 'number',
-    description: '',
-  })
-  @ApiParam({
-    name: 'action',
-    type: 'string',
-    description: 'deposit | withdrawal',
-  })
-  @ApiBody({ type: SwaggerPitch90TransactionRequest })
-  @ApiOkResponse({ type: SwaggerCommonResponseObj })
-  Pitch90Transaction(
-    @Param('clientId') clientId: number,
-    @Param('action') action: string,
-    @Body() body: Pitch90TransactionRequest,
-    @Req() req: IAuthorizedRequest,
-  ) {
-    return this.walletService.Pitch90Transaction({
-      ...body,
-      userId: req.user.id,
-      clientId,
-      action,
-    });
-  }
 
-  @UseGuards(AuthGuard)
-  @Post('/pitch90-register-url/:action/:clientId')
+  @Post('/stk-register-url/:clientId/:action')
   @ApiOperation({
-    summary: 'post request to register url for push notification',
-    description: 'This endpoint to handle push notifications',
+    summary: 'post request to register url for stk push notification',
+    description: 'This endpoint to handle registration of required url for stk deposit/withdrawal push notifications',
   })
   @ApiParam({
     name: 'action',
@@ -1020,11 +986,50 @@ export class WalletController {
   })
   @ApiBody({ type: SwaggerPitch90RegisterUrlRequest })
   @ApiOkResponse({ type: SwaggerCommonResponseObj })
-  Pitch90RegisterUrl(
-    @Body() param: Pitch90RegisterUrlRequest,
+  stk90RegisterUrl(
+    @Body() param: StkRegisterUrlRequest,
     @Param('action') action: string,
   ) {
     return this.walletService.Pitch90RegisterUrl({ ...param, action });
+  }
+
+  @Post('/stk-transaction/:clientId/:action')
+  @ApiOperation({
+    summary: 'post request to handle stk push request',
+    description: 'This endpoint to handle stk deposit/withdrawal/stkStatus requests',
+  })
+  @ApiParam({
+    name: 'action',
+    type: 'string',
+    description: 'deposit | withdrawal | stkstatus',
+  })
+  @ApiBody({ type: SwaggerPitch90RegisterUrlRequest })
+  @ApiOkResponse({ type: SwaggerCommonResponseObj })
+  async handleStkTransaction(
+    @Body() param,
+    @Param('action') action: string,
+    @Param('clientId') clientId: number,
+  ) {
+   let res = {};
+    const payload = {
+      clientId,
+      amount: param.amount,
+      msisdn: param.msisdn,
+      trxCode: param.trx_code,
+      trxDate: param.trx_date,
+      refId: param.ref_id
+    }
+    switch (action) {
+      case 'deposit':
+        res = await this.walletService.stkDepositnotification(payload)
+        break;
+      case 'withdrawal':
+        res = await this.walletService.stkWithdrawNotification(payload)
+      default:
+        res = await this.walletService.stkStatusNotification(payload);
+        break;
+    }
+   return res;
   }
 
   @UseGuards(AuthGuard)

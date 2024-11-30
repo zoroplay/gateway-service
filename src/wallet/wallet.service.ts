@@ -68,10 +68,10 @@ import {
   PawapayPredCorrRequest,
   CreateBulkPawapayRequest,
   WayaBankRequest,
-  Pitch90RegisterUrlRequest,
-  Pitch90TransactionRequest,
   GetTransactionsRequest,
   FetchUsersWithdrawalRequest,
+  StkTransactionRequest,
+  StkRegisterUrlRequest,
 } from '../interfaces/wallet.pb';
 import { ClientGrpc } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
@@ -436,15 +436,26 @@ export class WalletService {
     return await firstValueFrom(this.svc.wayabankAccountEnquiry(data));
   }
   async Pitch90RegisterUrl(
-    data: Pitch90RegisterUrlRequest,
+    data: StkRegisterUrlRequest,
   ): Promise<CommonResponseObj> {
-    return await firstValueFrom(this.svc.pitch90RegisterUrl(data));
+    return await firstValueFrom(this.svc.stkRegisterUrl(data));
   }
-  async Pitch90Transaction(
-    data: Pitch90TransactionRequest,
+  async stkDepositnotification(
+    data: StkTransactionRequest,
   ): Promise<CommonResponseObj> {
-    return await firstValueFrom(this.svc.pitch90Transaction(data));
+    return await firstValueFrom(this.svc.stkDepositNotification(data));
   }
+  async stkWithdrawNotification(
+    data: StkTransactionRequest,
+  ): Promise<CommonResponseObj> {
+    return await firstValueFrom(this.svc.stkWithdrawNotification(data));
+  }
+  async stkStatusNotification(
+    data: StkTransactionRequest,
+  ): Promise<CommonResponseObj> {
+    return await firstValueFrom(this.svc.stkStatusNotification(data));
+  }
+
   async FetchUsersWithdrawal(
     data: FetchUsersWithdrawalRequest,
   ): Promise<CommonResponseArray> {
