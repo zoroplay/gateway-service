@@ -107,9 +107,11 @@ export class SwaggerPitch90RegisterUrlRequest {
   @ApiProperty({
     description: 'The url where the push notifications will be sent',
   })
-  url: number;
+  url: string;
   @ApiProperty({ description: 'payment | withdrawal | stkstatus' })
   action: string;
+  @ApiProperty({ description: 'SBE Client ID' })
+  clientId: number;
 }
 export class SwaggerPitch90TransactionRequest {
   @ApiProperty({ description: 'ID of User that requested the expense' })

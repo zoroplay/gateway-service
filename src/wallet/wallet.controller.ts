@@ -987,10 +987,11 @@ export class WalletController {
   @ApiBody({ type: SwaggerPitch90RegisterUrlRequest })
   @ApiOkResponse({ type: SwaggerCommonResponseObj })
   stk90RegisterUrl(
-    @Body() param: StkRegisterUrlRequest,
+    @Body() param,
     @Param('action') action: string,
+    @Param('clientId') clientId: number
   ) {
-    return this.walletService.Pitch90RegisterUrl({ ...param, action });
+    return this.walletService.Pitch90RegisterUrl({ url: param.url, action, clientId });
   }
 
   @Post('/stk-transaction/:clientId/:action')
