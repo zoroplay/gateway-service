@@ -1011,7 +1011,7 @@ export class WalletController {
     @Param('action') action: string,
     @Param('clientId') clientId: number,
   ) {
-   let res = {};
+   let res: any;
     const payload = {
       clientId,
       amount: param.amount,
@@ -1031,7 +1031,20 @@ export class WalletController {
         break;
     }
     console.log(res);
-   return res;
+
+    if (res.success) {
+      return {
+        status: 'Success',
+        ref_id: res.data.refId
+      }
+    } else {
+      return {
+        status: 'Fail',
+        ref_id: res.data.refId,
+        error_no: res.data.error_no || '',
+        error_desc: res.data.error_desc || '',
+      }
+    }
   }
 
   @UseGuards(AuthGuard)
