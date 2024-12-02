@@ -1022,7 +1022,7 @@ export class WalletController {
     }
     switch (action) {
       case 'deposit':
-        res = await this.walletService.stkDepositnotification(payload)
+        res = await this.walletService.stkDepositnotification(payload);
         break;
       case 'withdrawal':
         res = await this.walletService.stkWithdrawNotification(payload)
@@ -1030,6 +1030,7 @@ export class WalletController {
         res = await this.walletService.stkStatusNotification(payload);
         break;
     }
+    console.log(res);
    return res;
   }
 
