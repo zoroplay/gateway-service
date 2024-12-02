@@ -133,7 +133,7 @@ export class WalletService {
   // async inititateFluterWaveDeposit(
   //   data: InitiateDepositRequest,
   // ): Promise<InitiateDepositResponse> {
-  //   return await firstValueFrom(this.svc.(data));
+  //   return await firstValueFrom(this.svc.createPayment(data));
   // }
 
   async verifyDeposit(
