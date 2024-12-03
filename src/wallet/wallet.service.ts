@@ -72,6 +72,8 @@ import {
   FetchUsersWithdrawalRequest,
   StkTransactionRequest,
   StkRegisterUrlRequest,
+  FlutterwaveWebhookRequest,
+  KoraPayWebhookRequest,
 } from '../interfaces/wallet.pb';
 import { ClientGrpc } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
@@ -129,13 +131,15 @@ export class WalletService {
     return await firstValueFrom(this.svc.inititateDeposit(data));
   }
 
+  async flutterWaveWebhook(
+    data: FlutterwaveWebhookRequest,
+  ): Promise<WebhookResponse> {
+    return await firstValueFrom(this.svc.flutterWaveWebhook(data));
+  }
 
-  // async inititateFluterWaveDeposit(
-  //   data: InitiateDepositRequest,
-  // ): Promise<InitiateDepositResponse> {
-  //   return await firstValueFrom(this.svc.createPayment(data));
-  // }
-
+  async korapayWebhook(data: KoraPayWebhookRequest): Promise<WebhookResponse> {
+    return await firstValueFrom(this.svc.korapayWebhook(data));
+  }
   async verifyDeposit(
     data: VerifyDepositRequest,
   ): Promise<VerifyDepositResponse> {
@@ -438,7 +442,7 @@ export class WalletService {
   async Pitch90RegisterUrl(
     data: StkRegisterUrlRequest,
   ): Promise<CommonResponseObj> {
-    console.log('register url data', data)
+    console.log('register url data', data);
     return await firstValueFrom(this.svc.stkRegisterUrl(data));
   }
   async stkDepositnotification(
