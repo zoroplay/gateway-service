@@ -137,11 +137,11 @@ export class WalletService {
     return await firstValueFrom(this.svc.flutterWaveWebhook(data));
   }
 
-  // async inititateFluterWaveDeposit(
-  //   data: InitiateDepositRequest,
-  // ): Promise<InitiateDepositResponse> {
-  //   return await firstValueFrom(this.svc.createPayment(data));
-  // }
+  async korapayWaveWebhook(
+    data: KoraPayWebhookRequest,
+  ): Promise<WebhookResponse> {
+    return await firstValueFrom(this.svc.korapayWebhook(data));
+  }
 
   async verifyDeposit(
     data: VerifyDepositRequest,
