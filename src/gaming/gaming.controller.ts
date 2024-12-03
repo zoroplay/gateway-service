@@ -297,7 +297,7 @@ export class GamingController {
             'X-ErrorCode': `${response.status}`,
           })
           .status(response.status)
-          .send(response)
+          .send(response.data)
       } else {
         console.log('response status is', response.status);
         return res.status(response.status).send(response.data);
