@@ -1011,39 +1011,43 @@ export class WalletController {
     @Param('action') action: string,
     @Param('clientId') clientId: number,
   ) {
-   let res: any;
-    const payload = {
-      clientId,
-      amount: param.amount,
-      msisdn: param.msisdn,
-      trxCode: param.trx_code,
-      trxDate: param.trx_date,
-      refId: param.ref_id
-    }
-    switch (action) {
-      case 'deposit':
-        res = await this.walletService.stkDepositnotification(payload);
-        break;
-      case 'withdrawal':
-        res = await this.walletService.stkWithdrawNotification(payload)
-      default:
-        res = await this.walletService.stkStatusNotification(payload);
-        break;
-    }
-    console.log(res);
+    try {
+    let res: any;
+      const payload = {
+        clientId,
+        amount: param.amount,
+        msisdn: param.msisdn,
+        trxCode: param.trx_code,
+        trxDate: param.trx_date,
+        refId: param.ref_id
+      }
+      switch (action) {
+        case 'deposit':
+          res = await this.walletService.stkDepositnotification(payload);
+          break;
+        case 'withdrawal':
+          res = await this.walletService.stkWithdrawNotification(payload)
+        default:
+          res = await this.walletService.stkStatusNotification(payload);
+          break;
+      }
+      console.log(res);
 
-    if (res.success) {
-      return {
-        status: 'Success',
-        ref_id: res.data.refId
+      if (res.success) {
+        return {
+          status: 'Success',
+          ref_id: res.data.refId
+        }
+      } else {
+        return {
+          status: 'Fail',
+          ref_id: res.data.refId,
+          error_no: res.data.error_no || '',
+          error_desc: res.data.error_desc || '',
+        }
       }
-    } else {
-      return {
-        status: 'Fail',
-        ref_id: res.data.refId,
-        error_no: res.data.error_no || '',
-        error_desc: res.data.error_desc || '',
-      }
+    } catch (e) {
+      console.log('stk transaction error', e.message);
     }
   }
 
