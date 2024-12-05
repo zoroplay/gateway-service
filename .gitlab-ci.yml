@@ -51,7 +51,7 @@ test:
 build-application:
   stage: build
   dependencies:
-    - get-new-version  # Ensure we get .VERSION file from the previous stage
+    - get-new-version  # Ensure we get .VERSION file from the previous stage..
   script: 
     - echo "We are building the application"
     - ls -la
