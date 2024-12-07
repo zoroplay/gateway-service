@@ -12,6 +12,8 @@ import {
   XpressRequest,
   XpressResponse,
   FetchGamesRequest,
+  SaveCategoryRequest,
+  FindOneCategoryDto,
 } from 'src/interfaces/gaming.pb';
 import { ClientGrpc } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
@@ -57,6 +59,33 @@ export class GamingService implements OnModuleInit {
     return firstValueFrom(this.service.fetchGamesByName(payload));
   }
 
+  async saveCategory(createCategoryDto: SaveCategoryRequest) {
+    //(createGameDto);
+    return firstValueFrom(this.service.saveCategory(createCategoryDto));
+  }
+
+  async findOneCategory(payload: FindOneCategoryDto) {
+    console.log("payload", payload);
+    //(createGameDto);
+    return firstValueFrom(this.service.findOneCategory(payload));
+  }
+
+  async updateCategory(updateCategoryDto: SaveCategoryRequest) {
+    //(createGameDto);
+    return firstValueFrom(this.service.updateCategory(updateCategoryDto));
+  }
+
+  async deleteCategory(payload: FindOneCategoryDto) {
+    console.log('Payload sent to gRPC client for deletion:', payload);
+  
+    const response = await firstValueFrom(this.service.deleteCategory(payload));
+    console.log('Response from gRPC server:', response);
+  
+    return response;
+  }
+  
+  
+
   async listCategories() {
     //('fetch categories');
     return firstValueFrom(this.service.fetchCategories({}));
@@ -84,6 +113,8 @@ export class GamingService implements OnModuleInit {
     // //('service start');
     // //(request);
     const resp = await firstValueFrom(this.service.handleCallback(request));
+
+    console.log("resp", resp);
 
     if (resp.success) {
       //('service ended in success');

@@ -24,9 +24,11 @@ import {
 import { Response } from 'express';
 import { GamingService } from './gaming.service';
 import {
+  FindOneCategoryDto,
   StartGameDto,
 } from 'src/interfaces/gaming.pb';
 import {
+  FindCategoryDto,
   SwaggerOKGameResponse,
   SwaggerStartGameDto,
   SwaggerStartGameResponseDto,
@@ -295,7 +297,7 @@ export class GamingController {
             'X-ErrorCode': `${response.status}`,
           })
           .status(response.status)
-          .send(response)
+          .send(response.data)
       } else {
         console.log('response status is', response.status);
         return res.status(response.status).send(response.data);

@@ -12,6 +12,22 @@ import { Struct } from "./google/protobuf/struct.pb";
 
 export const protobufPackage = "wallet";
 
+export interface FlutterwaveWebhookRequest {
+  clientId: number;
+  txRef: string;
+  event: string;
+  body: string;
+  flutterwaveKey: string;
+}
+
+export interface KoraPayWebhookRequest {
+  clientId: number;
+  reference: string;
+  event: string;
+  body: string;
+  korapayKey: string;
+}
+
 export interface PawapayToolkitRequest {
   action: string;
   clientId: number;
@@ -934,7 +950,7 @@ export interface WalletServiceClient {
   stkWithdrawNotification(request: StkTransactionRequest): Observable<CommonResponseObj>;
 
   stkStatusNotification(request: StkTransactionRequest): Observable<CommonResponseObj>;
-
+  
   stkRegisterUrl(request: StkRegisterUrlRequest): Observable<CommonResponseObj>;
 
   handleWayaQuickInit(request: WayaQuickRequest): Observable<CommonResponseObj>;
@@ -1018,6 +1034,10 @@ export interface WalletServiceClient {
   processShopWithdrawal(request: ProcessRetailTransaction): Observable<CommonResponseObj>;
 
   debitAgentBalance(request: DebitUserRequest): Observable<CommonResponseObj>;
+
+  flutterWaveWebhook(request: FlutterwaveWebhookRequest): Observable<WebhookResponse>;
+
+  korapayWebhook(request: KoraPayWebhookRequest): Observable<WebhookResponse>;
 }
 
 export interface WalletServiceController {
@@ -1358,6 +1378,14 @@ export interface WalletServiceController {
   debitAgentBalance(
     request: DebitUserRequest,
   ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
+
+  flutterWaveWebhook(
+    request: FlutterwaveWebhookRequest,
+  ): Promise<WebhookResponse> | Observable<WebhookResponse> | WebhookResponse;
+
+  korapayWebhook(
+    request: KoraPayWebhookRequest,
+  ): Promise<WebhookResponse> | Observable<WebhookResponse> | WebhookResponse;
 }
 
 export function WalletServiceControllerMethods() {
@@ -1450,6 +1478,8 @@ export function WalletServiceControllerMethods() {
       "validateWithdrawalCode",
       "processShopWithdrawal",
       "debitAgentBalance",
+      "flutterWaveWebhook",
+      "korapayWebhook",
     ];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
