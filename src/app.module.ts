@@ -10,6 +10,7 @@ import { BonusModule } from './bonus/bonus.module';
 import { NotificationModule } from './notification/notification.module';
 import { WalletModule } from './wallet/wallet.module';
 import { RetailModule } from './retail/retail.module';
+import { OddsModule } from './odds/odds.module';
 import 'dotenv/config';
 
 @Module({
@@ -23,6 +24,7 @@ import 'dotenv/config';
     NotificationModule,
     WalletModule,
     RetailModule,
+    OddsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
