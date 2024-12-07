@@ -3,12 +3,14 @@ import { ApiBody, ApiParam, ApiTags } from '@nestjs/swagger';
 import { AuthService } from './identity/auth/auth.service';
 import { WalletService } from './wallet/wallet.service';
 import { SwaggerGetUserByUsernmae } from './identity/dto';
+import { OddsService } from './odds/odds.service';
 
 @Controller()
 export class AppController {
   constructor(
     private readonly authService: AuthService,
-    private readonly walletService: WalletService
+    private readonly walletService: WalletService,
+    private readonly oddsService: OddsService
   ) {}
 
   @ApiTags('Webhooks')
@@ -109,4 +111,13 @@ export class AppController {
 
     return res.sendStatus(200);
   }
+
+  @Post('webhook/validate-odds')
+  validateOdds(
+    @Body() body,
+  ) {
+    return this.oddsService.GetOddsStatus(body)
+  }
+
+
 }

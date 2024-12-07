@@ -445,7 +445,7 @@ export class WalletService {
   async Pitch90RegisterUrl(
     data: StkRegisterUrlRequest,
   ): Promise<CommonResponseObj> {
-    console.log('register url data', data);
+    console.log('register url data', data)
     return await firstValueFrom(this.svc.stkRegisterUrl(data));
   }
   async stkDepositnotification(

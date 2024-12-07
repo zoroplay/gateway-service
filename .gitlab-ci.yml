@@ -51,7 +51,7 @@ test:
 build-application:
   stage: build
   dependencies:
-    - get-new-version  # Ensure we get .VERSION file from the previous stage
+    - get-new-version  # Ensure we get .VERSION file from the previous stage..
   script: 
     - echo "We are building the application"
     - ls -la
@@ -70,7 +70,7 @@ release-application:
   stage: release
   image: node:20
   variables:
-    GL_TOKEN: $GL_TOKEN  # Make sure GL_TOKEN is defined in GitLab CI/CD settings
+    GL_TOKEN: $GL_TOKEN  # Make sure GL_TOKEN is defined in GitLab CI/CD settings...
   script: 
     - yarn install  # Install dependencies
     - npx semantic-release  # Perform the release and create a new version
