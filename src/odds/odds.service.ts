@@ -14,8 +14,22 @@ export class OddsService {
         this.svc = this.client.getService<OddsClient>(ODDS_SERVICE_NAME);
     }
 
-    public async GetOddsStatus(param: GetOddsRequest) {
-      return await firstValueFrom(this.svc.getOdds(param));
+    public async GetOddsStatus(param: GetOddsRequest[]) {
+      try {
+        const accepted = [];
+        const rejected = [];
+        for(const selection of param) {
+          const res = await firstValueFrom(this.svc.getOdds(selection));
+          if (res.active) {
+            accepted.push({...selection, odds: res.odds})
+          } else {
+            rejected.push(selection)
+          }
+        }
+        return {success: true, message: 'Successful', data: {accepted, rejected} }
+      } catch (e) {
+        return {success: false, message: 'Error processing reques: ' + e.message, data: null};
+      }
     }
 
     public async getProbability(param: GetOddsRequest) {
