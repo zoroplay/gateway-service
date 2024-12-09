@@ -15,6 +15,7 @@ export class OddsService {
     }
 
     public async GetOddsStatus(param: GetOddsRequest[]) {
+      console.log(param)
       try {
         const accepted = [];
         const rejected = [];
