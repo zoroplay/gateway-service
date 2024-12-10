@@ -21,6 +21,7 @@ export class OddsService {
         const rejected = [];
         for(const selection of param) {
           const res = await firstValueFrom(this.svc.getOdds(selection));
+          console.log(res)
           if (res.active) {
             accepted.push({...selection, odds: res.odds})
           } else {
