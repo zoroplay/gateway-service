@@ -21,9 +21,20 @@ export class OddsService {
         for(const selection of param) {
           const res = await firstValueFrom(this.svc.getOdds(selection));
           if (res.active) {
-            accepted.push({...selection, odds: res.odds})
+            accepted.push({
+              ...selection, 
+              odds: res.odds, 
+              active: res.active, 
+              status: res.status,
+              statusName: res.statusName
+            })
           } else {
-            rejected.push(selection)
+            rejected.push({
+              ...selection, 
+              odds: res.odds, 
+              status: res.status,
+              statusName: res.statusName
+            })
           }
         }
         return {success: true, message: 'Successful', data: {accepted, rejected} }
