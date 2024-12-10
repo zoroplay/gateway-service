@@ -15,13 +15,11 @@ export class OddsService {
     }
 
     public async GetOddsStatus(param: GetOddsRequest[]) {
-      console.log(param)
       try {
         const accepted = [];
         const rejected = [];
         for(const selection of param) {
           const res = await firstValueFrom(this.svc.getOdds(selection));
-          console.log(res)
           if (res.active) {
             accepted.push({...selection, odds: res.odds})
           } else {
