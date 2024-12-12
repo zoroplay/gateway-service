@@ -5,15 +5,15 @@
 // source: google/protobuf/struct.proto
 
 /* eslint-disable */
-import { wrappers } from 'protobufjs';
+import { wrappers } from "protobufjs";
 
-export const protobufPackage = 'google.protobuf';
+export const protobufPackage = "google.protobuf";
 
 /**
  * `NullValue` is a singleton enumeration to represent the null value for the
  * `Value` type union.
  *
- *  The JSON representation for `NullValue` is JSON `null`.
+ * The JSON representation for `NullValue` is JSON `null`.
  */
 export enum NullValue {
   /** NULL_VALUE - Null value. */
@@ -51,15 +51,25 @@ export interface Struct_FieldsEntry {
  */
 export interface Value {
   /** Represents a null value. */
-  nullValue?: NullValue | undefined;
+  nullValue?:
+    | NullValue
+    | undefined;
   /** Represents a double value. */
-  numberValue?: number | undefined;
+  numberValue?:
+    | number
+    | undefined;
   /** Represents a string value. */
-  stringValue?: string | undefined;
+  stringValue?:
+    | string
+    | undefined;
   /** Represents a boolean value. */
-  boolValue?: boolean | undefined;
+  boolValue?:
+    | boolean
+    | undefined;
   /** Represents a structured value. */
-  structValue?: { [key: string]: any } | undefined;
+  structValue?:
+    | { [key: string]: any }
+    | undefined;
   /** Represents a repeated `Value`. */
   listValue?: Array<any> | undefined;
 }
@@ -74,7 +84,7 @@ export interface ListValue {
   values: any[];
 }
 
-export const GOOGLE_PROTOBUF_PACKAGE_NAME = 'google.protobuf';
+export const GOOGLE_PROTOBUF_PACKAGE_NAME = "google.protobuf";
 
 function createBaseStruct(): Struct {
   return { fields: {} };
@@ -112,54 +122,34 @@ export const Value = {
     const result = {} as any;
     if (value === null) {
       result.nullValue = NullValue.NULL_VALUE;
-    } else if (typeof value === 'boolean') {
+    } else if (typeof value === "boolean") {
       result.boolValue = value;
-    } else if (typeof value === 'number') {
+    } else if (typeof value === "number") {
       result.numberValue = value;
-    } else if (typeof value === 'string') {
+    } else if (typeof value === "string") {
       result.stringValue = value;
     } else if (globalThis.Array.isArray(value)) {
       result.listValue = ListValue.wrap(value);
-    } else if (typeof value === 'object') {
+    } else if (typeof value === "object") {
       result.structValue = Struct.wrap(value);
-    } else if (typeof value !== 'undefined') {
-      throw new globalThis.Error('Unsupported any value type: ' + typeof value);
+    } else if (typeof value !== "undefined") {
+      throw new globalThis.Error("Unsupported any value type: " + typeof value);
     }
     return result;
   },
 
-  unwrap(
-    message: any,
-  ): string | number | boolean | Object | null | Array<any> | undefined {
-    if (
-      message?.hasOwnProperty('stringValue') &&
-      message.stringValue !== undefined
-    ) {
+  unwrap(message: any): string | number | boolean | Object | null | Array<any> | undefined {
+    if (message?.hasOwnProperty("stringValue") && message.stringValue !== undefined) {
       return message.stringValue;
-    } else if (
-      message?.hasOwnProperty('numberValue') &&
-      message?.numberValue !== undefined
-    ) {
+    } else if (message?.hasOwnProperty("numberValue") && message?.numberValue !== undefined) {
       return message.numberValue;
-    } else if (
-      message?.hasOwnProperty('boolValue') &&
-      message?.boolValue !== undefined
-    ) {
+    } else if (message?.hasOwnProperty("boolValue") && message?.boolValue !== undefined) {
       return message.boolValue;
-    } else if (
-      message?.hasOwnProperty('structValue') &&
-      message?.structValue !== undefined
-    ) {
+    } else if (message?.hasOwnProperty("structValue") && message?.structValue !== undefined) {
       return Struct.unwrap(message.structValue as any);
-    } else if (
-      message?.hasOwnProperty('listValue') &&
-      message?.listValue !== undefined
-    ) {
+    } else if (message?.hasOwnProperty("listValue") && message?.listValue !== undefined) {
       return ListValue.unwrap(message.listValue);
-    } else if (
-      message?.hasOwnProperty('nullValue') &&
-      message?.nullValue !== undefined
-    ) {
+    } else if (message?.hasOwnProperty("nullValue") && message?.nullValue !== undefined) {
       return null;
     }
     return undefined;
@@ -178,10 +168,7 @@ export const ListValue = {
   },
 
   unwrap(message: ListValue): Array<any> {
-    if (
-      message?.hasOwnProperty('values') &&
-      globalThis.Array.isArray(message.values)
-    ) {
+    if (message?.hasOwnProperty("values") && globalThis.Array.isArray(message.values)) {
       return message.values.map(Value.unwrap);
     } else {
       return message as any;
@@ -189,7 +176,4 @@ export const ListValue = {
   },
 };
 
-wrappers['.google.protobuf.Struct'] = {
-  fromObject: Struct.wrap,
-  toObject: Struct.unwrap,
-} as any;
+wrappers[".google.protobuf.Struct"] = { fromObject: Struct.wrap, toObject: Struct.unwrap } as any;

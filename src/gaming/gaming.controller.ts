@@ -276,10 +276,12 @@ export class GamingController {
     @Req() req: RawBodyRequest<Request>,
     @Res() res: Response,
   ) {
-    console.log(req.rawBody)
-    const rawBody = req.rawBody;
-    let body = rawBody.toString().replace(/\r?\n|\r/g, "");
-    body = body.replace(/\s/g, "");
+    // console.log(req.rawBody)
+    // const rawBody = req.rawBody;
+    // let body = rawBody.toString().replace(/\r?\n|\r/g, "");
+    // body = body.replace(/\s/g, "");
+
+    const body = 'reference=acc2e13bc3b8401ca2a6ca47&amount=100.25&campaignType=T&providerId=PragmaticPlay&campaignId=68&currency=NGN&userId=214993&hash=b0b8ebd17bbfa89bbf3cccbdec0813e9&timestamp=1733827646440'
 
     try {
       const response = await this.gamingService.handleGamesCallback({
