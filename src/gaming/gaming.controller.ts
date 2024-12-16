@@ -290,6 +290,7 @@ export class GamingController {
         body,
         clientId
       });
+      console.log(response)
       if (response.success === false) {
         return res
           .set({
