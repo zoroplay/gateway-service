@@ -242,7 +242,7 @@ export class GamingController {
           })
           .send(response).status(HttpStatus.OK);
       }
-      
+
       return res.send(response.data).status(HttpStatus.OK);
 
     } catch (error) {
@@ -279,7 +279,7 @@ export class GamingController {
     @Req() req: RawBodyRequest<Request>,
     @Res() res: Response,
   ) {
-    console.log(req.rawBody)
+    // console.log(req.rawBody)
     const rawBody = req.rawBody;
     let body = rawBody.toString().replace(/\r?\n|\r/g, "");
     body = body.replace(/\s/g, "");
@@ -300,9 +300,9 @@ export class GamingController {
             'X-ErrorCode': `${response.status}`,
           })
           .status(response.status)
-          .send(response.data)
+          .send(response)
       } else {
-        console.log('response status is', response.status);
+        // console.log('response status is', response.status);
         return res.status(response.status).send(response.data);
       }
     } catch (error) {
