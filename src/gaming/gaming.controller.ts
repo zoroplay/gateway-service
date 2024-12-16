@@ -239,7 +239,7 @@ export class GamingController {
             'X-ErrorMessage': response.message,
             'X-ErrorCode': `${response.status}`,
           })
-          .json(response).status(HttpStatus.OK);
+          .json(response.data).status(HttpStatus.OK);
       }
       return res.json(response.data).status(HttpStatus.OK);
     } catch (error) {
