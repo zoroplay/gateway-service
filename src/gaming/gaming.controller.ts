@@ -128,7 +128,7 @@ export class GamingController {
             'X-ErrorMessage': response.message,
             'X-ErrorCode': `${HttpStatus.PROCESSING}`,
           })
-          .json(response);
+          .send(response);
       }
       return res.json(response);
     } catch (error) {
@@ -138,7 +138,7 @@ export class GamingController {
           'X-ErrorMessage': error.message,
           'X-ErrorCode': `${HttpStatus.INTERNAL_SERVER_ERROR}`,
         })
-        .json({
+        .send({
           message: error.message,
           success: false,
         });
@@ -179,7 +179,7 @@ export class GamingController {
         clientId
       })
       
-      return res.status(response.status).json(response.data);
+      return res.status(response.status).send(response.data);
       
     } catch (error) {
       console.error(error);
@@ -233,15 +233,18 @@ export class GamingController {
         body: Object.keys(data).length === 0 ? null : JSON.stringify(data),
         clientId
       });
+
       if (response.success === false) {
         return res
           .set({
             'X-ErrorMessage': response.message,
             'X-ErrorCode': `${response.status}`,
           })
-          .json(response.data).status(HttpStatus.OK);
+          .send(response).status(HttpStatus.OK);
       }
-      return res.json(response.data).status(HttpStatus.OK);
+      
+      return res.send(response.data).status(HttpStatus.OK);
+
     } catch (error) {
       console.error(error);
       return res
@@ -249,7 +252,7 @@ export class GamingController {
           'X-ErrorMessage': error.message,
           'X-ErrorCode': `${HttpStatus.INTERNAL_SERVER_ERROR}`,
         })
-        .json({
+        .send({
           message: error.message,
           success: false,
         });
@@ -290,7 +293,6 @@ export class GamingController {
         body,
         clientId
       });
-      console.log(response)
       if (response.success === false) {
         return res
           .set({
