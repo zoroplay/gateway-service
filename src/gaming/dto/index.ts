@@ -363,11 +363,16 @@ export class SaveCategoryRequestDto {
   name: string;
 
   @ApiProperty({
-    description: 'The image path for the category (optional).',
-    example: '/images/category/electronics.png',
+    example: 'active',
     required: false,
   })
-  imagePath?: string;
+  status?: string;
+
+  @ApiProperty({
+    required: false,
+    example: 1
+  })
+  priority?: boolean;
 }
 
 export class FindCategoryDto {
