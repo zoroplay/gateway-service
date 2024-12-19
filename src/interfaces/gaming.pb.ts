@@ -9,6 +9,7 @@ import { GrpcMethod, GrpcStreamMethod } from "@nestjs/microservices";
 import { wrappers } from "protobufjs";
 import { Observable } from "rxjs";
 import { Struct } from "./google/protobuf/struct.pb";
+import { Timestamp } from "./google/protobuf/timestamp.pb";
 
 export const protobufPackage = "gaming";
 
@@ -330,6 +331,8 @@ export interface SaveCategoryRequest {
   id?: number | undefined;
   name: string;
   imagePath?: string | undefined;
+  priority?: boolean | undefined;
+  status?: string | undefined;
 }
 
 export interface Category {
@@ -353,6 +356,48 @@ export interface MetaData {
   lastPage: number;
   nextPage: number;
   prevPage: number;
+}
+
+export interface Promotion {
+  title: string;
+  imageUrl: string;
+  content: string;
+  startDate: Timestamp | undefined;
+  endDate: Timestamp | undefined;
+  type: string;
+}
+
+export interface CreatePromotionDto {
+  title: string;
+  imageUrl: string;
+  content: string;
+  startDate: Timestamp | undefined;
+  endDate: Timestamp | undefined;
+  type: string;
+}
+
+export interface Promotions {
+  data: Promotion[];
+}
+
+export interface FindOnePromotionDto {
+  id: number;
+}
+
+export interface AddGameToCategoriesDto {
+  gameId: number;
+  categories: number[];
+}
+
+export interface GameCategory {
+  gameId: number;
+  gameTitle: string;
+  categoryId: number;
+  categoryName: string;
+}
+
+export interface AddGameToCategoriesResponse {
+  gameCategories: GameCategory[];
 }
 
 export const GAMING_PACKAGE_NAME = "gaming";
@@ -380,6 +425,10 @@ export interface GamingServiceClient {
 
   fetchCategories(request: Empty): Observable<Categories>;
 
+  addGameToCategories(request: AddGameToCategoriesDto): Observable<AddGameToCategoriesResponse>;
+
+  removeGameToCategories(request: AddGameToCategoriesDto): Observable<Empty>;
+
   findOneCategory(request: FindOneCategoryDto): Observable<Category>;
 
   updateCategory(request: SaveCategoryRequest): Observable<Category>;
@@ -397,6 +446,16 @@ export interface GamingServiceClient {
   removeProvider(request: CreateProviderDto): Observable<CommonResponse>;
 
   findAllProviders(request: Empty): Observable<CommonResponse>;
+
+  createPromotion(request: CreatePromotionDto): Observable<Promotion>;
+
+  findPromotions(request: Empty): Observable<Promotions>;
+
+  findOnePromotion(request: FindOnePromotionDto): Observable<Promotion>;
+
+  updatePromotion(request: CreatePromotionDto): Observable<Promotion>;
+
+  removePromotion(request: FindOnePromotionDto): Observable<Empty>;
 
   startGame(request: StartGameDto): Observable<StartGameResponse>;
 
@@ -438,6 +497,12 @@ export interface GamingServiceController {
 
   fetchCategories(request: Empty): Promise<Categories> | Observable<Categories> | Categories;
 
+  addGameToCategories(
+    request: AddGameToCategoriesDto,
+  ): Promise<AddGameToCategoriesResponse> | Observable<AddGameToCategoriesResponse> | AddGameToCategoriesResponse;
+
+  removeGameToCategories(request: AddGameToCategoriesDto): Promise<Empty> | Observable<Empty> | Empty;
+
   findOneCategory(request: FindOneCategoryDto): Promise<Category> | Observable<Category> | Category;
 
   updateCategory(request: SaveCategoryRequest): Promise<Category> | Observable<Category> | Category;
@@ -455,6 +520,16 @@ export interface GamingServiceController {
   removeProvider(request: CreateProviderDto): Promise<CommonResponse> | Observable<CommonResponse> | CommonResponse;
 
   findAllProviders(request: Empty): Promise<CommonResponse> | Observable<CommonResponse> | CommonResponse;
+
+  createPromotion(request: CreatePromotionDto): Promise<Promotion> | Observable<Promotion> | Promotion;
+
+  findPromotions(request: Empty): Promise<Promotions> | Observable<Promotions> | Promotions;
+
+  findOnePromotion(request: FindOnePromotionDto): Promise<Promotion> | Observable<Promotion> | Promotion;
+
+  updatePromotion(request: CreatePromotionDto): Promise<Promotion> | Observable<Promotion> | Promotion;
+
+  removePromotion(request: FindOnePromotionDto): Promise<Empty> | Observable<Empty> | Empty;
 
   startGame(request: StartGameDto): Promise<StartGameResponse> | Observable<StartGameResponse> | StartGameResponse;
 
@@ -488,6 +563,8 @@ export function GamingServiceControllerMethods() {
       "removeGame",
       "saveCategory",
       "fetchCategories",
+      "addGameToCategories",
+      "removeGameToCategories",
       "findOneCategory",
       "updateCategory",
       "deleteCategory",
@@ -497,6 +574,11 @@ export function GamingServiceControllerMethods() {
       "findOneProvider",
       "removeProvider",
       "findAllProviders",
+      "createPromotion",
+      "findPromotions",
+      "findOnePromotion",
+      "updatePromotion",
+      "removePromotion",
       "startGame",
       "handleCallback",
       "xpressLogin",

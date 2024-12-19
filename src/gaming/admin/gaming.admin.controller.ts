@@ -15,6 +15,7 @@ import {
   ApiTags
 } from '@nestjs/swagger';
 import {
+  AddGameToCategoriesDto,
   CreateGameDto,
   CreateProviderDto,
   FindOneCategoryDto,
@@ -22,6 +23,7 @@ import {
   SyncGameDto,
 } from 'src/interfaces/gaming.pb';
 import {
+  AddGameCategoriesDto,
   FindCategoryDto,
   SaveCategoryRequestDto,
   SwaggerCreateGameDto,
@@ -59,6 +61,20 @@ export class GamingAdminController {
   const payload: FindOneCategoryDto = { id: parseInt(id, 10) }; // Ensure it matches the expected structure
   return this.gamingService.findOneCategory(payload);
 }
+
+@Post('/add-game-category')
+@ApiBody({ type: AddGameCategoriesDto })
+@ApiOkResponse({ type: [SwaggerOKGameResponse] })
+addGameToCategories(@Body() payload: AddGameToCategoriesDto) {
+  return this.gamingService.addGameToCategories(payload);
+}
+
+@Delete('/delete-game-category')
+@ApiBody({ type: AddGameCategoriesDto })
+@ApiOkResponse({ type: [SwaggerOKGameResponse] })
+removeGameToCategories(@Body() payload: AddGameToCategoriesDto) {
+  return this.gamingService.removeGameToCategories(payload);
+}
   
   @Post('/add-category')
   @ApiBody({ type: SaveCategoryRequestDto })
@@ -67,12 +83,14 @@ export class GamingAdminController {
     return this.gamingService.saveCategory(payload);
   }
 
+
   @Put('/update-category')
   @ApiBody({ type: SaveCategoryRequestDto })
   @ApiOkResponse({ type: [SwaggerOKGameResponse] })
   updateCategory(@Body() payload: SaveCategoryRequest) {
     return this.gamingService.updateCategory(payload);
   }
+
 
   @Delete('category')
   @ApiQuery({ name: 'id', type: String, description: 'ID of the category to delete' })

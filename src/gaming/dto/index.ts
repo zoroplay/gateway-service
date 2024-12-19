@@ -377,3 +377,21 @@ export class FindCategoryDto {
   })
   id: number;
 }
+
+
+
+export class AddGameCategoriesDto {
+  @ApiProperty({
+    description: 'ID of the game to which categories will be added',
+    example: 1,
+  })
+
+  gameId: number;
+
+  @ApiProperty({
+    description: 'List of category IDs to associate with the game',
+    example: [2, 3, 4],
+    type: [Number], // Indicates an array of numbers
+  })
+  categories: number[]; // Array of category IDs
+}
