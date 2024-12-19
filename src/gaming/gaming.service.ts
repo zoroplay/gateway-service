@@ -14,6 +14,7 @@ import {
   FetchGamesRequest,
   SaveCategoryRequest,
   FindOneCategoryDto,
+  AddGameToCategoriesDto,
 } from 'src/interfaces/gaming.pb';
 import { ClientGrpc } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
@@ -57,6 +58,16 @@ export class GamingService implements OnModuleInit {
   async fetchGamesByName(payload: FetchGamesRequest) {
     //('fetch games');
     return firstValueFrom(this.service.fetchGamesByName(payload));
+  }
+
+  async addGameToCategories(addgameCategoryDto: AddGameToCategoriesDto) {
+    console.log('addGameToCategories')
+    return firstValueFrom(this.service.addGameToCategories(addgameCategoryDto));
+  }
+
+  async removeGameToCategories(removegameCategoryDto: AddGameToCategoriesDto) {
+    console.log('removeGameToCategories')
+    return firstValueFrom(this.service.removeGameToCategories(removegameCategoryDto));
   }
 
   async saveCategory(createCategoryDto: SaveCategoryRequest) {
