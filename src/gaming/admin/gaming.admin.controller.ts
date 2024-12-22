@@ -48,6 +48,13 @@ export class GamingAdminController {
     return this.gamingService.findAll();
   }
 
+  @Get('get-games')
+  // @ApiOkResponse({ type: [SwaggerOKGameResponse] })
+  getGames(
+  ) {
+    return this.gamingService.getGames();
+  }
+
   @Get('categories')
   @ApiOkResponse({ type: [SwaggerOKGameResponse] })
   getCategories() {

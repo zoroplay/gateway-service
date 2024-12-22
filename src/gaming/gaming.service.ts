@@ -50,6 +50,11 @@ export class GamingService implements OnModuleInit {
     return firstValueFrom(this.service.findAllGames({}));
   }
 
+  async getGames() {
+    //('finding all games');
+    return firstValueFrom(this.service.getGames({}));
+  }
+
   async fetchGames(payload: FetchGamesRequest) {
     //('fetch games');
     return firstValueFrom(this.service.fetchGames(payload));
