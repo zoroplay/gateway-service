@@ -286,7 +286,7 @@ export class BettingController {
     @ApiQuery({name: 'page', description: 'page number for pagination'})
     @ApiBody({ type: SwaggerGetVirtualBets })
     @ApiOkResponse({ type: SwaggerCommonResponse })
-    GetAllVirtualBets(
+    GetCodeHubTickets(
       @Body() data: GetTicketsRequest,
       @Query('page') page: number,
       @Param('clientId') clientId: number,
