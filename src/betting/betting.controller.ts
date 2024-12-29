@@ -24,6 +24,7 @@ import {
   SwaggerBetHistoryResponse,
   SwaggerCashoutRequest,
   SwaggerFindBetResponse,
+  SwaggerGetVirtualBets,
   SwaggerPlaceBet,
   SwaggerPlaceBetResponse,
   SwaggerProbability,
@@ -35,6 +36,7 @@ import {
 import {
   BetHistoryRequest,
   GamingActivityRequest,
+  GetTicketsRequest,
   PlaceBetRequest,
   ProcessCashoutRequest,
   Settings,
@@ -274,4 +276,28 @@ export class BettingController {
   ) {
     return this.bettingService.cashoutRequest(body);
   }
+
+  @Post(':clientId/codehub/tickets')
+    @ApiOperation({
+      summary: 'Get pending tickets for codehub',
+      description: 'List all tickets for a particular client',
+    })
+    @ApiParam({name: 'clientId', description: 'SBE Client ID'})
+    @ApiQuery({name: 'page', description: 'page number for pagination'})
+    @ApiBody({ type: SwaggerGetVirtualBets })
+    @ApiOkResponse({ type: SwaggerCommonResponse })
+    GetAllVirtualBets(
+      @Body() data: GetTicketsRequest,
+      @Query('page') page: number,
+      @Param('clientId') clientId: number,
+    ) {
+      try {
+        data.clientId = clientId;
+        data.page = page;
+  
+        return this.bettingService.getCodeHubTickets(data);
+      } catch (error) {
+        console.error(error);
+      }
+    }
 }
