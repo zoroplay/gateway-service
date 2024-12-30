@@ -17,6 +17,7 @@ import {
 import {
   AddGameToCategoriesDto,
   CreateGameDto,
+  CreatePromotionDto,
   CreateProviderDto,
   FindOneCategoryDto,
   SaveCategoryRequest,
@@ -24,12 +25,16 @@ import {
 } from 'src/interfaces/gaming.pb';
 import {
   AddGameCategoriesDto,
+  CreatePromotionRequestDto,
+  // CreatePromotionDto,
   FindCategoryDto,
+  FindPromotionDto,
   SaveCategoryRequestDto,
   SwaggerCreateGameDto,
   SwaggerCreateProviderDto,
   SwaggerOKGameArrayResponse,
   SwaggerOKGameResponse,
+  SwaggerOKPromotionResponse,
   SwaggerOKProviderArrayResponse,
   SwaggerOKProviderResponse,
   SwaggerSyncGameDto
@@ -49,10 +54,13 @@ export class GamingAdminController {
   }
 
   @Get('get-games')
-  // @ApiOkResponse({ type: [SwaggerOKGameResponse] })
-  getGames(
+  @ApiOkResponse({ type: [SwaggerOKGameResponse] })
+  async getGames(
   ) {
-    return this.gamingService.getGames();
+    const val = await this.gamingService.getGames()
+
+    console.log("val", val);
+    return val;
   }
 
   @Get('categories')
@@ -107,7 +115,63 @@ removeGameToCategories(@Body() payload: AddGameToCategoriesDto) {
     const payload: FindOneCategoryDto = { id: parseInt(id, 10) }; // Wrap id in DTO
     return this.gamingService.deleteCategory(payload);
   }
-  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  @Post('/add-promotion')
+  @ApiBody({ type: CreatePromotionRequestDto })
+  @ApiOkResponse({ type: [SwaggerOKPromotionResponse] })
+  async createPromotion(@Body() payload: CreatePromotionDto) {
+    console.log("payload", payload);
+    const promotion = await this.gamingService.createPromotion(payload);
+    console.log("promotion", promotion);
+    return promotion;
+  }
+
+
+  @Put('/update-promotion')
+  @ApiBody({ type: CreatePromotionRequestDto })
+  updatePromotion(@Body() payload: CreatePromotionDto) {
+    return this.gamingService.updatePromotion(payload);
+  }
+
+
+  @Delete('promotion')
+  @ApiQuery({ name: 'id', type: String, description: 'ID of the category to delete' })
+  @ApiOkResponse({ description: 'Category deleted successfully' })
+  removePromotion(@Query('id') id: string) {
+    console.log('Received ID for deletion:', id);
+    const payload: FindPromotionDto = { id: parseInt(id, 10) }; // Wrap id in DTO
+    return this.gamingService.removePromotion(payload);
+  }
+
+  @Get('promotions')
+  findPromotions() {
+    console.log("here");
+    return this.gamingService.findPromotions();
+  }
+
+  @Get('promotion')
+  @ApiQuery({ name: 'id', type: String })
+  findOnePromotion(@Query('id') id: string) {
+  const payload: FindOneCategoryDto = { id: parseInt(id, 10) }; // Ensure it matches the expected structure
+  return this.gamingService.findOnePromotion(payload);
+  }
+
 
   @Post()
   @ApiBody({ type: SwaggerCreateGameDto })
@@ -128,6 +192,7 @@ removeGameToCategories(@Body() payload: AddGameToCategoriesDto) {
   createProvider(@Body() createProviderDto: CreateProviderDto) {
     return this.gamingService.createProvider(createProviderDto);
   }
+
 
   @Post('/sync')
   @ApiBody({ type: SwaggerSyncGameDto })
