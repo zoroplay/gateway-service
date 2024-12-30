@@ -15,6 +15,8 @@ import {
   SaveCategoryRequest,
   FindOneCategoryDto,
   AddGameToCategoriesDto,
+  CreatePromotionDto,
+  FindOnePromotionDto,
 } from 'src/interfaces/gaming.pb';
 import { ClientGrpc } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
@@ -50,9 +52,12 @@ export class GamingService implements OnModuleInit {
     return firstValueFrom(this.service.findAllGames({}));
   }
 
+
   async getGames() {
     //('finding all games');
-    return firstValueFrom(this.service.getGames({}));
+    const val = await firstValueFrom(this.service.getGames({}))
+    console.log("val2", val);
+    return val;
   }
 
   async fetchGames(payload: FetchGamesRequest) {
@@ -99,8 +104,41 @@ export class GamingService implements OnModuleInit {
   
     return response;
   }
+
+
+
+
+
+  async createPromotion(createPromotionDto: CreatePromotionDto) {
+    console.log("createPromotionDto", createPromotionDto);
+    const promotion = await firstValueFrom(this.service.createPromotion(createPromotionDto));
+    console.log("promotion1", promotion);
+    return promotion;
+  }
+
+  async findPromotions() {
+    return firstValueFrom(this.service.findPromotions({}));
+  }
+
+  async findOnePromotion(payload: FindOnePromotionDto) {
+    console.log("payload", payload);
+    //(createGameDto);
+    return firstValueFrom(this.service.findOnePromotion(payload));
+  }
+
+  async updatePromotion(request: CreatePromotionDto) {
+    //(createGameDto);
+    return firstValueFrom(this.service.updatePromotion(request));
+  }
+
+  async removePromotion(request: FindOnePromotionDto) {
+    console.log('Payload sent to gRPC client for deletion:', request);
   
+    const response = await firstValueFrom(this.service.removePromotion(request));
+    console.log('Response from gRPC server:', response);
   
+    return response;
+  }
 
   async listCategories() {
     //('fetch categories');
