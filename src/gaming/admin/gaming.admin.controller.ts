@@ -22,6 +22,7 @@ import {
   FindOneCategoryDto,
   SaveCategoryRequest,
   SyncGameDto,
+  UpdateGameDto,
 } from 'src/interfaces/gaming.pb';
 import {
   AddGameCategoriesDto,
@@ -37,7 +38,8 @@ import {
   SwaggerOKPromotionResponse,
   SwaggerOKProviderArrayResponse,
   SwaggerOKProviderResponse,
-  SwaggerSyncGameDto
+  SwaggerSyncGameDto,
+  UpdateGameRequestDto
 } from '../dto';
 import { GamingService } from '../gaming.service';
 
@@ -63,11 +65,19 @@ export class GamingAdminController {
     return val;
   }
 
+  @Put('/update-game')
+  @ApiBody({ type: UpdateGameRequestDto })
+  @ApiOkResponse({ type: [SwaggerOKGameResponse] })
+  updateGame(@Body() payload: UpdateGameDto) {
+    return this.gamingService.updateGame(payload);
+  }
+
   @Get('categories')
   @ApiOkResponse({ type: [SwaggerOKGameResponse] })
   getCategories() {
     return this.gamingService.listCategories();
   }
+
 
   @Get('category')
   @ApiQuery({ name: 'id', type: String })
@@ -97,7 +107,6 @@ removeGameToCategories(@Body() payload: AddGameToCategoriesDto) {
   saveCategory(@Body() payload: SaveCategoryRequest) {
     return this.gamingService.saveCategory(payload);
   }
-
 
   @Put('/update-category')
   @ApiBody({ type: SaveCategoryRequestDto })

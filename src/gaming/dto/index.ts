@@ -384,6 +384,67 @@ export class FindCategoryDto {
   id: number;
 }
 
+export class UpdateGameRequestDto {
+  @ApiProperty({
+    description: 'Unique identifier of the game.',
+    example: 1,
+  })
+  id: number;
+
+  @ApiProperty({
+    description: 'Unique game identifier.',
+    example: 'game-12345',
+  })
+  gameId: string;
+
+  @ApiProperty({
+    description: 'Title of the game.',
+    example: 'Awesome Game',
+  })
+  title: string;
+
+  @ApiProperty({
+    description: 'Detailed description of the game.',
+    example: 'This is an amazing game description.',
+  })
+  description: string;
+
+  @ApiProperty({
+    description: 'URL of the game.',
+    example: 'https://example.com/game',
+  })
+  url: string;
+
+  @ApiProperty({
+    description: 'Path to the game\'s image.',
+    example: '/images/game-thumbnail.png',
+  })
+  imagePath: string;
+
+  @ApiProperty({
+    description: 'Path to the game\'s banner image.',
+    example: '/images/game-banner.png',
+  })
+  bannerPath: string;
+
+  @ApiProperty({
+    description: 'Indicates whether the game is active.',
+    example: true,
+  })
+  status: boolean;
+
+  @ApiProperty({
+    description: 'Type or category of the game.',
+    example: 'Action',
+  })
+  type: string;
+
+  @ApiProperty({
+    description: 'Unique identifier of the game provider.',
+    example: 42,
+  })
+  providerId: number;
+}
 
 
 export class AddGameCategoriesDto {

@@ -17,6 +17,7 @@ import {
   AddGameToCategoriesDto,
   CreatePromotionDto,
   FindOnePromotionDto,
+  UpdateGameDto,
 } from 'src/interfaces/gaming.pb';
 import { ClientGrpc } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
@@ -45,6 +46,11 @@ export class GamingService implements OnModuleInit {
   async create(createGameDto: CreateGameDto) {
     //(createGameDto);
     return firstValueFrom(this.service.createGame(createGameDto));
+  }
+
+  async updateGame(updateGameDto: UpdateGameDto) {
+    //(createGameDto);
+    return firstValueFrom(this.service.updateGame(updateGameDto));
   }
 
   async findAll() {
