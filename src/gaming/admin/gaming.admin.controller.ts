@@ -19,7 +19,9 @@ import {
   CreateGameDto,
   CreatePromotionDto,
   CreateProviderDto,
+  CreateTournamentDto,
   FindOneCategoryDto,
+  FindOneTournamentDto,
   SaveCategoryRequest,
   SyncGameDto,
   UpdateGameDto,
@@ -27,6 +29,7 @@ import {
 import {
   AddGameCategoriesDto,
   CreatePromotionRequestDto,
+  CreateTournamentRequestDto,
   // CreatePromotionDto,
   FindCategoryDto,
   FindPromotionDto,
@@ -208,5 +211,46 @@ removeGameToCategories(@Body() payload: AddGameToCategoriesDto) {
   @ApiOkResponse({ type: SwaggerOKGameArrayResponse })
   syncGames(@Body() syncGameDto: SyncGameDto) {
     return this.gamingService.sync(syncGameDto);
+  }
+
+
+  @Post('/add-tournament')
+  @ApiBody({ type: CreateTournamentRequestDto })
+  @ApiOkResponse({ type: [SwaggerOKPromotionResponse] })
+  async createTournament(@Body() payload: CreateTournamentDto) {
+    console.log("payload", payload);
+    const tournament = await this.gamingService.createTournament(payload);
+    console.log("tournament", tournament);
+    return tournament;
+  }
+
+
+  @Put('/update-tournament')
+  @ApiBody({ type: CreateTournamentRequestDto })
+  updateTournament(@Body() payload: CreateTournamentDto) {
+    return this.gamingService.updateTournament(payload);
+  }
+
+
+  @Delete('tournament')
+  @ApiQuery({ name: 'id', type: String, description: 'ID of the category to delete' })
+  @ApiOkResponse({ description: 'Tournament deleted successfully' })
+  deleteTournament(@Query('id') id: string) {
+    console.log('Received ID for deletion:', id);
+    const payload: FindOneTournamentDto = { id: parseInt(id, 10) }; // Wrap id in DTO
+    return this.gamingService.deleteTournament(payload);
+  }
+
+  @Get('tournaments')
+  findAllTournaments() {
+    console.log("here");
+    return this.gamingService.findAllTournaments();
+  }
+
+  @Get('tournament')
+  @ApiQuery({ name: 'id', type: String })
+  findOneTournament(@Query('id') id: string) {
+  const payload: FindOneTournamentDto = { id: parseInt(id, 10) }; // Ensure it matches the expected structure
+  return this.gamingService.findOneTournament(payload);
   }
 }
