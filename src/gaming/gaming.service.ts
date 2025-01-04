@@ -18,6 +18,8 @@ import {
   CreatePromotionDto,
   FindOnePromotionDto,
   UpdateGameDto,
+  CreateTournamentDto,
+  FindOneTournamentDto,
 } from 'src/interfaces/gaming.pb';
 import { ClientGrpc } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
@@ -242,6 +244,38 @@ export class GamingService implements OnModuleInit {
     const response: any = {...res};
     if (res.status) response.data.balance = parseFloat(res.data.balance);
 
+    return response;
+  }
+
+
+  async createTournament(createTournamentDto: CreateTournamentDto) {
+    console.log("createTournamentDto", createTournamentDto);
+    const tournament = await firstValueFrom(this.service.createTournament(createTournamentDto));
+    console.log("tournament", tournament);
+    return tournament;
+  }
+
+  async findAllTournaments() {
+    return firstValueFrom(this.service.findAllTournaments({}));
+  }
+
+  async findOneTournament(payload: FindOneTournamentDto) {
+    console.log("payload", payload);
+    //(createGameDto);
+    return firstValueFrom(this.service.findOneTournament(payload));
+  }
+
+  async updateTournament(request: CreateTournamentDto) {
+    //(createGameDto);
+    return firstValueFrom(this.service.updateTournament(request));
+  }
+
+  async deleteTournament(request: FindOneTournamentDto) {
+    console.log('Payload sent to gRPC client for deletion:', request);
+  
+    const response = await firstValueFrom(this.service.deleteTournament(request));
+    console.log('Response from gRPC server:', response);
+  
     return response;
   }
 
