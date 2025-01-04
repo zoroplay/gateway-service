@@ -379,6 +379,11 @@ export interface BetSlipHistory {
   eventPrefix: string;
   score: string;
   htScore: string;
+  id: number;
+  currentOdds: number;
+  eventTime: string;
+  matchStatus: string;
+  isLive: number;
 }
 
 export interface BetHistory {
