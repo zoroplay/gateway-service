@@ -91,6 +91,11 @@ export class BettingService implements OnModuleInit {
     return this.service.ticketsReport(data);
   }
 
+  getCodeHubTickets(data: GetTicketsRequest) {
+    // console.log('get tickets ');
+    return this.service.getCodeHubTickets(data);
+  }
+
   cashoutRequest(data: ProcessCashoutRequest) {
     //console.log('cashout request ');
     return this.service.cashoutRequest(data);

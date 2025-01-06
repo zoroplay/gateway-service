@@ -1043,7 +1043,7 @@ export class WalletController {
           status: 'Fail',
           ref_id: res.data.refId,
           error_no: res.data.error_no || '',
-          error_desc: res.message || '',
+          error_desc: res.data.message || '',
         }
       }
     } catch (e) {

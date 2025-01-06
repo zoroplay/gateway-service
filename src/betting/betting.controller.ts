@@ -7,6 +7,7 @@ import {
   Param,
   Ip,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import {
   ApiBody,
@@ -24,6 +25,7 @@ import {
   SwaggerBetHistoryResponse,
   SwaggerCashoutRequest,
   SwaggerFindBetResponse,
+  SwaggerGetVirtualBets,
   SwaggerPlaceBet,
   SwaggerPlaceBetResponse,
   SwaggerProbability,
@@ -35,12 +37,14 @@ import {
 import {
   BetHistoryRequest,
   GamingActivityRequest,
+  GetTicketsRequest,
   PlaceBetRequest,
   ProcessCashoutRequest,
   Settings,
   UpdateBetRequest,
 } from '../interfaces/betting.pb';
 import { SwaggerCommonResponse } from 'src/identity/dto';
+import { AuthGuard } from 'src/identity/auth/auth.guard';
 
 @ApiTags('Betting APIs')
 @Controller('bets')
@@ -112,6 +116,7 @@ export class BettingController {
     }
   }
 
+  @UseGuards(AuthGuard)
   @Post('/place-bet/:client_id')
   @ApiOperation({
     summary: 'Place a bet request',
@@ -122,6 +127,32 @@ export class BettingController {
   @ApiBody({ type: SwaggerPlaceBet })
   @ApiOkResponse({ type: SwaggerPlaceBetResponse })
   PlaceBet(
+    @Body() data, 
+    @Param() param: any, 
+    @Ip() ip: any
+  ) {
+    try {
+      data.clientId = param.client_id;
+      data.ipAddress = ip;
+      data.betType = data.bet_type;
+      data.type = data.event_type;
+      // console.log(data);
+      return this.bettingService.PlaceBet(data);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  @Post('/book-bet/:client_id')
+  @ApiOperation({
+    summary: 'Book a bet request',
+    description:
+      'Receives a bet request with all the required detailed, upon successful bet placement, unique betID is returned',
+  })
+  @ApiParam({ name: 'client_id', type: 'number' })
+  @ApiBody({ type: SwaggerPlaceBet })
+  @ApiOkResponse({ type: SwaggerPlaceBetResponse })
+  BookBet(
     @Body() data, 
     @Param() param: any, 
     @Ip() ip: any
@@ -274,4 +305,28 @@ export class BettingController {
   ) {
     return this.bettingService.cashoutRequest(body);
   }
+
+  @Post(':clientId/codehub/tickets')
+    @ApiOperation({
+      summary: 'Get pending tickets for codehub',
+      description: 'List all tickets for a particular client',
+    })
+    @ApiParam({name: 'clientId', description: 'SBE Client ID'})
+    @ApiQuery({name: 'page', description: 'page number for pagination'})
+    @ApiBody({ type: SwaggerGetVirtualBets })
+    @ApiOkResponse({ type: SwaggerCommonResponse })
+    GetCodeHubTickets(
+      @Body() data: GetTicketsRequest,
+      @Query('page') page: number,
+      @Param('clientId') clientId: number,
+    ) {
+      try {
+        data.clientId = clientId;
+        data.page = page;
+  
+        return this.bettingService.getCodeHubTickets(data);
+      } catch (error) {
+        console.error(error);
+      }
+    }
 }

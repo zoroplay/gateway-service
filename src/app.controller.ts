@@ -112,6 +112,7 @@ export class AppController {
     return res.sendStatus(200);
   }
 
+  @ApiTags('Webhooks')
   @Post('webhook/validate-odds')
   validateOdds(
     @Body() body,

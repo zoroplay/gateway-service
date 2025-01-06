@@ -6,9 +6,11 @@ import { BETTING_PACKAGE_NAME, protobufPackage } from 'src/interfaces/betting.pb
 import {join} from "path";
 import 'dotenv/config'
 import { BettingAdminController } from './admin/betting-admin.controller';
+import { IdentityModule } from 'src/identity/identity.module';
 
 @Module({
   imports: [
+    IdentityModule,
     ClientsModule.register([
       {
         name: protobufPackage,
