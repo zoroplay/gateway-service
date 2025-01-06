@@ -81,8 +81,19 @@ export class SwaggerStartGameDto {
     example: 'casino',
   })
   balanceType: string;
-}
 
+  @ApiProperty({
+    description: 'isBonus to load game',
+    example: true,
+  })
+  isBonus: boolean;
+
+  @ApiProperty({
+    description: 'bonusType to load game',
+    example: 'free_rounds',
+  })
+  bonusType: string;
+}
 
 export class SwaggerStartGameResponseDto {
   @ApiProperty({
