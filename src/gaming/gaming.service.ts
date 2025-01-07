@@ -60,10 +60,9 @@ export class GamingService implements OnModuleInit {
     return firstValueFrom(this.service.findAllGames({}));
   }
 
-
   async getGames() {
     //('finding all games');
-    const val = await firstValueFrom(this.service.getGames({}))
+    const val = await firstValueFrom(this.service.getGames({}));
     return val;
   }
 
@@ -78,13 +77,15 @@ export class GamingService implements OnModuleInit {
   }
 
   async addGameToCategories(addgameCategoryDto: AddGameToCategoriesDto) {
-    console.log('addGameToCategories')
+    console.log('addGameToCategories');
     return firstValueFrom(this.service.addGameToCategories(addgameCategoryDto));
   }
 
   async removeGameToCategories(removegameCategoryDto: AddGameToCategoriesDto) {
-    console.log('removeGameToCategories')
-    return firstValueFrom(this.service.removeGameToCategories(removegameCategoryDto));
+    console.log('removeGameToCategories');
+    return firstValueFrom(
+      this.service.removeGameToCategories(removegameCategoryDto),
+    );
   }
 
   async saveCategory(createCategoryDto: SaveCategoryRequest) {
@@ -93,7 +94,7 @@ export class GamingService implements OnModuleInit {
   }
 
   async findOneCategory(payload: FindOneCategoryDto) {
-    console.log("payload", payload);
+    console.log('payload', payload);
     //(createGameDto);
     return firstValueFrom(this.service.findOneCategory(payload));
   }
@@ -105,21 +106,19 @@ export class GamingService implements OnModuleInit {
 
   async deleteCategory(payload: FindOneCategoryDto) {
     console.log('Payload sent to gRPC client for deletion:', payload);
-  
+
     const response = await firstValueFrom(this.service.deleteCategory(payload));
     console.log('Response from gRPC server:', response);
-  
+
     return response;
   }
 
-
-
-
-
   async createPromotion(createPromotionDto: CreatePromotionDto) {
-    console.log("createPromotionDto", createPromotionDto);
-    const promotion = await firstValueFrom(this.service.createPromotion(createPromotionDto));
-    console.log("promotion1", promotion);
+    console.log('createPromotionDto', createPromotionDto);
+    const promotion = await firstValueFrom(
+      this.service.createPromotion(createPromotionDto),
+    );
+    console.log('promotion1', promotion);
     return promotion;
   }
 
@@ -128,7 +127,7 @@ export class GamingService implements OnModuleInit {
   }
 
   async findOnePromotion(payload: FindOnePromotionDto) {
-    console.log("payload", payload);
+    console.log('payload', payload);
     //(createGameDto);
     return firstValueFrom(this.service.findOnePromotion(payload));
   }
@@ -140,10 +139,12 @@ export class GamingService implements OnModuleInit {
 
   async removePromotion(request: FindOnePromotionDto) {
     console.log('Payload sent to gRPC client for deletion:', request);
-  
-    const response = await firstValueFrom(this.service.removePromotion(request));
+
+    const response = await firstValueFrom(
+      this.service.removePromotion(request),
+    );
     console.log('Response from gRPC server:', response);
-  
+
     return response;
   }
 
@@ -155,7 +156,7 @@ export class GamingService implements OnModuleInit {
   async sync(syncGameDto: SyncGameDto) {
     //('syncing games');
     const games = await firstValueFrom(this.service.syncGames(syncGameDto));
-
+    console.log(games);
     return {
       games,
     };
@@ -163,9 +164,9 @@ export class GamingService implements OnModuleInit {
 
   async startGame(request: StartGameDto) {
     // //('start game', request);
-    console.log("start-service", request);
+    console.log('start-service', request);
     const resp = await firstValueFrom(this.service.startGame(request));
-    console.log("resp", resp);
+    console.log('resp', resp);
 
     return resp;
   }
@@ -175,7 +176,7 @@ export class GamingService implements OnModuleInit {
     // //(request);
     const resp = await firstValueFrom(this.service.handleCallback(request));
 
-    console.log("resp", resp);
+    console.log('resp', resp);
 
     return resp;
   }
@@ -183,17 +184,16 @@ export class GamingService implements OnModuleInit {
   async xpressLogin(data: XpressRequest) {
     //('xpress login');
     const res = await firstValueFrom(this.service.xpressLogin(data));
-    const response: any = {...res};
+    const response: any = { ...res };
     if (res.status) response.data.balance = parseFloat(res.data.balance);
 
     return response;
   }
 
-
   async xpressBalance(data: XpressRequest): Promise<XpressResponse> {
     //('xpress balance');
     const res = await firstValueFrom(this.service.xpressBalance(data));
-    const response: any = {...res};
+    const response: any = { ...res };
     if (res.status) response.data.balance = parseFloat(res.data.balance);
 
     return response;
@@ -202,7 +202,7 @@ export class GamingService implements OnModuleInit {
   async xpressCredit(data: XpressRequest) {
     //('xpress credit');
     const res = await firstValueFrom(this.service.xpressCredit(data));
-    const response: any = {...res};
+    const response: any = { ...res };
     if (res.status) {
       response.data.balance = parseFloat(res.data.balance);
       response.data.oldBalance = parseFloat(res.data.oldBalance);
@@ -213,7 +213,7 @@ export class GamingService implements OnModuleInit {
   async xpressDebit(data: XpressRequest) {
     //('xpress debit');
     const res = await firstValueFrom(this.service.xpressDebit(data));
-    const response: any = {...res};
+    const response: any = { ...res };
     if (res.status) {
       response.data.balance = parseFloat(res.data.balance);
       response.data.oldBalance = parseFloat(res.data.oldBalance);
@@ -223,7 +223,7 @@ export class GamingService implements OnModuleInit {
 
   async xpressRollback(data: XpressRequest) {
     const res = await firstValueFrom(this.service.xpressRollback(data));
-    const response: any = {...res};
+    const response: any = { ...res };
     if (res.status) {
       response.data.balance = parseFloat(res.data.balance);
       response.data.oldBalance = parseFloat(res.data.oldBalance);
@@ -234,17 +234,18 @@ export class GamingService implements OnModuleInit {
   async xpressLogout(data: XpressRequest) {
     //('xpress logout');
     const res = await firstValueFrom(this.service.xpressLogout(data));
-    const response: any = {...res};
+    const response: any = { ...res };
     if (res.status) response.data.balance = parseFloat(res.data.balance);
 
     return response;
   }
 
-
   async createTournament(createTournamentDto: CreateTournamentDto) {
-    console.log("createTournamentDto", createTournamentDto);
-    const tournament = await firstValueFrom(this.service.createTournament(createTournamentDto));
-    console.log("tournament", tournament);
+    console.log('createTournamentDto', createTournamentDto);
+    const tournament = await firstValueFrom(
+      this.service.createTournament(createTournamentDto),
+    );
+    console.log('tournament', tournament);
     return tournament;
   }
 
@@ -253,7 +254,7 @@ export class GamingService implements OnModuleInit {
   }
 
   async findOneTournament(payload: FindOneTournamentDto) {
-    console.log("payload", payload);
+    console.log('payload', payload);
     //(createGameDto);
     return firstValueFrom(this.service.findOneTournament(payload));
   }
@@ -265,18 +266,20 @@ export class GamingService implements OnModuleInit {
 
   async deleteTournament(request: FindOneTournamentDto) {
     console.log('Payload sent to gRPC client for deletion:', request);
-  
-    const response = await firstValueFrom(this.service.deleteTournament(request));
+
+    const response = await firstValueFrom(
+      this.service.deleteTournament(request),
+    );
     console.log('Response from gRPC server:', response);
-  
+
     return response;
   }
 
-  formatNumber (num) {
+  formatNumber(num) {
     if (num > 0 && num % 1 === 0) {
-      return parseFloat(num + ".00");
+      return parseFloat(num + '.00');
     } else {
-      return parseFloat(num.toFixed(2))
+      return parseFloat(num.toFixed(2));
     }
-  };
+  }
 }
