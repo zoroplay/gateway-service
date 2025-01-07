@@ -156,7 +156,7 @@ export class GamingService implements OnModuleInit {
   async sync(syncGameDto: SyncGameDto) {
     //('syncing games');
     const games = await firstValueFrom(this.service.syncGames(syncGameDto));
-    console.log(games);
+    console.log("QTECH-LOG", games);
     return {
       games,
     };
