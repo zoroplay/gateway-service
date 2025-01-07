@@ -164,7 +164,7 @@ export class GamingService implements OnModuleInit {
 
   async startGame(request: StartGameDto) {
     // //('start game', request);
-    console.log("start-service", request)
+    console.log("start-service", request);
     const resp = await firstValueFrom(this.service.startGame(request));
     console.log("resp", resp);
 
