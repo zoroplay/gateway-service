@@ -64,7 +64,6 @@ export class GamingService implements OnModuleInit {
   async getGames() {
     //('finding all games');
     const val = await firstValueFrom(this.service.getGames({}))
-    console.log("val2", val);
     return val;
   }
 

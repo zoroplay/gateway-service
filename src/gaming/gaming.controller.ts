@@ -94,7 +94,6 @@ export class GamingController {
     }
     return this.gamingService.startGame(startGameDto);
   }
-
   
   @Get('/:clientId/:provider_id/callback')
   @ApiParam({ name: 'provider_id', type: 'string' })
