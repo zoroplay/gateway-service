@@ -275,6 +275,11 @@ export class GamingService implements OnModuleInit {
     return response;
   }
 
+
+
+
+  
+
   formatNumber(num) {
     if (num > 0 && num % 1 === 0) {
       return parseFloat(num + '.00');
