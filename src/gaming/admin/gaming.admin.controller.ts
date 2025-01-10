@@ -8,29 +8,36 @@ import {
   Put,
   Query,
 } from '@nestjs/common';
+import { ApiBody, ApiOkResponse, ApiQuery, ApiTags } from '@nestjs/swagger';
 import {
-  ApiBody,
-  ApiOkResponse,
-  ApiQuery,
-  ApiTags
-} from '@nestjs/swagger';
-import {
+  AddGameToCategoriesDto,
   CreateGameDto,
+  CreatePromotionDto,
   CreateProviderDto,
+  CreateTournamentDto,
   FindOneCategoryDto,
+  FindOneTournamentDto,
   SaveCategoryRequest,
   SyncGameDto,
+  UpdateGameDto,
 } from 'src/interfaces/gaming.pb';
 import {
+  AddGameCategoriesDto,
+  CreatePromotionRequestDto,
+  CreateTournamentRequestDto,
+  // CreatePromotionDto,
   FindCategoryDto,
+  FindPromotionDto,
   SaveCategoryRequestDto,
   SwaggerCreateGameDto,
   SwaggerCreateProviderDto,
   SwaggerOKGameArrayResponse,
   SwaggerOKGameResponse,
+  SwaggerOKPromotionResponse,
   SwaggerOKProviderArrayResponse,
   SwaggerOKProviderResponse,
-  SwaggerSyncGameDto
+  SwaggerSyncGameDto,
+  UpdateGameRequestDto,
 } from '../dto';
 import { GamingService } from '../gaming.service';
 
@@ -41,9 +48,24 @@ export class GamingAdminController {
 
   @Get()
   @ApiOkResponse({ type: [SwaggerOKGameResponse] })
-  findAll(
-  ) {
+  findAll() {
     return this.gamingService.findAll();
+  }
+
+  @Get('get-games')
+  @ApiOkResponse({ type: [SwaggerOKGameResponse] })
+  async getGames() {
+    const val = await this.gamingService.getGames();
+
+    console.log('val', val);
+    return val;
+  }
+
+  @Put('/update-game')
+  @ApiBody({ type: UpdateGameRequestDto })
+  @ApiOkResponse({ type: [SwaggerOKGameResponse] })
+  updateGame(@Body() payload: UpdateGameDto) {
+    return this.gamingService.updateGame(payload);
   }
 
   @Get('categories')
@@ -56,10 +78,24 @@ export class GamingAdminController {
   @ApiQuery({ name: 'id', type: String })
   @ApiOkResponse({ type: [SwaggerOKGameResponse] })
   findOneCategory(@Query('id') id: string) {
-  const payload: FindOneCategoryDto = { id: parseInt(id, 10) }; // Ensure it matches the expected structure
-  return this.gamingService.findOneCategory(payload);
-}
-  
+    const payload: FindOneCategoryDto = { id: parseInt(id, 10) }; // Ensure it matches the expected structure
+    return this.gamingService.findOneCategory(payload);
+  }
+
+  @Post('/add-game-category')
+  @ApiBody({ type: AddGameCategoriesDto })
+  @ApiOkResponse({ type: [SwaggerOKGameResponse] })
+  addGameToCategories(@Body() payload: AddGameToCategoriesDto) {
+    return this.gamingService.addGameToCategories(payload);
+  }
+
+  @Delete('/delete-game-category')
+  @ApiBody({ type: AddGameCategoriesDto })
+  @ApiOkResponse({ type: [SwaggerOKGameResponse] })
+  removeGameToCategories(@Body() payload: AddGameToCategoriesDto) {
+    return this.gamingService.removeGameToCategories(payload);
+  }
+
   @Post('/add-category')
   @ApiBody({ type: SaveCategoryRequestDto })
   @ApiOkResponse({ type: [SwaggerOKGameResponse] })
@@ -75,14 +111,59 @@ export class GamingAdminController {
   }
 
   @Delete('category')
-  @ApiQuery({ name: 'id', type: String, description: 'ID of the category to delete' })
+  @ApiQuery({
+    name: 'id',
+    type: String,
+    description: 'ID of the category to delete',
+  })
   @ApiOkResponse({ description: 'Category deleted successfully' })
   deleteCategory(@Query('id') id: string) {
     console.log('Received ID for deletion:', id);
     const payload: FindOneCategoryDto = { id: parseInt(id, 10) }; // Wrap id in DTO
     return this.gamingService.deleteCategory(payload);
   }
-  
+
+  @Post('/add-promotion')
+  @ApiBody({ type: CreatePromotionRequestDto })
+  @ApiOkResponse({ type: [SwaggerOKPromotionResponse] })
+  async createPromotion(@Body() payload: CreatePromotionDto) {
+    console.log('payload', payload);
+    const promotion = await this.gamingService.createPromotion(payload);
+    console.log('promotion', promotion);
+    return promotion;
+  }
+
+  @Put('/update-promotion')
+  @ApiBody({ type: CreatePromotionRequestDto })
+  updatePromotion(@Body() payload: CreatePromotionDto) {
+    return this.gamingService.updatePromotion(payload);
+  }
+
+  @Delete('promotion')
+  @ApiQuery({
+    name: 'id',
+    type: String,
+    description: 'ID of the category to delete',
+  })
+  @ApiOkResponse({ description: 'Category deleted successfully' })
+  removePromotion(@Query('id') id: string) {
+    console.log('Received ID for deletion:', id);
+    const payload: FindPromotionDto = { id: parseInt(id, 10) }; // Wrap id in DTO
+    return this.gamingService.removePromotion(payload);
+  }
+
+  @Get('promotions')
+  findPromotions() {
+    console.log('here');
+    return this.gamingService.findPromotions();
+  }
+
+  @Get('promotion')
+  @ApiQuery({ name: 'id', type: String })
+  findOnePromotion(@Query('id') id: string) {
+    const payload: FindOneCategoryDto = { id: parseInt(id, 10) }; // Ensure it matches the expected structure
+    return this.gamingService.findOnePromotion(payload);
+  }
 
   @Post()
   @ApiBody({ type: SwaggerCreateGameDto })
@@ -108,6 +189,49 @@ export class GamingAdminController {
   @ApiBody({ type: SwaggerSyncGameDto })
   @ApiOkResponse({ type: SwaggerOKGameArrayResponse })
   syncGames(@Body() syncGameDto: SyncGameDto) {
+    console.log('CONTROLLER CHECK');
     return this.gamingService.sync(syncGameDto);
+  }
+
+  @Post('/add-tournament')
+  @ApiBody({ type: CreateTournamentRequestDto })
+  @ApiOkResponse({ type: [SwaggerOKPromotionResponse] })
+  async createTournament(@Body() payload: CreateTournamentDto) {
+    console.log('payload', payload);
+    const tournament = await this.gamingService.createTournament(payload);
+    console.log('tournament', tournament);
+    return tournament;
+  }
+
+  @Put('/update-tournament')
+  @ApiBody({ type: CreateTournamentRequestDto })
+  updateTournament(@Body() payload: CreateTournamentDto) {
+    return this.gamingService.updateTournament(payload);
+  }
+
+  @Delete('tournament')
+  @ApiQuery({
+    name: 'id',
+    type: String,
+    description: 'ID of the category to delete',
+  })
+  @ApiOkResponse({ description: 'Tournament deleted successfully' })
+  deleteTournament(@Query('id') id: string) {
+    console.log('Received ID for deletion:', id);
+    const payload: FindOneTournamentDto = { id: parseInt(id, 10) }; // Wrap id in DTO
+    return this.gamingService.deleteTournament(payload);
+  }
+
+  @Get('tournaments')
+  findAllTournaments() {
+    console.log('here');
+    return this.gamingService.findAllTournaments();
+  }
+
+  @Get('tournament')
+  @ApiQuery({ name: 'id', type: String })
+  findOneTournament(@Query('id') id: string) {
+    const payload: FindOneTournamentDto = { id: parseInt(id, 10) }; // Ensure it matches the expected structure
+    return this.gamingService.findOneTournament(payload);
   }
 }

@@ -14,6 +14,12 @@ import {
   FetchGamesRequest,
   SaveCategoryRequest,
   FindOneCategoryDto,
+  AddGameToCategoriesDto,
+  CreatePromotionDto,
+  FindOnePromotionDto,
+  UpdateGameDto,
+  CreateTournamentDto,
+  FindOneTournamentDto,
 } from 'src/interfaces/gaming.pb';
 import { ClientGrpc } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
@@ -44,9 +50,20 @@ export class GamingService implements OnModuleInit {
     return firstValueFrom(this.service.createGame(createGameDto));
   }
 
+  async updateGame(updateGameDto: UpdateGameDto) {
+    //(createGameDto);
+    return firstValueFrom(this.service.updateGame(updateGameDto));
+  }
+
   async findAll() {
     //('finding all games');
     return firstValueFrom(this.service.findAllGames({}));
+  }
+
+  async getGames() {
+    //('finding all games');
+    const val = await firstValueFrom(this.service.getGames({}));
+    return val;
   }
 
   async fetchGames(payload: FetchGamesRequest) {
@@ -59,13 +76,25 @@ export class GamingService implements OnModuleInit {
     return firstValueFrom(this.service.fetchGamesByName(payload));
   }
 
+  async addGameToCategories(addgameCategoryDto: AddGameToCategoriesDto) {
+    console.log('addGameToCategories');
+    return firstValueFrom(this.service.addGameToCategories(addgameCategoryDto));
+  }
+
+  async removeGameToCategories(removegameCategoryDto: AddGameToCategoriesDto) {
+    console.log('removeGameToCategories');
+    return firstValueFrom(
+      this.service.removeGameToCategories(removegameCategoryDto),
+    );
+  }
+
   async saveCategory(createCategoryDto: SaveCategoryRequest) {
     //(createGameDto);
     return firstValueFrom(this.service.saveCategory(createCategoryDto));
   }
 
   async findOneCategory(payload: FindOneCategoryDto) {
-    console.log("payload", payload);
+    console.log('payload', payload);
     //(createGameDto);
     return firstValueFrom(this.service.findOneCategory(payload));
   }
@@ -77,14 +106,47 @@ export class GamingService implements OnModuleInit {
 
   async deleteCategory(payload: FindOneCategoryDto) {
     console.log('Payload sent to gRPC client for deletion:', payload);
-  
+
     const response = await firstValueFrom(this.service.deleteCategory(payload));
     console.log('Response from gRPC server:', response);
-  
+
     return response;
   }
-  
-  
+
+  async createPromotion(createPromotionDto: CreatePromotionDto) {
+    console.log('createPromotionDto', createPromotionDto);
+    const promotion = await firstValueFrom(
+      this.service.createPromotion(createPromotionDto),
+    );
+    console.log('promotion1', promotion);
+    return promotion;
+  }
+
+  async findPromotions() {
+    return firstValueFrom(this.service.findPromotions({}));
+  }
+
+  async findOnePromotion(payload: FindOnePromotionDto) {
+    console.log('payload', payload);
+    //(createGameDto);
+    return firstValueFrom(this.service.findOnePromotion(payload));
+  }
+
+  async updatePromotion(request: CreatePromotionDto) {
+    //(createGameDto);
+    return firstValueFrom(this.service.updatePromotion(request));
+  }
+
+  async removePromotion(request: FindOnePromotionDto) {
+    console.log('Payload sent to gRPC client for deletion:', request);
+
+    const response = await firstValueFrom(
+      this.service.removePromotion(request),
+    );
+    console.log('Response from gRPC server:', response);
+
+    return response;
+  }
 
   async listCategories() {
     //('fetch categories');
@@ -92,19 +154,19 @@ export class GamingService implements OnModuleInit {
   }
 
   async sync(syncGameDto: SyncGameDto) {
-    //('syncing games');
+    console.log('syncing games');
     const games = await firstValueFrom(this.service.syncGames(syncGameDto));
-
+    console.log("QTECH-LOG", games);
     return {
       games,
     };
   }
 
-
   async startGame(request: StartGameDto) {
     // //('start game', request);
-    console.log("start-service")
+    console.log('start-service', request);
     const resp = await firstValueFrom(this.service.startGame(request));
+    console.log('resp', resp);
 
     return resp;
   }
@@ -114,7 +176,7 @@ export class GamingService implements OnModuleInit {
     // //(request);
     const resp = await firstValueFrom(this.service.handleCallback(request));
 
-    console.log("resp", resp);
+    console.log('resp', resp);
 
     return resp;
   }
@@ -122,17 +184,16 @@ export class GamingService implements OnModuleInit {
   async xpressLogin(data: XpressRequest) {
     //('xpress login');
     const res = await firstValueFrom(this.service.xpressLogin(data));
-    const response: any = {...res};
+    const response: any = { ...res };
     if (res.status) response.data.balance = parseFloat(res.data.balance);
 
     return response;
   }
 
-
   async xpressBalance(data: XpressRequest): Promise<XpressResponse> {
     //('xpress balance');
     const res = await firstValueFrom(this.service.xpressBalance(data));
-    const response: any = {...res};
+    const response: any = { ...res };
     if (res.status) response.data.balance = parseFloat(res.data.balance);
 
     return response;
@@ -141,7 +202,7 @@ export class GamingService implements OnModuleInit {
   async xpressCredit(data: XpressRequest) {
     //('xpress credit');
     const res = await firstValueFrom(this.service.xpressCredit(data));
-    const response: any = {...res};
+    const response: any = { ...res };
     if (res.status) {
       response.data.balance = parseFloat(res.data.balance);
       response.data.oldBalance = parseFloat(res.data.oldBalance);
@@ -152,7 +213,7 @@ export class GamingService implements OnModuleInit {
   async xpressDebit(data: XpressRequest) {
     //('xpress debit');
     const res = await firstValueFrom(this.service.xpressDebit(data));
-    const response: any = {...res};
+    const response: any = { ...res };
     if (res.status) {
       response.data.balance = parseFloat(res.data.balance);
       response.data.oldBalance = parseFloat(res.data.oldBalance);
@@ -162,7 +223,7 @@ export class GamingService implements OnModuleInit {
 
   async xpressRollback(data: XpressRequest) {
     const res = await firstValueFrom(this.service.xpressRollback(data));
-    const response: any = {...res};
+    const response: any = { ...res };
     if (res.status) {
       response.data.balance = parseFloat(res.data.balance);
       response.data.oldBalance = parseFloat(res.data.oldBalance);
@@ -173,17 +234,57 @@ export class GamingService implements OnModuleInit {
   async xpressLogout(data: XpressRequest) {
     //('xpress logout');
     const res = await firstValueFrom(this.service.xpressLogout(data));
-    const response: any = {...res};
+    const response: any = { ...res };
     if (res.status) response.data.balance = parseFloat(res.data.balance);
 
     return response;
   }
 
-  formatNumber (num) {
+  async createTournament(createTournamentDto: CreateTournamentDto) {
+    console.log('createTournamentDto', createTournamentDto);
+    const tournament = await firstValueFrom(
+      this.service.createTournament(createTournamentDto),
+    );
+    console.log('tournament', tournament);
+    return tournament;
+  }
+
+  async findAllTournaments() {
+    return firstValueFrom(this.service.findAllTournaments({}));
+  }
+
+  async findOneTournament(payload: FindOneTournamentDto) {
+    console.log('payload', payload);
+    //(createGameDto);
+    return firstValueFrom(this.service.findOneTournament(payload));
+  }
+
+  async updateTournament(request: CreateTournamentDto) {
+    //(createGameDto);
+    return firstValueFrom(this.service.updateTournament(request));
+  }
+
+  async deleteTournament(request: FindOneTournamentDto) {
+    console.log('Payload sent to gRPC client for deletion:', request);
+
+    const response = await firstValueFrom(
+      this.service.deleteTournament(request),
+    );
+    console.log('Response from gRPC server:', response);
+
+    return response;
+  }
+
+
+
+
+  
+
+  formatNumber(num) {
     if (num > 0 && num % 1 === 0) {
-      return parseFloat(num + ".00");
+      return parseFloat(num + '.00');
     } else {
-      return parseFloat(num.toFixed(2))
+      return parseFloat(num.toFixed(2));
     }
-  };
+  }
 }

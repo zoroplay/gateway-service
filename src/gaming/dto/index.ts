@@ -1,5 +1,6 @@
 /* eslint-disable prettier/prettier */
 import { ApiProperty } from '@nestjs/swagger';
+import { Timestamp } from 'typeorm';  
 
 export class SwaggerSyncGameDto {
   @ApiProperty({
@@ -80,8 +81,19 @@ export class SwaggerStartGameDto {
     example: 'casino',
   })
   balanceType: string;
-}
 
+  @ApiProperty({
+    description: 'isBonus to load game',
+    example: true,
+  })
+  isBonus: boolean;
+
+  @ApiProperty({
+    description: 'bonusType to load game',
+    example: 'free_rounds',
+  })
+  bonusType: string;
+}
 
 export class SwaggerStartGameResponseDto {
   @ApiProperty({
@@ -363,11 +375,16 @@ export class SaveCategoryRequestDto {
   name: string;
 
   @ApiProperty({
-    description: 'The image path for the category (optional).',
-    example: '/images/category/electronics.png',
+    example: 'active',
     required: false,
   })
-  imagePath?: string;
+  status?: string;
+
+  @ApiProperty({
+    required: false,
+    example: 1
+  })
+  priority?: boolean;
 }
 
 export class FindCategoryDto {
@@ -376,4 +393,262 @@ export class FindCategoryDto {
     example: 1,
   })
   id: number;
+}
+
+export class UpdateGameRequestDto {
+  @ApiProperty({
+    description: 'Unique identifier of the game.',
+    example: 1,
+  })
+  id: number;
+
+  @ApiProperty({
+    description: 'Unique game identifier.',
+    example: 'game-12345',
+  })
+  gameId: string;
+
+  @ApiProperty({
+    description: 'Title of the game.',
+    example: 'Awesome Game',
+  })
+  title: string;
+
+  @ApiProperty({
+    description: 'Detailed description of the game.',
+    example: 'This is an amazing game description.',
+  })
+  description: string;
+
+  @ApiProperty({
+    description: 'URL of the game.',
+    example: 'https://example.com/game',
+  })
+  url: string;
+
+  @ApiProperty({
+    description: 'Path to the game\'s image.',
+    example: '/images/game-thumbnail.png',
+  })
+  imagePath: string;
+
+  @ApiProperty({
+    description: 'Path to the game\'s banner image.',
+    example: '/images/game-banner.png',
+  })
+  bannerPath: string;
+
+  @ApiProperty({
+    description: 'Indicates whether the game is active.',
+    example: true,
+  })
+  status: boolean;
+
+  @ApiProperty({
+    description: 'Type or category of the game.',
+    example: 'Action',
+  })
+  type: string;
+
+  @ApiProperty({
+    description: 'Unique identifier of the game provider.',
+    example: 42,
+  })
+  providerId: number;
+}
+
+
+export class AddGameCategoriesDto {
+  @ApiProperty({
+    description: 'ID of the game to which categories will be added',
+    example: 1,
+  })
+
+  gameId: number;
+
+  @ApiProperty({
+    description: 'List of category IDs to associate with the game',
+    example: [2, 3, 4],
+    type: [Number], // Indicates an array of numbers
+  })
+  categories: number[]; // Array of category IDs
+}
+
+export class CreatePromotionRequestDto {
+  // @ApiProperty({
+  //   description: 'The unique ID of the client creating the promotion',
+  //   example: 123,
+  // })
+  // clientId: number;
+
+  @ApiProperty({
+    description: 'The unique ID of the promotion (optional)',
+    example: 1,
+    required: false,
+  })
+  id?: number;
+
+  @ApiProperty({
+    description: 'The title of the promotion',
+    example: 'Winter Sale',
+  })
+  title: string;
+
+  @ApiProperty({
+    description: 'URL of the image associated with the promotion',
+    example: 'https://example.com/images/promotion.jpg',
+  })
+  imageUrl: string;
+
+  @ApiProperty({
+    description: 'Content or description of the promotion',
+    example: 'Get up to 50% off on all items this winter!',
+  })
+  content: string;
+
+  @ApiProperty({
+    description: 'Start date of the promotion in a timestamp format',
+    example: '2024-12-01T00:00:00.000Z',
+    type: 'string',
+    format: 'date-time',
+  })
+  startDate: Timestamp;
+
+  @ApiProperty({
+    description: 'End date of the promotion in a timestamp format',
+    example: '2025-01-01T23:59:59.000Z',
+    type: 'string',
+    format: 'date-time',
+  })
+  endDate: Timestamp;
+
+  @ApiProperty({
+    description: 'The type of promotion',
+    example: 'Discount',
+  })
+  type: string;
+
+  @ApiProperty({
+    description: 'The targetUrl of tournament',
+    example: 'https://example.com',
+  })
+  targetUrl: string;
+}
+
+export class CreateTournamentRequestDto {
+  // @ApiProperty({
+  //   description: 'The unique ID of the client creating the promotion',
+  //   example: 123,
+  // })
+  // clientId: number;
+
+  @ApiProperty({
+    description: 'The unique ID of the promotion (optional)',
+    example: 1,
+    required: false,
+  })
+  id?: number;
+
+  @ApiProperty({
+    description: 'The title of the promotion',
+    example: 'Winter Sale',
+  })
+  title: string;
+
+  @ApiProperty({
+    description: 'URL of the image associated with the promotion',
+    example: 'https://example.com/images/promotion.jpg',
+  })
+  imageUrl: string;
+
+  @ApiProperty({
+    description: 'Content or description of the promotion',
+    example: 'Get up to 50% off on all items this winter!',
+  })
+  content: string;
+
+  @ApiProperty({
+    description: 'Start date of the promotion in a timestamp format',
+    example: '2024-12-01T00:00:00.000Z',
+    type: 'string',
+    format: 'date-time',
+  })
+  startDate: Timestamp;
+
+  @ApiProperty({
+    description: 'End date of the promotion in a timestamp format',
+    example: '2025-01-01T23:59:59.000Z',
+    type: 'string',
+    format: 'date-time',
+  })
+  endDate: Timestamp;
+
+  @ApiProperty({
+    description: 'The type of promotion',
+    example: 'Discount',
+  })
+  type: string;
+}
+
+
+export class FindPromotionDto {
+  @ApiProperty({
+    description: 'The unique ID of the category to retrieve.',
+    example: 1,
+  })
+  id: number;
+}
+
+
+
+export class SwaggerOKPromotionResponse {
+  @ApiProperty({
+    description: 'id',
+  })
+  id: number;
+
+  @ApiProperty({
+    description: 'title e.g penaldo',
+  })
+  title: string;
+
+  @ApiProperty({
+    description: 'promo image e.g penaldo',
+  })
+  imageUrl: string;
+
+  @ApiProperty({
+    description: 'promo content e.g casino game by shacks evolution',
+  })
+  content: string;
+
+  @ApiProperty({
+    description: 'promo type',
+  })
+  type: string;
+
+  @ApiProperty({
+    description: 'gamee image url',
+  })
+  endDate: string;
+
+  @ApiProperty({
+    description: 'game banner url',
+  })
+  startDate: string;
+
+  @ApiProperty({
+    description: 'game status',
+  })
+  status: string;
+  
+ 
+  @ApiProperty({
+    description: 'date game was created',
+  })
+  createdAt: Date;
+  @ApiProperty({
+    description: 'date game was updated',
+  })
+  updatedAt: Date;
 }
