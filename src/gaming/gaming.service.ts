@@ -20,9 +20,11 @@ import {
   UpdateGameDto,
   CreateTournamentDto,
   FindOneTournamentDto,
+  CreatePromotionRequest,
+  FileChunk,
 } from 'src/interfaces/gaming.pb';
 import { ClientGrpc } from '@nestjs/microservices';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, of } from 'rxjs';
 
 @Injectable()
 export class GamingService implements OnModuleInit {
@@ -113,12 +115,30 @@ export class GamingService implements OnModuleInit {
     return response;
   }
 
-  async createPromotion(createPromotionDto: CreatePromotionDto) {
-    console.log('createPromotionDto', createPromotionDto);
+  async createPromotion(
+    createPromotionDto: CreatePromotionDto,  // Use CreatePromotionDto here
+    file: Express.Multer.File,  // Add the file parameter
+  ): Promise<any> {
+    console.log('createPromotionDto:', createPromotionDto);
+    console.log('file:', file);
+  
+    // Convert the file to a FileChunk
+    const fileChunk: FileChunk = { data: file.buffer };
+
+    console.log('fileChunk:', fileChunk);
+  
+    // Create the request object
+    const createPromotionRequest: CreatePromotionRequest = {
+      metadata: createPromotionDto,  // Pass createPromotionDto as metadata
+      fileChunk,  // Pass file chunk here
+    };
+  
+    // Forward the observable request to the service
     const promotion = await firstValueFrom(
-      this.service.createPromotion(createPromotionDto),
+      this.service.createPromotion(createPromotionRequest),
     );
-    console.log('promotion1', promotion);
+  
+    console.log('promotion:', promotion);
     return promotion;
   }
 

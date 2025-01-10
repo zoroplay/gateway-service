@@ -7,8 +7,10 @@ import {
   Post,
   Put,
   Query,
+  UploadedFile,
+  UseInterceptors,
 } from '@nestjs/common';
-import { ApiBody, ApiOkResponse, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiConsumes, ApiOkResponse, ApiQuery, ApiTags } from '@nestjs/swagger';
 import {
   AddGameToCategoriesDto,
   CreateGameDto,
@@ -40,6 +42,7 @@ import {
   UpdateGameRequestDto,
 } from '../dto';
 import { GamingService } from '../gaming.service';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @ApiTags('BackOffice APIs')
 @Controller('admin/games')
@@ -123,15 +126,44 @@ export class GamingAdminController {
     return this.gamingService.deleteCategory(payload);
   }
 
+  // @Post('/add-promotion')
+  // @ApiBody({ type: CreatePromotionRequestDto })
+  // @ApiOkResponse({ type: [SwaggerOKPromotionResponse] })
+  // @UseInterceptors(FileInterceptor('imageFile'))
+  // async createPromotion(@Body() payload: CreatePromotionDto, @UploadedFile() imageFile: Express.Multer.File) {
+  //   console.log('payload', payload);
+  //   const promotion = await this.gamingService.createPromotion(payload);
+  //   console.log('promotion', promotion);
+  //   return promotion;
+  // }
+
   @Post('/add-promotion')
-  @ApiBody({ type: CreatePromotionRequestDto })
-  @ApiOkResponse({ type: [SwaggerOKPromotionResponse] })
-  async createPromotion(@Body() payload: CreatePromotionDto) {
-    console.log('payload', payload);
-    const promotion = await this.gamingService.createPromotion(payload);
-    console.log('promotion', promotion);
-    return promotion;
-  }
+@ApiConsumes('multipart/form-data') // Specify content type for file upload
+@ApiBody({
+  schema: {
+    type: 'object',
+    properties: {
+      ...CreatePromotionRequestDto.getProperties(), // Helper to include DTO properties
+      file: {
+        type: 'string',
+        format: 'binary', // Mark the field as a file upload
+      },
+    },
+  },
+})
+@ApiOkResponse({ type: [SwaggerOKPromotionResponse] })
+@UseInterceptors(FileInterceptor('imageFile'))
+async createPromotion(
+  @Body() payload: CreatePromotionDto,
+  @UploadedFile() file: Express.Multer.File,
+) {
+  console.log('payload', payload);
+  console.log('file', file); // Debug the uploaded file
+  const promotion = await this.gamingService.createPromotion(payload, file); // Pass file to service
+  console.log('promotion', promotion);
+  return promotion;
+}
+
 
   @Put('/update-promotion')
   @ApiBody({ type: CreatePromotionRequestDto })
