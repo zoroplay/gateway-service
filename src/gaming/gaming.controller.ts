@@ -23,10 +23,7 @@ import {
 } from '@nestjs/swagger';
 import { Response } from 'express';
 import { GamingService } from './gaming.service';
-import {
-  FindOneCategoryDto,
-  StartGameDto,
-} from 'src/interfaces/gaming.pb';
+import { FindOneCategoryDto, StartGameDto } from 'src/interfaces/gaming.pb';
 import {
   FindCategoryDto,
   SwaggerOKGameResponse,
@@ -41,8 +38,16 @@ export class GamingController {
 
   @Get('/:clientId/list')
   @ApiOkResponse({ type: [SwaggerOKGameResponse] })
-  @ApiQuery({name: 'categoryId', description: 'Gaming category ID', required: false})
-  @ApiQuery({name: 'providerId', description: 'Gaming provider ID', required: false})
+  @ApiQuery({
+    name: 'categoryId',
+    description: 'Gaming category ID',
+    required: false,
+  })
+  @ApiQuery({
+    name: 'providerId',
+    description: 'Gaming provider ID',
+    required: false,
+  })
   findAll(
     @Query('categoryId') categoryId: number,
     @Query('providerId') providerId: number,
@@ -51,25 +56,28 @@ export class GamingController {
     const payload = {
       categoryId,
       providerId,
-      clientId
-    }
+      clientId,
+    };
     return this.gamingService.fetchGames(payload);
   }
 
   @Get('/:clientId/game-list')
   @ApiOkResponse({ type: [SwaggerOKGameResponse] })
-  @ApiQuery({name: 'gameName', description: 'Game title in the DB', required: false})
+  @ApiQuery({
+    name: 'gameName',
+    description: 'Game title in the DB',
+    required: false,
+  })
   fetchGamesByName(
     @Query('gameName') gameName: string,
     @Param('clientId') clientId: number = 4,
   ) {
     const payload = {
       gameName,
-      clientId
-    }
+      clientId,
+    };
     return this.gamingService.fetchGamesByName(payload);
   }
-  
 
   @Get('categories')
   @ApiOkResponse({ type: [SwaggerOKGameResponse] })
@@ -77,11 +85,10 @@ export class GamingController {
     return this.gamingService.listCategories();
   }
 
-
   @Post('/:clientId/start')
   @ApiBody({ type: SwaggerStartGameDto })
   @ApiOkResponse({ type: SwaggerStartGameResponseDto })
-  @ApiParam({name: 'clientId', description: 'SBE CLient ID'})
+  @ApiParam({ name: 'clientId', description: 'SBE CLient ID' })
   constructGameUrl(
     @Body() startGameDto: StartGameDto,
     @Param('clientId') clientId,
@@ -94,7 +101,7 @@ export class GamingController {
     }
     return this.gamingService.startGame(startGameDto);
   }
-  
+
   @Get('/:clientId/:provider_id/callback')
   @ApiParam({ name: 'provider_id', type: 'string' })
   @ApiHeader({ name: 'X-Signature', description: 'Signature' })
@@ -175,23 +182,20 @@ export class GamingController {
         method: req.method,
         header: headers,
         body: JSON.stringify(body),
-        clientId
-      })
-      
+        clientId,
+      });
+
       return res.status(response.status).send(response.data);
-      
     } catch (error) {
       console.error(error);
-      return res
-        .status(HttpStatus.INTERNAL_SERVER_ERROR)
-        .send({
-          status: "error", 
-          error: {
-            scope: "internal",
-            no_refund: "1",
-            message: "Internal server error"
-          }
-        })
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).send({
+        status: 'error',
+        error: {
+          scope: 'internal',
+          no_refund: '1',
+          message: 'Internal server error',
+        },
+      });
     }
   }
 
@@ -230,7 +234,7 @@ export class GamingController {
         method: request.method,
         header: headers,
         body: Object.keys(data).length === 0 ? null : JSON.stringify(data),
-        clientId
+        clientId,
       });
 
       if (response.success === false) {
@@ -239,11 +243,70 @@ export class GamingController {
             'X-ErrorMessage': response.message,
             'X-ErrorCode': `${response.status}`,
           })
-          .send(response).status(HttpStatus.OK);
+          .send(response)
+          .status(HttpStatus.OK);
       }
 
       return res.send(response.data).status(HttpStatus.OK);
+    } catch (error) {
+      console.error(error);
+      return res
+        .set({
+          'X-ErrorMessage': error.message,
+          'X-ErrorCode': `${HttpStatus.INTERNAL_SERVER_ERROR}`,
+        })
+        .send({
+          message: error.message,
+          success: false,
+        });
+    }
+  }
 
+  @Get('/accounts/:playerId/session')
+  @ApiParam({ name: 'playerId', type: 'string' })
+  @ApiQuery({ name: 'gameId', type: 'string' })
+  @ApiHeader({ name: 'Wallet-Session', description: 'Signature' })
+  @ApiHeader({ name: 'Pass-Key', description: 'Session ID' })
+  async handleCallbackWithQtechActionGet(
+    @Req() request,
+    @Param('playerId') playerId,
+    @Param('action') action,
+    @Query('gameId') gameId,
+    @Headers() headers,
+    @Res() res: Response,
+    @Body() data,
+  ) {
+    console.log({
+      playerId: playerId,
+      action: action,
+      method: request.method,
+      header: headers,
+      body: data,
+    });
+    try {
+      const response = await this.gamingService.handleQtechGamesCallback({
+        playerId: playerId,
+        gameId: gameId,
+        action: action,
+        method: request.method,
+        header: headers,
+        body: Object.keys(data).length === 0 ? null : JSON.stringify(data),
+        clientId: 4,
+      });
+
+      console.log('response', response);
+
+      if (response.success === false) {
+        return res
+          .set({
+            'X-ErrorMessage': response.message,
+            'X-ErrorCode': `${response.status}`,
+          })
+          .send(response)
+          .status(HttpStatus.OK);
+      }
+
+      return res.send(response.data).status(HttpStatus.OK);
     } catch (error) {
       console.error(error);
       return res
@@ -283,7 +346,8 @@ export class GamingController {
     // let body = rawBody.toString().replace(/\r?\n|\r/g, "");
     // body = body.replace(/\s/g, "");
 
-    const body = 'reference=acc2e13bc3b8401ca2a6ca47&amount=100.25&campaignType=T&providerId=PragmaticPlay&campaignId=68&currency=NGN&userId=214993&hash=b0b8ebd17bbfa89bbf3cccbdec0813e9&timestamp=1733827646440'
+    const body =
+      'reference=acc2e13bc3b8401ca2a6ca47&amount=100.25&campaignType=T&providerId=PragmaticPlay&campaignId=68&currency=NGN&userId=214993&hash=b0b8ebd17bbfa89bbf3cccbdec0813e9&timestamp=1733827646440';
 
     // const body = 'reference=cf694b66c6044264a6a3f076&gameId=vs25wolfjpt&jackpotDetails=%7B%22progressive%22%3A200.25%2C%22non-progressive%22%3A0.0%7D&amount=200.25&jackpotId=162&providerId=PragmaticPlay&userId=214993&roundId=14398923&hash=e7fe70d40e521dd5a8deda065b1e69bf&timestamp=1734026932633&token=HO8QBS6I6R15CC6YQKFE4OYXYULGAI6WEZ1S05BV'
 
@@ -294,7 +358,7 @@ export class GamingController {
         method: req.method,
         header: headers,
         body,
-        clientId
+        clientId,
       });
       if (response.success === false) {
         return res
@@ -303,7 +367,7 @@ export class GamingController {
             'X-ErrorCode': `${response.status}`,
           })
           .status(response.status)
-          .send(response)
+          .send(response);
       } else {
         // console.log('response status is', response.status);
         return res.status(response.status).send(response.data);
@@ -319,7 +383,7 @@ export class GamingController {
         .send({
           message: error.message,
           success: false,
-        })
+        });
     }
   }
 }

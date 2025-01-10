@@ -20,8 +20,9 @@ import {
   UpdateGameDto,
   CreateTournamentDto,
   FindOneTournamentDto,
-  CreatePromotionRequest,
+  QtechCallbackRequest,
   FileChunk,
+  CreatePromotionRequest,
 } from 'src/interfaces/gaming.pb';
 import { ClientGrpc } from '@nestjs/microservices';
 import { firstValueFrom, of } from 'rxjs';
@@ -176,12 +177,11 @@ export class GamingService implements OnModuleInit {
   async sync(syncGameDto: SyncGameDto) {
     console.log('syncing games');
     const games = await firstValueFrom(this.service.syncGames(syncGameDto));
-    console.log("QTECH-LOG", games);
+    console.log('QTECH-LOG', games);
     return {
       games,
     };
   }
-
   async startGame(request: StartGameDto) {
     // //('start game', request);
     console.log('start-service', request);
@@ -192,9 +192,21 @@ export class GamingService implements OnModuleInit {
   }
 
   async handleGamesCallback(request: CallbackGameDto) {
-    // //('service start');
+    console.log('start-service', request);
     // //(request);
     const resp = await firstValueFrom(this.service.handleCallback(request));
+
+    console.log('resp', resp);
+
+    return resp;
+  }
+
+  async handleQtechGamesCallback(request: QtechCallbackRequest) {
+    console.log('Q-tech service start');
+    // //(request);
+    const resp = await firstValueFrom(
+      this.service.handleQtechCallback(request),
+    );
 
     console.log('resp', resp);
 
@@ -294,11 +306,6 @@ export class GamingService implements OnModuleInit {
 
     return response;
   }
-
-
-
-
-  
 
   formatNumber(num) {
     if (num > 0 && num % 1 === 0) {
