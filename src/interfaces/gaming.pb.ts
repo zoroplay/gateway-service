@@ -12,14 +12,22 @@ import { Struct } from "./google/protobuf/struct.pb";
 
 export const protobufPackage = "gaming";
 
+export interface QtechtransactionRequest {
+  clientId: number;
+  gameId?: string | undefined;
+  passkey: string;
+  walletSessionId: string;
+  body?: string | undefined;
+}
+
 export interface QtechCallbackRequest {
-  clientId?: number | undefined;
+  clientId: number;
   playerId: string;
   gameId: string;
-  action?: string | undefined;
-  method?: string | undefined;
-  header: { [key: string]: any } | undefined;
+  passkey: string;
+  walletSessionId: string;
   body?: string | undefined;
+  action: string;
 }
 
 export interface AddGameToCategoriesResponse {
@@ -430,7 +438,7 @@ export interface Promotion {
 export interface CreatePromotionDto {
   id?: number | undefined;
   title: string;
-  imageUrl: string;
+  imageUrl?: Uint8Array | undefined;
   content: string;
   startDate: string;
   endDate: string;
@@ -464,11 +472,27 @@ export interface AddGameToCategoriesDto {
   categories: number[];
 }
 
+export interface AddGameToPromotionDto {
+  gameId: number;
+  promotion: number[];
+}
+
 export interface GameCategory {
   gameId: number;
   gameTitle: string;
   categoryId: number;
   categoryName: string;
+}
+
+export interface GamePromotion {
+  gameId: number;
+  gameTitle: string;
+  promotionId: number;
+  promotionTitle: string;
+}
+
+export interface AddGameToPromotionResponse {
+  gamePromotion: GamePromotion[];
 }
 
 export interface Tournament {
@@ -530,6 +554,10 @@ export interface GamingServiceClient {
 
   removeGameToCategories(request: AddGameToCategoriesDto): Observable<Empty>;
 
+  addGameToPromotion(request: AddGameToPromotionDto): Observable<AddGameToPromotionResponse>;
+
+  removeGamePromotion(request: AddGameToPromotionDto): Observable<Empty>;
+
   findOneCategory(request: FindOneCategoryDto): Observable<Category>;
 
   updateCategory(request: SaveCategoryRequest): Observable<Category>;
@@ -537,6 +565,8 @@ export interface GamingServiceClient {
   deleteCategory(request: FindOneCategoryDto): Observable<Empty>;
 
   registerBonus(request: Empty): Observable<CommonResponse>;
+
+  uploadImage(request: FileChunk): Observable<CommonResponse>;
 
   findOneTournament(request: FindOneTournamentDto): Observable<Tournament>;
 
@@ -560,7 +590,7 @@ export interface GamingServiceClient {
 
   getGames(request: Empty): Observable<CommonResponseArray>;
 
-  createPromotion(request: CreatePromotionRequest): Observable<Promotion>;
+  createPromotion(request: CreatePromotionDto): Observable<Promotion>;
 
   findPromotions(request: Empty): Observable<Promotions>;
 
@@ -578,6 +608,8 @@ export interface GamingServiceClient {
 
   handleQtechCallback(request: QtechCallbackRequest): Observable<CallbackResponse>;
 
+  handleQtechTransaction(request: QtechtransactionRequest): Observable<CallbackResponse>;
+
   xpressLogin(request: XpressRequest): Observable<XpressResponse>;
 
   xpressBalance(request: XpressRequest): Observable<XpressResponse>;
@@ -589,8 +621,6 @@ export interface GamingServiceClient {
   xpressRollback(request: XpressRequest): Observable<XpressResponse>;
 
   xpressLogout(request: XpressRequest): Observable<XpressResponse>;
-
-  qTechVerifySession(request: QtechCallbackRequest): Observable<CallbackResponse>;
 }
 
 export interface GamingServiceController {
@@ -620,6 +650,12 @@ export interface GamingServiceController {
 
   removeGameToCategories(request: AddGameToCategoriesDto): Promise<Empty> | Observable<Empty> | Empty;
 
+  addGameToPromotion(
+    request: AddGameToPromotionDto,
+  ): Promise<AddGameToPromotionResponse> | Observable<AddGameToPromotionResponse> | AddGameToPromotionResponse;
+
+  removeGamePromotion(request: AddGameToPromotionDto): Promise<Empty> | Observable<Empty> | Empty;
+
   findOneCategory(request: FindOneCategoryDto): Promise<Category> | Observable<Category> | Category;
 
   updateCategory(request: SaveCategoryRequest): Promise<Category> | Observable<Category> | Category;
@@ -627,6 +663,8 @@ export interface GamingServiceController {
   deleteCategory(request: FindOneCategoryDto): Promise<Empty> | Observable<Empty> | Empty;
 
   registerBonus(request: Empty): Promise<CommonResponse> | Observable<CommonResponse> | CommonResponse;
+
+  uploadImage(request: FileChunk): Promise<CommonResponse> | Observable<CommonResponse> | CommonResponse;
 
   findOneTournament(request: FindOneTournamentDto): Promise<Tournament> | Observable<Tournament> | Tournament;
 
@@ -650,7 +688,7 @@ export interface GamingServiceController {
 
   getGames(request: Empty): Promise<CommonResponseArray> | Observable<CommonResponseArray> | CommonResponseArray;
 
-  createPromotion(request: CreatePromotionRequest): Promise<Promotion> | Observable<Promotion> | Promotion;
+  createPromotion(request: CreatePromotionDto): Promise<Promotion> | Observable<Promotion> | Promotion;
 
   findPromotions(request: Empty): Promise<Promotions> | Observable<Promotions> | Promotions;
 
@@ -670,6 +708,10 @@ export interface GamingServiceController {
     request: QtechCallbackRequest,
   ): Promise<CallbackResponse> | Observable<CallbackResponse> | CallbackResponse;
 
+  handleQtechTransaction(
+    request: QtechtransactionRequest,
+  ): Promise<CallbackResponse> | Observable<CallbackResponse> | CallbackResponse;
+
   xpressLogin(request: XpressRequest): Promise<XpressResponse> | Observable<XpressResponse> | XpressResponse;
 
   xpressBalance(request: XpressRequest): Promise<XpressResponse> | Observable<XpressResponse> | XpressResponse;
@@ -681,10 +723,6 @@ export interface GamingServiceController {
   xpressRollback(request: XpressRequest): Promise<XpressResponse> | Observable<XpressResponse> | XpressResponse;
 
   xpressLogout(request: XpressRequest): Promise<XpressResponse> | Observable<XpressResponse> | XpressResponse;
-
-  qTechVerifySession(
-    request: QtechCallbackRequest,
-  ): Promise<CallbackResponse> | Observable<CallbackResponse> | CallbackResponse;
 }
 
 export function GamingServiceControllerMethods() {
@@ -702,10 +740,13 @@ export function GamingServiceControllerMethods() {
       "fetchCategories",
       "addGameToCategories",
       "removeGameToCategories",
+      "addGameToPromotion",
+      "removeGamePromotion",
       "findOneCategory",
       "updateCategory",
       "deleteCategory",
       "registerBonus",
+      "uploadImage",
       "findOneTournament",
       "findAllTournaments",
       "updateTournament",
@@ -725,13 +766,13 @@ export function GamingServiceControllerMethods() {
       "startGame",
       "handleCallback",
       "handleQtechCallback",
+      "handleQtechTransaction",
       "xpressLogin",
       "xpressBalance",
       "xpressDebit",
       "xpressCredit",
       "xpressRollback",
       "xpressLogout",
-      "qTechVerifySession",
     ];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);

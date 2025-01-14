@@ -151,18 +151,18 @@ export class GamingAdminController {
     },
   },
 })
-@ApiOkResponse({ type: [SwaggerOKPromotionResponse] })
-@UseInterceptors(FileInterceptor('imageFile'))
-async createPromotion(
-  @Body() payload: CreatePromotionDto,
-  @UploadedFile() file: Express.Multer.File,
-) {
-  console.log('payload', payload);
-  console.log('file', file); // Debug the uploaded file
-  const promotion = await this.gamingService.createPromotion(payload, file); // Pass file to service
-  console.log('promotion', promotion);
-  return promotion;
-}
+// @ApiOkResponse({ type: [SwaggerOKPromotionResponse] })
+// @UseInterceptors(FileInterceptor('imageFile'))
+// async createPromotion(
+//   @Body() payload: CreatePromotionDto,
+//   @UploadedFile() file: Express.Multer.File,
+// ) {
+//   console.log('payload', payload);
+//   console.log('file', file); // Debug the uploaded file
+//   const promotion = await this.gamingService.createPromotion(payload, file); // Pass file to service
+//   console.log('promotion', promotion);
+//   return promotion;
+// }
 
 
   @Put('/update-promotion')

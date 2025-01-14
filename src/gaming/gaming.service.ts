@@ -116,32 +116,32 @@ export class GamingService implements OnModuleInit {
     return response;
   }
 
-  async createPromotion(
-    createPromotionDto: CreatePromotionDto,  // Use CreatePromotionDto here
-    file: Express.Multer.File,  // Add the file parameter
-  ): Promise<any> {
-    console.log('createPromotionDto:', createPromotionDto);
-    console.log('file:', file);
+  // async createPromotion(
+  //   createPromotionDto: CreatePromotionDto,  // Use CreatePromotionDto here
+  //   file: Express.Multer.File,  // Add the file parameter
+  // ): Promise<any> {
+  //   console.log('createPromotionDto:', createPromotionDto);
+  //   console.log('file:', file);
   
-    // Convert the file to a FileChunk
-    const fileChunk: FileChunk = { data: file.buffer };
+  //   // Convert the file to a FileChunk
+  //   const fileChunk: FileChunk = { data: file.buffer };
 
-    console.log('fileChunk:', fileChunk);
+  //   console.log('fileChunk:', fileChunk);
   
-    // Create the request object
-    const createPromotionRequest: CreatePromotionRequest = {
-      metadata: createPromotionDto,  // Pass createPromotionDto as metadata
-      fileChunk,  // Pass file chunk here
-    };
+  //   // Create the request object
+  //   const createPromotionRequest: CreatePromotionRequest = {
+  //     metadata: createPromotionDto,  // Pass createPromotionDto as metadata
+  //     fileChunk,  // Pass file chunk here
+  //   };
   
-    // Forward the observable request to the service
-    const promotion = await firstValueFrom(
-      this.service.createPromotion(createPromotionRequest),
-    );
+  //   // Forward the observable request to the service
+  //   const promotion = await firstValueFrom(
+  //     this.service.createPromotion(createPromotionRequest),
+  //   );
   
-    console.log('promotion:', promotion);
-    return promotion;
-  }
+  //   console.log('promotion:', promotion);
+  //   return promotion;
+  // }
 
   async findPromotions() {
     return firstValueFrom(this.service.findPromotions({}));
@@ -196,6 +196,18 @@ export class GamingService implements OnModuleInit {
     // //(request);
     const resp = await firstValueFrom(this.service.handleCallback(request));
 
+    console.log('resp', resp);
+
+    return resp;
+  }
+
+
+  async handleQtechPlayerBalance(request: QtechCallbackRequest) {
+    console.log('start-service', request);
+    // //(request);
+    const resp = await firstValueFrom(
+      this.service.handleQtechCallback(request),
+    );
     console.log('resp', resp);
 
     return resp;

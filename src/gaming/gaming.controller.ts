@@ -266,59 +266,163 @@ export class GamingController {
   @ApiParam({ name: 'playerId', type: 'string' })
   @ApiQuery({ name: 'gameId', type: 'string' })
   @ApiHeader({ name: 'Wallet-Session', description: 'Signature' })
-  @ApiHeader({ name: 'Pass-Key', description: 'Session ID' })
+  @ApiHeader({ name: 'Pass-Key', description: 'Pass Key' })
   async handleCallbackWithQtechActionGet(
     @Req() request,
-    @Param('playerId') playerId,
-    @Param('action') action,
-    @Query('gameId') gameId,
-    @Headers() headers,
+    @Param('playerId') playerId: string,
+    @Query('gameId') gameId: string,
+    @Headers() headers: Record<string, string>,
     @Res() res: Response,
-    @Body() data,
+    @Body() data: Record<string, any>,
   ) {
     console.log({
-      playerId: playerId,
-      action: action,
+      playerId,
       method: request.method,
       header: headers,
       body: data,
     });
+
     try {
+      // Handle the response if session is valid
       const response = await this.gamingService.handleQtechGamesCallback({
         playerId: playerId,
         gameId: gameId,
-        action: action,
-        method: request.method,
-        header: headers,
-        body: Object.keys(data).length === 0 ? null : JSON.stringify(data),
-        clientId: 4,
+        walletSessionId: headers['Wallet-Session'],
+        passkey: headers['Pass-Key'],
+        body: Object.keys(data).length === 0 ? '' : JSON.stringify(data),
+        clientId: data.clientId,
+        action: 'verifySession',
       });
 
-      console.log('response', response);
+      console.log('Game Callback Response:', response);
 
-      if (response.success === false) {
+      // Send appropriate response back
+      if (!response.success) {
         return res
           .set({
             'X-ErrorMessage': response.message,
             'X-ErrorCode': `${response.status}`,
           })
-          .send(response)
-          .status(HttpStatus.OK);
+          .status(HttpStatus.OK)
+          .send(response);
       }
 
-      return res.send(response.data).status(HttpStatus.OK);
+      return res.status(HttpStatus.OK).send(response.data);
     } catch (error) {
-      console.error(error);
+      console.error('Error in handleCallbackWithQtechActionGet:', error);
       return res
         .set({
-          'X-ErrorMessage': error.message,
+          'X-ErrorMessage': error.message || 'Internal Server Error',
           'X-ErrorCode': `${HttpStatus.INTERNAL_SERVER_ERROR}`,
         })
+        .status(HttpStatus.INTERNAL_SERVER_ERROR)
         .send({
-          message: error.message,
+          message: error.message || 'Internal Server Error',
           success: false,
         });
     }
+  }
+
+  @Get('/accounts/:playerId/balance')
+  @ApiParam({ name: 'playerId', type: 'string' })
+  @ApiQuery({ name: 'gameId', type: 'string', required: false })
+  @ApiHeader({
+    name: 'Wallet-Session',
+    description: 'Player session token (optional)',
+  })
+  @ApiHeader({ name: 'Pass-Key', description: 'Shared secret pass-key' })
+  async getQtechBalance(
+    @Req() request,
+    @Param('playerId') playerId: string,
+    @Query('gameId') gameId: string | undefined,
+    @Headers() headers: Record<string, string>,
+    @Res() res: Response,
+    @Body() data: Record<string, any>,
+  ) {
+    console.log({
+      playerId,
+      gameId,
+      method: request.method,
+      headers,
+    });
+
+    // Fetch the player's balance
+    const balanceResponse = await this.gamingService.handleQtechPlayerBalance({
+      playerId: playerId,
+      gameId: gameId,
+      walletSessionId: headers['Wallet-Session'],
+      passkey: headers['Pass-Key'],
+      body: Object.keys(data).length === 0 ? '' : JSON.stringify(data),
+      clientId: data.clientId,
+      action: 'getBalance',
+    });
+
+    console.log('Balance Response:', balanceResponse);
+
+    if (!balanceResponse.success) {
+      return res
+        .set({
+          'X-ErrorMessage': balanceResponse.message,
+          'X-ErrorCode': `${balanceResponse.status}`,
+        })
+        .status(HttpStatus.OK)
+        .send(balanceResponse);
+    }
+
+    // Send the player's balance
+    return res.status(HttpStatus.OK).send({
+      balance: balanceResponse.data.balance,
+      currency: balanceResponse.data.currency,
+      success: true,
+    });
+  }
+  catch(error) {
+    console.error('Error in handleCallbackWithQtechActionGet:', error);
+  }
+
+  @Post('/transactions')
+  @ApiHeader({
+    name: 'Wallet-Session',
+    description: 'Session signature for validation',
+  })
+  @ApiHeader({ name: 'Pass-Key', description: 'Pass Key for authentication' })
+  async QtechBet(
+    @Headers() headers: Record<string, string>,
+    @Res() res: Response,
+    @Req() request: Request,
+    @Body() data: Record<string, any>,
+  ) {
+    //TODO:  action: 'transaction',
+  }
+
+  @Post('/transactions')
+  @ApiHeader({
+    name: 'Wallet-Session',
+    description: 'Session signature for validation',
+  })
+  @ApiHeader({ name: 'Pass-Key', description: 'Pass Key for authentication' })
+  async QtechWin(
+    @Headers() headers: Record<string, string>,
+    @Res() res: Response,
+    @Req() request: Request,
+    @Body() data: Record<string, any>,
+  ) {
+    //TODO:  action: 'transaction',
+  }
+
+  @Post('/transactions/rollback')
+  @ApiHeader({
+    name: 'Wallet-Session',
+    description: 'Session signature for validation',
+  })
+  @ApiHeader({ name: 'Pass-Key', description: 'Pass Key for authentication' })
+  async QtechRollBack(
+    @Headers() headers: Record<string, string>,
+    @Res() res: Response,
+    @Req() request: Request,
+    @Body() data: Record<string, any>,
+  ) {
+    //TODO:  action: 'transaction',
   }
 
   @Post('/:clientId/:provider_id/callback/:action')
