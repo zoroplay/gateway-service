@@ -329,4 +329,28 @@ export class BettingController {
         console.error(error);
       }
     }
+
+    @Post('reporting/:clientId/tax-report')
+    @ApiOperation({
+      summary: 'Get tax reports',
+      description: 'List tax on tickets for a particular client',
+    })
+    @ApiParam({name: 'clientId', description: 'SBE Client ID'})
+    @ApiQuery({name: 'page', description: 'page number for pagination'})
+    @ApiBody({ type: SwaggerGetVirtualBets })
+    @ApiOkResponse({ type: SwaggerCommonResponse })
+    GetTaxReport(
+      @Body() data: GetTicketsRequest,
+      @Query('page') page: number,
+      @Param('clientId') clientId: number,
+    ) {
+      try {
+        data.clientId = clientId;
+        data.page = page;
+  
+        return this.bettingService.getTaxReport(data);
+      } catch (error) {
+        console.error(error);
+      }
+    }
 }
