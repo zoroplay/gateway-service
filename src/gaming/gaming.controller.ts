@@ -386,7 +386,37 @@ export class GamingController {
     description: 'Session signature for validation',
   })
   @ApiHeader({ name: 'Pass-Key', description: 'Pass Key for authentication' })
-  async withDraw(
+  async QtechBet(
+    @Headers() headers: Record<string, string>,
+    @Res() res: Response,
+    @Req() request: Request,
+    @Body() data: Record<string, any>,
+  ) {
+    //TODO:  action: 'transaction',
+  }
+
+  @Post('/transactions')
+  @ApiHeader({
+    name: 'Wallet-Session',
+    description: 'Session signature for validation',
+  })
+  @ApiHeader({ name: 'Pass-Key', description: 'Pass Key for authentication' })
+  async QtechWin(
+    @Headers() headers: Record<string, string>,
+    @Res() res: Response,
+    @Req() request: Request,
+    @Body() data: Record<string, any>,
+  ) {
+    //TODO:  action: 'transaction',
+  }
+
+  @Post('/transactions/rollback')
+  @ApiHeader({
+    name: 'Wallet-Session',
+    description: 'Session signature for validation',
+  })
+  @ApiHeader({ name: 'Pass-Key', description: 'Pass Key for authentication' })
+  async QtechRollBack(
     @Headers() headers: Record<string, string>,
     @Res() res: Response,
     @Req() request: Request,
