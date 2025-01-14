@@ -169,6 +169,7 @@ export interface PlaceCasinoBetRequest {
   username?: string | undefined;
   betType?: string | undefined;
   bonusId?: number | undefined;
+  roundDetails?: number | undefined;
 }
 
 export interface CreditCasinoBetRequest {
@@ -554,6 +555,8 @@ export interface BettingServiceClient {
 
   ticketsReport(request: GetTicketsRequest): Observable<CommonResponseObj>;
 
+  taxReport(request: GetTicketsRequest): Observable<CommonResponseObj>;
+
   getCodeHubTickets(request: GetTicketsRequest): Observable<CommonResponseObj>;
 }
 
@@ -654,6 +657,8 @@ export interface BettingServiceController {
     request: GetTicketsRequest,
   ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
 
+  taxReport(request: GetTicketsRequest): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
+
   getCodeHubTickets(
     request: GetTicketsRequest,
   ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
@@ -691,6 +696,7 @@ export function BettingServiceControllerMethods() {
       "deletePlayerData",
       "getCommissions",
       "ticketsReport",
+      "taxReport",
       "getCodeHubTickets",
     ];
     for (const method of grpcMethods) {

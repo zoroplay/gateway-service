@@ -201,6 +201,18 @@ export class GamingService implements OnModuleInit {
     return resp;
   }
 
+
+  async handleQtechPlayerBalance(request: QtechCallbackRequest) {
+    console.log('start-service', request);
+    // //(request);
+    const resp = await firstValueFrom(
+      this.service.handleQtechCallback(request),
+    );
+    console.log('resp', resp);
+
+    return resp;
+  }
+
   async handleQtechGamesCallback(request: QtechCallbackRequest) {
     console.log('Q-tech service start');
     // //(request);
