@@ -94,7 +94,6 @@ export class GamingController {
     }
     return this.gamingService.startGame(startGameDto);
   }
-
   
   @Get('/:clientId/:provider_id/callback')
   @ApiParam({ name: 'provider_id', type: 'string' })
@@ -280,9 +279,13 @@ export class GamingController {
     @Res() res: Response,
   ) {
     // console.log(req.rawBody)
-    const rawBody = req.rawBody;
-    let body = rawBody.toString().replace(/\r?\n|\r/g, "");
-    body = body.replace(/\s/g, "");
+    // const rawBody = req.rawBody;
+    // let body = rawBody.toString().replace(/\r?\n|\r/g, "");
+    // body = body.replace(/\s/g, "");
+
+    const body = 'reference=acc2e13bc3b8401ca2a6ca47&amount=100.25&campaignType=T&providerId=PragmaticPlay&campaignId=68&currency=NGN&userId=214993&hash=b0b8ebd17bbfa89bbf3cccbdec0813e9&timestamp=1733827646440'
+
+    // const body = 'reference=cf694b66c6044264a6a3f076&gameId=vs25wolfjpt&jackpotDetails=%7B%22progressive%22%3A200.25%2C%22non-progressive%22%3A0.0%7D&amount=200.25&jackpotId=162&providerId=PragmaticPlay&userId=214993&roundId=14398923&hash=e7fe70d40e521dd5a8deda065b1e69bf&timestamp=1734026932633&token=HO8QBS6I6R15CC6YQKFE4OYXYULGAI6WEZ1S05BV'
 
     try {
       const response = await this.gamingService.handleGamesCallback({
