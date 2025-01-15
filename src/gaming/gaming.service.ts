@@ -21,7 +21,7 @@ import {
   CreateTournamentDto,
   FindOneTournamentDto,
   QtechCallbackRequest,
-  FileChunk,
+  Promotion,
   CreatePromotionRequest,
 } from 'src/interfaces/gaming.pb';
 import { ClientGrpc } from '@nestjs/microservices';
@@ -119,7 +119,7 @@ export class GamingService implements OnModuleInit {
   // async createPromotion(
   //   createPromotionDto: CreatePromotionDto,  // Use CreatePromotionDto here
   //   file: Express.Multer.File,  // Add the file parameter
-  // ): Promise<any> {
+  // ): Promise<Promotion> {
   //   console.log('createPromotionDto:', createPromotionDto);
   //   console.log('file:', file);
   
@@ -143,6 +143,41 @@ export class GamingService implements OnModuleInit {
   //   return promotion;
   // }
 
+  async createPromotion(
+    createPromotionDto: CreatePromotionDto, // Use CreatePromotionDto here
+    file?: Express.Multer.File,  // Optional base64 string of the file
+  ): Promise<Promotion> {
+    console.log('createPromotionDto:', createPromotionDto);
+    console.log('fileBase64:', file);
+
+    let fileBase64: string | undefined;
+
+    if (file) {
+      fileBase64 = file.buffer.toString('base64');
+    }
+  
+    // If fileBase64 is provided, send the base64 encoded string to gRPC
+    const createPromotionRequest:  CreatePromotionRequest= {
+      metadata: createPromotionDto,  // Pass CreatePromotionDto as metadata
+      file: fileBase64,  // Send the base64 string of the file
+    };
+
+    console.log('createPromotionRequest:', createPromotionRequest);
+  
+    try {
+      // Forward the request to the gRPC service
+      const promotion = await firstValueFrom(
+        this.service.createPromotion(createPromotionRequest),  // Make sure this matches the expected gRPC service method signature
+      );
+  
+      console.log('promotion:', promotion);
+      return promotion;
+    } catch (error) {
+      console.error('Error in createPromotion:', error);
+      throw new Error('Failed to create promotion. Please try again later.');
+    }
+  }
+
   async findPromotions() {
     return firstValueFrom(this.service.findPromotions({}));
   }
@@ -159,8 +194,7 @@ export class GamingService implements OnModuleInit {
   }
 
   async removePromotion(request: FindOnePromotionDto) {
-    console.log('Payload sent to gRPC client for deletion:', request);
-
+    console.log('Payload sent to gRPC client for deletion:', request)
     const response = await firstValueFrom(
       this.service.removePromotion(request),
     );
