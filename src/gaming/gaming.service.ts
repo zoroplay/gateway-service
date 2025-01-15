@@ -21,8 +21,8 @@ import {
   CreateTournamentDto,
   FindOneTournamentDto,
   QtechCallbackRequest,
-  Promotion,
   CreatePromotionRequest,
+  Promotion,
 } from 'src/interfaces/gaming.pb';
 import { ClientGrpc } from '@nestjs/microservices';
 import { firstValueFrom, of } from 'rxjs';
@@ -122,30 +122,30 @@ export class GamingService implements OnModuleInit {
   // ): Promise<Promotion> {
   //   console.log('createPromotionDto:', createPromotionDto);
   //   console.log('file:', file);
-  
+
   //   // Convert the file to a FileChunk
   //   const fileChunk: FileChunk = { data: file.buffer };
 
   //   console.log('fileChunk:', fileChunk);
-  
+
   //   // Create the request object
   //   const createPromotionRequest: CreatePromotionRequest = {
   //     metadata: createPromotionDto,  // Pass createPromotionDto as metadata
   //     fileChunk,  // Pass file chunk here
   //   };
-  
+
   //   // Forward the observable request to the service
   //   const promotion = await firstValueFrom(
   //     this.service.createPromotion(createPromotionRequest),
   //   );
-  
+
   //   console.log('promotion:', promotion);
   //   return promotion;
   // }
 
   async createPromotion(
     createPromotionDto: CreatePromotionDto, // Use CreatePromotionDto here
-    file?: Express.Multer.File,  // Optional base64 string of the file
+    file?: Express.Multer.File, // Optional base64 string of the file
   ): Promise<Promotion> {
     console.log('createPromotionDto:', createPromotionDto);
     console.log('fileBase64:', file);
@@ -155,21 +155,21 @@ export class GamingService implements OnModuleInit {
     if (file) {
       fileBase64 = file.buffer.toString('base64');
     }
-  
+
     // If fileBase64 is provided, send the base64 encoded string to gRPC
-    const createPromotionRequest:  CreatePromotionRequest= {
-      metadata: createPromotionDto,  // Pass CreatePromotionDto as metadata
-      file: fileBase64,  // Send the base64 string of the file
+    const createPromotionRequest: CreatePromotionRequest = {
+      metadata: createPromotionDto, // Pass CreatePromotionDto as metadata
+      file: fileBase64, // Send the base64 string of the file
     };
 
     console.log('createPromotionRequest:', createPromotionRequest);
-  
+
     try {
       // Forward the request to the gRPC service
       const promotion = await firstValueFrom(
-        this.service.createPromotion(createPromotionRequest),  // Make sure this matches the expected gRPC service method signature
+        this.service.createPromotion(createPromotionRequest), // Make sure this matches the expected gRPC service method signature
       );
-  
+
       console.log('promotion:', promotion);
       return promotion;
     } catch (error) {
@@ -194,7 +194,7 @@ export class GamingService implements OnModuleInit {
   }
 
   async removePromotion(request: FindOnePromotionDto) {
-    console.log('Payload sent to gRPC client for deletion:', request)
+    console.log('Payload sent to gRPC client for deletion:', request);
     const response = await firstValueFrom(
       this.service.removePromotion(request),
     );
@@ -235,12 +235,11 @@ export class GamingService implements OnModuleInit {
     return resp;
   }
 
-
   async handleQtechPlayerBalance(request: QtechCallbackRequest) {
     console.log('start-service', request);
     // //(request);
     const resp = await firstValueFrom(
-      this.service.handleQtechCallback(request),
+      this.service.handleQtechGetBalance(request),
     );
     console.log('resp', resp);
 

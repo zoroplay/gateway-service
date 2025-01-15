@@ -325,19 +325,17 @@ export class GamingController {
 
   @Get('/accounts/:playerId/balance')
   @ApiParam({ name: 'playerId', type: 'string' })
-  @ApiQuery({ name: 'gameId', type: 'string', required: false })
-  @ApiHeader({
-    name: 'Wallet-Session',
-    description: 'Player session token (optional)',
-  })
+  @ApiQuery({ name: 'gameId', type: 'string' })
+  @ApiHeader({ name: 'Wallet-Session', description: 'Signature' })
+  @ApiHeader({ name: 'Pass-Key', description: 'Pass Key' })
   @ApiHeader({ name: 'Pass-Key', description: 'Shared secret pass-key' })
   async getQtechBalance(
     @Req() request,
-    @Param('playerId') playerId: string,
-    @Query('gameId') gameId: string | undefined,
     @Headers() headers: Record<string, string>,
     @Res() res: Response,
     @Body() data: Record<string, any>,
+    @Param('playerId') playerId: string,
+    @Query('gameId') gameId?: string,
   ) {
     console.log({
       playerId,
@@ -346,38 +344,46 @@ export class GamingController {
       headers,
     });
 
-    // Fetch the player's balance
-    const balanceResponse = await this.gamingService.handleQtechPlayerBalance({
-      playerId: playerId,
-      gameId: gameId,
-      walletSessionId: headers['Wallet-Session'],
-      passkey: headers['Pass-Key'],
-      body: Object.keys(data).length === 0 ? '' : JSON.stringify(data),
-      clientId: data.clientId,
-      action: 'getBalance',
-    });
+    try {
+      // Fetch the player's balance
+      const balanceResponse = await this.gamingService.handleQtechPlayerBalance(
+        {
+          playerId: playerId,
+          gameId: gameId,
+          walletSessionId: headers['Wallet-Session'],
+          passkey: headers['Pass-Key'],
+          body: Object.keys(data).length === 0 ? '' : JSON.stringify(data),
+          clientId: data.clientId,
+          action: 'getBalance',
+        },
+      );
 
-    console.log('Balance Response:', balanceResponse);
+      console.log('Balance Response:', balanceResponse);
 
-    if (!balanceResponse.success) {
+      if (!balanceResponse.success) {
+        return res
+          .set({
+            'X-ErrorMessage': balanceResponse.message,
+            'X-ErrorCode': `${balanceResponse.status}`,
+          })
+          .status(HttpStatus.OK)
+          .send(balanceResponse);
+      }
+
+      return res.status(HttpStatus.OK).send(balanceResponse.data);
+    } catch (error) {
+      console.error('Error in handleCallbackWithQtechActionGet:', error);
       return res
         .set({
-          'X-ErrorMessage': balanceResponse.message,
-          'X-ErrorCode': `${balanceResponse.status}`,
+          'X-ErrorMessage': error.message || 'Internal Server Error',
+          'X-ErrorCode': `${HttpStatus.INTERNAL_SERVER_ERROR}`,
         })
-        .status(HttpStatus.OK)
-        .send(balanceResponse);
+        .status(HttpStatus.INTERNAL_SERVER_ERROR)
+        .send({
+          message: error.message || 'Internal Server Error',
+          success: false,
+        });
     }
-
-    // Send the player's balance
-    return res.status(HttpStatus.OK).send({
-      balance: balanceResponse.data.balance,
-      currency: balanceResponse.data.currency,
-      success: true,
-    });
-  }
-  catch(error) {
-    console.error('Error in handleCallbackWithQtechActionGet:', error);
   }
 
   @Post('/transactions')
