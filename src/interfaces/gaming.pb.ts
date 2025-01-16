@@ -12,14 +12,6 @@ import { Struct } from "./google/protobuf/struct.pb";
 
 export const protobufPackage = "gaming";
 
-export interface QtechtransactionRequest {
-  clientId: number;
-  gameId?: string | undefined;
-  passkey: string;
-  walletSessionId: string;
-  body?: string | undefined;
-}
-
 export interface QtechCallbackRequest {
   clientId: number;
   playerId: string;
@@ -36,14 +28,19 @@ export interface JPContribution {
   balance: number;
 }
 
-/** remover from wallet balance */
-export interface QtechDepositTransactionResponse {
+export interface QtechtransactionRequest {
+  /** Headers */
+  walletSessionId: string;
+  passKey: string;
+  /** Required Parameters */
   txnType: string;
   txnId: string;
   playerId: string;
   roundId: string;
   amount: number;
   currency: string;
+  conversionRat: number;
+  clientId: number;
   jpContributions: JPContribution[];
   gameId: string;
   device: string;
@@ -52,6 +49,11 @@ export interface QtechDepositTransactionResponse {
   category: string;
   created: string;
   completed: boolean;
+}
+
+export interface QtechDepositTransactionResponse {
+  balance: number;
+  referenceId: string;
 }
 
 /** Rollback can use this to update wallet */
@@ -490,6 +492,7 @@ export interface CreatePromotionDto {
 }
 
 export interface CreatePromotionRequest {
+  id?: number | undefined;
   metadata: CreatePromotionDto | undefined;
   file: string;
 }
@@ -508,8 +511,8 @@ export interface AddGameToCategoriesDto {
 }
 
 export interface AddGameToTournamentDto {
-  gameId: number;
-  tournamentId: number[];
+  tournamentId: number;
+  gameId: number[];
 }
 
 export interface GameCategory {
