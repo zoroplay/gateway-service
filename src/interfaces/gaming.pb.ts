@@ -2,7 +2,6 @@
 // versions:
 //   protoc-gen-ts_proto  v1.181.2
 //   protoc               v3.21.12
-//   protoc               v3.21.12
 // source: gaming.proto
 
 /* eslint-disable */
@@ -34,19 +33,12 @@ export interface QtechtransactionRequest {
   walletSessionId: string;
   passKey: string;
   /** Required Parameters */
-export interface QtechtransactionRequest {
-  /** Headers */
-  walletSessionId: string;
-  passKey: string;
-  /** Required Parameters */
   txnType: string;
   txnId: string;
   playerId: string;
   roundId: string;
   amount: number;
   currency: string;
-  conversionRat: number;
-  clientId: number;
   conversionRat: number;
   clientId: number;
   jpContributions: JPContribution[];
@@ -57,11 +49,6 @@ export interface QtechtransactionRequest {
   category: string;
   created: string;
   completed: boolean;
-}
-
-export interface QtechDepositTransactionResponse {
-  balance: number;
-  referenceId: string;
 }
 
 export interface QtechDepositTransactionResponse {
@@ -524,9 +511,6 @@ export interface AddGameToCategoriesDto {
 }
 
 export interface AddGameToTournamentDto {
-  id?: number | undefined;
-  tournamentId: number;
-  gameId: number[];
   tournamentId: number;
   gameId: number[];
 }
