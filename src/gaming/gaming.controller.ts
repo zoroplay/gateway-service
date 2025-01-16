@@ -23,10 +23,14 @@ import {
 } from '@nestjs/swagger';
 import { Response } from 'express';
 import { GamingService } from './gaming.service';
-import { FindOneCategoryDto, StartGameDto } from 'src/interfaces/gaming.pb';
+import {
+  FindOneCategoryDto,
+  StartGameDto,
+} from 'src/interfaces/gaming.pb';
 import {
   FindCategoryDto,
   SwaggerOKGameResponse,
+  SwaggerQtechTransactionDto,
   SwaggerStartGameDto,
   SwaggerStartGameResponseDto,
 } from './dto';
@@ -386,35 +390,7 @@ export class GamingController {
     }
   }
 
-  @Post('/transactions')
-  @ApiHeader({
-    name: 'Wallet-Session',
-    description: 'Session signature for validation',
-  })
-  @ApiHeader({ name: 'Pass-Key', description: 'Pass Key for authentication' })
-  async QtechBet(
-    @Headers() headers: Record<string, string>,
-    @Res() res: Response,
-    @Req() request: Request,
-    @Body() data: Record<string, any>,
-  ) {
-    //TODO:  action: 'transaction',
-  }
-
-  @Post('/transactions')
-  @ApiHeader({
-    name: 'Wallet-Session',
-    description: 'Session signature for validation',
-  })
-  @ApiHeader({ name: 'Pass-Key', description: 'Pass Key for authentication' })
-  async QtechWin(
-    @Headers() headers: Record<string, string>,
-    @Res() res: Response,
-    @Req() request: Request,
-    @Body() data: Record<string, any>,
-  ) {
-    //TODO:  action: 'transaction',
-  }
+  
 
   @Post('/transactions/rollback')
   @ApiHeader({
