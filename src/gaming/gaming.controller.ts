@@ -23,10 +23,7 @@ import {
 } from '@nestjs/swagger';
 import { Response } from 'express';
 import { GamingService } from './gaming.service';
-import {
-  FindOneCategoryDto,
-  StartGameDto,
-} from 'src/interfaces/gaming.pb';
+import { FindOneCategoryDto, QtechtransactionRequest, StartGameDto } from 'src/interfaces/gaming.pb';
 import {
   FindCategoryDto,
   SwaggerOKGameResponse,
@@ -390,7 +387,110 @@ export class GamingController {
     }
   }
 
-  
+  @Post('/transactions')
+  @ApiHeader({
+    name: 'Wallet-Session',
+    description: 'Session signature for validation',
+  })
+  @Post('/transactions')
+  @ApiHeader({
+    name: 'Pass-Key',
+    description: 'Pass Key for authentication',
+  })
+  @ApiParam({ name: 'playerId', type: 'string' })
+  @ApiParam({ name: 'txnType', type: 'string' })
+  @ApiParam({ name: 'txnId', type: 'string' })
+  @ApiParam({ name: 'roundId', type: 'string' })
+  @ApiParam({ name: 'amount', type: 'string' })
+  @ApiParam({ name: 'currency', type: 'string' })
+  @ApiParam({ name: 'conversionRate', type: 'string' })
+  @ApiParam({ name: 'gameId', type: 'string' })
+  @ApiParam({ name: 'device', type: 'string' })
+  @ApiParam({ name: 'clientType', type: 'string' })
+  @ApiParam({ name: 'clientRoundId', type: 'string' })
+  @ApiParam({ name: 'category', type: 'string' })
+  @ApiParam({ name: 'created', type: 'string' })
+  @ApiParam({ name: 'completed', type: 'string' })
+  @ApiParam({ name: 'jpContributions', type: 'string' })
+  async QtechBet(
+    @Headers() headers: Record<string, string>,
+    @Res() res: Response,
+    @Req() request: Request,
+    @Body() data: Record<string, any>,
+  ) {
+    try {
+      const { txnType, playerId, amount, currency, roundId } = data;
+
+      // // Validate required fields
+      // if (!txnType || !['DEBIT', 'CREDIT'].includes(txnType)) {
+      //   return res.status(400).json({
+      //     success: false,
+      //     message: 'Invalid or missing txnType. Must be DEBIT or CREDIT.',
+      //   });
+      // }
+
+      // if (!playerId || !amount || !currency || !roundId) {
+      //   return res.status(400).json({
+      //     success: false,
+      //     message:
+      //       'Missing required fields: playerId, amount, currency, or roundId.',
+      //   });
+      // }
+
+      const requestPayload: QtechtransactionRequest = {
+        ...data,
+        playerId: String(playerId),
+        passKey: headers['Pass-Key'],
+        walletSessionId: headers['Wallet-Session'],
+        clientId: data.clientId,
+        clientType: data.clientType,
+        clientRoundId: data.clientRoundId,
+        category: data.category,
+        created: data.created,
+        completed: data.completed,
+        jpContributions: data.jpContributions ? data.jpContributions.map((contribution: any) => ({
+          id: contribution.id,
+          amount: Number(contribution.amount),
+          balance: Number(contribution.balance),
+        })) : [],
+        txnType: data.txnType,
+        txnId: data.txnId,
+        roundId: data.roundId,
+        amount: data.amount,
+        currency: data.currency,
+        conversionRat: data.conversionRate,
+        gameId: data.gameId,
+        device: data.device,
+      };
+
+      // Handle DEBIT (Withdrawal)
+      if (txnType === 'DEBIT') {
+        const result = await this.gamingService.handleQtechBet(requestPayload);
+        return res.status(201).json({
+          success: true,
+          message: 'Withdrawal processed successfully.',
+          ...result,
+        });
+      }
+
+      // Handle CREDIT (Deposit)
+      if (txnType === 'CREDIT') {
+        const result = await this.gamingService.handleQtechWin(requestPayload);
+        return res.status(201).json({
+          success: true,
+          message: 'Deposit processed successfully.',
+          ...result,
+        });
+      }
+    } catch (error) {
+      console.error('Error in QtechBet:', error);
+      return res.status(500).json({
+        success: false,
+        message:
+          'An unexpected error occurred while processing the transaction.',
+      });
+    }
+  }
 
   @Post('/transactions/rollback')
   @ApiHeader({

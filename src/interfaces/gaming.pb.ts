@@ -40,6 +40,7 @@ export interface QtechtransactionRequest {
   amount: number;
   currency: string;
   conversionRat: number;
+  clientId: number;
   jpContributions: JPContribution[];
   gameId: string;
   device: string;
