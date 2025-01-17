@@ -433,6 +433,8 @@ export class GamingController {
         });
       }
 
+      console.log('Hit Transaction');
+
       const requestPayload: QtechtransactionRequest = {
         ...data,
         playerId: String(playerId),
