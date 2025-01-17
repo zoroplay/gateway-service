@@ -23,7 +23,11 @@ import {
 } from '@nestjs/swagger';
 import { Response } from 'express';
 import { GamingService } from './gaming.service';
-import { FindOneCategoryDto, QtechtransactionRequest, StartGameDto } from 'src/interfaces/gaming.pb';
+import {
+  FindOneCategoryDto,
+  QtechtransactionRequest,
+  StartGameDto,
+} from 'src/interfaces/gaming.pb';
 import {
   FindCategoryDto,
   SwaggerOKGameResponse,
@@ -419,23 +423,15 @@ export class GamingController {
     @Body() data: Record<string, any>,
   ) {
     try {
-      const { txnType, playerId, amount, currency, roundId } = data;
+      const { txnType, playerId } = data;
 
       // // Validate required fields
-      // if (!txnType || !['DEBIT', 'CREDIT'].includes(txnType)) {
-      //   return res.status(400).json({
-      //     success: false,
-      //     message: 'Invalid or missing txnType. Must be DEBIT or CREDIT.',
-      //   });
-      // }
-
-      // if (!playerId || !amount || !currency || !roundId) {
-      //   return res.status(400).json({
-      //     success: false,
-      //     message:
-      //       'Missing required fields: playerId, amount, currency, or roundId.',
-      //   });
-      // }
+      if (!txnType || !['DEBIT', 'CREDIT'].includes(txnType)) {
+        return res.status(400).json({
+          success: false,
+          message: 'Invalid or missing txnType. Must be DEBIT or CREDIT.',
+        });
+      }
 
       const requestPayload: QtechtransactionRequest = {
         ...data,
@@ -448,11 +444,13 @@ export class GamingController {
         category: data.category,
         created: data.created,
         completed: data.completed,
-        jpContributions: data.jpContributions ? data.jpContributions.map((contribution: any) => ({
-          id: contribution.id,
-          amount: Number(contribution.amount),
-          balance: Number(contribution.balance),
-        })) : [],
+        jpContributions: data.jpContributions
+          ? data.jpContributions.map((contribution: any) => ({
+              id: contribution.id,
+              amount: Number(contribution.amount),
+              balance: Number(contribution.balance),
+            }))
+          : [],
         txnType: data.txnType,
         txnId: data.txnId,
         roundId: data.roundId,
@@ -468,7 +466,7 @@ export class GamingController {
         const result = await this.gamingService.handleQtechBet(requestPayload);
         return res.status(201).json({
           success: true,
-          message: 'Withdrawal processed successfully.',
+          message: 'Deposit processed successfully..',
           ...result,
         });
       }
@@ -478,7 +476,7 @@ export class GamingController {
         const result = await this.gamingService.handleQtechWin(requestPayload);
         return res.status(201).json({
           success: true,
-          message: 'Deposit processed successfully.',
+          message: 'Withdrawal processed successfully..',
           ...result,
         });
       }

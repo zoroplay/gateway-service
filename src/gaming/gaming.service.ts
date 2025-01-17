@@ -294,10 +294,10 @@ export class GamingService implements OnModuleInit {
   }
 
   async handleQtechWin(request: QtechtransactionRequest) {
-    console.log('Q-tech Bet Func');
+    console.log('Q-tech Win Func');
     // //(request);
     const resp = await firstValueFrom(
-      this.service.handleQtechTransaction(request),
+      this.service.handleQtechTransactionWin(request),
     );
 
     console.log('resp', resp);
