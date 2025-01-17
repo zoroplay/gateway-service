@@ -293,8 +293,7 @@ export class GamingController {
     const passkey = headers['Pass-Key'];
 
     try {
-
-      console.log("HIT-HIT")
+      console.log('HIT-HIT');
       // Handle the response if session is valid
       const response = await this.gamingService.handleQtechGamesCallback({
         playerId: playerId,
@@ -350,11 +349,14 @@ export class GamingController {
     @Query('gameId') gameId?: string,
   ) {
     console.log({
+      message: 'CHECKING-BALANCE',
       playerId,
       gameId,
       method: request.method,
       headers,
     });
+
+    console.log('BANCE_HIT-HIT');
 
     try {
       // Fetch the player's balance
