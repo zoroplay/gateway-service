@@ -489,6 +489,7 @@ export interface CreatePromotionDto {
   endDate: string;
   type: string;
   targetUrl?: string | undefined;
+  file?: string | undefined;
 }
 
 export interface CreatePromotionRequest {
@@ -633,7 +634,7 @@ export interface GamingServiceClient {
 
   findOnePromotion(request: FindOnePromotionDto): Observable<Promotion>;
 
-  updatePromotion(request: CreatePromotionDto): Observable<Promotion>;
+  updatePromotion(request: CreatePromotionRequest): Observable<Promotion>;
 
   removePromotion(request: FindOnePromotionDto): Observable<Empty>;
 
@@ -648,6 +649,8 @@ export interface GamingServiceClient {
   handleQtechGetBalance(request: QtechCallbackRequest): Observable<CallbackResponse>;
 
   handleQtechTransaction(request: QtechtransactionRequest): Observable<QtechDepositTransactionResponse>;
+
+  handleQtechTransactionWin(request: QtechtransactionRequest): Observable<QtechDepositTransactionResponse>;
 
   xpressLogin(request: XpressRequest): Observable<XpressResponse>;
 
@@ -731,7 +734,7 @@ export interface GamingServiceController {
 
   findOnePromotion(request: FindOnePromotionDto): Promise<Promotion> | Observable<Promotion> | Promotion;
 
-  updatePromotion(request: CreatePromotionDto): Promise<Promotion> | Observable<Promotion> | Promotion;
+  updatePromotion(request: CreatePromotionRequest): Promise<Promotion> | Observable<Promotion> | Promotion;
 
   removePromotion(request: FindOnePromotionDto): Promise<Empty> | Observable<Empty> | Empty;
 
@@ -750,6 +753,13 @@ export interface GamingServiceController {
   ): Promise<CallbackResponse> | Observable<CallbackResponse> | CallbackResponse;
 
   handleQtechTransaction(
+    request: QtechtransactionRequest,
+  ):
+    | Promise<QtechDepositTransactionResponse>
+    | Observable<QtechDepositTransactionResponse>
+    | QtechDepositTransactionResponse;
+
+  handleQtechTransactionWin(
     request: QtechtransactionRequest,
   ):
     | Promise<QtechDepositTransactionResponse>
@@ -811,6 +821,7 @@ export function GamingServiceControllerMethods() {
       "handleQtechCallback",
       "handleQtechGetBalance",
       "handleQtechTransaction",
+      "handleQtechTransactionWin",
       "xpressLogin",
       "xpressBalance",
       "xpressDebit",
