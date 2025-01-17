@@ -23,6 +23,7 @@ import {
   QtechCallbackRequest,
   CreatePromotionRequest,
   Promotion,
+  QtechtransactionRequest,
 } from 'src/interfaces/gaming.pb';
 import { ClientGrpc } from '@nestjs/microservices';
 import { firstValueFrom, of } from 'rxjs';
@@ -271,6 +272,30 @@ export class GamingService implements OnModuleInit {
     // //(request);
     const resp = await firstValueFrom(
       this.service.handleQtechCallback(request),
+    );
+
+    console.log('resp', resp);
+
+    return resp;
+  }
+
+  async handleQtechBet(request: QtechtransactionRequest) {
+    console.log('Q-tech Bet Func');
+    // //(request);
+    const resp = await firstValueFrom(
+      this.service.handleQtechTransaction(request),
+    );
+
+    console.log('resp', resp);
+
+    return resp;
+  }
+
+  async handleQtechWin(request: QtechtransactionRequest) {
+    console.log('Q-tech Bet Func');
+    // //(request);
+    const resp = await firstValueFrom(
+      this.service.handleQtechTransaction(request),
     );
 
     console.log('resp', resp);
