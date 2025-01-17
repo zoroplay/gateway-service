@@ -281,19 +281,26 @@ export class GamingController {
     @Body() data: Record<string, any>,
   ) {
     console.log({
+      message: 'CHECKING-SESSION',
       playerId,
       method: request.method,
       header: headers,
       body: data,
     });
 
+    // Validate required headers
+    const walletSessionId = headers['Wallet-Session'];
+    const passkey = headers['Pass-Key'];
+
     try {
+
+      console.log("HIT-HIT")
       // Handle the response if session is valid
       const response = await this.gamingService.handleQtechGamesCallback({
         playerId: playerId,
         gameId: gameId,
-        walletSessionId: headers['Wallet-Session'],
-        passkey: headers['Pass-Key'],
+        walletSessionId,
+        passkey,
         body: Object.keys(data).length === 0 ? '' : JSON.stringify(data),
         clientId: data.clientId,
         action: 'verifySession',
