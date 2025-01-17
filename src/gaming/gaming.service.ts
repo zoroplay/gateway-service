@@ -116,61 +116,80 @@ export class GamingService implements OnModuleInit {
 
     return response;
   }
+ 
 
   // async createPromotion(
-  //   createPromotionDto: CreatePromotionDto,  // Use CreatePromotionDto here
-  //   file: Express.Multer.File,  // Add the file parameter
+  //   createPromotionDto: CreatePromotionDto, // Use CreatePromotionDto here
+  //   file?: Express.Multer.File, // Optional base64 string of the file
   // ): Promise<Promotion> {
   //   console.log('createPromotionDto:', createPromotionDto);
-  //   console.log('file:', file);
+  //   console.log('fileBase64:', file);
 
-  //   // Convert the file to a FileChunk
-  //   const fileChunk: FileChunk = { data: file.buffer };
+  //   let fileBase64: string | undefined;
 
-  //   console.log('fileChunk:', fileChunk);
+  //   // if (file) {238791
+  //   //   fileBase64 = file.buffer.toString('base64');
+  //   // }
 
-  //   // Create the request object
+  //   // if (fileBase64.startsWith("data:image/png;base64,")) {
+  //   //   fileBase64.replace("data:image/png;base64,", "");
+  //   // }
+
+  //   // If fileBase64 is provided, send the base64 encoded string to gRPC
   //   const createPromotionRequest: CreatePromotionRequest = {
-  //     metadata: createPromotionDto,  // Pass createPromotionDto as metadata
-  //     fileChunk,  // Pass file chunk here
+  //     metadata: createPromotionDto, // Pass CreatePromotionDto as metadata
+  //     file: fileBase64, // Send the base64 string of the file
   //   };
 
-  //   // Forward the observable request to the service
-  //   const promotion = await firstValueFrom(
-  //     this.service.createPromotion(createPromotionRequest),
-  //   );
+  //   console.log('createPromotionRequest:', createPromotionRequest);
 
-  //   console.log('promotion:', promotion);
-  //   return promotion;
+  //   try {
+  //     // Forward the request to the gRPC service
+  //     const promotion = await firstValueFrom(
+  //       this.service.createPromotion(createPromotionRequest), // Make sure this matches the expected gRPC service method signature
+  //     );
+
+  //     console.log('promotion:', promotion);
+  //     return promotion;
+  //   } catch (error) {
+  //     console.error('Error in createPromotion:', error);
+  //     throw new Error('Failed to create promotion. Please try again later.');
+  //   }
   // }
 
   async createPromotion(
-    createPromotionDto: CreatePromotionDto, // Use CreatePromotionDto here
-    file?: Express.Multer.File, // Optional base64 string of the file
+    createPromotionDto: CreatePromotionDto,
+    file?: Express.Multer.File, // Optional file input
   ): Promise<Promotion> {
     console.log('createPromotionDto:', createPromotionDto);
-    console.log('fileBase64:', file);
-
+    console.log('file:', file);
+  
     let fileBase64: string | undefined;
-
+    let fileString: string | undefined = createPromotionDto.file.toString();
+  
     if (file) {
+      // Convert the file buffer to a Base64 string
       fileBase64 = file.buffer.toString('base64');
+    } else if (fileString.startsWith("data:image/")) {
+        fileBase64 = fileString.replace(/^data:image\/\w+;base64,/, '');
+    } else {
+      fileBase64; // Assume it's already a clean Base64 string
     }
-
-    // If fileBase64 is provided, send the base64 encoded string to gRPC
+  
+    // Construct the gRPC request payload
     const createPromotionRequest: CreatePromotionRequest = {
-      metadata: createPromotionDto, // Pass CreatePromotionDto as metadata
-      file: fileBase64, // Send the base64 string of the file
+      metadata: createPromotionDto, // Metadata from DTO
+      file: fileBase64, // Base64 file string or undefined
     };
-
+  
     console.log('createPromotionRequest:', createPromotionRequest);
-
+  
     try {
-      // Forward the request to the gRPC service
+      // Send the request to the gRPC service
       const promotion = await firstValueFrom(
-        this.service.createPromotion(createPromotionRequest), // Make sure this matches the expected gRPC service method signature
+        this.service.createPromotion(createPromotionRequest),
       );
-
+  
       console.log('promotion:', promotion);
       return promotion;
     } catch (error) {
@@ -178,6 +197,7 @@ export class GamingService implements OnModuleInit {
       throw new Error('Failed to create promotion. Please try again later.');
     }
   }
+  
 
   async findPromotions() {
     return firstValueFrom(this.service.findPromotions({}));
