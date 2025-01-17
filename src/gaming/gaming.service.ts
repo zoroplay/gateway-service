@@ -167,7 +167,7 @@ export class GamingService implements OnModuleInit {
     let fileBase64: string | undefined;
     let fileString: string | undefined = createPromotionDto.file.toString();
   
-    if (file.buffer) {
+    if (file) {
       // Convert the file buffer to a Base64 string
       fileBase64 = file.buffer.toString('base64');
     } else if (fileString.startsWith("data:image/")) {
