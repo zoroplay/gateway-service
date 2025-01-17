@@ -211,7 +211,11 @@ export class GamingService implements OnModuleInit {
 
   async updatePromotion(request: CreatePromotionDto) {
     //(createGameDto);
-    return firstValueFrom(this.service.updatePromotion(request));
+    const updatePromotionRequest: CreatePromotionRequest = {
+      metadata: request,
+      file: '', // Add appropriate file handling if needed
+    };
+    return firstValueFrom(this.service.updatePromotion(updatePromotionRequest));
   }
 
   async removePromotion(request: FindOnePromotionDto) {
