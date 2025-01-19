@@ -123,38 +123,13 @@ export class GamingService implements OnModuleInit {
  
 
   async createPromotion(
-    createPromotionDto: CreatePromotionDto,
-    file?: Express.Multer.File, // Optional file input
+    createPromotionDto: CreatePromotionDto
   ): Promise<Promotion> {
-    console.log('createPromotionDto:', createPromotionDto);
-    console.log('file:', file);
-  
-    let fileBase64: string | undefined;
-    let fileString: string | undefined = file.toString();
-
-    console.log('fileString:', fileString);
-  
-    if (file) {
-      // Convert the file buffer to a Base64 string
-      fileBase64 = file.buffer.toString('base64');
-    } else if (fileString.startsWith("data:image/")) {
-        fileBase64 = fileString.replace(/^data:image\/\w+;base64,/, '');
-    } else {
-      fileBase64; // Assume it's already a clean Base64 string
-    }
-  
-    // Construct the gRPC request payload
-    const createPromotionRequest: CreatePromotionRequest = {
-      metadata: createPromotionDto, // Metadata from DTO
-      file: fileBase64, // Base64 file string or undefined
-    };
-  
-    console.log('createPromotionRequest:', createPromotionRequest);
   
     try {
       // Send the request to the gRPC service
       const promotion = await firstValueFrom(
-        this.service.createPromotion(createPromotionRequest),
+        this.service.createPromotion(createPromotionDto),
       );
   
       console.log('promotion:', promotion);
@@ -178,37 +153,12 @@ export class GamingService implements OnModuleInit {
 
   async updatePromotion(
     createPromotionDto: CreatePromotionDto,
-    file?: Express.Multer.File, // Optional file input
   ): Promise<Promotion> {
-    console.log('updatePromotion:', createPromotionDto);
-    console.log('file:', file);
-  
-    let fileBase64: string | undefined;
-    let fileString: string | undefined = file.toString();
-
-    console.log('fileString:', fileString);
-  
-    if (file) {
-      // Convert the file buffer to a Base64 string
-      fileBase64 = file.buffer.toString('base64');
-    } else if (fileString.startsWith("data:image/")) {
-        fileBase64 = fileString.replace(/^data:image\/\w+;base64,/, '');
-    } else {
-      fileBase64; // Assume it's already a clean Base64 string
-    }
-  
-    // Construct the gRPC request payload
-    const createPromotionRequest: CreatePromotionRequest = {
-      metadata: createPromotionDto, // Metadata from DTO
-      file: fileBase64, // Base64 file string or undefined
-    };
-  
-    console.log('createPromotionRequest:', createPromotionRequest);
   
     try {
       // Send the request to the gRPC service
       const promotion = await firstValueFrom(
-        this.service.updatePromotion(createPromotionRequest),
+        this.service.updatePromotion(createPromotionDto),
       );
   
       console.log('promotion:', promotion);
