@@ -162,6 +162,7 @@ async createPromotion(@Body() payload: CreatePromotionDto, @UploadedFile() file:
   schema: {
     type: 'object',
     properties: {
+      id: { type: 'number', example: 'Promotion ID' },
       title: { type: 'string', example: 'Promotion Title' },
       imageUrl: { type: 'string', example: 'http://example.com/image.png' },
       content: { type: 'string', example: 'This is the promotion content.' },
@@ -283,3 +284,5 @@ async updatePromotion(@Body() payload: CreatePromotionDto, @UploadedFile() file:
     return this.gamingService.findOneTournament(payload);
   }
 }
+
+

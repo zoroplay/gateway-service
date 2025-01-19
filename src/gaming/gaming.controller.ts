@@ -12,11 +12,14 @@ import {
   Query,
   RawBodyRequest,
   HttpCode,
+  UploadedFile,
+  UseInterceptors,
 } from '@nestjs/common';
 import {
   ApiBody,
   ApiHeader,
   ApiOkResponse,
+  ApiOperation,
   ApiParam,
   ApiQuery,
   ApiTags,
@@ -35,6 +38,8 @@ import {
   SwaggerStartGameDto,
   SwaggerStartGameResponseDto,
 } from './dto';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { ApiFile } from 'src/common/file-interceptor';
 
 @ApiTags('Gaming APIs')
 @Controller('games')
@@ -580,5 +585,21 @@ export class GamingController {
           success: false,
         });
     }
+  }
+
+  @Post('upload')
+  @ApiOperation({ summary: 'Upload a single file' })
+  @UseInterceptors(FileInterceptor('file'))
+  async handleFileUpload(
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    //@ts-ignore
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    console.log("file", file);
+    const value = await this.gamingService.uploadFile(file);
+
+    console.log("value", value);
+
+    return value;
   }
 }
