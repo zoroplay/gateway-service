@@ -6,6 +6,7 @@ import { GAMING_PACKAGE_NAME, protobufPackage } from 'src/interfaces/gaming.pb';
 import { join } from 'path';
 import { VirtualController } from './virtual.controller';
 import { GamingAdminController } from './admin/gaming.admin.controller';
+import { FirebaseService } from 'src/common/services/firebaseUpload';
 
 @Module({
   imports: [
@@ -22,7 +23,7 @@ import { GamingAdminController } from './admin/gaming.admin.controller';
     ]),
   ],
   controllers: [GamingAdminController, GamingController, VirtualController],
-  providers: [GamingService],
-  exports: [GamingService],
+  providers: [GamingService, FirebaseService],
+  exports: [GamingService, FirebaseService],
 })
 export class GamingModule {}
