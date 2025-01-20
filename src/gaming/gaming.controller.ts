@@ -28,6 +28,7 @@ import { Response } from 'express';
 import { GamingService } from './gaming.service';
 import {
   FindOneCategoryDto,
+  QtechRollbackRequest,
   QtechtransactionRequest,
   StartGameDto,
 } from 'src/interfaces/gaming.pb';
@@ -344,7 +345,6 @@ export class GamingController {
   @ApiQuery({ name: 'gameId', type: 'string' })
   @ApiHeader({ name: 'Wallet-Session', description: 'Signature' })
   @ApiHeader({ name: 'Pass-Key', description: 'Pass Key' })
-  @ApiHeader({ name: 'Pass-Key', description: 'Shared secret pass-key' })
   async getQtechBalance(
     @Req() request,
     @Headers() headers: Record<string, string>,
@@ -406,84 +406,86 @@ export class GamingController {
   }
 
   @Post('/transactions')
-  @ApiHeader({
-    name: 'Wallet-Session',
-    description: 'Session signature for validation',
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        txnType: {
+          type: 'string',
+          enum: ['DEBIT', 'CREDIT'],
+          example: 'DEBIT',
+        },
+        txnId: { type: 'string', example: '5693761657f5d346ec6749a1' },
+        playerId: { type: 'string', example: 'test123' },
+        roundId: { type: 'string', example: '568cc92f57f5d33b95846124' },
+        amount: { type: 'number', example: 80.0 },
+        currency: { type: 'string', example: 'USD' },
+        gameId: { type: 'string', example: 'game_12345' },
+      },
+      required: ['txnType', 'txnId', 'playerId', 'amount', 'currency'],
+    },
   })
-  @Post('/transactions')
-  @ApiHeader({
-    name: 'Pass-Key',
-    description: 'Pass Key for authentication',
-  })
-  @ApiParam({ name: 'playerId', type: 'string' })
-  @ApiParam({ name: 'txnType', type: 'string' })
-  @ApiParam({ name: 'txnId', type: 'string' })
-  @ApiParam({ name: 'roundId', type: 'string' })
-  @ApiParam({ name: 'amount', type: 'string' })
-  @ApiParam({ name: 'currency', type: 'string' })
-  @ApiParam({ name: 'conversionRate', type: 'string' })
-  @ApiParam({ name: 'gameId', type: 'string' })
-  @ApiParam({ name: 'device', type: 'string' })
-  @ApiParam({ name: 'clientType', type: 'string' })
-  @ApiParam({ name: 'clientRoundId', type: 'string' })
-  @ApiParam({ name: 'category', type: 'string' })
-  @ApiParam({ name: 'created', type: 'string' })
-  @ApiParam({ name: 'completed', type: 'string' })
-  @ApiParam({ name: 'jpContributions', type: 'string' })
+  @ApiHeader({ name: 'Wallet-Session', description: 'Signature' })
+  @ApiHeader({ name: 'Pass-Key', description: 'Pass Key' })
   async QtechBet(
     @Headers() headers: Record<string, string>,
     @Res() res: Response,
     @Req() request: Request,
     @Body() data: Record<string, any>,
   ) {
+    console.log({
+      message: 'CHECKING-TRX',
+      playerId: data.playerId,
+      method: request.method,
+      header: headers,
+      body: data,
+    });
     try {
-      const { txnType, playerId } = data;
+      const walletSessionId = headers['wallet-session'];
+      const passkey = headers['pass-key'];
 
-      // // Validate required fields
+      if (!walletSessionId || !passkey) {
+        return res.status(400).json({
+          success: false,
+          message: 'Missing required headers: Wallet-Session and Pass-Key',
+        });
+      }
+
+      const { txnType } = data;
+
+      // Validate required fields
       if (!txnType || !['DEBIT', 'CREDIT'].includes(txnType)) {
         return res.status(400).json({
           success: false,
           message: 'Invalid or missing txnType. Must be DEBIT or CREDIT.',
         });
       }
-
+      let result;
       console.log('Hit Transaction');
 
       const requestPayload: QtechtransactionRequest = {
         ...data,
-        playerId: String(playerId),
-        passKey: headers['Pass-Key'],
-        walletSessionId: headers['Wallet-Session'],
-        clientId: data.clientId,
-        clientType: data.clientType,
-        clientRoundId: data.clientRoundId,
-        category: data.category,
-        created: data.created,
-        completed: data.completed,
-        jpContributions: data.jpContributions
-          ? data.jpContributions.map((contribution: any) => ({
-              id: contribution.id,
-              amount: Number(contribution.amount),
-              balance: Number(contribution.balance),
-            }))
-          : [],
+        walletSessionId,
+        passKey: passkey,
+        playerId: data.playerId.toString(),
         txnType: data.txnType,
         txnId: data.txnId,
         roundId: data.roundId,
         amount: data.amount,
         currency: data.currency,
-        conversionRat: data.conversionRate,
         gameId: data.gameId,
-        device: data.device,
+        clientId: data.clientId || 4,
       };
+
+      console.log(requestPayload);
 
       // Handle DEBIT (Withdrawal)
       if (txnType === 'DEBIT') {
         const result = await this.gamingService.handleQtechBet(requestPayload);
         return res.status(201).json({
           success: true,
-          message: 'Deposit processed successfully..',
-          ...result,
+          message: 'Bet processed successfully.',
+          ...(typeof result === 'object' ? result : {}),
         });
       }
 
@@ -492,33 +494,89 @@ export class GamingController {
         const result = await this.gamingService.handleQtechWin(requestPayload);
         return res.status(201).json({
           success: true,
-          message: 'Withdrawal processed successfully..',
+          message: 'Win processed successfully.',
           ...result,
         });
       }
+
+      if (!result.success) {
+        return res
+          .set({
+            'X-ErrorMessage': result.message,
+            'X-ErrorCode': `${result.status}`,
+          })
+          .status(HttpStatus.OK)
+          .send(result.data);
+      }
+      console.log('RES', res);
+      return res.status(HttpStatus.OK).send(result.data);
     } catch (error) {
       console.error('Error in QtechBet:', error);
-      return res.status(500).json({
-        success: false,
-        message:
-          'An unexpected error occurred while processing the transaction.',
-      });
+      return res
+        .set({
+          'X-ErrorMessage': error.message || 'Internal Server Error',
+          'X-ErrorCode': `${HttpStatus.INTERNAL_SERVER_ERROR}`,
+        })
+        .status(HttpStatus.INTERNAL_SERVER_ERROR)
+        .send({
+          message: error.message || 'Internal Server Error',
+          success: false,
+        });
     }
   }
 
   @Post('/transactions/rollback')
-  @ApiHeader({
-    name: 'Wallet-Session',
-    description: 'Session signature for validation',
-  })
-  @ApiHeader({ name: 'Pass-Key', description: 'Pass Key for authentication' })
+  @ApiHeader({ name: 'Wallet-Session', description: 'Signature' })
+  @ApiHeader({ name: 'Pass-Key', description: 'Pass Key' })
   async QtechRollBack(
     @Headers() headers: Record<string, string>,
     @Res() res: Response,
     @Req() request: Request,
     @Body() data: Record<string, any>,
   ) {
-    //TODO:  action: 'transaction',
+    console.log({
+      message: 'CHECKING-ROLLBACK',
+      playerId: data.playerId,
+      method: request.method,
+      header: headers,
+      body: data,
+    });
+
+    const walletSessionId = headers['wallet-session'];
+    const passkey = headers['pass-key'];
+
+    try {
+      console.log('ROLLBACK Transaction');
+
+      const result: QtechRollbackRequest = {
+        walletSessionId,
+        passKey: passkey,
+        playerId: data.playerId.toString(),
+        betId: data.txnType,
+        txnId: data.txnId,
+        roundId: data.roundId,
+        amount: data.amount,
+        currency: data.currency,
+        gameId: data.gameId,
+        clientId: data.clientId || 4,
+      };
+
+      const request = await this.gamingService.handleQtechRollback(result);
+
+      return res.status(HttpStatus.OK).send(request.data);
+    } catch (error) {
+      console.error('Error in QtechBet:', error);
+      return res
+        .set({
+          'X-ErrorMessage': error.message || 'Internal Server Error',
+          'X-ErrorCode': `${HttpStatus.INTERNAL_SERVER_ERROR}`,
+        })
+        .status(HttpStatus.INTERNAL_SERVER_ERROR)
+        .send({
+          message: error.message || 'Internal Server Error',
+          success: false,
+        });
+    }
   }
 
   @Post('/:clientId/:provider_id/callback/:action')

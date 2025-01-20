@@ -24,6 +24,7 @@ import {
   CreatePromotionRequest,
   Promotion,
   QtechtransactionRequest,
+  QtechRollbackRequest,
 } from 'src/interfaces/gaming.pb';
 import { ClientGrpc } from '@nestjs/microservices';
 import { firstValueFrom, of } from 'rxjs';
@@ -120,10 +121,10 @@ export class GamingService implements OnModuleInit {
 
     return response;
   }
- 
 
   async createPromotion(
-    createPromotionDto: CreatePromotionDto
+    createPromotionDto: CreatePromotionDto,
+    file?: Express.Multer.File, // Optional file input
   ): Promise<Promotion> {
   
     try {
@@ -131,7 +132,7 @@ export class GamingService implements OnModuleInit {
       const promotion = await firstValueFrom(
         this.service.createPromotion(createPromotionDto),
       );
-  
+
       console.log('promotion:', promotion);
       return promotion;
     } catch (error) {
@@ -139,7 +140,6 @@ export class GamingService implements OnModuleInit {
       throw new Error('Failed to create promotion. Please try again later.');
     }
   }
-  
 
   async findPromotions() {
     return firstValueFrom(this.service.findPromotions({}));
@@ -160,7 +160,7 @@ export class GamingService implements OnModuleInit {
       const promotion = await firstValueFrom(
         this.service.updatePromotion(createPromotionDto),
       );
-  
+
       console.log('promotion:', promotion);
       return promotion;
     } catch (error) {
@@ -168,6 +168,11 @@ export class GamingService implements OnModuleInit {
       throw new Error('Failed to create promotion. Please try again later.');
     }
   }
+
+  // async updatePromotion(request: CreatePromotionDto) {
+  //   //(createGameDto);
+  //   return firstValueFrom(this.service.updatePromotion(request));
+  // }
 
   async removePromotion(request: FindOnePromotionDto) {
     console.log('Payload sent to gRPC client for deletion:', request);
@@ -217,7 +222,7 @@ export class GamingService implements OnModuleInit {
     const resp = await firstValueFrom(
       this.service.handleQtechGetBalance(request),
     );
-    console.log('resp', resp);
+    console.log('resp', resp.data);
 
     return resp;
   }
@@ -229,21 +234,26 @@ export class GamingService implements OnModuleInit {
       this.service.handleQtechCallback(request),
     );
 
-    console.log('resp', resp);
+    console.log('respVERIFY', resp);
 
     return resp;
   }
 
   async handleQtechBet(request: QtechtransactionRequest) {
-    console.log('Q-tech Bet Func');
-    // //(request);
-    const resp = await firstValueFrom(
-      this.service.handleQtechTransaction(request),
-    );
+    try {
+      console.log('Q-tech Bet Func');
+      // //(request);
+      const resp = await firstValueFrom(
+        this.service.handleQtechTransactionBet(request),
+      );
 
-    console.log('resp', resp);
+      console.log('resp', resp);
 
-    return resp;
+      return resp;
+    } catch (error) {
+      console.log('TRX ERROR', error);
+      throw new Error(error);
+    }
   }
 
   async handleQtechWin(request: QtechtransactionRequest) {
@@ -251,6 +261,18 @@ export class GamingService implements OnModuleInit {
     // //(request);
     const resp = await firstValueFrom(
       this.service.handleQtechTransactionWin(request),
+    );
+
+    console.log('resp', resp);
+
+    return resp;
+  }
+
+  async handleQtechRollback(request: QtechRollbackRequest) {
+    console.log('Q-tech Roll Gate Func');
+    // //(request);
+    const resp = await firstValueFrom(
+      this.service.handleQtechRollback(request),
     );
 
     console.log('resp', resp);
@@ -359,7 +381,6 @@ export class GamingService implements OnModuleInit {
       return parseFloat(num.toFixed(2));
     }
   }
-
   async uploadFile(
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     //@ts-ignore
