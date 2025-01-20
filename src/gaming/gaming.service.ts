@@ -24,6 +24,7 @@ import {
   CreatePromotionRequest,
   Promotion,
   QtechtransactionRequest,
+  QtechRollbackRequest,
 } from 'src/interfaces/gaming.pb';
 import { ClientGrpc } from '@nestjs/microservices';
 import { firstValueFrom, of } from 'rxjs';
@@ -116,7 +117,6 @@ export class GamingService implements OnModuleInit {
 
     return response;
   }
- 
 
   async createPromotion(
     createPromotionDto: CreatePromotionDto,
@@ -124,33 +124,33 @@ export class GamingService implements OnModuleInit {
   ): Promise<Promotion> {
     console.log('createPromotionDto:', createPromotionDto);
     console.log('file:', file);
-  
+
     let fileBase64: string | undefined;
     let fileString: string | undefined = createPromotionDto.file.toString();
-  
+
     if (file) {
       // Convert the file buffer to a Base64 string
       fileBase64 = file.buffer.toString('base64');
-    } else if (fileString.startsWith("data:image/")) {
-        fileBase64 = fileString.replace(/^data:image\/\w+;base64,/, '');
+    } else if (fileString.startsWith('data:image/')) {
+      fileBase64 = fileString.replace(/^data:image\/\w+;base64,/, '');
     } else {
       fileBase64; // Assume it's already a clean Base64 string
     }
-  
+
     // Construct the gRPC request payload
     const createPromotionRequest: CreatePromotionRequest = {
       metadata: createPromotionDto, // Metadata from DTO
       file: fileBase64, // Base64 file string or undefined
     };
-  
+
     console.log('createPromotionRequest:', createPromotionRequest);
-  
+
     try {
       // Send the request to the gRPC service
       const promotion = await firstValueFrom(
         this.service.createPromotion(createPromotionRequest),
       );
-  
+
       console.log('promotion:', promotion);
       return promotion;
     } catch (error) {
@@ -158,7 +158,6 @@ export class GamingService implements OnModuleInit {
       throw new Error('Failed to create promotion. Please try again later.');
     }
   }
-  
 
   async findPromotions() {
     return firstValueFrom(this.service.findPromotions({}));
@@ -176,33 +175,33 @@ export class GamingService implements OnModuleInit {
   ): Promise<Promotion> {
     console.log('createPromotionDto:', createPromotionDto);
     console.log('file:', file);
-  
+
     let fileBase64: string | undefined;
     let fileString: string | undefined = createPromotionDto.file.toString();
-  
+
     if (file) {
       // Convert the file buffer to a Base64 string
       fileBase64 = file.buffer.toString('base64');
-    } else if (fileString.startsWith("data:image/")) {
-        fileBase64 = fileString.replace(/^data:image\/\w+;base64,/, '');
+    } else if (fileString.startsWith('data:image/')) {
+      fileBase64 = fileString.replace(/^data:image\/\w+;base64,/, '');
     } else {
       fileBase64; // Assume it's already a clean Base64 string
     }
-  
+
     // Construct the gRPC request payload
     const createPromotionRequest: CreatePromotionRequest = {
       metadata: createPromotionDto, // Metadata from DTO
       file: fileBase64, // Base64 file string or undefined
     };
-  
+
     console.log('createPromotionRequest:', createPromotionRequest);
-  
+
     try {
       // Send the request to the gRPC service
       const promotion = await firstValueFrom(
         this.service.updatePromotion(createPromotionRequest),
       );
-  
+
       console.log('promotion:', promotion);
       return promotion;
     } catch (error) {
@@ -211,10 +210,10 @@ export class GamingService implements OnModuleInit {
     }
   }
 
-  // async updatePromotion(request: CreatePromotionDto) {
-  //   //(createGameDto);
-  //   return firstValueFrom(this.service.updatePromotion(request));
-  // }
+  async updatePromotion(request: CreatePromotionDto) {
+    //(createGameDto);
+    return firstValueFrom(this.service.updatePromotion(request));
+  }
 
   async removePromotion(request: FindOnePromotionDto) {
     console.log('Payload sent to gRPC client for deletion:', request);
@@ -264,7 +263,7 @@ export class GamingService implements OnModuleInit {
     const resp = await firstValueFrom(
       this.service.handleQtechGetBalance(request),
     );
-    console.log('resp', resp);
+    console.log('resp', resp.data);
 
     return resp;
   }
@@ -276,21 +275,26 @@ export class GamingService implements OnModuleInit {
       this.service.handleQtechCallback(request),
     );
 
-    console.log('resp', resp);
+    console.log('respVERIFY', resp);
 
     return resp;
   }
 
   async handleQtechBet(request: QtechtransactionRequest) {
-    console.log('Q-tech Bet Func');
-    // //(request);
-    const resp = await firstValueFrom(
-      this.service.handleQtechTransaction(request),
-    );
+    try {
+      console.log('Q-tech Bet Func');
+      // //(request);
+      const resp = await firstValueFrom(
+        this.service.handleQtechTransactionBet(request),
+      );
 
-    console.log('resp', resp);
+      console.log('resp', resp);
 
-    return resp;
+      return resp;
+    } catch (error) {
+      console.log('TRX ERROR', error);
+      throw new Error(error);
+    }
   }
 
   async handleQtechWin(request: QtechtransactionRequest) {
@@ -298,6 +302,18 @@ export class GamingService implements OnModuleInit {
     // //(request);
     const resp = await firstValueFrom(
       this.service.handleQtechTransactionWin(request),
+    );
+
+    console.log('resp', resp);
+
+    return resp;
+  }
+
+  async handleQtechRollback(request: QtechRollbackRequest) {
+    console.log('Q-tech Roll Gate Func');
+    // //(request);
+    const resp = await firstValueFrom(
+      this.service.handleQtechRollback(request),
     );
 
     console.log('resp', resp);
