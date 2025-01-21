@@ -83,10 +83,10 @@ export interface CreateBonusRequest {
   applicableBetType: string;
   maximumWinning: number;
   bonusAmount: number;
-  status: number;
-  created: string;
-  updated: string;
-  id: number;
+  status?: number | undefined;
+  created?: string | undefined;
+  updated?: string | undefined;
+  id?: number | undefined;
   minimumLostGames: number;
   rolloverCount: number;
   name: string;
