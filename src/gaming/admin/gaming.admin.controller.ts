@@ -13,6 +13,7 @@ import {
 import { ApiBody, ApiConsumes, ApiOkResponse, ApiQuery, ApiTags } from '@nestjs/swagger';
 import {
   AddGameToCategoriesDto,
+  AddGameToTournamentDto,
   CreateGameDto,
   CreatePromotionDto,
   CreateProviderDto,
@@ -25,6 +26,7 @@ import {
 } from 'src/interfaces/gaming.pb';
 import {
   AddGameCategoriesDto,
+  AddTournamentGameDto,
   CreatePromotionRequestDto,
   CreateTournamentRequestDto,
   // CreatePromotionDto,
@@ -243,6 +245,23 @@ async updatePromotion(@Body() payload: CreatePromotionDto) {
     const payload: FindOneTournamentDto = { id: parseInt(id, 10) }; // Ensure it matches the expected structure
     return this.gamingService.findOneTournament(payload);
   }
+
+  @Post('/add-tournament-game')
+  @ApiBody({ type: AddTournamentGameDto })
+  @ApiOkResponse({ type: [SwaggerOKGameResponse] })
+  addTournamentGame(@Body() payload: AddGameToTournamentDto) {
+    console.log('here');
+    console.log('payload', payload);
+    return this.gamingService.addTournamentGame(payload);
+  }
+
+  @Delete('/delete-tournament-game')
+  @ApiBody({ type: AddTournamentGameDto })
+  @ApiOkResponse({ type: [SwaggerOKGameResponse] })
+  removeTournamentGame(@Body() payload: AddGameToTournamentDto) {
+    return this.gamingService.removeTournamentGame(payload);
+  }
 }
+
 
 

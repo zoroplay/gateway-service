@@ -24,6 +24,7 @@ import {
   CreatePromotionRequest,
   Promotion,
   QtechtransactionRequest,
+  AddGameToTournamentDto,
 } from 'src/interfaces/gaming.pb';
 import { ClientGrpc } from '@nestjs/microservices';
 import { firstValueFrom, of } from 'rxjs';
@@ -350,6 +351,18 @@ export class GamingService implements OnModuleInit {
     console.log('Response from gRPC server:', response);
 
     return response;
+  }
+
+  async addTournamentGame(addGameTournamentDto: AddGameToTournamentDto) {
+    console.log('addGameToCategories');
+    return firstValueFrom(this.service.addTournamentGame(addGameTournamentDto));
+  }
+
+  async removeTournamentGame(removeGameTournamenDto: AddGameToTournamentDto) {
+    console.log('removeGameToCategories');
+    return firstValueFrom(
+      this.service.removeTournamentGame(removeGameTournamenDto),
+    );
   }
 
   formatNumber(num) {

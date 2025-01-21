@@ -495,6 +495,21 @@ export class AddGameCategoriesDto {
   categories: number[]; // Array of category IDs
 }
 
+export class AddTournamentGameDto {
+  @ApiProperty({
+    description: 'ID of the game to which categories will be added',
+    example: 1,
+  })
+  tournamentId: number;
+
+  @ApiProperty({
+    description: 'List of category IDs to associate with the game',
+    example: [2, 3, 4],
+    type: [Number], // Indicates an array of numbers
+  })
+  gameId: number[]; // Array of category IDs
+}
+
 export class CreatePromotionRequestDto {
   @ApiProperty({
     description: 'The unique ID of the client creating the promotion',
