@@ -166,6 +166,8 @@ async saveSettings(
     console.log('body', body);
     console.log('clientId', clientId);
 
+    const parsedBody = JSON.parse(JSON.stringify(body));
+
     const folderName = 'settings'; // Folder to store images in Firebase
 
     // Function to handle uploading to Firebase
@@ -180,7 +182,7 @@ async saveSettings(
 
     // Handle logo upload
     if (body.logo) {
-        const logoUrl = await uploadToFirebase(body.logo, 'logo');
+        const logoUrl = await uploadToFirebase(parsedBody.logo, 'logo');
         if (logoUrl) {
             body.logo = logoUrl; // Update the input field with the URL
         }
@@ -188,7 +190,7 @@ async saveSettings(
 
     // Handle print_logo upload
     if (body.print_logo) {
-        const printLogoUrl = await uploadToFirebase(body.print_logo, 'print_logo');
+        const printLogoUrl = await uploadToFirebase(parsedBody.print_logo, 'print_logo');
         if (printLogoUrl) {
             body.print_logo = printLogoUrl; // Update the input field with the URL
         }
@@ -196,7 +198,7 @@ async saveSettings(
 
     const payload: SettingsRequest = {
         clientId,
-        inputs: JSON.stringify(body), // Pass updated body
+        inputs: JSON.stringify(parsedBody), // Pass updated body
     };
 
     return this.svc.saveSettings(payload);
