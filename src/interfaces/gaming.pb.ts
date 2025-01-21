@@ -22,10 +22,27 @@ export interface QtechCallbackRequest {
   action: string;
 }
 
-export interface JPContribution {
-  id: string;
+export interface QtechRollbackResponse {
+  success: boolean;
+  message: string;
+  status?: number | undefined;
+  data: { [key: string]: any } | undefined;
+}
+
+export interface QtechRollbackRequest {
+  /** Headers */
+  walletSessionId: string;
+  passKey: string;
+  /** Required Parameters */
+  betId: string;
+  txnId: string;
+  playerId: string;
+  roundId: string;
   amount: number;
-  balance: number;
+  currency: string;
+  clientId: number;
+  gameId: string;
+  body?: string | undefined;
 }
 
 export interface QtechtransactionRequest {
@@ -39,40 +56,33 @@ export interface QtechtransactionRequest {
   roundId: string;
   amount: number;
   currency: string;
-  conversionRat: number;
   clientId: number;
-  jpContributions: JPContribution[];
   gameId: string;
-  device: string;
-  clientType: string;
-  clientRoundId: string;
-  category: string;
-  created: string;
-  completed: boolean;
+  body?: string | undefined;
 }
 
 export interface QtechDepositTransactionResponse {
-  balance: number;
-  referenceId: string;
+  success: boolean;
+  message: string;
+  status?: number | undefined;
+  data: { [key: string]: any } | undefined;
 }
 
 /** Rollback can use this to update wallet */
 export interface QtechWinTransactionResponse {
+  /** Headers */
+  walletSessionId: string;
+  passKey: string;
+  /** Required Parameters */
   txnType: string;
   txnId: string;
-  betId: string;
   playerId: string;
   roundId: string;
   amount: number;
   currency: string;
-  jpPayout: number;
+  clientId: number;
   gameId: string;
-  device: string;
-  clientType: string;
-  clientRoundId: string;
-  category: string;
-  created: string;
-  completed: boolean;
+  body?: string | undefined;
 }
 
 export interface AddGameToCategoriesResponse {
@@ -478,6 +488,7 @@ export interface Promotion {
   endDate: string;
   status: string;
   targetUrl?: string | undefined;
+  clientId: string;
 }
 
 export interface CreatePromotionDto {
@@ -490,12 +501,13 @@ export interface CreatePromotionDto {
   type: string;
   targetUrl?: string | undefined;
   file?: string | undefined;
+  clientId?: string | undefined;
 }
 
 export interface CreatePromotionRequest {
   id?: number | undefined;
   metadata: CreatePromotionDto | undefined;
-  file: string;
+  file?: string | undefined;
 }
 
 export interface Promotions {
@@ -648,9 +660,11 @@ export interface GamingServiceClient {
 
   handleQtechGetBalance(request: QtechCallbackRequest): Observable<CallbackResponse>;
 
-  handleQtechTransaction(request: QtechtransactionRequest): Observable<QtechDepositTransactionResponse>;
+  handleQtechTransactionBet(request: QtechtransactionRequest): Observable<QtechDepositTransactionResponse>;
 
   handleQtechTransactionWin(request: QtechtransactionRequest): Observable<QtechDepositTransactionResponse>;
+
+  handleQtechRollback(request: QtechRollbackRequest): Observable<QtechRollbackResponse>;
 
   xpressLogin(request: XpressRequest): Observable<XpressResponse>;
 
@@ -752,7 +766,7 @@ export interface GamingServiceController {
     request: QtechCallbackRequest,
   ): Promise<CallbackResponse> | Observable<CallbackResponse> | CallbackResponse;
 
-  handleQtechTransaction(
+  handleQtechTransactionBet(
     request: QtechtransactionRequest,
   ):
     | Promise<QtechDepositTransactionResponse>
@@ -765,6 +779,10 @@ export interface GamingServiceController {
     | Promise<QtechDepositTransactionResponse>
     | Observable<QtechDepositTransactionResponse>
     | QtechDepositTransactionResponse;
+
+  handleQtechRollback(
+    request: QtechRollbackRequest,
+  ): Promise<QtechRollbackResponse> | Observable<QtechRollbackResponse> | QtechRollbackResponse;
 
   xpressLogin(request: XpressRequest): Promise<XpressResponse> | Observable<XpressResponse> | XpressResponse;
 
@@ -820,8 +838,9 @@ export function GamingServiceControllerMethods() {
       "handleCallback",
       "handleQtechCallback",
       "handleQtechGetBalance",
-      "handleQtechTransaction",
+      "handleQtechTransactionBet",
       "handleQtechTransactionWin",
+      "handleQtechRollback",
       "xpressLogin",
       "xpressBalance",
       "xpressDebit",

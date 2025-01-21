@@ -13,6 +13,7 @@ import {
 import { ApiBody, ApiConsumes, ApiOkResponse, ApiQuery, ApiTags } from '@nestjs/swagger';
 import {
   AddGameToCategoriesDto,
+  AddGameToTournamentDto,
   CreateGameDto,
   CreatePromotionDto,
   CreateProviderDto,
@@ -25,6 +26,7 @@ import {
 } from 'src/interfaces/gaming.pb';
 import {
   AddGameCategoriesDto,
+  AddTournamentGameDto,
   CreatePromotionRequestDto,
   CreateTournamentRequestDto,
   // CreatePromotionDto,
@@ -126,6 +128,16 @@ export class GamingAdminController {
     return this.gamingService.deleteCategory(payload);
   }
 
+// @Post('/add-promotion')
+// @ApiBody({ type: CreatePromotionRequestDto })
+// @ApiOkResponse({ type: [SwaggerOKPromotionResponse] })
+// async createPromotion(@Body() payload: CreatePromotionDto ) {
+//   console.log('payload', payload);
+//   const promotion = await this.gamingService.createPromotion(payload);
+//   console.log('promotion', promotion);
+//   return promotion;
+// }
+
 @Post('/add-promotion')
 @ApiConsumes('multipart/form-data') // Indicate multipart/form-data for file uploads
 @ApiBody({
@@ -156,12 +168,14 @@ async createPromotion(@Body() payload: CreatePromotionDto, @UploadedFile() file:
   return promotion;
 }
 
+
 @Post('/update-promotion')
 @ApiConsumes('multipart/form-data') // Indicate multipart/form-data for file uploads
 @ApiBody({
   schema: {
     type: 'object',
     properties: {
+      id: { type: 'number', example: 1 },
       title: { type: 'string', example: 'Promotion Title' },
       imageUrl: { type: 'string', example: 'http://example.com/image.png' },
       content: { type: 'string', example: 'This is the promotion content.' },
@@ -174,17 +188,29 @@ async createPromotion(@Body() payload: CreatePromotionDto, @UploadedFile() file:
         format: 'binary', // Specifies that this is a file upload field
       },
     },
-    required: ['title', 'content', 'startDate', 'endDate', 'type', 'file'], // Specify required fields
+    required: ['title', 'content', 'startDate', 'endDate', 'type', 'id'], // Specify required fields
   },
 })
 @ApiOkResponse({ type: [SwaggerOKPromotionResponse] })
 @UseInterceptors(FileInterceptor('file'))
-async updatePromotion(@Body() payload: CreatePromotionDto, @UploadedFile() file: Express.Multer.File) {
+async updatePromotion(@Body() payload: CreatePromotionDto, @UploadedFile() file?: Express.Multer.File) {
   console.log('payload', payload);
   const promotion = await this.gamingService.updatePromotion(payload, file);
   console.log('promotion', promotion);
   return promotion;
 }
+
+
+// @Post('/update-promotion')
+// @ApiBody({ type: CreatePromotionRequestDto })
+// @ApiOkResponse({ type: [SwaggerOKPromotionResponse] })
+// @UseInterceptors(FileInterceptor('file'))
+// async updatePromotion(@Body() payload: CreatePromotionDto) {
+//   console.log('payload', payload);
+//   const promotion = await this.gamingService.updatePromotion(payload);
+//   console.log('promotion', promotion);
+//   return promotion;
+// }
 
 
   @Delete('promotion')
@@ -282,4 +308,23 @@ async updatePromotion(@Body() payload: CreatePromotionDto, @UploadedFile() file:
     const payload: FindOneTournamentDto = { id: parseInt(id, 10) }; // Ensure it matches the expected structure
     return this.gamingService.findOneTournament(payload);
   }
+
+  @Post('/add-tournament-game')
+  @ApiBody({ type: AddTournamentGameDto })
+  @ApiOkResponse({ type: [SwaggerOKGameResponse] })
+  addTournamentGame(@Body() payload: AddGameToTournamentDto) {
+    console.log('here');
+    console.log('payload', payload);
+    return this.gamingService.addTournamentGame(payload);
+  }
+
+  @Delete('/delete-tournament-game')
+  @ApiBody({ type: AddTournamentGameDto })
+  @ApiOkResponse({ type: [SwaggerOKGameResponse] })
+  removeTournamentGame(@Body() payload: AddGameToTournamentDto) {
+    return this.gamingService.removeTournamentGame(payload);
+  }
 }
+
+
+

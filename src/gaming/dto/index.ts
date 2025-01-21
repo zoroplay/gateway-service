@@ -495,73 +495,46 @@ export class AddGameCategoriesDto {
   categories: number[]; // Array of category IDs
 }
 
-// export class CreatePromotionRequestDto {
-//   // @ApiProperty({
-//   //   description: 'The unique ID of the client creating the promotion',
-//   //   example: 123,
-//   // })
-//   // clientId: number;
+export class AddTournamentGameDto {
+  @ApiProperty({
+    description: 'ID of the game to which categories will be added',
+    example: 1,
+  })
+  tournamentId: number;
 
-//   @ApiProperty({
-//     description: 'The unique ID of the promotion (optional)',
-//     example: 1,
-//     required: false,
-//   })
-//   id?: number;
-
-//   @ApiProperty({
-//     description: 'The title of the promotion',
-//     example: 'Winter Sale',
-//   })
-//   title: string;
-
-//   @ApiProperty({
-//     description: 'URL of the image associated with the promotion',
-//     example: 'https://example.com/images/promotion.jpg',
-//   })
-//   imageUrl: string;
-
-//   @ApiProperty({
-//     description: 'Content or description of the promotion',
-//     example: 'Get up to 50% off on all items this winter!',
-//   })
-//   content: string;
-
-//   @ApiProperty({
-//     description: 'Start date of the promotion in a timestamp format',
-//     example: '2024-12-01T00:00:00.000Z',
-//     type: 'string',
-//     format: 'date-time',
-//   })
-//   startDate: Timestamp;
-
-//   @ApiProperty({
-//     description: 'End date of the promotion in a timestamp format',
-//     example: '2025-01-01T23:59:59.000Z',
-//     type: 'string',
-//     format: 'date-time',
-//   })
-//   endDate: Timestamp;
-
-//   @ApiProperty({
-//     description: 'The type of promotion',
-//     example: 'Discount',
-//   })
-//   type: string;
-
-//   @ApiProperty({
-//     description: 'The targetUrl of tournament',
-//     example: 'https://example.com',
-//   })
-//   targetUrl: string;
-// }
+  @ApiProperty({
+    description: 'List of category IDs to associate with the game',
+    example: [2, 3, 4],
+    type: [Number], // Indicates an array of numbers
+  })
+  gameId: number[]; // Array of category IDs
+}
 
 export class CreatePromotionRequestDto {
+  @ApiProperty({
+    description: 'The unique ID of the client creating the promotion',
+    example: 123,
+  })
+  clientId: number;
+
+  @ApiProperty({
+    description: 'The unique ID of the promotion (optional)',
+    example: 1,
+    required: false,
+  })
+  id?: number;
+
   @ApiProperty({
     description: 'The title of the promotion',
     example: 'Winter Sale',
   })
   title: string;
+
+  @ApiProperty({
+    description: 'URL of the image associated with the promotion',
+    example: 'https://example.com/images/promotion.jpg',
+  })
+  imageUrl: string;
 
   @ApiProperty({
     description: 'Content or description of the promotion',
@@ -575,7 +548,7 @@ export class CreatePromotionRequestDto {
     type: 'string',
     format: 'date-time',
   })
-  startDate: string;
+  startDate: Timestamp;
 
   @ApiProperty({
     description: 'End date of the promotion in a timestamp format',
@@ -583,39 +556,81 @@ export class CreatePromotionRequestDto {
     type: 'string',
     format: 'date-time',
   })
-  endDate: string;
+  endDate: Timestamp;
 
-  @ApiProperty({ description: 'The type of promotion', example: 'Discount' })
+  @ApiProperty({
+    description: 'The type of promotion',
+    example: 'Discount',
+  })
   type: string;
 
   @ApiProperty({
-    description: 'The target URL of the tournament',
+    description: 'The targetUrl of tournament',
     example: 'https://example.com',
   })
   targetUrl: string;
-
-  static getProperties() {
-    return {
-      title: { type: 'string', example: 'Winter Sale' },
-      content: {
-        type: 'string',
-        example: 'Get up to 50% off on all items this winter!',
-      },
-      startDate: {
-        type: 'string',
-        format: 'date-time',
-        example: '2024-12-01T00:00:00.000Z',
-      },
-      endDate: {
-        type: 'string',
-        format: 'date-time',
-        example: '2025-01-01T23:59:59.000Z',
-      },
-      type: { type: 'string', example: 'Discount' },
-      targetUrl: { type: 'string', example: 'https://example.com' },
-    };
-  }
 }
+
+// export class CreatePromotionRequestDto {
+//   @ApiProperty({
+//     description: 'The title of the promotion',
+//     example: 'Winter Sale',
+//   })
+//   title: string;
+
+//   @ApiProperty({
+//     description: 'Content or description of the promotion',
+//     example: 'Get up to 50% off on all items this winter!',
+//   })
+//   content: string;
+
+//   @ApiProperty({
+//     description: 'Start date of the promotion in a timestamp format',
+//     example: '2024-12-01T00:00:00.000Z',
+//     type: 'string',
+//     format: 'date-time',
+//   })
+//   startDate: string;
+
+//   @ApiProperty({
+//     description: 'End date of the promotion in a timestamp format',
+//     example: '2025-01-01T23:59:59.000Z',
+//     type: 'string',
+//     format: 'date-time',
+//   })
+//   endDate: string;
+
+//   @ApiProperty({ description: 'The type of promotion', example: 'Discount' })
+//   type: string;
+
+//   @ApiProperty({
+//     description: 'The target URL of the tournament',
+//     example: 'https://example.com',
+//   })
+//   targetUrl: string;
+
+//   static getProperties() {
+//     return {
+//       title: { type: 'string', example: 'Winter Sale' },
+//       content: {
+//         type: 'string',
+//         example: 'Get up to 50% off on all items this winter!',
+//       },
+//       startDate: {
+//         type: 'string',
+//         format: 'date-time',
+//         example: '2024-12-01T00:00:00.000Z',
+//       },
+//       endDate: {
+//         type: 'string',
+//         format: 'date-time',
+//         example: '2025-01-01T23:59:59.000Z',
+//       },
+//       type: { type: 'string', example: 'Discount' },
+//       targetUrl: { type: 'string', example: 'https://example.com' },
+//     };
+//   }
+// }
 
 export class CreateTournamentRequestDto {
   // @ApiProperty({

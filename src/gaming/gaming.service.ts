@@ -24,15 +24,21 @@ import {
   CreatePromotionRequest,
   Promotion,
   QtechtransactionRequest,
+  AddGameToTournamentDto,
+  QtechRollbackRequest,
 } from 'src/interfaces/gaming.pb';
 import { ClientGrpc } from '@nestjs/microservices';
 import { firstValueFrom, of } from 'rxjs';
+import { FirebaseService } from 'src/common/services/firebaseUpload';
 
 @Injectable()
 export class GamingService implements OnModuleInit {
   private service: GamingServiceClient;
 
-  constructor(@Inject(protobufPackage) private client: ClientGrpc) {}
+  constructor(
+    @Inject(protobufPackage) private client: ClientGrpc,
+    private readonly firebaseService: FirebaseService
+  ) {}
 
   onModuleInit() {
     this.service =
@@ -116,7 +122,25 @@ export class GamingService implements OnModuleInit {
 
     return response;
   }
- 
+
+  // async createPromotion(
+  //   createPromotionDto: CreatePromotionDto,
+  //   file?: Express.Multer.File, // Optional file input
+  // ): Promise<Promotion> {
+  
+  //   try {
+  //     // Send the request to the gRPC service
+  //     const promotion = await firstValueFrom(
+  //       this.service.createPromotion(createPromotionDto),
+  //     );
+
+  //     console.log('promotion:', promotion);
+  //     return promotion;
+  //   } catch (error) {
+  //     console.error('Error in createPromotion:', error);
+  //     throw new Error('Failed to create promotion. Please try again later.');
+  //   }
+  // }
 
   async createPromotion(
     createPromotionDto: CreatePromotionDto,
@@ -126,9 +150,9 @@ export class GamingService implements OnModuleInit {
     console.log('file:', file);
   
     let fileBase64: string | undefined;
-    let fileString: string | undefined = createPromotionDto.file.toString();
+    let fileString: string | undefined = file.toString();
   
-    if (file) {
+    if (file.buffer) {
       // Convert the file buffer to a Base64 string
       fileBase64 = file.buffer.toString('base64');
     } else if (fileString.startsWith("data:image/")) {
@@ -158,7 +182,6 @@ export class GamingService implements OnModuleInit {
       throw new Error('Failed to create promotion. Please try again later.');
     }
   }
-  
 
   async findPromotions() {
     return firstValueFrom(this.service.findPromotions({}));
@@ -170,6 +193,24 @@ export class GamingService implements OnModuleInit {
     return firstValueFrom(this.service.findOnePromotion(payload));
   }
 
+  // async updatePromotion(
+  //   createPromotionDto: CreatePromotionDto,
+  // ): Promise<Promotion> {
+  
+  //   try {
+  //     // Send the request to the gRPC service
+  //     const promotion = await firstValueFrom(
+  //       this.service.updatePromotion(createPromotionDto),
+  //     );
+
+  //     console.log('promotion:', promotion);
+  //     return promotion;
+  //   } catch (error) {
+  //     console.error('Error in createPromotion:', error);
+  //     throw new Error('Failed to create promotion. Please try again later.');
+  //   }
+  // }
+
   async updatePromotion(
     createPromotionDto: CreatePromotionDto,
     file?: Express.Multer.File, // Optional file input
@@ -178,15 +219,18 @@ export class GamingService implements OnModuleInit {
     console.log('file:', file);
   
     let fileBase64: string | undefined;
-    let fileString: string | undefined = createPromotionDto.file.toString();
-  
+    
+
+
     if (file) {
-      // Convert the file buffer to a Base64 string
-      fileBase64 = file.buffer.toString('base64');
-    } else if (fileString.startsWith("data:image/")) {
+      let fileString: string | undefined = file.toString();
+
+      if (file.buffer) {
+        // Convert the file buffer to a Base64 string
+        fileBase64 = file.buffer.toString('base64');
+      } else if (fileString?.startsWith("data:image/")) {
         fileBase64 = fileString.replace(/^data:image\/\w+;base64,/, '');
-    } else {
-      fileBase64; // Assume it's already a clean Base64 string
+      }
     }
   
     // Construct the gRPC request payload
@@ -210,11 +254,6 @@ export class GamingService implements OnModuleInit {
       throw new Error('Failed to create promotion. Please try again later.');
     }
   }
-
-  // async updatePromotion(request: CreatePromotionDto) {
-  //   //(createGameDto);
-  //   return firstValueFrom(this.service.updatePromotion(request));
-  // }
 
   async removePromotion(request: FindOnePromotionDto) {
     console.log('Payload sent to gRPC client for deletion:', request);
@@ -264,7 +303,7 @@ export class GamingService implements OnModuleInit {
     const resp = await firstValueFrom(
       this.service.handleQtechGetBalance(request),
     );
-    console.log('resp', resp);
+    console.log('resp', resp.data);
 
     return resp;
   }
@@ -276,21 +315,26 @@ export class GamingService implements OnModuleInit {
       this.service.handleQtechCallback(request),
     );
 
-    console.log('resp', resp);
+    console.log('respVERIFY', resp);
 
     return resp;
   }
 
   async handleQtechBet(request: QtechtransactionRequest) {
-    console.log('Q-tech Bet Func');
-    // //(request);
-    const resp = await firstValueFrom(
-      this.service.handleQtechTransaction(request),
-    );
+    try {
+      console.log('Q-tech Bet Func');
+      // //(request);
+      const resp = await firstValueFrom(
+        this.service.handleQtechTransactionBet(request),
+      );
 
-    console.log('resp', resp);
+      console.log('resp', resp);
 
-    return resp;
+      return resp;
+    } catch (error) {
+      console.log('TRX ERROR', error);
+      throw new Error(error);
+    }
   }
 
   async handleQtechWin(request: QtechtransactionRequest) {
@@ -298,6 +342,18 @@ export class GamingService implements OnModuleInit {
     // //(request);
     const resp = await firstValueFrom(
       this.service.handleQtechTransactionWin(request),
+    );
+
+    console.log('resp', resp);
+
+    return resp;
+  }
+
+  async handleQtechRollback(request: QtechRollbackRequest) {
+    console.log('Q-tech Roll Gate Func');
+    // //(request);
+    const resp = await firstValueFrom(
+      this.service.handleQtechRollback(request),
     );
 
     console.log('resp', resp);
@@ -399,6 +455,18 @@ export class GamingService implements OnModuleInit {
     return response;
   }
 
+  async addTournamentGame(addGameTournamentDto: AddGameToTournamentDto) {
+    console.log('addGameToCategories');
+    return firstValueFrom(this.service.addTournamentGame(addGameTournamentDto));
+  }
+
+  async removeTournamentGame(removeGameTournamenDto: AddGameToTournamentDto) {
+    console.log('removeGameToCategories');
+    return firstValueFrom(
+      this.service.removeTournamentGame(removeGameTournamenDto),
+    );
+  }
+
   formatNumber(num) {
     if (num > 0 && num % 1 === 0) {
       return parseFloat(num + '.00');
@@ -406,4 +474,43 @@ export class GamingService implements OnModuleInit {
       return parseFloat(num.toFixed(2));
     }
   }
+  async uploadFile(
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    //@ts-ignore
+    file: Express.Multer.File,
+  ){
+
+    const folderName = 'files-upload'; //
+    const fileName = `${Date.now()}_uploaded-file`;
+
+
+    let fileBase64: string | undefined;
+    let fileString: string | undefined = file.toString();
+
+    console.log('fileString:', fileString);
+  
+    if (file) {
+      // Convert the file buffer to a Base64 string
+      fileBase64 = file.buffer.toString('base64');
+    } else if (fileString.startsWith("data:image/")) {
+        fileBase64 = fileString.replace(/^data:image\/\w+;base64,/, '');
+    } else {
+      fileBase64; // Assume it's already a clean Base64 string
+    }
+
+    try {
+      const file_url = await this.firebaseService.uploadFileToFirebase(folderName, fileName, fileBase64);
+      console.log('file_url:', file_url);
+
+      return { file_url };
+
+    } catch (error) {
+      return {
+        success: false,
+        message: 'Can not upload image now, try again later...',
+        error: error.message
+      }
+    }
+  }
+
 }

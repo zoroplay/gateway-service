@@ -12,11 +12,14 @@ import {
   Query,
   RawBodyRequest,
   HttpCode,
+  UploadedFile,
+  UseInterceptors,
 } from '@nestjs/common';
 import {
   ApiBody,
   ApiHeader,
   ApiOkResponse,
+  ApiOperation,
   ApiParam,
   ApiQuery,
   ApiTags,
@@ -24,6 +27,7 @@ import {
 import { Response } from 'express';
 import { GamingService } from './gaming.service';
 import {
+  FindOneCategoryDto,
   QtechtransactionRequest,
   StartGameDto,
 } from 'src/interfaces/gaming.pb';
@@ -32,6 +36,8 @@ import {
   SwaggerStartGameDto,
   SwaggerStartGameResponseDto,
 } from './dto';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { ApiFile } from 'src/common/file-interceptor';
 
 @ApiTags('Gaming APIs')
 @Controller('games')
@@ -323,7 +329,6 @@ export class GamingController {
   @ApiQuery({ name: 'gameId', type: 'string' })
   @ApiHeader({ name: 'Wallet-Session', description: 'Signature' })
   @ApiHeader({ name: 'Pass-Key', description: 'Pass Key' })
-  @ApiHeader({ name: 'Pass-Key', description: 'Shared secret pass-key' })
   async getQtechBalance(
     @Headers() headers: Record<string, string>,
     @Res() res: Response,
@@ -366,67 +371,52 @@ export class GamingController {
     }
   }
 
-  @Post(':clientId/transactions')
-  @ApiParam({ name: 'clientId', type: 'string' })
-  @ApiHeader({
-    name: 'Wallet-Session',
-    description: 'Session signature for validation',
-  })
-  @ApiHeader({
-    name: 'Pass-Key',
-    description: 'Pass Key for authentication',
-  })
-  async QtechTransaction(
-    @Headers() headers: Record<string, string>,
-    @Res() res: Response,
-    @Param('clientId') clientId: number,
-    @Body() data: Record<string, any>,
-  ) {
-    try {
-
-      console.log('Hit Transaction');
-
-      const response = await this.gamingService.handleQtechGamesCallback({
-        playerId: data.playerId,
-        gameId: data.gameId,
-        walletSessionId: headers['wallet-session'],
-        passkey: headers['pass-key'],
-        body: Object.keys(data).length === 0 ? '' : JSON.stringify(data),
-        clientId,
-        action: data.txnType,
-      });
-
-      if (!response.success) {
-        return res
-          .status(response.status)
-          .send(response.data);
-      }
-
-      return res.status(response.status).send(response.data);
-      
-    } catch (error) {
-      console.error('Error in QtechBet:', error);
-      return res.status(500).json({
-        code: "UNKNOWN_ERROR",
-        message:
-          'An unexpected error occurred while processing the transaction.',
-      });
-    }
-  }
-
   @Post('/transactions/rollback')
-  @ApiHeader({
-    name: 'Wallet-Session',
-    description: 'Session signature for validation',
-  })
-  @ApiHeader({ name: 'Pass-Key', description: 'Pass Key for authentication' })
+  @ApiHeader({ name: 'Wallet-Session', description: 'Signature' })
+  @ApiHeader({ name: 'Pass-Key', description: 'Pass Key' })
   async QtechRollBack(
     @Headers() headers: Record<string, string>,
     @Res() res: Response,
     @Req() request: Request,
     @Body() data: Record<string, any>,
   ) {
-    //TODO:  action: 'transaction',
+
+
+    const walletSessionId = headers['wallet-session'];
+    const passkey = headers['pass-key'];
+
+    try {
+      console.log('ROLLBACK Transaction');
+
+      const result = {
+        walletSessionId,
+        passKey: passkey,
+        playerId: data.playerId.toString(),
+        betId: data.txnType,
+        txnId: data.txnId,
+        roundId: data.roundId,
+        amount: data.amount,
+        currency: data.currency,
+        gameId: data.gameId,
+        clientId: data.clientId || 4,
+      };
+
+      const request = await this.gamingService.handleQtechRollback(result);
+
+      return res.status(HttpStatus.OK).send(request.data);
+    } catch (error) {
+      console.error('Error in QtechBet:', error);
+      return res
+        .set({
+          'X-ErrorMessage': error.message || 'Internal Server Error',
+          'X-ErrorCode': `${HttpStatus.INTERNAL_SERVER_ERROR}`,
+        })
+        .status(HttpStatus.INTERNAL_SERVER_ERROR)
+        .send({
+          message: error.message || 'Internal Server Error',
+          success: false,
+        });
+    }
   }
 
   @Post('/:clientId/:provider_id/callback/:action')
@@ -493,5 +483,21 @@ export class GamingController {
           success: false,
         });
     }
+  }
+
+  @Post('upload')
+  @ApiOperation({ summary: 'Upload a single file' })
+  @UseInterceptors(FileInterceptor('file'))
+  async handleFileUpload(
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    //@ts-ignore
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    console.log("file", file);
+    const value = await this.gamingService.uploadFile(file);
+
+    console.log("value", value);
+
+    return value;
   }
 }
