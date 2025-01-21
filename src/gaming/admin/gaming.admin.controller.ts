@@ -169,6 +169,7 @@ async createPromotion(@Body() payload: CreatePromotionDto, @UploadedFile() file:
 }
 
 
+
 @Post('/update-promotion')
 @ApiConsumes('multipart/form-data') // Indicate multipart/form-data for file uploads
 @ApiBody({
