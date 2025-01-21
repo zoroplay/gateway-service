@@ -128,26 +128,89 @@ export class GamingAdminController {
     return this.gamingService.deleteCategory(payload);
   }
 
+// @Post('/add-promotion')
+// @ApiBody({ type: CreatePromotionRequestDto })
+// @ApiOkResponse({ type: [SwaggerOKPromotionResponse] })
+// async createPromotion(@Body() payload: CreatePromotionDto ) {
+//   console.log('payload', payload);
+//   const promotion = await this.gamingService.createPromotion(payload);
+//   console.log('promotion', promotion);
+//   return promotion;
+// }
+
 @Post('/add-promotion')
-@ApiBody({ type: CreatePromotionRequestDto })
+@ApiConsumes('multipart/form-data') // Indicate multipart/form-data for file uploads
+@ApiBody({
+  schema: {
+    type: 'object',
+    properties: {
+      title: { type: 'string', example: 'Promotion Title' },
+      imageUrl: { type: 'string', example: 'http://example.com/image.png' },
+      content: { type: 'string', example: 'This is the promotion content.' },
+      startDate: { type: 'string', format: 'date-time', example: '2025-01-15T00:00:00Z' },
+      endDate: { type: 'string', format: 'date-time', example: '2025-01-20T00:00:00Z' },
+      type: { type: 'string', example: 'Promotion Type' },
+      targetUrl: { type: 'string', example: 'http://example.com' },
+      file: {
+        type: 'string',
+        format: 'binary', // Specifies that this is a file upload field
+      },
+    },
+    required: ['title', 'content', 'startDate', 'endDate', 'type', 'file'], // Specify required fields
+  },
+})
 @ApiOkResponse({ type: [SwaggerOKPromotionResponse] })
-async createPromotion(@Body() payload: CreatePromotionDto ) {
+@UseInterceptors(FileInterceptor('file'))
+async createPromotion(@Body() payload: CreatePromotionDto, @UploadedFile() file: Express.Multer.File) {
   console.log('payload', payload);
-  const promotion = await this.gamingService.createPromotion(payload);
+  const promotion = await this.gamingService.createPromotion(payload, file);
   console.log('promotion', promotion);
   return promotion;
 }
 
+
 @Post('/update-promotion')
-@ApiBody({ type: CreatePromotionRequestDto })
+@ApiConsumes('multipart/form-data') // Indicate multipart/form-data for file uploads
+@ApiBody({
+  schema: {
+    type: 'object',
+    properties: {
+      id: { type: 'number', example: 1 },
+      title: { type: 'string', example: 'Promotion Title' },
+      imageUrl: { type: 'string', example: 'http://example.com/image.png' },
+      content: { type: 'string', example: 'This is the promotion content.' },
+      startDate: { type: 'string', format: 'date-time', example: '2025-01-15T00:00:00Z' },
+      endDate: { type: 'string', format: 'date-time', example: '2025-01-20T00:00:00Z' },
+      type: { type: 'string', example: 'Promotion Type' },
+      targetUrl: { type: 'string', example: 'http://example.com' },
+      file: {
+        type: 'string',
+        format: 'binary', // Specifies that this is a file upload field
+      },
+    },
+    required: ['title', 'content', 'startDate', 'endDate', 'type', 'id'], // Specify required fields
+  },
+})
 @ApiOkResponse({ type: [SwaggerOKPromotionResponse] })
 @UseInterceptors(FileInterceptor('file'))
-async updatePromotion(@Body() payload: CreatePromotionDto) {
+async updatePromotion(@Body() payload: CreatePromotionDto, @UploadedFile() file?: Express.Multer.File) {
   console.log('payload', payload);
-  const promotion = await this.gamingService.updatePromotion(payload);
+  const promotion = await this.gamingService.updatePromotion(payload, file);
   console.log('promotion', promotion);
   return promotion;
 }
+
+
+// @Post('/update-promotion')
+// @ApiBody({ type: CreatePromotionRequestDto })
+// @ApiOkResponse({ type: [SwaggerOKPromotionResponse] })
+// @UseInterceptors(FileInterceptor('file'))
+// async updatePromotion(@Body() payload: CreatePromotionDto) {
+//   console.log('payload', payload);
+//   const promotion = await this.gamingService.updatePromotion(payload);
+//   console.log('promotion', promotion);
+//   return promotion;
+// }
 
 
   @Delete('promotion')
