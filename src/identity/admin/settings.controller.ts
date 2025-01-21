@@ -182,19 +182,36 @@ async saveSettings(
 
     // Handle logo upload
     if (body.logo) {
-        const logoUrl = await uploadToFirebase(parsedBody.logo, 'logo');
+        const fileName = `${Date.now()}_logo`;
+        let fileBase64: string | undefined;
+        if(body.logo.startsWith('data:image/')) {
+          fileBase64 = body.logo.replace(/^data:image\/\w+;base64,/, '');
+        }
+        const logoUrl = await this.firebaseService.uploadFileToFirebase(folderName, fileName, fileBase64);
         if (logoUrl) {
             body.logo = logoUrl; // Update the input field with the URL
         }
     }
 
-    // Handle print_logo upload
     if (body.print_logo) {
-        const printLogoUrl = await uploadToFirebase(parsedBody.print_logo, 'print_logo');
-        if (printLogoUrl) {
-            body.print_logo = printLogoUrl; // Update the input field with the URL
-        }
-    }
+      const fileName = `${Date.now()}_print_logo`;
+      let fileBase64: string | undefined;
+      if(body.print_logo.startsWith('data:image/')) {
+        fileBase64 = body.logo.replace(/^data:image\/\w+;base64,/, '');
+      }
+      const printLogoUrl = await this.firebaseService.uploadFileToFirebase(folderName, fileName, fileBase64);
+      if (printLogoUrl) {
+        body.print_logo= printLogoUrl; // Update the input field with the URL
+      }
+  }
+
+    // Handle print_logo upload
+    // if (body.print_logo) {
+    //     const printLogoUrl = await uploadToFirebase(parsedBody.print_logo, 'print_logo');
+    //     if (printLogoUrl) {
+    //         body.print_logo = printLogoUrl; // Update the input field with the URL
+    //     }
+    // }
 
     const payload: SettingsRequest = {
         clientId,
