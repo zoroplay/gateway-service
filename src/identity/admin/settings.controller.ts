@@ -171,14 +171,14 @@ async saveSettings(
     const folderName = 'settings'; // Folder to store images in Firebase
 
     // Function to handle uploading to Firebase
-    const uploadToFirebase = async (base64String: string, fieldName: string): Promise<string | undefined> => {
-        if (base64String.startsWith('data:image/')) {
-            const fileBase64 = base64String.replace(/^data:image\/\w+;base64,/, '');
-            const fileName = `${Date.now()}_${fieldName}`;
-            return this.firebaseService.uploadFileToFirebase(folderName, fileName, fileBase64);
-        }
-        return undefined;
-    };
+    // const uploadToFirebase = async (base64String: string, fieldName: string): Promise<string | undefined> => {
+    //     if (base64String.startsWith('data:image/')) {
+    //         const fileBase64 = base64String.replace(/^data:image\/\w+;base64,/, '');
+    //         const fileName = `${Date.now()}_${fieldName}`;
+    //         return this.firebaseService.uploadFileToFirebase(folderName, fileName, fileBase64);
+    //     }
+    //     return undefined;
+    // };
 
     // Handle logo upload
     if (body.logo) {
