@@ -24,6 +24,7 @@ import {
   CreatePromotionRequest,
   Promotion,
   QtechtransactionRequest,
+  AddGameToTournamentDto,
   QtechRollbackRequest,
 } from 'src/interfaces/gaming.pb';
 import { ClientGrpc } from '@nestjs/microservices';
@@ -122,17 +123,58 @@ export class GamingService implements OnModuleInit {
     return response;
   }
 
+  // async createPromotion(
+  //   createPromotionDto: CreatePromotionDto,
+  //   file?: Express.Multer.File, // Optional file input
+  // ): Promise<Promotion> {
+  
+  //   try {
+  //     // Send the request to the gRPC service
+  //     const promotion = await firstValueFrom(
+  //       this.service.createPromotion(createPromotionDto),
+  //     );
+
+  //     console.log('promotion:', promotion);
+  //     return promotion;
+  //   } catch (error) {
+  //     console.error('Error in createPromotion:', error);
+  //     throw new Error('Failed to create promotion. Please try again later.');
+  //   }
+  // }
+
   async createPromotion(
     createPromotionDto: CreatePromotionDto,
     file?: Express.Multer.File, // Optional file input
   ): Promise<Promotion> {
+    console.log('createPromotionDto:', createPromotionDto);
+    console.log('file:', file);
+  
+    let fileBase64: string | undefined;
+    let fileString: string | undefined = file.toString();
+  
+    if (file.buffer) {
+      // Convert the file buffer to a Base64 string
+      fileBase64 = file.buffer.toString('base64');
+    } else if (fileString.startsWith("data:image/")) {
+        fileBase64 = fileString.replace(/^data:image\/\w+;base64,/, '');
+    } else {
+      fileBase64; // Assume it's already a clean Base64 string
+    }
+  
+    // Construct the gRPC request payload
+    const createPromotionRequest: CreatePromotionRequest = {
+      metadata: createPromotionDto, // Metadata from DTO
+      file: fileBase64, // Base64 file string or undefined
+    };
+  
+    console.log('createPromotionRequest:', createPromotionRequest);
   
     try {
       // Send the request to the gRPC service
       const promotion = await firstValueFrom(
-        this.service.createPromotion(createPromotionDto),
+        this.service.createPromotion(createPromotionRequest),
       );
-
+  
       console.log('promotion:', promotion);
       return promotion;
     } catch (error) {
@@ -151,16 +193,60 @@ export class GamingService implements OnModuleInit {
     return firstValueFrom(this.service.findOnePromotion(payload));
   }
 
+  // async updatePromotion(
+  //   createPromotionDto: CreatePromotionDto,
+  // ): Promise<Promotion> {
+  
+  //   try {
+  //     // Send the request to the gRPC service
+  //     const promotion = await firstValueFrom(
+  //       this.service.updatePromotion(createPromotionDto),
+  //     );
+
+  //     console.log('promotion:', promotion);
+  //     return promotion;
+  //   } catch (error) {
+  //     console.error('Error in createPromotion:', error);
+  //     throw new Error('Failed to create promotion. Please try again later.');
+  //   }
+  // }
+
   async updatePromotion(
     createPromotionDto: CreatePromotionDto,
+    file?: Express.Multer.File, // Optional file input
   ): Promise<Promotion> {
+    console.log('createPromotionDto:', createPromotionDto);
+    console.log('file:', file);
+  
+    let fileBase64: string | undefined;
+    
+
+
+    if (file) {
+      let fileString: string | undefined = file.toString();
+
+      if (file.buffer) {
+        // Convert the file buffer to a Base64 string
+        fileBase64 = file.buffer.toString('base64');
+      } else if (fileString?.startsWith("data:image/")) {
+        fileBase64 = fileString.replace(/^data:image\/\w+;base64,/, '');
+      }
+    }
+  
+    // Construct the gRPC request payload
+    const createPromotionRequest: CreatePromotionRequest = {
+      metadata: createPromotionDto, // Metadata from DTO
+      file: fileBase64, // Base64 file string or undefined
+    };
+  
+    console.log('createPromotionRequest:', createPromotionRequest);
   
     try {
       // Send the request to the gRPC service
       const promotion = await firstValueFrom(
-        this.service.updatePromotion(createPromotionDto),
+        this.service.updatePromotion(createPromotionRequest),
       );
-
+  
       console.log('promotion:', promotion);
       return promotion;
     } catch (error) {
@@ -168,11 +254,6 @@ export class GamingService implements OnModuleInit {
       throw new Error('Failed to create promotion. Please try again later.');
     }
   }
-
-  // async updatePromotion(request: CreatePromotionDto) {
-  //   //(createGameDto);
-  //   return firstValueFrom(this.service.updatePromotion(request));
-  // }
 
   async removePromotion(request: FindOnePromotionDto) {
     console.log('Payload sent to gRPC client for deletion:', request);
@@ -372,6 +453,18 @@ export class GamingService implements OnModuleInit {
     console.log('Response from gRPC server:', response);
 
     return response;
+  }
+
+  async addTournamentGame(addGameTournamentDto: AddGameToTournamentDto) {
+    console.log('addGameToCategories');
+    return firstValueFrom(this.service.addTournamentGame(addGameTournamentDto));
+  }
+
+  async removeTournamentGame(removeGameTournamenDto: AddGameToTournamentDto) {
+    console.log('removeGameToCategories');
+    return firstValueFrom(
+      this.service.removeTournamentGame(removeGameTournamenDto),
+    );
   }
 
   formatNumber(num) {
