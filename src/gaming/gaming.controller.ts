@@ -24,14 +24,11 @@ import {
 import { Response } from 'express';
 import { GamingService } from './gaming.service';
 import {
-  FindOneCategoryDto,
   QtechtransactionRequest,
   StartGameDto,
 } from 'src/interfaces/gaming.pb';
 import {
-  FindCategoryDto,
   SwaggerOKGameResponse,
-  SwaggerQtechTransactionDto,
   SwaggerStartGameDto,
   SwaggerStartGameResponseDto,
 } from './dto';
@@ -267,33 +264,26 @@ export class GamingController {
     }
   }
 
-  @Get('/accounts/:playerId/session')
+  @Get(':clientId/accounts/:playerId/session')
+  @ApiParam({ name: 'clientId', type: 'string' })
   @ApiParam({ name: 'playerId', type: 'string' })
   @ApiQuery({ name: 'gameId', type: 'string' })
   @ApiHeader({ name: 'Wallet-Session', description: 'Signature' })
   @ApiHeader({ name: 'Pass-Key', description: 'Pass Key' })
   async handleCallbackWithQtechActionGet(
-    @Req() request,
     @Param('playerId') playerId: string,
+    @Param('clientId') clientId: number,
     @Query('gameId') gameId: string,
     @Headers() headers: Record<string, string>,
     @Res() res: Response,
     @Body() data: Record<string, any>,
   ) {
-    console.log({
-      message: 'CHECKING-SESSION',
-      playerId,
-      method: request.method,
-      header: headers,
-      body: data,
-    });
 
     // Validate required headers
-    const walletSessionId = headers['Wallet-Session'];
-    const passkey = headers['Pass-Key'];
+    const walletSessionId = headers['wallet-session'];
+    const passkey = headers['pass-key'];
 
     try {
-      console.log('HIT-HIT');
       // Handle the response if session is valid
       const response = await this.gamingService.handleQtechGamesCallback({
         playerId: playerId,
@@ -301,7 +291,7 @@ export class GamingController {
         walletSessionId,
         passkey,
         body: Object.keys(data).length === 0 ? '' : JSON.stringify(data),
-        clientId: data.clientId,
+        clientId,
         action: 'verifySession',
       });
 
@@ -310,191 +300,114 @@ export class GamingController {
       // Send appropriate response back
       if (!response.success) {
         return res
-          .set({
-            'X-ErrorMessage': response.message,
-            'X-ErrorCode': `${response.status}`,
-          })
-          .status(HttpStatus.OK)
-          .send(response);
+          .status(response.status)
+          .send(response.data);
       }
 
-      return res.status(HttpStatus.OK).send(response.data);
+      return res.status(response.status).send(response.data);
+
     } catch (error) {
       console.error('Error in handleCallbackWithQtechActionGet:', error);
       return res
-        .set({
-          'X-ErrorMessage': error.message || 'Internal Server Error',
-          'X-ErrorCode': `${HttpStatus.INTERNAL_SERVER_ERROR}`,
-        })
         .status(HttpStatus.INTERNAL_SERVER_ERROR)
         .send({
-          message: error.message || 'Internal Server Error',
-          success: false,
+          message: 'Unexpected error',
+          code: "UNKNOWN_ERROR",
         });
     }
   }
 
-  @Get('/accounts/:playerId/balance')
+  @Get(':clientId/accounts/:playerId/balance')
+  @ApiParam({ name: 'clientId', type: 'string' })
   @ApiParam({ name: 'playerId', type: 'string' })
   @ApiQuery({ name: 'gameId', type: 'string' })
   @ApiHeader({ name: 'Wallet-Session', description: 'Signature' })
   @ApiHeader({ name: 'Pass-Key', description: 'Pass Key' })
   @ApiHeader({ name: 'Pass-Key', description: 'Shared secret pass-key' })
   async getQtechBalance(
-    @Req() request,
     @Headers() headers: Record<string, string>,
     @Res() res: Response,
     @Body() data: Record<string, any>,
     @Param('playerId') playerId: string,
+    @Param('clientId') clientId: number,
     @Query('gameId') gameId?: string,
   ) {
-    console.log({
-      message: 'CHECKING-BALANCE',
-      playerId,
-      gameId,
-      method: request.method,
-      headers,
-    });
-
-    console.log('BANCE_HIT-HIT');
 
     try {
       // Fetch the player's balance
-      const balanceResponse = await this.gamingService.handleQtechPlayerBalance(
+      const balanceResponse = await this.gamingService.handleQtechGamesCallback(
         {
           playerId: playerId,
           gameId: gameId,
-          walletSessionId: headers['Wallet-Session'],
-          passkey: headers['Pass-Key'],
+          walletSessionId: headers['wallet-session'],
+          passkey: headers['pass-key'],
           body: Object.keys(data).length === 0 ? '' : JSON.stringify(data),
-          clientId: data.clientId,
+          clientId,
           action: 'getBalance',
         },
       );
 
-      console.log('Balance Response:', balanceResponse);
-
       if (!balanceResponse.success) {
         return res
-          .set({
-            'X-ErrorMessage': balanceResponse.message,
-            'X-ErrorCode': `${balanceResponse.status}`,
-          })
-          .status(HttpStatus.OK)
+          .status(balanceResponse.status)
           .send(balanceResponse);
       }
 
-      return res.status(HttpStatus.OK).send(balanceResponse.data);
+      return res.status(balanceResponse.status).send(balanceResponse.data);
+
     } catch (error) {
       console.error('Error in handleCallbackWithQtechActionGet:', error);
       return res
-        .set({
-          'X-ErrorMessage': error.message || 'Internal Server Error',
-          'X-ErrorCode': `${HttpStatus.INTERNAL_SERVER_ERROR}`,
-        })
         .status(HttpStatus.INTERNAL_SERVER_ERROR)
         .send({
-          message: error.message || 'Internal Server Error',
-          success: false,
+          message: 'Unexpected error',
+          code: "UNKNOWN_ERROR",
         });
     }
   }
 
-  @Post('/transactions')
+  @Post(':clientId/transactions')
+  @ApiParam({ name: 'clientId', type: 'string' })
   @ApiHeader({
     name: 'Wallet-Session',
     description: 'Session signature for validation',
   })
-  @Post('/transactions')
   @ApiHeader({
     name: 'Pass-Key',
     description: 'Pass Key for authentication',
   })
-  @ApiParam({ name: 'playerId', type: 'string' })
-  @ApiParam({ name: 'txnType', type: 'string' })
-  @ApiParam({ name: 'txnId', type: 'string' })
-  @ApiParam({ name: 'roundId', type: 'string' })
-  @ApiParam({ name: 'amount', type: 'string' })
-  @ApiParam({ name: 'currency', type: 'string' })
-  @ApiParam({ name: 'conversionRate', type: 'string' })
-  @ApiParam({ name: 'gameId', type: 'string' })
-  @ApiParam({ name: 'device', type: 'string' })
-  @ApiParam({ name: 'clientType', type: 'string' })
-  @ApiParam({ name: 'clientRoundId', type: 'string' })
-  @ApiParam({ name: 'category', type: 'string' })
-  @ApiParam({ name: 'created', type: 'string' })
-  @ApiParam({ name: 'completed', type: 'string' })
-  @ApiParam({ name: 'jpContributions', type: 'string' })
-  async QtechBet(
+  async QtechTransaction(
     @Headers() headers: Record<string, string>,
     @Res() res: Response,
-    @Req() request: Request,
+    @Param('clientId') clientId: number,
     @Body() data: Record<string, any>,
   ) {
     try {
-      const { txnType, playerId } = data;
-
-      // // Validate required fields
-      if (!txnType || !['DEBIT', 'CREDIT'].includes(txnType)) {
-        return res.status(400).json({
-          success: false,
-          message: 'Invalid or missing txnType. Must be DEBIT or CREDIT.',
-        });
-      }
 
       console.log('Hit Transaction');
 
-      const requestPayload: QtechtransactionRequest = {
-        ...data,
-        playerId: String(playerId),
-        passKey: headers['Pass-Key'],
-        walletSessionId: headers['Wallet-Session'],
-        clientId: data.clientId,
-        clientType: data.clientType,
-        clientRoundId: data.clientRoundId,
-        category: data.category,
-        created: data.created,
-        completed: data.completed,
-        jpContributions: data.jpContributions
-          ? data.jpContributions.map((contribution: any) => ({
-              id: contribution.id,
-              amount: Number(contribution.amount),
-              balance: Number(contribution.balance),
-            }))
-          : [],
-        txnType: data.txnType,
-        txnId: data.txnId,
-        roundId: data.roundId,
-        amount: data.amount,
-        currency: data.currency,
-        conversionRat: data.conversionRate,
+      const response = await this.gamingService.handleQtechGamesCallback({
+        playerId: data.playerId,
         gameId: data.gameId,
-        device: data.device,
-      };
+        walletSessionId: headers['wallet-session'],
+        passkey: headers['pass-key'],
+        body: Object.keys(data).length === 0 ? '' : JSON.stringify(data),
+        clientId,
+        action: data.txnType,
+      });
 
-      // Handle DEBIT (Withdrawal)
-      if (txnType === 'DEBIT') {
-        const result = await this.gamingService.handleQtechBet(requestPayload);
-        return res.status(201).json({
-          success: true,
-          message: 'Deposit processed successfully..',
-          ...result,
-        });
+      if (!response.success) {
+        return res
+          .status(response.status)
+          .send(response.data);
       }
 
-      // Handle CREDIT (Deposit)
-      if (txnType === 'CREDIT') {
-        const result = await this.gamingService.handleQtechWin(requestPayload);
-        return res.status(201).json({
-          success: true,
-          message: 'Withdrawal processed successfully..',
-          ...result,
-        });
-      }
+      return res.status(response.status).send(response.data);
+      
     } catch (error) {
       console.error('Error in QtechBet:', error);
       return res.status(500).json({
-        success: false,
+        code: "UNKNOWN_ERROR",
         message:
           'An unexpected error occurred while processing the transaction.',
       });
