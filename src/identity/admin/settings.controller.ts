@@ -26,38 +26,66 @@ export class SettingsController {
         );
     }
 
-    @Post(':clientId/save')
-    @ApiOperation({
-        summary: 'Save system settings',
-        description: 'This endpoint is used to save or update settings for a client',
-    })
-    @ApiParam({ name: 'client', type: 'number', description: 'SBE Client ID' })
-    @ApiBody({ type: SwaggerSettingsRequest })
-    @ApiOkResponse({ type: SwaggerCommonResponse })
-    @UseInterceptors(FileFieldsInterceptor([
-        { name: 'logo', maxCount: 1 },
-        { name: 'print_logo', maxCount: 1 },
-    ]))
-    saveSettings(
-        @Param('clientId') clientId: number,
-        @Body() body,
-        @UploadedFiles() files: { logo?: Express.Multer.File, printLogo?: Express.Multer.File }
-    ) {
-      console.log("body", body);
-      console.log("clientId", clientId);
+    // @Post(':clientId/save')
+    // @ApiOperation({
+    //     summary: 'Save system settings',
+    //     description: 'This endpoint is used to save or update settings for a client',
+    // })
+    // @ApiParam({ name: 'client', type: 'number', description: 'SBE Client ID' })
+    // @ApiBody({ type: SwaggerSettingsRequest })
+    // @ApiOkResponse({ type: SwaggerCommonResponse })
+    // @UseInterceptors(FileFieldsInterceptor([
+    //     { name: 'logo', maxCount: 1 },
+    //     { name: 'print_logo', maxCount: 1 },
+    // ]))
+    // async saveSettings(
+    //     @Param('clientId') clientId: number,
+    //     @Body() body,
+    //     @UploadedFiles() files: { logo?: Express.Multer.File, printLogo?: Express.Multer.File }
+    // ) {
+    //   console.log("body", body);
+    //   console.log("clientId", clientId);
 
-        // console.log(files);
-        // if (files.logo)
-        //     body.logo = `${PATH_DOWNLOADED_FILE}/${files.logo.filename}`
+    //   let fileBase64: string | undefined;
+    //   let logoString: string | undefined = body.logo.toString();
+    //   let printString: string | undefined = body.print_logo.toString();
+    //   const folderName = 'settings'; // Example: folder to store promotion images
+    //   const fileName = `${Date.now()}_uploaded-file`;
 
-        // if (files.printLogo)
-        //     body.print_logo = `${PATH_DOWNLOADED_FILE}/${files.printLogo.filename}`
-        const payload: SettingsRequest = {
-            clientId,
-            inputs: JSON.stringify(body)
-        }
-        return this.svc.saveSettings(payload);
-    }
+    //   if(body.logo) { 
+    //     if(logoString?.startsWith("data:image/")) {
+    //       fileBase64 = logoString.replace(/^data:image\/\w+;base64,/, '');
+    //     }
+        
+    //   }
+
+    //   if(body.print_logo) { 
+    //     if(printString?.startsWith("data:image/")) {
+    //       fileBase64 = printString.replace(/^data:image\/\w+;base64,/, '');
+    //     }
+
+    //     const imageUrl = await this.firebaseService.uploadFileToFirebase(
+    //       folderName,
+    //       fileName,
+    //       fileBase64
+    //     );
+        
+    //   }
+
+      
+
+    //     // console.log(files);
+    //     // if (files.logo)
+    //     //     body.logo = `${PATH_DOWNLOADED_FILE}/${files.logo.filename}`
+
+    //     // if (files.printLogo)
+    //     //     body.print_logo = `${PATH_DOWNLOADED_FILE}/${files.printLogo.filename}`
+    //     const payload: SettingsRequest = {
+    //         clientId,
+    //         inputs: JSON.stringify(body)
+    //     }
+    //     return this.svc.saveSettings(payload);
+    // }
 
 // @Post(':clientId/save')
 // @ApiConsumes('multipart/form-data')
@@ -114,6 +142,66 @@ export class SettingsController {
 //     };
 //   }
 // }
+
+
+@Post(':clientId/save')
+@ApiOperation({
+    summary: 'Save system settings',
+    description: 'This endpoint is used to save or update settings for a client',
+})
+@ApiParam({ name: 'clientId', type: 'number', description: 'SBE Client ID' })
+@ApiBody({ type: SwaggerSettingsRequest })
+@ApiOkResponse({ type: SwaggerCommonResponse })
+@UseInterceptors(
+    FileFieldsInterceptor([
+        { name: 'logo', maxCount: 1 },
+        { name: 'print_logo', maxCount: 1 },
+    ])
+)
+async saveSettings(
+    @Param('clientId') clientId: number,
+    @Body() body,
+    @UploadedFiles() files: { logo?: Express.Multer.File; printLogo?: Express.Multer.File }
+) {
+    console.log('body', body);
+    console.log('clientId', clientId);
+
+    const folderName = 'settings'; // Folder to store images in Firebase
+
+    // Function to handle uploading to Firebase
+    const uploadToFirebase = async (base64String: string, fieldName: string): Promise<string | undefined> => {
+        if (base64String.startsWith('data:image/')) {
+            const fileBase64 = base64String.replace(/^data:image\/\w+;base64,/, '');
+            const fileName = `${Date.now()}_${fieldName}`;
+            return this.firebaseService.uploadFileToFirebase(folderName, fileName, fileBase64);
+        }
+        return undefined;
+    };
+
+    // Handle logo upload
+    if (body.logo) {
+        const logoUrl = await uploadToFirebase(body.logo, 'logo');
+        if (logoUrl) {
+            body.logo = logoUrl; // Update the input field with the URL
+        }
+    }
+
+    // Handle print_logo upload
+    if (body.print_logo) {
+        const printLogoUrl = await uploadToFirebase(body.print_logo, 'print_logo');
+        if (printLogoUrl) {
+            body.print_logo = printLogoUrl; // Update the input field with the URL
+        }
+    }
+
+    const payload: SettingsRequest = {
+        clientId,
+        inputs: JSON.stringify(body), // Pass updated body
+    };
+
+    return this.svc.saveSettings(payload);
+}
+
 
 
 
