@@ -23,9 +23,7 @@ import {
   QtechCallbackRequest,
   CreatePromotionRequest,
   Promotion,
-  QtechtransactionRequest,
   AddGameToTournamentDto,
-  QtechRollbackRequest,
 } from 'src/interfaces/gaming.pb';
 import { ClientGrpc } from '@nestjs/microservices';
 import { firstValueFrom, of } from 'rxjs';
@@ -278,6 +276,7 @@ export class GamingService implements OnModuleInit {
       games,
     };
   }
+
   async startGame(request: StartGameDto) {
     // //('start game', request);
     console.log('start-service', request);
@@ -297,16 +296,6 @@ export class GamingService implements OnModuleInit {
     return resp;
   }
 
-  async handleQtechPlayerBalance(request: QtechCallbackRequest) {
-    console.log('start-service', request);
-    // //(request);
-    const resp = await firstValueFrom(
-      this.service.handleQtechGetBalance(request),
-    );
-    console.log('resp', resp.data);
-
-    return resp;
-  }
 
   async handleQtechGamesCallback(request: QtechCallbackRequest) {
     console.log('Q-tech service start');
@@ -320,46 +309,17 @@ export class GamingService implements OnModuleInit {
     return resp;
   }
 
-  async handleQtechBet(request: QtechtransactionRequest) {
-    try {
-      console.log('Q-tech Bet Func');
-      // //(request);
-      const resp = await firstValueFrom(
-        this.service.handleQtechTransactionBet(request),
-      );
+  // async handleQtechRollback(request: QtechRollbackRequest) {
+  //   console.log('Q-tech Roll Gate Func');
+  //   // //(request);
+  //   const resp = await firstValueFrom(
+  //     this.service.handleQtechRollback(request),
+  //   );
 
-      console.log('resp', resp);
+  //   console.log('resp', resp);
 
-      return resp;
-    } catch (error) {
-      console.log('TRX ERROR', error);
-      throw new Error(error);
-    }
-  }
-
-  async handleQtechWin(request: QtechtransactionRequest) {
-    console.log('Q-tech Win Func');
-    // //(request);
-    const resp = await firstValueFrom(
-      this.service.handleQtechTransactionWin(request),
-    );
-
-    console.log('resp', resp);
-
-    return resp;
-  }
-
-  async handleQtechRollback(request: QtechRollbackRequest) {
-    console.log('Q-tech Roll Gate Func');
-    // //(request);
-    const resp = await firstValueFrom(
-      this.service.handleQtechRollback(request),
-    );
-
-    console.log('resp', resp);
-
-    return resp;
-  }
+  //   return resp;
+  // }
 
   async xpressLogin(data: XpressRequest) {
     //('xpress login');

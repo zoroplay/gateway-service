@@ -454,9 +454,10 @@ export class GamingController {
         clientId: data.clientId || 4,
       };
 
-      const request = await this.gamingService.handleQtechRollback(result);
+      // const request = await this.gamingService.handleQtechRollback(result);
 
-      return res.status(HttpStatus.OK).send(request.data);
+      // return res.status(HttpStatus.OK).send(request.data);
+
     } catch (error) {
       console.error('Error in QtechBet:', error);
       return res
