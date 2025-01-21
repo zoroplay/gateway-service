@@ -142,23 +142,20 @@ export class GamingService implements OnModuleInit {
 
   async createPromotion(
     createPromotionDto: CreatePromotionDto,
-    file?: Express.Multer.File, // Optional file input
+    file?: any, // Optional file input
   ): Promise<Promotion> {
     console.log('createPromotionDto:', createPromotionDto);
     console.log('file:', file);
   
     let fileBase64: string | undefined;
-    let fileString: string | undefined = file.toString();
+    let fileString: string | undefined = createPromotionDto.file.toString();
   
-    if (file.buffer) {
-      // Convert the file buffer to a Base64 string
-      fileBase64 = file.buffer.toString('base64');
-    } else if (fileString.startsWith("data:image/")) {
+    if (fileString) {
+      if (fileString.startsWith("data:image/")) {
         fileBase64 = fileString.replace(/^data:image\/\w+;base64,/, '');
-    } else {
-      fileBase64; // Assume it's already a clean Base64 string
-    }
-  
+      // Convert the file buffer to a Base64 string
+    } 
+  }
     // Construct the gRPC request payload
     const createPromotionRequest: CreatePromotionRequest = {
       metadata: createPromotionDto, // Metadata from DTO
