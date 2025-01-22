@@ -144,82 +144,82 @@ export class SettingsController {
 // }
 
 
-@Post(':clientId/save')
-@ApiOperation({
-    summary: 'Save system settings',
-    description: 'This endpoint is used to save or update settings for a client',
-})
-@ApiParam({ name: 'clientId', type: 'number', description: 'SBE Client ID' })
-@ApiBody({ type: SwaggerSettingsRequest })
-@ApiOkResponse({ type: SwaggerCommonResponse })
-@UseInterceptors(
-    FileFieldsInterceptor([
-        { name: 'logo', maxCount: 1 },
-        { name: 'print_logo', maxCount: 1 },
-    ])
-)
-async saveSettings(
-    @Param('clientId') clientId: number,
-    @Body() body,
-    @UploadedFiles() files: { logo?: Express.Multer.File; printLogo?: Express.Multer.File }
-) {
-    console.log('body', body);
-    console.log('clientId', clientId);
+// @Post(':clientId/save')
+// @ApiOperation({
+//     summary: 'Save system settings',
+//     description: 'This endpoint is used to save or update settings for a client',
+// })
+// @ApiParam({ name: 'clientId', type: 'number', description: 'SBE Client ID' })
+// @ApiBody({ type: SwaggerSettingsRequest })
+// @ApiOkResponse({ type: SwaggerCommonResponse })
+// @UseInterceptors(
+//     FileFieldsInterceptor([
+//         { name: 'logo', maxCount: 1 },
+//         { name: 'print_logo', maxCount: 1 },
+//     ])
+// )
+// async saveSettings(
+//     @Param('clientId') clientId: number,
+//     @Body() body,
+//     @UploadedFiles() files: { logo?: Express.Multer.File; printLogo?: Express.Multer.File }
+// ) {
+//     console.log('body', body);
+//     console.log('clientId', clientId);
 
-    const parsedBody = JSON.parse(JSON.stringify(body));
+//     const parsedBody = JSON.parse(JSON.stringify(body));
 
-    const folderName = 'settings'; // Folder to store images in Firebase
+//     const folderName = 'settings'; // Folder to store images in Firebase
 
-    // Function to handle uploading to Firebase
-    // const uploadToFirebase = async (base64String: string, fieldName: string): Promise<string | undefined> => {
-    //     if (base64String.startsWith('data:image/')) {
-    //         const fileBase64 = base64String.replace(/^data:image\/\w+;base64,/, '');
-    //         const fileName = `${Date.now()}_${fieldName}`;
-    //         return this.firebaseService.uploadFileToFirebase(folderName, fileName, fileBase64);
-    //     }
-    //     return undefined;
-    // };
+//     // Function to handle uploading to Firebase
+//     // const uploadToFirebase = async (base64String: string, fieldName: string): Promise<string | undefined> => {
+//     //     if (base64String.startsWith('data:image/')) {
+//     //         const fileBase64 = base64String.replace(/^data:image\/\w+;base64,/, '');
+//     //         const fileName = `${Date.now()}_${fieldName}`;
+//     //         return this.firebaseService.uploadFileToFirebase(folderName, fileName, fileBase64);
+//     //     }
+//     //     return undefined;
+//     // };
 
-    // Handle logo upload
-    if (body.logo) {
-        const fileName = `${Date.now()}_logo`;
-        let fileBase64: string | undefined;
-        if(body.logo.startsWith('data:image/')) {
-          fileBase64 = body.logo.replace(/^data:image\/\w+;base64,/, '');
-        }
-        const logoUrl = await this.firebaseService.uploadFileToFirebase(folderName, fileName, fileBase64);
-        if (logoUrl) {
-            body.logo = logoUrl; // Update the input field with the URL
-        }
-    }
+//     // Handle logo upload
+//     if (body.logo) {
+//         const fileName = `${Date.now()}_logo`;
+//         let fileBase64: string | undefined;
+//         if(body.logo.startsWith('data:image/')) {
+//           fileBase64 = body.logo.replace(/^data:image\/\w+;base64,/, '');
+//         }
+//         const logoUrl = await this.firebaseService.uploadFileToFirebase(folderName, fileName, fileBase64);
+//         if (logoUrl) {
+//             body.logo = logoUrl; // Update the input field with the URL
+//         }
+//     }
 
-    if (body.print_logo) {
-      const fileName = `${Date.now()}_print_logo`;
-      let fileBase64: string | undefined;
-      if(body.print_logo.startsWith('data:image/')) {
-        fileBase64 = body.logo.replace(/^data:image\/\w+;base64,/, '');
-      }
-      const printLogoUrl = await this.firebaseService.uploadFileToFirebase(folderName, fileName, fileBase64);
-      if (printLogoUrl) {
-        body.print_logo= printLogoUrl; // Update the input field with the URL
-      }
-  }
+//     if (body.print_logo) {
+//       const fileName = `${Date.now()}_print_logo`;
+//       let fileBase64: string | undefined;
+//       if(body.print_logo.startsWith('data:image/')) {
+//         fileBase64 = body.logo.replace(/^data:image\/\w+;base64,/, '');
+//       }
+//       const printLogoUrl = await this.firebaseService.uploadFileToFirebase(folderName, fileName, fileBase64);
+//       if (printLogoUrl) {
+//         body.print_logo= printLogoUrl; // Update the input field with the URL
+//       }
+//   }
 
-    // Handle print_logo upload
-    // if (body.print_logo) {
-    //     const printLogoUrl = await uploadToFirebase(parsedBody.print_logo, 'print_logo');
-    //     if (printLogoUrl) {
-    //         body.print_logo = printLogoUrl; // Update the input field with the URL
-    //     }
-    // }
+//     // Handle print_logo upload
+//     // if (body.print_logo) {
+//     //     const printLogoUrl = await uploadToFirebase(parsedBody.print_logo, 'print_logo');
+//     //     if (printLogoUrl) {
+//     //         body.print_logo = printLogoUrl; // Update the input field with the URL
+//     //     }
+//     // }
 
-    const payload: SettingsRequest = {
-        clientId,
-        inputs: JSON.stringify(parsedBody), // Pass updated body
-    };
+//     const payload: SettingsRequest = {
+//         clientId,
+//         inputs: JSON.stringify(parsedBody), // Pass updated body
+//     };
 
-    return this.svc.saveSettings(payload);
-}
+//     return this.svc.saveSettings(payload);
+// }
 
 
 
