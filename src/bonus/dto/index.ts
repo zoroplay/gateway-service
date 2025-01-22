@@ -103,6 +103,12 @@ export class SwaggerCreateBonusRequest {
 
   @ApiProperty({ description: 'Product type - Sport, casino, virtual' })
   product: string;
+
+  @ApiProperty({ description: 'Id of provider' })
+  providerId: number;
+
+  @ApiProperty({ description: 'no of spin count' })
+  casinoSpinCount: number;
 }
 
 export class SwaggerCreateFirstDepositBonusRequest {
