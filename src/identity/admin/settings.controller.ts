@@ -26,6 +26,38 @@ export class SettingsController {
         );
     }
 
+
+    @Post(':clientId/save')
+    @ApiOperation({
+        summary: 'Save system settings',
+        description: 'This endpoint is used to save or update settings for a client',
+    })
+    @ApiParam({ name: 'client', type: 'number', description: 'SBE Client ID' })
+    @ApiBody({ type: SwaggerSettingsRequest })
+    @ApiOkResponse({ type: SwaggerCommonResponse })
+    @UseInterceptors(FileFieldsInterceptor([
+        { name: 'logo', maxCount: 1 },
+        { name: 'print_logo', maxCount: 1 },
+    ]))
+    saveSettings(
+        @Param('clientId') clientId: number,
+        @Body() body,
+        @UploadedFiles() files: { logo?: Express.Multer.File, printLogo?: Express.Multer.File }
+    ) {
+        // console.log(files);
+        // if (files.logo)
+        //     body.logo = `${PATH_DOWNLOADED_FILE}/${files.logo.filename}`
+
+        // if (files.printLogo)
+        //     body.print_logo = `${PATH_DOWNLOADED_FILE}/${files.printLogo.filename}`
+        
+        const payload: SettingsRequest = {
+            clientId,
+            inputs: JSON.stringify(body)
+        }
+        return this.svc.saveSettings(payload);
+    }
+
     // @Post(':clientId/save')
     // @ApiOperation({
     //     summary: 'Save system settings',
