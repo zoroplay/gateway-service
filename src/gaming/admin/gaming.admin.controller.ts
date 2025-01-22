@@ -145,6 +145,7 @@ export class GamingAdminController {
     type: 'object',
     properties: {
       title: { type: 'string', example: 'Promotion Title' },
+      clientId: { type: 'number', example: 4 },
       imageUrl: { type: 'string', example: 'http://example.com/image.png' },
       content: { type: 'string', example: 'This is the promotion content.' },
       startDate: { type: 'string', format: 'date-time', example: '2025-01-15T00:00:00Z' },
