@@ -104,6 +104,9 @@ export class SwaggerCreateBonusRequest {
   @ApiProperty({ description: 'Product type - Sport, casino, virtual' })
   product: string;
 
+  @ApiProperty({ description: 'Array of gameIds to grant bonus' })
+  gameId: string[];
+
   @ApiProperty({ description: 'Id of provider' })
   providerId: number;
 
