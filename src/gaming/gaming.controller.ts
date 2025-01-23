@@ -418,58 +418,44 @@ export class GamingController {
     }
   }
 
-  @Post('/transactions/rollback')
+  @Post(':clientId/transactions/rollback')
   @ApiHeader({ name: 'Wallet-Session', description: 'Signature' })
   @ApiHeader({ name: 'Pass-Key', description: 'Pass Key' })
   async QtechRollBack(
     @Headers() headers: Record<string, string>,
     @Res() res: Response,
-    @Req() request: Request,
     @Body() data: Record<string, any>,
+    @Param('clientId') clientId: number,
   ) {
-    console.log({
-      message: 'CHECKING-ROLLBACK',
-      playerId: data.playerId,
-      method: request.method,
-      header: headers,
-      body: data,
-    });
-
-    const walletSessionId = headers['wallet-session'];
-    const passkey = headers['pass-key'];
 
     try {
       console.log('ROLLBACK Transaction');
 
-      const result = {
-        walletSessionId,
-        passKey: passkey,
-        playerId: data.playerId.toString(),
-        betId: data.txnType,
-        txnId: data.txnId,
-        roundId: data.roundId,
-        amount: data.amount,
-        currency: data.currency,
+      const response = await this.gamingService.handleQtechGamesCallback({
+        playerId: data.playerId,
         gameId: data.gameId,
-        clientId: data.clientId || 4,
-      };
+        walletSessionId: headers['wallet-session'],
+        passkey: headers['pass-key'],
+        body: Object.keys(data).length === 0 ? '' : JSON.stringify(data),
+        clientId,
+        action: 'ROLLBACK',
+      });
 
-      // const request = await this.gamingService.handleQtechRollback(result);
+      if (!response.success) {
+        return res
+          .status(response.status)
+          .send(response.data);
+      }
 
-      // return res.status(HttpStatus.OK).send(request.data);
+      return res.status(response.status).send(response.data);
 
     } catch (error) {
       console.error('Error in QtechBet:', error);
-      return res
-        .set({
-          'X-ErrorMessage': error.message || 'Internal Server Error',
-          'X-ErrorCode': `${HttpStatus.INTERNAL_SERVER_ERROR}`,
-        })
-        .status(HttpStatus.INTERNAL_SERVER_ERROR)
-        .send({
-          message: error.message || 'Internal Server Error',
-          success: false,
-        });
+      return res.status(500).json({
+        code: "UNKNOWN_ERROR",
+        message:
+          'An unexpected error occurred while processing the transaction.',
+      });
     }
   }
 
