@@ -112,6 +112,7 @@ export class SwaggerCreateBonusRequest {
 
   @ApiProperty({ description: 'no of spin count' })
   casinoSpinCount: number;
+  
 }
 
 export class SwaggerCreateFirstDepositBonusRequest {
