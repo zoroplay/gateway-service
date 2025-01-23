@@ -99,7 +99,7 @@ export class AdminBonusController {
   @ApiOkResponse({ type: SwaggerCreateBonusResponse })
   CreateBonus(@Body() data: CreateBonusRequest) {
     try {
-      console.log("got here", body)
+      console.log("got here", data)
       return this.bonusService.CreateBonus(data);
     } catch (error) {
       console.error(error);
