@@ -459,6 +459,47 @@ export class GamingController {
     }
   }
 
+  @Post(':clientId/bonus/reward')
+  @ApiHeader({ name: 'Wallet-Session', description: 'Signature' })
+  @ApiHeader({ name: 'Pass-Key', description: 'Pass Key' })
+  async QtechBonusReward(
+    @Headers() headers: Record<string, string>,
+    @Res() res: Response,
+    @Body() data: Record<string, any>,
+    @Param('clientId') clientId: number,
+  ) {
+
+    try {
+      console.log('Bonus Reward');
+
+      const response = await this.gamingService.handleQtechGamesCallback({
+        playerId: data.playerId,
+        gameId: data.gameId,
+        walletSessionId: headers['wallet-session'],
+        passkey: headers['pass-key'],
+        body: Object.keys(data).length === 0 ? '' : JSON.stringify(data),
+        clientId,
+        action: 'BONUS-REWARD',
+      });
+
+      if (!response.success) {
+        return res
+          .status(response.status)
+          .send(response.data);
+      }
+
+      return res.status(response.status).send(response.data);
+
+    } catch (error) {
+      console.error('Error in QtechBet:', error);
+      return res.status(500).json({
+        code: "UNKNOWN_ERROR",
+        message:
+          'An unexpected error occurred while processing the transaction.',
+      });
+    }
+  }
+
   @Post('/:clientId/:provider_id/callback/:action')
   @ApiParam({ name: 'clientId', type: 'string' })
   @ApiParam({ name: 'provider_id', type: 'string' })
