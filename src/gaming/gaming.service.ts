@@ -233,6 +233,7 @@ export class GamingService implements OnModuleInit {
       metadata: createPromotionDto, // Metadata from DTO
       file: fileBase64, // Base64 file string or undefined
     };
+    
   
     console.log('createPromotionRequest:', createPromotionRequest);
   
