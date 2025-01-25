@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class SwaggerFilterBySportID {
   @ApiProperty({ description: 'ID of the Sport' })
@@ -328,6 +328,57 @@ export class SwaggerAwardBonusRequest {
   @ApiProperty({ description: 'ID of the bonus to award', required: false })
   bonusId: number;
 }
+
+export class AwardBonusRequestDto {
+  @ApiProperty({
+    description: 'The client ID associated with the bonus request',
+    example: 123,
+  })
+  clientId: number;
+
+  @ApiProperty({
+    description: 'The ID of the bonus being awarded',
+    example: 456,
+  })
+  bonusId: number;
+
+  @ApiProperty({
+    description: 'The user ID for whom the bonus is being awarded',
+    example: 'user123',
+  })
+  userId: string;
+
+  @ApiPropertyOptional({
+    description: 'The username of the user receiving the bonus',
+    example: 'johndoe',
+  })
+  username?: string;
+
+  @ApiPropertyOptional({
+    description: 'The amount of the bonus being awarded',
+    example: 1000,
+  })
+  amount?: number;
+
+  @ApiPropertyOptional({
+    description: 'The base value associated with the bonus',
+    example: 500,
+  })
+  baseValue?: number;
+
+  @ApiPropertyOptional({
+    description: 'The promotional code applied to the bonus',
+    example: 'PROMO2023',
+  })
+  promoCode?: string;
+
+  @ApiPropertyOptional({
+    description: 'The status of the bonus',
+    example: 1,
+  })
+  status?: number;
+}
+
 
 export class SwaggerBetslip {
   @ApiProperty({ description: 'ID of the match' })

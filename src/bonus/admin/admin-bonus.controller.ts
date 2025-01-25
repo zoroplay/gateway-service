@@ -29,6 +29,7 @@ import {
   UpdateCampaignBonusDto,
 } from 'src/interfaces/bonus.pb';
 import {
+  AwardBonusRequestDto,
   SwaggerAllCampaignBonus,
   SwaggerAwardBonusRequest,
   SwaggerBonusResponse,
@@ -283,7 +284,7 @@ export class AdminBonusController {
       'This endpoint awards a user a bonus, this endpoint is meant to be used for administrative purposes only',
   })
   @ApiQuery({ name: 'client_id', description: 'SBE client ID' })
-  @ApiBody({ type: SwaggerAwardBonusRequest })
+  @ApiBody({ type: AwardBonusRequestDto })
   @ApiOkResponse({ type: SwaggerGetUserBonusResponse })
   AwardBonus(
     @Body() data: AwardBonusRequest,
