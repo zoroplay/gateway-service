@@ -292,6 +292,7 @@ export class AdminBonusController {
     // @Req() req: IAuthorizedRequest,
   ) {
     try {
+      console.log("data", data)
       data.clientId = query.client_id;
 
       return this.bonusService.AwardBonus(data);

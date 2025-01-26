@@ -288,6 +288,9 @@ export class SwaggerBonus {
   @ApiProperty({ description: 'Bonus amount to award' })
   bonusAmount: number;
 
+  @ApiProperty({ description: 'Casino Spin Count' })
+  casinoSpinCount: number;
+
   @ApiProperty({ description: 'Bonus type', enum: bonusTypes })
   bonusType: string;
 
