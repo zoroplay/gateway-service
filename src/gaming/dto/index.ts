@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsIn } from 'class-validator';
 import { Timestamp } from 'typeorm';
 
@@ -118,6 +118,12 @@ export class SwaggerStartGameDto {
     example: 'free_rounds',
   })
   bonusType: string;
+
+  @ApiPropertyOptional({
+    description: 'bonusId to load game',
+    example: 12,
+  })
+  bonusId: number;
 }
 
 export class SwaggerStartGameResponseDto {

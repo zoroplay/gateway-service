@@ -103,7 +103,7 @@ export class BonusService implements OnModuleInit {
   }
 
   AwardBonus(data: AwardBonusRequest) {
-    // console.log('AwardBonus ', data);
+    console.log('AwardBonus ', data);
     return this.service.awardBonus(data);
   }
 
