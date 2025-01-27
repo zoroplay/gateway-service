@@ -125,7 +125,7 @@ export class BonusController {
         clientId: query.client_id,
         userId: req.user.id,
       };
-      return this.bonusService.CheckFirstDeposit(body);
+      return this.bonusService.getActiveBonus(body);
     } catch (error) {
       console.error(error);
     }
