@@ -20,6 +20,7 @@ import {
   CreateTournamentDto,
   FindOneCategoryDto,
   FindOneTournamentDto,
+  GetGamesRequest,
   SaveCategoryRequest,
   SyncGameDto,
   UpdateGameDto,
@@ -57,14 +58,29 @@ export class GamingAdminController {
     return this.gamingService.findAll();
   }
 
-  @Get('get-games')
-  @ApiOkResponse({ type: [SwaggerOKGameResponse] })
-  async getGames() {
-    const val = await this.gamingService.getGames();
+  // @Get('get-games')
+  // @ApiOkResponse({ type: [SwaggerOKGameResponse] })
+  // @ApiQuery({ name: 'gameIds', required: false, isArray: true, type: Number })
+  // async getGames() {
+  //   const val = await this.gamingService.getGames();
 
-    console.log('val', val);
-    return val;
-  }
+  //   console.log('val', val);
+  //   return val;
+  // }
+
+
+@Get('get-games')
+@ApiOkResponse({ type: [SwaggerOKGameResponse] })
+@ApiQuery({ name: 'gameIds', required: false, isArray: true, type: Number })
+async getGames(@Query('gameIds') gameIds?: string): Promise<any> {
+  const request: GetGamesRequest = {
+    gameIds: gameIds ? gameIds.split(',').map(Number) : [], // Construct the GetGamesRequest object
+  };
+
+  const val = await this.gamingService.getGames(request); // Pass the request object to the service
+  console.log('val', val);
+  return val;
+}
 
   @Put('/update-game')
   @ApiBody({ type: UpdateGameRequestDto })

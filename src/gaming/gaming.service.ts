@@ -24,6 +24,7 @@ import {
   CreatePromotionRequest,
   Promotion,
   AddGameToTournamentDto,
+  GetGamesRequest,
 } from 'src/interfaces/gaming.pb';
 import { ClientGrpc } from '@nestjs/microservices';
 import { firstValueFrom, of } from 'rxjs';
@@ -68,9 +69,9 @@ export class GamingService implements OnModuleInit {
     return firstValueFrom(this.service.findAllGames({}));
   }
 
-  async getGames() {
+  async getGames(request?: GetGamesRequest) {
     //('finding all games');
-    const val = await firstValueFrom(this.service.getGames({}));
+    const val = await firstValueFrom(this.service.getGames(request));
     return val;
   }
 

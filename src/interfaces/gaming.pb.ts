@@ -12,6 +12,11 @@ import { Struct } from "./google/protobuf/struct.pb";
 
 export const protobufPackage = "gaming";
 
+export interface GetGamesRequest {
+  /** Optional array of game IDs for filtering */
+  gameIds: number[];
+}
+
 export interface CreateBonusRequest {
   clientId: number;
   bonusType: string;
@@ -459,7 +464,7 @@ export interface Promotion {
   endDate: string;
   status: string;
   targetUrl?: string | undefined;
-  clientId: string;
+  clientId: number;
 }
 
 export interface CreatePromotionDto {
@@ -472,7 +477,7 @@ export interface CreatePromotionDto {
   type: string;
   targetUrl?: string | undefined;
   file?: string | undefined;
-  clientId?: string | undefined;
+  clientId: number;
 }
 
 export interface CreatePromotionRequest {
@@ -609,7 +614,7 @@ export interface GamingServiceClient {
 
   findAllProviders(request: Empty): Observable<CommonResponse>;
 
-  getGames(request: Empty): Observable<CommonResponseArray>;
+  getGames(request: GetGamesRequest): Observable<CommonResponseArray>;
 
   createPromotion(request: CreatePromotionRequest): Observable<Promotion>;
 
@@ -705,7 +710,9 @@ export interface GamingServiceController {
 
   findAllProviders(request: Empty): Promise<CommonResponse> | Observable<CommonResponse> | CommonResponse;
 
-  getGames(request: Empty): Promise<CommonResponseArray> | Observable<CommonResponseArray> | CommonResponseArray;
+  getGames(
+    request: GetGamesRequest,
+  ): Promise<CommonResponseArray> | Observable<CommonResponseArray> | CommonResponseArray;
 
   createPromotion(request: CreatePromotionRequest): Promise<Promotion> | Observable<Promotion> | Promotion;
 
