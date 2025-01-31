@@ -144,16 +144,6 @@ async getGames(@Query('gameIds') gameIds?: string): Promise<any> {
     return this.gamingService.deleteCategory(payload);
   }
 
-// @Post('/add-promotion')
-// @ApiBody({ type: CreatePromotionRequestDto })
-// @ApiOkResponse({ type: [SwaggerOKPromotionResponse] })
-// async createPromotion(@Body() payload: CreatePromotionDto ) {
-//   console.log('payload', payload);
-//   const promotion = await this.gamingService.createPromotion(payload);
-//   console.log('promotion', promotion);
-//   return promotion;
-// }
-
 @Post('/add-promotion')
 @ApiConsumes('multipart/form-data') // Indicate multipart/form-data for file uploads
 @ApiBody({
