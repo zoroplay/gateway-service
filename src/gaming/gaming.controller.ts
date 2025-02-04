@@ -576,4 +576,16 @@ export class GamingController {
 
     return value;
   }
+
+  @Get('active-jackpot')
+  @ApiOkResponse({ type: [SwaggerOKGameResponse] })
+  handleCasinoJackpot() {
+    return this.gamingService.handleCasinoJackpot();
+  }
+
+  @Get('jackpot-winners')
+  @ApiOkResponse({ type: [SwaggerOKGameResponse] })
+  handleCasinoJackpotWinners() {
+    return this.gamingService.handleCasinoJackpotWinners();
+  }
 }
