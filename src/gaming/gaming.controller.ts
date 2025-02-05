@@ -520,7 +520,8 @@ export class GamingController {
     @Req() req: RawBodyRequest<Request>,
     @Res() res: Response,
   ) {
-    console.log(req.rawBody)
+    // console.log(req.rawBody)
+ 
     const rawBody = req.rawBody;
     let body = rawBody.toString().replace(/\r?\n|\r/g, "");
     body = body.replace(/\s/g, "");

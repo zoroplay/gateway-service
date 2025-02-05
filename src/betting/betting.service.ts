@@ -125,4 +125,9 @@ export class BettingService implements OnModuleInit {
     //console.log('get commission retport ');
     return this.service.getShopUserCommissions(data);
   }
+
+  getTaxReport(data: GetTicketsRequest) {
+    // console.log('get tickets ');
+    return this.service.taxReport(data);
+  }
 }
