@@ -319,6 +319,7 @@ export interface BetSlip {
   eventPrefix: string;
   isBonus?: boolean | undefined;
   id?: number | undefined;
+  displayName?: string | undefined;
 }
 
 export interface Combo {
@@ -341,6 +342,7 @@ export interface PlaceBetResponse {
   status: number;
   message: string;
   data?: BetHistory | undefined;
+  events?: string | undefined;
 }
 
 export interface BetHistoryRequest {
@@ -523,6 +525,8 @@ export interface BettingServiceClient {
 
   betHistory(request: BetHistoryRequest): Observable<BetHistoryResponse>;
 
+  simulatedBetHistory(request: BetHistoryRequest): Observable<BetHistoryResponse>;
+
   findBet(request: FindBetRequest): Observable<CommonResponseObj>;
 
   updateBet(request: UpdateBetRequest): Observable<UpdateBetResponse>;
@@ -598,6 +602,10 @@ export interface BettingServiceController {
   ): Promise<PlaceCasinoBetResponse> | Observable<PlaceCasinoBetResponse> | PlaceCasinoBetResponse;
 
   betHistory(
+    request: BetHistoryRequest,
+  ): Promise<BetHistoryResponse> | Observable<BetHistoryResponse> | BetHistoryResponse;
+
+  simulatedBetHistory(
     request: BetHistoryRequest,
   ): Promise<BetHistoryResponse> | Observable<BetHistoryResponse> | BetHistoryResponse;
 
@@ -680,6 +688,7 @@ export function BettingServiceControllerMethods() {
       "settleVirtualBet",
       "cancelCasinoBet",
       "betHistory",
+      "simulatedBetHistory",
       "findBet",
       "updateBet",
       "getProbabilityFromBetId",

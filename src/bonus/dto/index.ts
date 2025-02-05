@@ -70,7 +70,7 @@ export class SwaggerCreateBonusRequest {
 
   @ApiProperty({ description: 'This bonus can only be used when each selection in a betslip has atleast this number of odds' })
   minimumOddsPerEvent: number;
-
+   
   @ApiProperty({ description: 'This bonus can only be used when total odds in a betslip has atleast this number of odds' })
   minimumTotalOdds: number;
 
