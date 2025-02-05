@@ -12,6 +12,59 @@ import { Struct } from "./google/protobuf/struct.pb";
 
 export const protobufPackage = "gaming";
 
+export interface GetGamesRequest {
+  /** Optional array of game IDs for filtering */
+  gameIds: number[];
+}
+
+export interface CreateBonusRequest {
+  clientId: number;
+  bonusType: string;
+  creditType: string;
+  duration: number;
+  minimumSelection: number;
+  minimumOddsPerEvent: number;
+  minimumTotalOdds: number;
+  applicableBetType: string;
+  maximumWinning: number;
+  bonusAmount: number;
+  status?: number | undefined;
+  created?: string | undefined;
+  updated?: string | undefined;
+  id?: number | undefined;
+  minimumLostGames: number;
+  rolloverCount: number;
+  name: string;
+  minimumEntryAmount: number;
+  maxAmount: number;
+  product: string;
+  gameId: string[];
+  casinoSpinCount?: number | undefined;
+  providerId?: number | undefined;
+  bonusId?: number | undefined;
+}
+
+export interface CreateBonusResponse {
+  bonusId: number;
+  status: number;
+  description: string;
+  success: boolean;
+}
+
+export interface QtechCallbackRequest {
+  clientId: number;
+  playerId: string;
+  gameId: string;
+  passkey: string;
+  walletSessionId: string;
+  body?: string | undefined;
+  action: string;
+}
+
+export interface AddGameToCategoriesResponse {
+  gameCategories: GameCategory[];
+}
+
 export interface RegisterBonusRequest {
   clientId: number;
   gameId: string;
@@ -411,10 +464,10 @@ export interface Promotion {
   endDate: string;
   status: string;
   targetUrl?: string | undefined;
+  clientId: number;
 }
 
 export interface CreatePromotionDto {
-  /** int32 clientId = 1; */
   id?: number | undefined;
   title: string;
   imageUrl: string;
@@ -423,6 +476,14 @@ export interface CreatePromotionDto {
   endDate: string;
   type: string;
   targetUrl?: string | undefined;
+  file?: string | undefined;
+  clientId: number;
+}
+
+export interface CreatePromotionRequest {
+  id?: number | undefined;
+  metadata: CreatePromotionDto | undefined;
+  file?: string | undefined;
 }
 
 export interface Promotions {
@@ -438,11 +499,27 @@ export interface AddGameToCategoriesDto {
   categories: number[];
 }
 
+export interface AddGameToTournamentDto {
+  tournamentId: number;
+  gameId: number[];
+}
+
 export interface GameCategory {
   gameId: number;
   gameTitle: string;
   categoryId: number;
   categoryName: string;
+}
+
+export interface GameTournament {
+  gameId: number;
+  gameTitle: string;
+  tournamentId: number;
+  tournamentTitle: string;
+}
+
+export interface TournamentResponse {
+  gameTournament: GameTournament[];
 }
 
 export interface Tournament {
@@ -454,10 +531,7 @@ export interface Tournament {
   startDate: string;
   endDate: string;
   status: string;
-}
-
-export interface AddGameToCategoriesResponse {
-  gameCategories: GameCategory[];
+  categoryId: number;
 }
 
 export interface CreateTournamentDto {
@@ -508,6 +582,10 @@ export interface GamingServiceClient {
 
   removeGameToCategories(request: AddGameToCategoriesDto): Observable<Empty>;
 
+  addTournamentGame(request: AddGameToTournamentDto): Observable<TournamentResponse>;
+
+  removeTournamentGame(request: AddGameToTournamentDto): Observable<Empty>;
+
   findOneCategory(request: FindOneCategoryDto): Observable<Category>;
 
   updateCategory(request: SaveCategoryRequest): Observable<Category>;
@@ -536,23 +614,31 @@ export interface GamingServiceClient {
 
   findAllProviders(request: Empty): Observable<CommonResponse>;
 
-  getGames(request: Empty): Observable<CommonResponseArray>;
+  getGames(request: GetGamesRequest): Observable<CommonResponseArray>;
 
-  createPromotion(request: CreatePromotionDto): Observable<Promotion>;
+  createPromotion(request: CreatePromotionRequest): Observable<Promotion>;
 
   findPromotions(request: Empty): Observable<Promotions>;
 
   findOnePromotion(request: FindOnePromotionDto): Observable<Promotion>;
 
-  updatePromotion(request: CreatePromotionDto): Observable<Promotion>;
+  updatePromotion(request: CreatePromotionRequest): Observable<Promotion>;
 
   removePromotion(request: FindOnePromotionDto): Observable<Empty>;
+
+  handleCasinoBonus(request: CreateBonusRequest): Observable<CreateBonusResponse>;
+
+  handleCasinoJackpot(request: Empty): Observable<CommonResponse>;
+
+  handleCasinoJackpotWinners(request: Empty): Observable<CommonResponse>;
 
   startGame(request: StartGameDto): Observable<StartGameResponse>;
 
   queryGames(request: Observable<PaginationDto>): Observable<Games>;
 
   handleCallback(request: CallbackGameDto): Observable<CallbackResponse>;
+
+  handleQtechCallback(request: QtechCallbackRequest): Observable<CallbackResponse>;
 
   xpressLogin(request: XpressRequest): Observable<XpressResponse>;
 
@@ -594,6 +680,12 @@ export interface GamingServiceController {
 
   removeGameToCategories(request: AddGameToCategoriesDto): Promise<Empty> | Observable<Empty> | Empty;
 
+  addTournamentGame(
+    request: AddGameToTournamentDto,
+  ): Promise<TournamentResponse> | Observable<TournamentResponse> | TournamentResponse;
+
+  removeTournamentGame(request: AddGameToTournamentDto): Promise<Empty> | Observable<Empty> | Empty;
+
   findOneCategory(request: FindOneCategoryDto): Promise<Category> | Observable<Category> | Category;
 
   updateCategory(request: SaveCategoryRequest): Promise<Category> | Observable<Category> | Category;
@@ -622,23 +714,37 @@ export interface GamingServiceController {
 
   findAllProviders(request: Empty): Promise<CommonResponse> | Observable<CommonResponse> | CommonResponse;
 
-  getGames(request: Empty): Promise<CommonResponseArray> | Observable<CommonResponseArray> | CommonResponseArray;
+  getGames(
+    request: GetGamesRequest,
+  ): Promise<CommonResponseArray> | Observable<CommonResponseArray> | CommonResponseArray;
 
-  createPromotion(request: CreatePromotionDto): Promise<Promotion> | Observable<Promotion> | Promotion;
+  createPromotion(request: CreatePromotionRequest): Promise<Promotion> | Observable<Promotion> | Promotion;
 
   findPromotions(request: Empty): Promise<Promotions> | Observable<Promotions> | Promotions;
 
   findOnePromotion(request: FindOnePromotionDto): Promise<Promotion> | Observable<Promotion> | Promotion;
 
-  updatePromotion(request: CreatePromotionDto): Promise<Promotion> | Observable<Promotion> | Promotion;
+  updatePromotion(request: CreatePromotionRequest): Promise<Promotion> | Observable<Promotion> | Promotion;
 
   removePromotion(request: FindOnePromotionDto): Promise<Empty> | Observable<Empty> | Empty;
+
+  handleCasinoBonus(
+    request: CreateBonusRequest,
+  ): Promise<CreateBonusResponse> | Observable<CreateBonusResponse> | CreateBonusResponse;
+
+  handleCasinoJackpot(request: Empty): Promise<CommonResponse> | Observable<CommonResponse> | CommonResponse;
+
+  handleCasinoJackpotWinners(request: Empty): Promise<CommonResponse> | Observable<CommonResponse> | CommonResponse;
 
   startGame(request: StartGameDto): Promise<StartGameResponse> | Observable<StartGameResponse> | StartGameResponse;
 
   queryGames(request: Observable<PaginationDto>): Observable<Games>;
 
   handleCallback(request: CallbackGameDto): Promise<CallbackResponse> | Observable<CallbackResponse> | CallbackResponse;
+
+  handleQtechCallback(
+    request: QtechCallbackRequest,
+  ): Promise<CallbackResponse> | Observable<CallbackResponse> | CallbackResponse;
 
   xpressLogin(request: XpressRequest): Promise<XpressResponse> | Observable<XpressResponse> | XpressResponse;
 
@@ -668,6 +774,8 @@ export function GamingServiceControllerMethods() {
       "fetchCategories",
       "addGameToCategories",
       "removeGameToCategories",
+      "addTournamentGame",
+      "removeTournamentGame",
       "findOneCategory",
       "updateCategory",
       "deleteCategory",
@@ -688,8 +796,12 @@ export function GamingServiceControllerMethods() {
       "findOnePromotion",
       "updatePromotion",
       "removePromotion",
+      "handleCasinoBonus",
+      "handleCasinoJackpot",
+      "handleCasinoJackpotWinners",
       "startGame",
       "handleCallback",
+      "handleQtechCallback",
       "xpressLogin",
       "xpressBalance",
       "xpressDebit",

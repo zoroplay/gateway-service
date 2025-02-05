@@ -1,6 +1,7 @@
 /* eslint-disable prettier/prettier */
-import { ApiProperty } from '@nestjs/swagger';
-import { Timestamp } from 'typeorm';  
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { IsIn } from 'class-validator';
+import { Timestamp } from 'typeorm';
 
 export class SwaggerSyncGameDto {
   @ApiProperty({
@@ -8,6 +9,30 @@ export class SwaggerSyncGameDto {
     example: 'tada',
   })
   provider: string;
+}
+
+export class SwaggerQtechTransactionDto {
+  @ApiProperty({ description: 'Transaction type, either DEBIT or CREDIT' })
+  @IsIn(['DEBIT', 'CREDIT'])
+  txnType: string;
+
+  @ApiProperty({ description: 'Player ID' })
+  playerId: number;
+
+  @ApiProperty({ description: 'Transaction amount' })
+  amount: number;
+
+  @ApiProperty({ description: 'Currency code' })
+  currency: string;
+
+  @ApiProperty({ description: 'Round ID' })
+  roundId: string;
+
+  @ApiProperty({ description: 'Game id' })
+  gameId: string;
+
+  @ApiProperty({ description: 'Game id' })
+  clientId?: string
 }
 
 export class SwaggerStartGameDto {
@@ -93,6 +118,12 @@ export class SwaggerStartGameDto {
     example: 'free_rounds',
   })
   bonusType: string;
+
+  @ApiPropertyOptional({
+    description: 'bonusId to load game',
+    example: 12,
+  })
+  bonusId: number;
 }
 
 export class SwaggerStartGameResponseDto {
@@ -352,7 +383,6 @@ export class SwaggerCreateGameDto {
 //   Portalname: string;
 // }
 
-
 export class SaveCategoryRequestDto {
   @ApiProperty({
     description: 'The ID of the client associated with the category.',
@@ -366,7 +396,6 @@ export class SaveCategoryRequestDto {
     required: false,
   })
   id?: number;
-
 
   @ApiProperty({
     description: 'The name of the category.',
@@ -382,7 +411,7 @@ export class SaveCategoryRequestDto {
 
   @ApiProperty({
     required: false,
-    example: 1
+    example: 1,
   })
   priority?: boolean;
 }
@@ -427,13 +456,13 @@ export class UpdateGameRequestDto {
   url: string;
 
   @ApiProperty({
-    description: 'Path to the game\'s image.',
+    description: "Path to the game's image.",
     example: '/images/game-thumbnail.png',
   })
   imagePath: string;
 
   @ApiProperty({
-    description: 'Path to the game\'s banner image.',
+    description: "Path to the game's banner image.",
     example: '/images/game-banner.png',
   })
   bannerPath: string;
@@ -457,13 +486,11 @@ export class UpdateGameRequestDto {
   providerId: number;
 }
 
-
 export class AddGameCategoriesDto {
   @ApiProperty({
     description: 'ID of the game to which categories will be added',
     example: 1,
   })
-
   gameId: number;
 
   @ApiProperty({
@@ -474,12 +501,27 @@ export class AddGameCategoriesDto {
   categories: number[]; // Array of category IDs
 }
 
+export class AddTournamentGameDto {
+  @ApiProperty({
+    description: 'ID of the game to which categories will be added',
+    example: 1,
+  })
+  tournamentId: number;
+
+  @ApiProperty({
+    description: 'List of category IDs to associate with the game',
+    example: [2, 3, 4],
+    type: [Number], // Indicates an array of numbers
+  })
+  gameId: number[]; // Array of category IDs
+}
+
 export class CreatePromotionRequestDto {
-  // @ApiProperty({
-  //   description: 'The unique ID of the client creating the promotion',
-  //   example: 123,
-  // })
-  // clientId: number;
+  @ApiProperty({
+    description: 'The unique ID of the client creating the promotion',
+    example: 123,
+  })
+  clientId: number;
 
   @ApiProperty({
     description: 'The unique ID of the promotion (optional)',
@@ -534,6 +576,67 @@ export class CreatePromotionRequestDto {
   })
   targetUrl: string;
 }
+
+// export class CreatePromotionRequestDto {
+//   @ApiProperty({
+//     description: 'The title of the promotion',
+//     example: 'Winter Sale',
+//   })
+//   title: string;
+
+//   @ApiProperty({
+//     description: 'Content or description of the promotion',
+//     example: 'Get up to 50% off on all items this winter!',
+//   })
+//   content: string;
+
+//   @ApiProperty({
+//     description: 'Start date of the promotion in a timestamp format',
+//     example: '2024-12-01T00:00:00.000Z',
+//     type: 'string',
+//     format: 'date-time',
+//   })
+//   startDate: string;
+
+//   @ApiProperty({
+//     description: 'End date of the promotion in a timestamp format',
+//     example: '2025-01-01T23:59:59.000Z',
+//     type: 'string',
+//     format: 'date-time',
+//   })
+//   endDate: string;
+
+//   @ApiProperty({ description: 'The type of promotion', example: 'Discount' })
+//   type: string;
+
+//   @ApiProperty({
+//     description: 'The target URL of the tournament',
+//     example: 'https://example.com',
+//   })
+//   targetUrl: string;
+
+//   static getProperties() {
+//     return {
+//       title: { type: 'string', example: 'Winter Sale' },
+//       content: {
+//         type: 'string',
+//         example: 'Get up to 50% off on all items this winter!',
+//       },
+//       startDate: {
+//         type: 'string',
+//         format: 'date-time',
+//         example: '2024-12-01T00:00:00.000Z',
+//       },
+//       endDate: {
+//         type: 'string',
+//         format: 'date-time',
+//         example: '2025-01-01T23:59:59.000Z',
+//       },
+//       type: { type: 'string', example: 'Discount' },
+//       targetUrl: { type: 'string', example: 'https://example.com' },
+//     };
+//   }
+// }
 
 export class CreateTournamentRequestDto {
   // @ApiProperty({
@@ -590,7 +693,6 @@ export class CreateTournamentRequestDto {
   type: string;
 }
 
-
 export class FindPromotionDto {
   @ApiProperty({
     description: 'The unique ID of the category to retrieve.',
@@ -598,8 +700,6 @@ export class FindPromotionDto {
   })
   id: number;
 }
-
-
 
 export class SwaggerOKPromotionResponse {
   @ApiProperty({
@@ -641,8 +741,7 @@ export class SwaggerOKPromotionResponse {
     description: 'game status',
   })
   status: string;
-  
- 
+
   @ApiProperty({
     description: 'date game was created',
   })

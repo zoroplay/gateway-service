@@ -20,15 +20,24 @@ import {
   UpdateGameDto,
   CreateTournamentDto,
   FindOneTournamentDto,
+  QtechCallbackRequest,
+  CreatePromotionRequest,
+  Promotion,
+  AddGameToTournamentDto,
+  GetGamesRequest,
 } from 'src/interfaces/gaming.pb';
 import { ClientGrpc } from '@nestjs/microservices';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, of } from 'rxjs';
+import { FirebaseService } from 'src/common/services/firebaseUpload';
 
 @Injectable()
 export class GamingService implements OnModuleInit {
   private service: GamingServiceClient;
 
-  constructor(@Inject(protobufPackage) private client: ClientGrpc) {}
+  constructor(
+    @Inject(protobufPackage) private client: ClientGrpc,
+    private readonly firebaseService: FirebaseService
+  ) {}
 
   onModuleInit() {
     this.service =
@@ -60,9 +69,9 @@ export class GamingService implements OnModuleInit {
     return firstValueFrom(this.service.findAllGames({}));
   }
 
-  async getGames() {
+  async getGames(request?: GetGamesRequest) {
     //('finding all games');
-    const val = await firstValueFrom(this.service.getGames({}));
+    const val = await firstValueFrom(this.service.getGames(request));
     return val;
   }
 
@@ -113,13 +122,61 @@ export class GamingService implements OnModuleInit {
     return response;
   }
 
-  async createPromotion(createPromotionDto: CreatePromotionDto) {
-    console.log('createPromotionDto', createPromotionDto);
-    const promotion = await firstValueFrom(
-      this.service.createPromotion(createPromotionDto),
-    );
-    console.log('promotion1', promotion);
-    return promotion;
+  // async createPromotion(
+  //   createPromotionDto: CreatePromotionDto,
+  //   file?: Express.Multer.File, // Optional file input
+  // ): Promise<Promotion> {
+  
+  //   try {
+  //     // Send the request to the gRPC service
+  //     const promotion = await firstValueFrom(
+  //       this.service.createPromotion(createPromotionDto),
+  //     );
+
+  //     console.log('promotion:', promotion);
+  //     return promotion;
+  //   } catch (error) {
+  //     console.error('Error in createPromotion:', error);
+  //     throw new Error('Failed to create promotion. Please try again later.');
+  //   }
+  // }
+
+  async createPromotion(
+    createPromotionDto: CreatePromotionDto,
+    file?: any, // Optional file input
+  ): Promise<Promotion> {
+    console.log('createPromotionDto:', createPromotionDto);
+    console.log('file:', file);
+  
+    let fileBase64: string | undefined;
+    let fileString: string | undefined = createPromotionDto.file.toString();
+  
+    if (fileString) {
+      if (fileString.startsWith("data:image/")) {
+        fileBase64 = fileString.replace(/^data:image\/\w+;base64,/, '');
+      // Convert the file buffer to a Base64 string
+    } 
+  }
+    // Construct the gRPC request payload
+    const createPromotionRequest: CreatePromotionRequest = {
+      metadata: createPromotionDto, // Metadata from DTO
+      file: fileBase64, // Base64 file string or undefined
+    };
+  
+    console.log('createPromotionRequest:', createPromotionRequest);
+  
+    try {
+      // Send the request to the gRPC service
+      const promotion = await firstValueFrom(
+        this.service.createPromotion(createPromotionRequest),
+      );
+  
+      console.log('promotion:', promotion);
+      return promotion;
+    } catch (error) {
+      console.error('Error in createPromotion:', error);
+      throw new Error('Failed to create promotion. Please try again later.');
+    }
   }
 
   async findPromotions() {
@@ -132,14 +189,71 @@ export class GamingService implements OnModuleInit {
     return firstValueFrom(this.service.findOnePromotion(payload));
   }
 
-  async updatePromotion(request: CreatePromotionDto) {
-    //(createGameDto);
-    return firstValueFrom(this.service.updatePromotion(request));
+  // async updatePromotion(
+  //   createPromotionDto: CreatePromotionDto,
+  // ): Promise<Promotion> {
+  
+  //   try {
+  //     // Send the request to the gRPC service
+  //     const promotion = await firstValueFrom(
+  //       this.service.updatePromotion(createPromotionDto),
+  //     );
+
+  //     console.log('promotion:', promotion);
+  //     return promotion;
+  //   } catch (error) {
+  //     console.error('Error in createPromotion:', error);
+  //     throw new Error('Failed to create promotion. Please try again later.');
+  //   }
+  // }
+
+  async updatePromotion(
+    createPromotionDto: CreatePromotionDto,
+    file?: Express.Multer.File, // Optional file input
+  ): Promise<Promotion> {
+    console.log('createPromotionDto:', createPromotionDto);
+    console.log('file:', file);
+  
+    let fileBase64: string | undefined;
+    
+
+
+    if (file) {
+      let fileString: string | undefined = file.toString();
+
+      if (file.buffer) {
+        // Convert the file buffer to a Base64 string
+        fileBase64 = file.buffer.toString('base64');
+      } else if (fileString?.startsWith("data:image/")) {
+        fileBase64 = fileString.replace(/^data:image\/\w+;base64,/, '');
+      }
+    }
+  
+    // Construct the gRPC request payload
+    const createPromotionRequest: CreatePromotionRequest = {
+      metadata: createPromotionDto, // Metadata from DTO
+      file: fileBase64, // Base64 file string or undefined
+    };
+    
+  
+    console.log('createPromotionRequest:', createPromotionRequest);
+  
+    try {
+      // Send the request to the gRPC service
+      const promotion = await firstValueFrom(
+        this.service.updatePromotion(createPromotionRequest),
+      );
+  
+      console.log('promotion:', promotion);
+      return promotion;
+    } catch (error) {
+      console.error('Error in createPromotion:', error);
+      throw new Error('Failed to create promotion. Please try again later.');
+    }
   }
 
   async removePromotion(request: FindOnePromotionDto) {
     console.log('Payload sent to gRPC client for deletion:', request);
-
     const response = await firstValueFrom(
       this.service.removePromotion(request),
     );
@@ -156,7 +270,7 @@ export class GamingService implements OnModuleInit {
   async sync(syncGameDto: SyncGameDto) {
     console.log('syncing games');
     const games = await firstValueFrom(this.service.syncGames(syncGameDto));
-    console.log("QTECH-LOG", games);
+    console.log('QTECH-LOG', games);
     return {
       games,
     };
@@ -172,7 +286,6 @@ export class GamingService implements OnModuleInit {
   }
 
   async handleGamesCallback(request: CallbackGameDto) {
-    console.log('request for ', request.action);
     // //(request);
     const resp = await firstValueFrom(this.service.handleCallback(request));
 
@@ -180,6 +293,31 @@ export class GamingService implements OnModuleInit {
 
     return resp;
   }
+
+
+  async handleQtechGamesCallback(request: QtechCallbackRequest) {
+    console.log('Q-tech service start');
+    // //(request);
+    const resp = await firstValueFrom(
+      this.service.handleQtechCallback(request),
+    );
+
+    console.log('respVERIFY', resp);
+
+    return resp;
+  }
+
+  // async handleQtechRollback(request: QtechRollbackRequest) {
+  //   console.log('Q-tech Roll Gate Func');
+  //   // //(request);
+  //   const resp = await firstValueFrom(
+  //     this.service.handleQtechRollback(request),
+  //   );
+
+  //   console.log('resp', resp);
+
+  //   return resp;
+  // }
 
   async xpressLogin(data: XpressRequest) {
     //('xpress login');
@@ -275,10 +413,17 @@ export class GamingService implements OnModuleInit {
     return response;
   }
 
+  async addTournamentGame(addGameTournamentDto: AddGameToTournamentDto) {
+    console.log('addGameToCategories');
+    return firstValueFrom(this.service.addTournamentGame(addGameTournamentDto));
+  }
 
-
-
-  
+  async removeTournamentGame(removeGameTournamenDto: AddGameToTournamentDto) {
+    console.log('removeGameToCategories');
+    return firstValueFrom(
+      this.service.removeTournamentGame(removeGameTournamenDto),
+    );
+  }
 
   formatNumber(num) {
     if (num > 0 && num % 1 === 0) {
@@ -287,4 +432,57 @@ export class GamingService implements OnModuleInit {
       return parseFloat(num.toFixed(2));
     }
   }
+  async uploadFile(
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    //@ts-ignore
+    file: Express.Multer.File,
+  ){
+
+    const folderName = 'files-upload'; //
+    const fileName = `${Date.now()}_uploaded-file`;
+
+
+    let fileBase64: string | undefined;
+    let fileString: string | undefined = file.toString();
+
+    console.log('fileString:', fileString);
+  
+    if (file) {
+      // Convert the file buffer to a Base64 string
+      fileBase64 = file.buffer.toString('base64');
+    } else if (fileString.startsWith("data:image/")) {
+        fileBase64 = fileString.replace(/^data:image\/\w+;base64,/, '');
+    } else {
+      fileBase64; // Assume it's already a clean Base64 string
+    }
+
+    try {
+      const file_url = await this.firebaseService.uploadFileToFirebase(folderName, fileName, fileBase64);
+      console.log('file_url:', file_url);
+
+      return { file_url };
+
+    } catch (error) {
+      return {
+        success: false,
+        message: 'Can not upload image now, try again later...',
+        error: error.message
+      }
+    }
+  }
+
+  async handleCasinoJackpot() {
+    console.log('handleCasinoJackpot');
+    return firstValueFrom(
+      this.service.handleCasinoJackpot({}),
+    );
+  }
+
+  async handleCasinoJackpotWinners() {
+    console.log('handleCasinoJackpotWinners');
+    return firstValueFrom(
+      this.service.handleCasinoJackpotWinners({}),
+    );
+  }
+
 }

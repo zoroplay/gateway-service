@@ -17,6 +17,7 @@ import { AppService } from 'src/app.service';
 import { RetailService } from '../retail/retail.service';
 import { NotificationModule } from 'src/notification/notification.module';
 import { NotificationService } from 'src/notification/notification.service';
+import { FirebaseService } from 'src/common/services/firebaseUpload';
 
 @Module({
   imports: [
@@ -42,7 +43,7 @@ import { NotificationService } from 'src/notification/notification.service';
     RolesController,
     SettingsController,
   ],
-  providers: [AppService, AuthService, RetailService],
-  exports: [AuthService, RetailService],
+  providers: [AppService, AuthService, RetailService, FirebaseService],
+  exports: [AuthService, RetailService, FirebaseService],
 })
 export class IdentityModule {}

@@ -7,22 +7,27 @@ import {
   Post,
   Put,
   Query,
+  UploadedFile,
+  UseInterceptors,
 } from '@nestjs/common';
-import { ApiBody, ApiOkResponse, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiConsumes, ApiOkResponse, ApiQuery, ApiTags } from '@nestjs/swagger';
 import {
   AddGameToCategoriesDto,
+  AddGameToTournamentDto,
   CreateGameDto,
   CreatePromotionDto,
   CreateProviderDto,
   CreateTournamentDto,
   FindOneCategoryDto,
   FindOneTournamentDto,
+  GetGamesRequest,
   SaveCategoryRequest,
   SyncGameDto,
   UpdateGameDto,
 } from 'src/interfaces/gaming.pb';
 import {
   AddGameCategoriesDto,
+  AddTournamentGameDto,
   CreatePromotionRequestDto,
   CreateTournamentRequestDto,
   // CreatePromotionDto,
@@ -40,6 +45,7 @@ import {
   UpdateGameRequestDto,
 } from '../dto';
 import { GamingService } from '../gaming.service';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @ApiTags('BackOffice APIs')
 @Controller('admin/games')
@@ -52,14 +58,29 @@ export class GamingAdminController {
     return this.gamingService.findAll();
   }
 
-  @Get('get-games')
-  @ApiOkResponse({ type: [SwaggerOKGameResponse] })
-  async getGames() {
-    const val = await this.gamingService.getGames();
+  // @Get('get-games')
+  // @ApiOkResponse({ type: [SwaggerOKGameResponse] })
+  // @ApiQuery({ name: 'gameIds', required: false, isArray: true, type: Number })
+  // async getGames() {
+  //   const val = await this.gamingService.getGames();
 
-    console.log('val', val);
-    return val;
-  }
+  //   console.log('val', val);
+  //   return val;
+  // }
+
+
+@Get('get-games')
+@ApiOkResponse({ type: [SwaggerOKGameResponse] })
+@ApiQuery({ name: 'gameIds', required: false, isArray: true, type: Number })
+async getGames(@Query('gameIds') gameIds?: string): Promise<any> {
+  const request: GetGamesRequest = {
+    gameIds: gameIds ? gameIds.split(',').map(Number) : [], // Construct the GetGamesRequest object
+  };
+
+  const val = await this.gamingService.getGames(request); // Pass the request object to the service
+  console.log('val', val);
+  return val;
+}
 
   @Put('/update-game')
   @ApiBody({ type: UpdateGameRequestDto })
@@ -123,21 +144,82 @@ export class GamingAdminController {
     return this.gamingService.deleteCategory(payload);
   }
 
-  @Post('/add-promotion')
-  @ApiBody({ type: CreatePromotionRequestDto })
-  @ApiOkResponse({ type: [SwaggerOKPromotionResponse] })
-  async createPromotion(@Body() payload: CreatePromotionDto) {
-    console.log('payload', payload);
-    const promotion = await this.gamingService.createPromotion(payload);
-    console.log('promotion', promotion);
-    return promotion;
-  }
+@Post('/add-promotion')
+@ApiConsumes('multipart/form-data') // Indicate multipart/form-data for file uploads
+@ApiBody({
+  schema: {
+    type: 'object',
+    properties: {
+      title: { type: 'string', example: 'Promotion Title' },
+      clientId: { type: 'number', example: 4 },
+      imageUrl: { type: 'string', example: 'http://example.com/image.png' },
+      content: { type: 'string', example: 'This is the promotion content.' },
+      startDate: { type: 'string', format: 'date-time', example: '2025-01-15T00:00:00Z' },
+      endDate: { type: 'string', format: 'date-time', example: '2025-01-20T00:00:00Z' },
+      type: { type: 'string', example: 'Promotion Type' },
+      targetUrl: { type: 'string', example: 'http://example.com' },
+      file: {
+        type: 'string',
+        format: 'binary', // Specifies that this is a file upload field
+      },
+    },
+    required: ['title', 'content', 'startDate', 'endDate', 'type', 'file'], // Specify required fields
+  },
+})
+@ApiOkResponse({ type: [SwaggerOKPromotionResponse] })
+@UseInterceptors(FileInterceptor('file'))
+async createPromotion(@Body() payload: CreatePromotionDto, @UploadedFile() file: Express.Multer.File) {
+  console.log('payload', payload);
+  const promotion = await this.gamingService.createPromotion(payload, payload.file);
+  console.log('promotion', promotion);
+  return promotion;
+}
 
-  @Put('/update-promotion')
-  @ApiBody({ type: CreatePromotionRequestDto })
-  updatePromotion(@Body() payload: CreatePromotionDto) {
-    return this.gamingService.updatePromotion(payload);
-  }
+
+
+@Post('/update-promotion')
+@ApiConsumes('multipart/form-data') // Indicate multipart/form-data for file uploads
+@ApiBody({
+  schema: {
+    type: 'object',
+    properties: {
+      id: { type: 'number', example: 1 },
+      title: { type: 'string', example: 'Promotion Title' },
+      imageUrl: { type: 'string', example: 'http://example.com/image.png' },
+      content: { type: 'string', example: 'This is the promotion content.' },
+      startDate: { type: 'string', format: 'date-time', example: '2025-01-15T00:00:00Z' },
+      endDate: { type: 'string', format: 'date-time', example: '2025-01-20T00:00:00Z' },
+      type: { type: 'string', example: 'Promotion Type' },
+      targetUrl: { type: 'string', example: 'http://example.com' },
+      file: {
+        type: 'string',
+        format: 'binary', // Specifies that this is a file upload field
+      },
+    },
+    required: ['title', 'content', 'startDate', 'endDate', 'type', 'id'], // Specify required fields
+  },
+})
+@ApiOkResponse({ type: [SwaggerOKPromotionResponse] })
+@UseInterceptors(FileInterceptor('file'))
+async updatePromotion(@Body() payload: CreatePromotionDto, @UploadedFile() file?: Express.Multer.File) {
+  console.log('payload', payload);
+  const promotion = await this.gamingService.updatePromotion(payload, file);
+  console.log('promotion', promotion);
+  return promotion;
+}
+
+
+// @Post('/update-promotion')
+// @ApiBody({ type: CreatePromotionRequestDto })
+// @ApiOkResponse({ type: [SwaggerOKPromotionResponse] })
+// @UseInterceptors(FileInterceptor('file'))
+// async updatePromotion(@Body() payload: CreatePromotionDto) {
+//   console.log('payload', payload);
+//   const promotion = await this.gamingService.updatePromotion(payload);
+//   console.log('promotion', promotion);
+//   return promotion;
+// }
+
 
   @Delete('promotion')
   @ApiQuery({
@@ -234,4 +316,23 @@ export class GamingAdminController {
     const payload: FindOneTournamentDto = { id: parseInt(id, 10) }; // Ensure it matches the expected structure
     return this.gamingService.findOneTournament(payload);
   }
+
+  @Post('/add-tournament-game')
+  @ApiBody({ type: AddTournamentGameDto })
+  @ApiOkResponse({ type: [SwaggerOKGameResponse] })
+  addTournamentGame(@Body() payload: AddGameToTournamentDto) {
+    console.log('here');
+    console.log('payload', payload);
+    return this.gamingService.addTournamentGame(payload);
+  }
+
+  @Delete('/delete-tournament-game')
+  @ApiBody({ type: AddTournamentGameDto })
+  @ApiOkResponse({ type: [SwaggerOKGameResponse] })
+  removeTournamentGame(@Body() payload: AddGameToTournamentDto) {
+    return this.gamingService.removeTournamentGame(payload);
+  }
 }
+
+
+
