@@ -45,6 +45,7 @@ import {
 } from '../interfaces/betting.pb';
 import { SwaggerCommonResponse } from 'src/identity/dto';
 import { AuthGuard } from 'src/identity/auth/auth.guard';
+import { IRequestResponse } from 'src/interfaces/request-response.dto';
 
 @ApiTags('Betting APIs')
 @Controller('bets')
@@ -267,6 +268,19 @@ export class BettingController {
     } catch (error) {
       console.error(error);
     }
+  }
+
+  @Get('/pay-out/:bet_id')
+  @ApiOperation({
+    summary: 'Get probability of the supplied betID',
+    description: 'This endpoints retrieve probability of the supplied betID',
+  })
+  @ApiParam({ name: 'bet_id', type: 'number' })
+  @ApiOkResponse({ type: IRequestResponse })
+  PayoutBet(@Param() params: any) {
+    return this.bettingService.payoutTicket({
+      betID: params.bet_id,
+    });
   }
 
   @Post('/reporting/gaming-activity')
