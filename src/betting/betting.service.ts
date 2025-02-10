@@ -130,4 +130,9 @@ export class BettingService implements OnModuleInit {
     // console.log('get tickets ');
     return this.service.taxReport(data);
   }
+
+  payoutTicket(data: BetID) {
+    // console.log('get tickets ');
+    return this.service.payoutTicket(data);
+  }
 }

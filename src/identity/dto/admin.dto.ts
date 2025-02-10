@@ -104,6 +104,9 @@ export class SwaggerRegistrationReportRequest {
 
     @ApiProperty({ description: 'No. of rows per page', example: 100 })
     limit?: number;
+
+    @ApiProperty({ description: 'Type of report', example: 'inactive | frozen' })
+    reportType?: string;
 }
 
 export class SwaggerSaveSegmentRequest {
