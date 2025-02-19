@@ -27,12 +27,14 @@ import {
 import { Response } from 'express';
 import { GamingService } from './gaming.service';
 import {
+  StartDto,
   StartGameDto,
 } from 'src/interfaces/gaming.pb';
 import {
   SwaggerOKGameResponse,
   SwaggerStartGameDto,
   SwaggerStartGameResponseDto,
+  SwaggerStartSmatGameDto,
 } from './dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiFile } from 'src/common/file-interceptor';
@@ -106,6 +108,23 @@ export class GamingController {
       startGameDto.language = 'en';
     }
     return this.gamingService.startGame(startGameDto);
+  }
+
+  @Post('/:clientId/start-url')
+  @ApiBody({ type: SwaggerStartSmatGameDto })
+  @ApiOkResponse({ type: SwaggerStartGameResponseDto })
+  @ApiParam({ name: 'clientId', description: 'SBE CLient ID' })
+  constructSmatGameUrl(
+    @Body() startGameDto: StartDto,
+    @Param('clientId') clientId,
+  ) {
+    startGameDto.clientId = parseInt(clientId);
+
+    // Set default language if it is not provided
+    // if (!startGameDto.language) {
+    //   startGameDto.language = 'en';
+    // }
+    return this.gamingService.startSmatGame(startGameDto);
   }
 
   @Get('/:clientId/:provider_id/callback')
