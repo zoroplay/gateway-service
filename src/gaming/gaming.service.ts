@@ -25,6 +25,7 @@ import {
   Promotion,
   AddGameToTournamentDto,
   GetGamesRequest,
+  StartDto,
 } from 'src/interfaces/gaming.pb';
 import { ClientGrpc } from '@nestjs/microservices';
 import { firstValueFrom, of } from 'rxjs';
@@ -280,6 +281,15 @@ export class GamingService implements OnModuleInit {
     // //('start game', request);
     console.log('start-service', request);
     const resp = await firstValueFrom(this.service.startGame(request));
+    console.log('resp', resp);
+
+    return resp;
+  }
+
+  async startSmatGame(request: StartDto) {
+    // //('start game', request);
+    console.log('start-service', request);
+    const resp = await firstValueFrom(this.service.startSmatGame(request));
     console.log('resp', resp);
 
     return resp;
