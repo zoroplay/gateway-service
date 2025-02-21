@@ -23,6 +23,14 @@ export interface StartDto {
   token: string;
 }
 
+export interface SmatVirtualCallbackRequest {
+  clientId: number;
+  action?: string | undefined;
+  body?: string | undefined;
+  playerId?: string | undefined;
+  sessionId?: string | undefined;
+}
+
 export interface CreateBonusRequest {
   clientId: number;
   bonusType: string;
@@ -646,6 +654,8 @@ export interface GamingServiceClient {
 
   handleQtechCallback(request: QtechCallbackRequest): Observable<CallbackResponse>;
 
+  handleSmatVirtualCallback(request: SmatVirtualCallbackRequest): Observable<CallbackResponse>;
+
   xpressLogin(request: XpressRequest): Observable<XpressResponse>;
 
   xpressBalance(request: XpressRequest): Observable<XpressResponse>;
@@ -754,6 +764,10 @@ export interface GamingServiceController {
     request: QtechCallbackRequest,
   ): Promise<CallbackResponse> | Observable<CallbackResponse> | CallbackResponse;
 
+  handleSmatVirtualCallback(
+    request: SmatVirtualCallbackRequest,
+  ): Promise<CallbackResponse> | Observable<CallbackResponse> | CallbackResponse;
+
   xpressLogin(request: XpressRequest): Promise<XpressResponse> | Observable<XpressResponse> | XpressResponse;
 
   xpressBalance(request: XpressRequest): Promise<XpressResponse> | Observable<XpressResponse> | XpressResponse;
@@ -812,6 +826,7 @@ export function GamingServiceControllerMethods() {
       "startGame",
       "handleCallback",
       "handleQtechCallback",
+      "handleSmatVirtualCallback",
       "xpressLogin",
       "xpressBalance",
       "xpressDebit",
