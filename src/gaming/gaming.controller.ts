@@ -608,4 +608,49 @@ export class GamingController {
   handleCasinoJackpotWinners() {
     return this.gamingService.handleCasinoJackpotWinners();
   }
+
+  @Post(':clientId/callback/:action')
+  @ApiParam({ name: 'clientId', type: 'string' })
+  @ApiQuery({ name: 'playerId', type: 'string' })
+  @ApiHeader({ name: 'Wallet-Session', description: 'Signature' })
+  @ApiHeader({ name: 'Pass-Key', description: 'Pass Key' })
+  async authenticatePlayer(
+    @Res() res: Response,
+    @Body() data: Record<string, any>,
+    @Param('playerId') playerId: string,
+    @Param('sessionId') sessionId: string,
+    @Param('clientId') clientId: number,
+
+  ) {
+
+    try {
+      // Fetch the player's balance
+      const response = await this.gamingService.handleSmatVirtualGamesCallback(
+        {
+          playerId: playerId,
+          body: Object.keys(data).length === 0 ? '' : JSON.stringify(data),
+          clientId,
+          sessionId,
+          action: 'player-information',
+        },
+      );
+
+      if (!response.success) {
+        return res
+          .status(response.status)
+          .send(response);
+      }
+
+      return res.status(response.status).send(response.data);
+
+    } catch (error) {
+      console.error('Error in handleSmatVirtualGamesCallback:', error);
+      return res
+        .status(HttpStatus.INTERNAL_SERVER_ERROR)
+        .send({
+          message: 'Unexpected error',
+          code: "UNKNOWN_ERROR",
+        });
+    }
+  }
 }

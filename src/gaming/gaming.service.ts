@@ -26,6 +26,7 @@ import {
   AddGameToTournamentDto,
   GetGamesRequest,
   StartDto,
+  SmatVirtualCallbackRequest,
 } from 'src/interfaces/gaming.pb';
 import { ClientGrpc } from '@nestjs/microservices';
 import { firstValueFrom, of } from 'rxjs';
@@ -310,6 +311,19 @@ export class GamingService implements OnModuleInit {
     // //(request);
     const resp = await firstValueFrom(
       this.service.handleQtechCallback(request),
+    );
+
+    console.log('respVERIFY', resp);
+
+    return resp;
+  }
+
+
+  async handleSmatVirtualGamesCallback(request: SmatVirtualCallbackRequest) {
+    console.log('Smat-virtual service start');
+    // //(request);
+    const resp = await firstValueFrom(
+      this.service.handleSmatVirtualCallback(request),
     );
 
     console.log('respVERIFY', resp);
