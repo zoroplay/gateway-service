@@ -609,9 +609,10 @@ export class GamingController {
     return this.gamingService.handleCasinoJackpotWinners();
   }
 
-  @Post(':clientId/callback/:action')
+  @Post(':clientId/callback/player-information')
   @ApiParam({ name: 'clientId', type: 'string' })
   @ApiQuery({ name: 'playerId', type: 'string' })
+  @ApiParam({ name: 'action', type: 'string' })
   @ApiQuery({ name: 'sessionId', type: 'string' })
   async authenticatePlayer(
     @Res() res: Response,
