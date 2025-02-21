@@ -617,13 +617,14 @@ export class GamingController {
   async authenticatePlayer(
     @Res() res: Response,
     @Body() data: Record<string, any>,
-    @Param('playerId') playerId: string,
-    @Param('sessionId') sessionId: string,
+    @Query('playerId') playerId: string,
+    @Query('sessionId') sessionId: string,
     @Param('clientId') clientId: number,
 
   ) {
 
     try {
+      console.log("data", playerId, sessionId);
       // Fetch the player's balance
       const response = await this.gamingService.handleSmatVirtualGamesCallback(
         {
@@ -641,7 +642,7 @@ export class GamingController {
           .send(response);
       }
 
-      return res.status(response.status).send(response.data);
+      return res.status(response.status).send(response);
 
     } catch (error) {
       console.error('Error in handleSmatVirtualGamesCallback:', error);
