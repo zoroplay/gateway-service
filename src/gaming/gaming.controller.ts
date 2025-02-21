@@ -609,7 +609,7 @@ export class GamingController {
     return this.gamingService.handleCasinoJackpotWinners();
   }
 
-  @Post(':clientId/callback/player-information')
+  @Get(':clientId/callback/player-information')
   @ApiParam({ name: 'clientId', type: 'string' })
   @ApiQuery({ name: 'playerId', type: 'string' })
   @ApiParam({ name: 'action', type: 'string' })
