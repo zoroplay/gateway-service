@@ -612,8 +612,7 @@ export class GamingController {
   @Post(':clientId/callback/:action')
   @ApiParam({ name: 'clientId', type: 'string' })
   @ApiQuery({ name: 'playerId', type: 'string' })
-  @ApiHeader({ name: 'Wallet-Session', description: 'Signature' })
-  @ApiHeader({ name: 'Pass-Key', description: 'Pass Key' })
+  @ApiQuery({ name: 'sessionId', type: 'string' })
   async authenticatePlayer(
     @Res() res: Response,
     @Body() data: Record<string, any>,
