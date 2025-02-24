@@ -126,6 +126,27 @@ export class SwaggerStartGameDto {
   bonusId: number;
 }
 
+export class SwaggerStartSmatGameDto {
+  @ApiProperty({
+    description: 'Client Id',
+    example: 2,
+  })
+  clientId: number;
+
+  @ApiProperty({
+    description: 'User Id',
+    example: 2,
+  })
+  userId: number;
+  
+  @ApiProperty({
+    description: 'User authCode that is currently logged in',
+    example: 'XNTRGAK4BGDR9O3GHKA8CNNKSVUHRPVSXWPATAT7',
+  })
+  token: string;
+  
+}
+
 export class SwaggerStartGameResponseDto {
   @ApiProperty({
     description: 'Url tto Initiate Game',

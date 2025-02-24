@@ -27,12 +27,14 @@ import {
 import { Response } from 'express';
 import { GamingService } from './gaming.service';
 import {
+  StartDto,
   StartGameDto,
 } from 'src/interfaces/gaming.pb';
 import {
   SwaggerOKGameResponse,
   SwaggerStartGameDto,
   SwaggerStartGameResponseDto,
+  SwaggerStartSmatGameDto,
 } from './dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiFile } from 'src/common/file-interceptor';
@@ -106,6 +108,23 @@ export class GamingController {
       startGameDto.language = 'en';
     }
     return this.gamingService.startGame(startGameDto);
+  }
+
+  @Post('/:clientId/start-url')
+  @ApiBody({ type: SwaggerStartSmatGameDto })
+  @ApiOkResponse({ type: SwaggerStartGameResponseDto })
+  @ApiParam({ name: 'clientId', description: 'SBE CLient ID' })
+  constructSmatGameUrl(
+    @Body() startGameDto: StartDto,
+    @Param('clientId') clientId,
+  ) {
+    startGameDto.clientId = parseInt(clientId);
+
+    // Set default language if it is not provided
+    // if (!startGameDto.language) {
+    //   startGameDto.language = 'en';
+    // }
+    return this.gamingService.startSmatGame(startGameDto);
   }
 
   @Get('/:clientId/:provider_id/callback')
@@ -588,5 +607,51 @@ export class GamingController {
   @ApiOkResponse({ type: [SwaggerOKGameResponse] })
   handleCasinoJackpotWinners() {
     return this.gamingService.handleCasinoJackpotWinners();
+  }
+
+  @Get(':clientId/callback/player-information')
+  @ApiParam({ name: 'clientId', type: 'string' })
+  @ApiQuery({ name: 'playerId', type: 'string' })
+  @ApiParam({ name: 'action', type: 'string' })
+  @ApiQuery({ name: 'sessionId', type: 'string' })
+  async authenticatePlayer(
+    @Res() res: Response,
+    @Body() data: Record<string, any>,
+    @Query('playerId') playerId: string,
+    @Query('sessionId') sessionId: string,
+    @Param('clientId') clientId: number,
+
+  ) {
+
+    try {
+      console.log("data", playerId, sessionId);
+      // Fetch the player's balance
+      const response = await this.gamingService.handleSmatVirtualGamesCallback(
+        {
+          playerId: playerId,
+          body: Object.keys(data).length === 0 ? '' : JSON.stringify(data),
+          clientId,
+          sessionId,
+          action: 'player-information',
+        },
+      );
+
+      if (!response.success) {
+        return res
+          .status(response.status)
+          .send(response);
+      }
+
+      return res.status(response.status).send(response);
+
+    } catch (error) {
+      console.error('Error in handleSmatVirtualGamesCallback:', error);
+      return res
+        .status(HttpStatus.INTERNAL_SERVER_ERROR)
+        .send({
+          message: 'Unexpected error',
+          code: "UNKNOWN_ERROR",
+        });
+    }
   }
 }
