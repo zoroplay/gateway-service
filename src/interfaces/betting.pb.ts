@@ -27,6 +27,7 @@ export interface GetTicketsRequest {
   betType?: string | undefined;
   amountRange?: string | undefined;
   groupType?: string | undefined;
+  viewType?: string | undefined;
 }
 
 export interface GetCommissionsRequest {
