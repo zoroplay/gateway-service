@@ -495,17 +495,17 @@ export class GamingService implements OnModuleInit {
     }
   }
 
-  async handleCasinoJackpot() {
+  async handleCasinoJackpot(payload: SyncGameDto) {
     console.log('handleCasinoJackpot');
     return firstValueFrom(
-      this.service.handleCasinoJackpot({}),
+      this.service.handleCasinoJackpot(payload),
     );
   }
 
-  async handleCasinoJackpotWinners() {
+  async handleCasinoJackpotWinners(payload: SyncGameDto) {
     console.log('handleCasinoJackpotWinners');
     return firstValueFrom(
-      this.service.handleCasinoJackpotWinners({}),
+      this.service.handleCasinoJackpotWinners(payload),
     );
   }
 

@@ -29,6 +29,7 @@ import { GamingService } from './gaming.service';
 import {
   StartDto,
   StartGameDto,
+  SyncGameDto,
 } from 'src/interfaces/gaming.pb';
 import {
   SwaggerOKGameResponse,
@@ -599,14 +600,20 @@ export class GamingController {
 
   @Get('active-jackpot')
   @ApiOkResponse({ type: [SwaggerOKGameResponse] })
-  handleCasinoJackpot() {
-    return this.gamingService.handleCasinoJackpot();
+  @ApiQuery({ name: 'provider', type: String, required: true }) // Documenting query parameters
+  @ApiQuery({ name: 'clientId', type: Number, required: false }) 
+  handleCasinoJackpot(@Query() query: SyncGameDto) {
+    return this.gamingService.handleCasinoJackpot(query);
   }
+
+
 
   @Get('jackpot-winners')
   @ApiOkResponse({ type: [SwaggerOKGameResponse] })
-  handleCasinoJackpotWinners() {
-    return this.gamingService.handleCasinoJackpotWinners();
+  @ApiQuery({ name: 'provider', type: String, required: true }) // Documenting query parameters
+  @ApiQuery({ name: 'clientId', type: Number, required: false }) 
+  handleCasinoJackpotWinners(@Query() query: SyncGameDto) {
+    return this.gamingService.handleCasinoJackpotWinners(query);
   }
 
   @Get(':clientId/callback/player-information')
