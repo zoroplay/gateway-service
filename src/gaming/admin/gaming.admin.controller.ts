@@ -256,8 +256,8 @@ async updatePromotion(@Body() payload: CreatePromotionDto, @UploadedFile() file?
 
   @Get('/provider')
   @ApiOkResponse({ type: [SwaggerOKProviderArrayResponse] })
-  findAllProvider() {
-    return this.gamingService.findAllProvider();
+  findAdminProviders() {
+    return this.gamingService.findAdminProviders();
   }
 
   @Post('/provider')
@@ -265,6 +265,13 @@ async updatePromotion(@Body() payload: CreatePromotionDto, @UploadedFile() file?
   @ApiOkResponse({ type: SwaggerOKProviderResponse })
   createProvider(@Body() createProviderDto: CreateProviderDto) {
     return this.gamingService.createProvider(createProviderDto);
+  }
+
+  @Put('/update-provider')
+  @ApiBody({ type: SwaggerCreateProviderDto })
+  @ApiOkResponse({ type: SwaggerOKProviderResponse })
+  updateProvider(@Body() createProviderDto: CreateProviderDto) {
+    return this.gamingService.updateProvider(createProviderDto);
   }
 
   @Post('/sync')

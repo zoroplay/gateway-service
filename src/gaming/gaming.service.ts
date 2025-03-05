@@ -56,6 +56,17 @@ export class GamingService implements OnModuleInit {
     return firstValueFrom(this.service.findAllProviders({}));
   }
 
+  async findAdminProviders() {
+    //('finding all providers');
+    return firstValueFrom(this.service.findAdminProviders({}));
+  }
+
+  async updateProvider(updateDto: CreateProviderDto) {
+    //('finding all providers');
+    return firstValueFrom(this.service.updateProvider(updateDto));
+  }
+
+
   async create(createGameDto: CreateGameDto) {
     //(createGameDto);
     return firstValueFrom(this.service.createGame(createGameDto));

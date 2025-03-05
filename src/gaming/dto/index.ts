@@ -201,27 +201,43 @@ export class SwaggerOKProviderArrayResponse {
 }
 
 export class SwaggerCreateProviderDto {
-  @ApiProperty({
+
+  @ApiPropertyOptional({
+    description: 'providerId',
+    example: 1,
+  })
+  id?: number;
+
+  @ApiPropertyOptional({
     description: 'provider slug e.g evo-play',
     example: 'smart-soft',
   })
-  slug: string;
-  @ApiProperty({
+  slug?: string;
+
+  @ApiPropertyOptional({
     description: 'provider name e.g Evo Play',
     example: 'Smart Soft',
   })
-  name: string;
-  @ApiProperty({
+  name?: string;
+
+  @ApiPropertyOptional({
     description:
       'provider description e.g Evo Play is a xyz provider founded in 0000 bc',
     example: 'Smart Soft Gaming ',
   })
-  description: string;
-  @ApiProperty({
+  description?: string;
+
+  @ApiPropertyOptional({
     description: 'image url for provider',
     example: 'https://images.pexels.com/photos/414612/pexels-photo-414612.jpeg',
   })
-  imagePath: string;
+  imagePath?: string;
+
+  @ApiPropertyOptional({
+    description: 'status of provider',
+    example: 1,
+  })
+  status?: number;
 }
 
 export class SwaggerOKGameResponse {
