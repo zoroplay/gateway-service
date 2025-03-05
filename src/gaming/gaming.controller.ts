@@ -33,6 +33,7 @@ import {
 } from 'src/interfaces/gaming.pb';
 import {
   SwaggerOKGameResponse,
+  SwaggerOKProviderArrayResponse,
   SwaggerStartGameDto,
   SwaggerStartGameResponseDto,
   SwaggerStartSmatGameDto,
@@ -102,6 +103,7 @@ export class GamingController {
     @Body() startGameDto: StartGameDto,
     @Param('clientId') clientId,
   ) {
+    console.log("got here")
     startGameDto.clientId = parseInt(clientId);
 
     // Set default language if it is not provided
@@ -126,6 +128,13 @@ export class GamingController {
     //   startGameDto.language = 'en';
     // }
     return this.gamingService.startSmatGame(startGameDto);
+  }
+
+
+  @Get('/provider')
+  @ApiOkResponse({ type: [SwaggerOKProviderArrayResponse] })
+  findAllProvider() {
+    return this.gamingService.findAllProvider();
   }
 
   @Get('/:clientId/:provider_id/callback')
