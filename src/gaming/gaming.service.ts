@@ -56,6 +56,17 @@ export class GamingService implements OnModuleInit {
     return firstValueFrom(this.service.findAllProviders({}));
   }
 
+  async findAdminProviders() {
+    //('finding all providers');
+    return firstValueFrom(this.service.findAdminProviders({}));
+  }
+
+  async updateProvider(updateDto: CreateProviderDto) {
+    //('finding all providers');
+    return firstValueFrom(this.service.updateProvider(updateDto));
+  }
+
+
   async create(createGameDto: CreateGameDto) {
     //(createGameDto);
     return firstValueFrom(this.service.createGame(createGameDto));
@@ -495,17 +506,17 @@ export class GamingService implements OnModuleInit {
     }
   }
 
-  async handleCasinoJackpot() {
+  async handleCasinoJackpot(payload: SyncGameDto) {
     console.log('handleCasinoJackpot');
     return firstValueFrom(
-      this.service.handleCasinoJackpot({}),
+      this.service.handleCasinoJackpot(payload),
     );
   }
 
-  async handleCasinoJackpotWinners() {
+  async handleCasinoJackpotWinners(payload: SyncGameDto) {
     console.log('handleCasinoJackpotWinners');
     return firstValueFrom(
-      this.service.handleCasinoJackpotWinners({}),
+      this.service.handleCasinoJackpotWinners(payload),
     );
   }
 
