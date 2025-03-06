@@ -78,7 +78,6 @@ async getGames(@Query('gameIds') gameIds?: string): Promise<any> {
   };
 
   const val = await this.gamingService.getGames(request); // Pass the request object to the service
-  console.log('val', val);
   return val;
 }
 
@@ -110,7 +109,7 @@ async getGames(@Query('gameIds') gameIds?: string): Promise<any> {
     return this.gamingService.addGameToCategories(payload);
   }
 
-  @Delete('/delete-game-category')
+  @Post('/delete-game-category')
   @ApiBody({ type: AddGameCategoriesDto })
   @ApiOkResponse({ type: [SwaggerOKGameResponse] })
   removeGameToCategories(@Body() payload: AddGameToCategoriesDto) {
@@ -281,6 +280,8 @@ async updatePromotion(@Body() payload: CreatePromotionDto, @UploadedFile() file?
     console.log('CONTROLLER CHECK');
     return this.gamingService.sync(syncGameDto);
   }
+
+
 
   @Post('/add-tournament')
   @ApiBody({ type: CreateTournamentRequestDto })
