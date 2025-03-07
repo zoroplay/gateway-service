@@ -69,18 +69,35 @@ export class GamingAdminController {
   // }
 
 
+// @Get('get-games')
+// @ApiOkResponse({ type: [SwaggerOKGameResponse] })
+// @ApiQuery({ name: 'gameIds', required: false, isArray: true, type: Number })
+// async getGames(@Query('gameIds') gameIds?: string): Promise<any> {
+//   const request: GetGamesRequest = {
+//     gameIds: gameIds ? gameIds.split(',').map(Number) : [], // Construct the GetGamesRequest object
+//   };
+
+//   const val = await this.gamingService.getGames(request); // Pass the request object to the service
+//   return val;
+// }
+
 @Get('get-games')
 @ApiOkResponse({ type: [SwaggerOKGameResponse] })
-@ApiQuery({ name: 'gameIds', required: false, isArray: true, type: Number })
-async getGames(@Query('gameIds') gameIds?: string): Promise<any> {
+@ApiQuery({ name: 'providerId', required: false, type: Number })
+@ApiQuery({ name: 'categoryId', required: false, type: Number })
+async getGames(
+  @Query('providerId') providerId?: string,
+  @Query('categoryId') categoryId?: string
+): Promise<any> {
   const request: GetGamesRequest = {
-    gameIds: gameIds ? gameIds.split(',').map(Number) : [], // Construct the GetGamesRequest object
+    providerId: providerId ? Number(providerId) : undefined,
+    categoryId: categoryId ? Number(categoryId) : undefined,
   };
 
-  const val = await this.gamingService.getGames(request); // Pass the request object to the service
-  console.log('val', val);
+  const val = await this.gamingService.getGames(request);
   return val;
 }
+
 
   @Put('/update-game')
   @ApiBody({ type: UpdateGameRequestDto })
@@ -110,7 +127,7 @@ async getGames(@Query('gameIds') gameIds?: string): Promise<any> {
     return this.gamingService.addGameToCategories(payload);
   }
 
-  @Delete('/delete-game-category')
+  @Post('/delete-game-category')
   @ApiBody({ type: AddGameCategoriesDto })
   @ApiOkResponse({ type: [SwaggerOKGameResponse] })
   removeGameToCategories(@Body() payload: AddGameToCategoriesDto) {
@@ -169,7 +186,7 @@ async getGames(@Query('gameIds') gameIds?: string): Promise<any> {
 @ApiOkResponse({ type: [SwaggerOKPromotionResponse] })
 @UseInterceptors(FileInterceptor('file'))
 async createPromotion(@Body() payload: CreatePromotionDto, @UploadedFile() file: Express.Multer.File) {
-  console.log('payload', payload);
+  console.log('payload', payload, file);
   const promotion = await this.gamingService.createPromotion(payload, payload.file);
   console.log('promotion', promotion);
   return promotion;
@@ -281,6 +298,8 @@ async updatePromotion(@Body() payload: CreatePromotionDto, @UploadedFile() file?
     console.log('CONTROLLER CHECK');
     return this.gamingService.sync(syncGameDto);
   }
+
+
 
   @Post('/add-tournament')
   @ApiBody({ type: CreateTournamentRequestDto })
