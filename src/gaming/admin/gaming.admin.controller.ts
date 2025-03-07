@@ -187,7 +187,7 @@ async getGames(
 @UseInterceptors(FileInterceptor('file'))
 async createPromotion(@Body() payload: CreatePromotionDto, @UploadedFile() file: Express.Multer.File) {
   console.log('payload', payload, file);
-  const promotion = await this.gamingService.createPromotion(payload, file);
+  const promotion = await this.gamingService.createPromotion(payload, payload.file);
   console.log('promotion', promotion);
   return promotion;
 }
