@@ -202,7 +202,7 @@ export class GamingService implements OnModuleInit {
   
     let fileBase64: string | undefined;
   
-    if (file) {
+    if (createPromotionDto.file) {
       if (typeof file === 'string') {
         // File is already a Base64 string
         if (file.startsWith('data:image/')) {
