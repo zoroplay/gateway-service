@@ -56,6 +56,17 @@ export class GamingService implements OnModuleInit {
     return firstValueFrom(this.service.findAllProviders({}));
   }
 
+  async findAdminProviders() {
+    //('finding all providers');
+    return firstValueFrom(this.service.findAdminProviders({}));
+  }
+
+  async updateProvider(updateDto: CreateProviderDto) {
+    //('finding all providers');
+    return firstValueFrom(this.service.updateProvider(updateDto));
+  }
+
+
   async create(createGameDto: CreateGameDto) {
     //(createGameDto);
     return firstValueFrom(this.service.createGame(createGameDto));
@@ -143,6 +154,45 @@ export class GamingService implements OnModuleInit {
   //   }
   // }
 
+  // async createPromotion(
+  //   createPromotionDto: CreatePromotionDto,
+  //   file?: any, // Optional file input
+  // ): Promise<Promotion> {
+  //   console.log('createPromotionDto:', createPromotionDto);
+  //   console.log('file:', file);
+  
+  //   let fileBase64: string | undefined;
+  //   let fileString: string | undefined = file.toString();
+  
+  //   if (fileString) {
+  //     if (fileString.startsWith("data:image/")) {
+  //       fileBase64 = fileString.replace(/^data:image\/\w+;base64,/, '');
+  //     // Convert the file buffer to a Base64 string
+  //   } 
+  // }
+  //   // Construct the gRPC request payload
+  //   const createPromotionRequest: CreatePromotionRequest = {
+  //     metadata: createPromotionDto, // Metadata from DTO
+  //     file: fileBase64, // Base64 file string or undefined
+  //   };
+  
+  //   console.log('createPromotionRequest:', createPromotionRequest);
+  
+  //   try {
+  //     // Send the request to the gRPC service
+  //     const promotion = await firstValueFrom(
+  //       this.service.createPromotion(createPromotionRequest),
+  //     );
+  
+  //     console.log('promotion:', promotion);
+  //     return promotion;
+  //   } catch (error) {
+  //     console.error('Error in createPromotion:', error);
+  //     throw new Error('Failed to create promotion. Please try again later.');
+  //   }
+  // }
+
+
   async createPromotion(
     createPromotionDto: CreatePromotionDto,
     file?: any, // Optional file input
@@ -151,14 +201,19 @@ export class GamingService implements OnModuleInit {
     console.log('file:', file);
   
     let fileBase64: string | undefined;
-    let fileString: string | undefined = createPromotionDto.file.toString();
   
-    if (fileString) {
-      if (fileString.startsWith("data:image/")) {
-        fileBase64 = fileString.replace(/^data:image\/\w+;base64,/, '');
-      // Convert the file buffer to a Base64 string
-    } 
-  }
+    if (createPromotionDto.file) {
+      if (typeof file === 'string') {
+        // File is already a Base64 string
+        if (file.startsWith('data:image/')) {
+          fileBase64 = file.replace(/^data:image\/\w+;base64,/, '');
+        }
+      } else if (file.buffer) {
+        // File is a Buffer, convert to Base64
+        fileBase64 = file.buffer.toString('base64');
+      }
+    }
+  
     // Construct the gRPC request payload
     const createPromotionRequest: CreatePromotionRequest = {
       metadata: createPromotionDto, // Metadata from DTO
@@ -180,6 +235,7 @@ export class GamingService implements OnModuleInit {
       throw new Error('Failed to create promotion. Please try again later.');
     }
   }
+  
 
   async findPromotions() {
     return firstValueFrom(this.service.findPromotions({}));
@@ -495,17 +551,17 @@ export class GamingService implements OnModuleInit {
     }
   }
 
-  async handleCasinoJackpot() {
+  async handleCasinoJackpot(payload: SyncGameDto) {
     console.log('handleCasinoJackpot');
     return firstValueFrom(
-      this.service.handleCasinoJackpot({}),
+      this.service.handleCasinoJackpot(payload),
     );
   }
 
-  async handleCasinoJackpotWinners() {
+  async handleCasinoJackpotWinners(payload: SyncGameDto) {
     console.log('handleCasinoJackpotWinners');
     return firstValueFrom(
-      this.service.handleCasinoJackpotWinners({}),
+      this.service.handleCasinoJackpotWinners(payload),
     );
   }
 

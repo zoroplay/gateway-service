@@ -13,8 +13,8 @@ import { Struct } from "./google/protobuf/struct.pb";
 export const protobufPackage = "gaming";
 
 export interface GetGamesRequest {
-  /** Optional array of game IDs for filtering */
-  gameIds: number[];
+  providerId?: number | undefined;
+  categoryId?: number | undefined;
 }
 
 export interface StartDto {
@@ -34,28 +34,29 @@ export interface SmatVirtualCallbackRequest {
 export interface CreateBonusRequest {
   clientId: number;
   bonusType: string;
-  creditType: string;
-  duration: number;
-  minimumSelection: number;
-  minimumOddsPerEvent: number;
-  minimumTotalOdds: number;
-  applicableBetType: string;
-  maximumWinning: number;
-  bonusAmount: number;
+  creditType?: string | undefined;
+  duration?: number | undefined;
+  minimumSelection?: number | undefined;
+  minimumOddsPerEvent?: number | undefined;
+  minimumTotalOdds?: number | undefined;
+  applicableBetType?: string | undefined;
+  maximumWinning?: number | undefined;
+  bonusAmount?: number | undefined;
   status?: number | undefined;
   created?: string | undefined;
   updated?: string | undefined;
   id?: number | undefined;
-  minimumLostGames: number;
-  rolloverCount: number;
-  name: string;
-  minimumEntryAmount: number;
-  maxAmount: number;
-  product: string;
+  minimumLostGames?: number | undefined;
+  rolloverCount?: number | undefined;
+  name?: string | undefined;
+  minimumEntryAmount?: number | undefined;
+  maxAmount?: number | undefined;
+  product?: string | undefined;
   gameId: string[];
   casinoSpinCount?: number | undefined;
   providerId?: number | undefined;
   bonusId?: number | undefined;
+  userIds: string[];
 }
 
 export interface CreateBonusResponse {
@@ -107,6 +108,7 @@ export interface Empty {
 
 export interface SyncGameDto {
   provider: string;
+  clientId?: number | undefined;
 }
 
 export interface CallbackGameDto {
@@ -149,6 +151,7 @@ export interface CreateProviderDto {
   name: string;
   description: string;
   imagePath: string;
+  status?: number | undefined;
 }
 
 export interface CreateGameDto {
@@ -592,9 +595,9 @@ export interface GamingServiceClient {
 
   fetchCategories(request: Empty): Observable<Categories>;
 
-  addGameToCategories(request: AddGameToCategoriesDto): Observable<AddGameToCategoriesResponse>;
+  addGameToCategories(request: AddGameToCategoriesDto): Observable<Game>;
 
-  removeGameToCategories(request: AddGameToCategoriesDto): Observable<Empty>;
+  removeGameToCategories(request: AddGameToCategoriesDto): Observable<Game>;
 
   addTournamentGame(request: AddGameToTournamentDto): Observable<TournamentResponse>;
 
@@ -628,6 +631,8 @@ export interface GamingServiceClient {
 
   findAllProviders(request: Empty): Observable<CommonResponse>;
 
+  findAdminProviders(request: Empty): Observable<CommonResponse>;
+
   getGames(request: GetGamesRequest): Observable<CommonResponseArray>;
 
   createPromotion(request: CreatePromotionRequest): Observable<Promotion>;
@@ -642,9 +647,9 @@ export interface GamingServiceClient {
 
   handleCasinoBonus(request: CreateBonusRequest): Observable<CreateBonusResponse>;
 
-  handleCasinoJackpot(request: Empty): Observable<CommonResponse>;
+  handleCasinoJackpot(request: SyncGameDto): Observable<CommonResponse>;
 
-  handleCasinoJackpotWinners(request: Empty): Observable<CommonResponse>;
+  handleCasinoJackpotWinners(request: SyncGameDto): Observable<CommonResponse>;
 
   startGame(request: StartGameDto): Observable<StartGameResponse>;
 
@@ -692,11 +697,9 @@ export interface GamingServiceController {
 
   fetchCategories(request: Empty): Promise<Categories> | Observable<Categories> | Categories;
 
-  addGameToCategories(
-    request: AddGameToCategoriesDto,
-  ): Promise<AddGameToCategoriesResponse> | Observable<AddGameToCategoriesResponse> | AddGameToCategoriesResponse;
+  addGameToCategories(request: AddGameToCategoriesDto): Promise<Game> | Observable<Game> | Game;
 
-  removeGameToCategories(request: AddGameToCategoriesDto): Promise<Empty> | Observable<Empty> | Empty;
+  removeGameToCategories(request: AddGameToCategoriesDto): Promise<Game> | Observable<Game> | Game;
 
   addTournamentGame(
     request: AddGameToTournamentDto,
@@ -732,6 +735,8 @@ export interface GamingServiceController {
 
   findAllProviders(request: Empty): Promise<CommonResponse> | Observable<CommonResponse> | CommonResponse;
 
+  findAdminProviders(request: Empty): Promise<CommonResponse> | Observable<CommonResponse> | CommonResponse;
+
   getGames(
     request: GetGamesRequest,
   ): Promise<CommonResponseArray> | Observable<CommonResponseArray> | CommonResponseArray;
@@ -750,9 +755,11 @@ export interface GamingServiceController {
     request: CreateBonusRequest,
   ): Promise<CreateBonusResponse> | Observable<CreateBonusResponse> | CreateBonusResponse;
 
-  handleCasinoJackpot(request: Empty): Promise<CommonResponse> | Observable<CommonResponse> | CommonResponse;
+  handleCasinoJackpot(request: SyncGameDto): Promise<CommonResponse> | Observable<CommonResponse> | CommonResponse;
 
-  handleCasinoJackpotWinners(request: Empty): Promise<CommonResponse> | Observable<CommonResponse> | CommonResponse;
+  handleCasinoJackpotWinners(
+    request: SyncGameDto,
+  ): Promise<CommonResponse> | Observable<CommonResponse> | CommonResponse;
 
   startGame(request: StartGameDto): Promise<StartGameResponse> | Observable<StartGameResponse> | StartGameResponse;
 
@@ -814,6 +821,7 @@ export function GamingServiceControllerMethods() {
       "findOneProvider",
       "removeProvider",
       "findAllProviders",
+      "findAdminProviders",
       "getGames",
       "createPromotion",
       "findPromotions",
