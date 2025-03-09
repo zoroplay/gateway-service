@@ -12,6 +12,29 @@ import { Struct } from "./google/protobuf/struct.pb";
 
 export const protobufPackage = "betting";
 
+export interface GetRiskSettingRequest {
+  clientId: number;
+  userId: number;
+}
+
+export interface GetSettingsRequest {
+  clientId: number;
+  category: string;
+}
+
+export interface SettingsRequest {
+  clientId: number;
+  inputs: string;
+  category?: string | undefined;
+  period?: string | undefined;
+}
+
+export interface UserRiskSettingsRequest {
+  userId: number;
+  inputs: string;
+  period: string;
+}
+
 export interface GetTicketsRequest {
   userId: number;
   clientId: number;
@@ -27,6 +50,7 @@ export interface GetTicketsRequest {
   betType?: string | undefined;
   amountRange?: string | undefined;
   groupType?: string | undefined;
+  viewType?: string | undefined;
 }
 
 export interface GetCommissionsRequest {
@@ -58,6 +82,14 @@ export interface CommonResponseObj {
   success?: boolean | undefined;
   message: string;
   data?: { [key: string]: any } | undefined;
+  errors?: string | undefined;
+}
+
+export interface CommonResponseArray {
+  status?: number | undefined;
+  success?: boolean | undefined;
+  message: string;
+  data: { [key: string]: any }[];
   errors?: string | undefined;
 }
 
@@ -292,6 +324,7 @@ export interface PlaceBetRequest {
   isBooking: number;
   bonusId?: number | undefined;
   useBonus?: boolean | undefined;
+  userRole?: string | undefined;
 }
 
 export interface BetSlip {
@@ -566,6 +599,18 @@ export interface BettingServiceClient {
   getCodeHubTickets(request: GetTicketsRequest): Observable<CommonResponseObj>;
 
   payoutTicket(request: BetID): Observable<CommonResponseObj>;
+
+  saveSettings(request: SettingsRequest): Observable<CommonResponseObj>;
+
+  saveRiskSettings(request: SettingsRequest): Observable<CommonResponseObj>;
+
+  saveUserRiskSettings(request: UserRiskSettingsRequest): Observable<CommonResponseObj>;
+
+  getSettings(request: GetSettingsRequest): Observable<CommonResponseArray>;
+
+  getGlobalVariables(request: GetSettingsRequest): Observable<CommonResponseObj>;
+
+  getUserRiskSettings(request: GetRiskSettingRequest): Observable<CommonResponseObj>;
 }
 
 export interface BettingServiceController {
@@ -676,6 +721,30 @@ export interface BettingServiceController {
   ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
 
   payoutTicket(request: BetID): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
+
+  saveSettings(
+    request: SettingsRequest,
+  ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
+
+  saveRiskSettings(
+    request: SettingsRequest,
+  ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
+
+  saveUserRiskSettings(
+    request: UserRiskSettingsRequest,
+  ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
+
+  getSettings(
+    request: GetSettingsRequest,
+  ): Promise<CommonResponseArray> | Observable<CommonResponseArray> | CommonResponseArray;
+
+  getGlobalVariables(
+    request: GetSettingsRequest,
+  ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
+
+  getUserRiskSettings(
+    request: GetRiskSettingRequest,
+  ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
 }
 
 export function BettingServiceControllerMethods() {
@@ -714,6 +783,12 @@ export function BettingServiceControllerMethods() {
       "taxReport",
       "getCodeHubTickets",
       "payoutTicket",
+      "saveSettings",
+      "saveRiskSettings",
+      "saveUserRiskSettings",
+      "getSettings",
+      "getGlobalVariables",
+      "getUserRiskSettings",
     ];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
