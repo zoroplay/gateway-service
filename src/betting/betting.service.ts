@@ -16,6 +16,10 @@ import {
   SalesReportRequest,
   GetCommissionsRequest,
   GetTicketsRequest,
+  SettingsRequest,
+  UserRiskSettingsRequest,
+  GetSettingsRequest,
+  GetRiskSettingRequest,
 } from 'src/interfaces/betting.pb';
 import { ClientGrpc } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
@@ -134,5 +138,25 @@ export class BettingService implements OnModuleInit {
   payoutTicket(data: BetID) {
     // console.log('get tickets ');
     return this.service.payoutTicket(data);
+  }
+
+  saveRiskSettings(data: SettingsRequest) {
+    // console.log('get tickets ');
+    return this.service.saveRiskSettings(data);
+  }
+
+  saveUserRiskSettings(data: UserRiskSettingsRequest) {
+    // console.log('get tickets ');
+    return this.service.saveUserRiskSettings(data);
+  }
+
+  getSettings(data: GetSettingsRequest) {
+    // console.log('get tickets ');
+    return this.service.getSettings(data);
+  }
+
+  getUserRiskSettings(data: GetRiskSettingRequest) {
+    // console.log('get tickets ');
+    return this.service.getUserRiskSettings(data);
   }
 }

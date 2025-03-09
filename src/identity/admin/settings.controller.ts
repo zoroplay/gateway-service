@@ -296,46 +296,4 @@ export class SettingsController {
         
         return this.svc.getSettings(payload);
     }
-
-    @Get(':clientId/betting-parameters/:userId')
-    @ApiOperation({
-        summary: 'Get User Betting Parameters',
-        description: 'This endpoint is used retrieve betting parameters for a user',
-    })
-    @ApiParam({ name: 'client', type: 'number', description: 'SBE Client ID' })
-    @ApiParam({ name: 'user', type: 'number', description: 'User ID' })
-    @ApiOkResponse({ type: SwaggerCommonResponse })
-    getUserSettings(
-        @Param('clientId') clientId: number,
-        @Param('userId') userId: number,
-    ) {
-        
-        const payload: GetRiskSettingRequest = {
-            clientId,
-            userId,
-        }
-
-        return this.svc.getUserRiskSettings(payload);
-    }
-
-    @Put(':userId/betting-parameters/save')
-    @ApiOperation({
-        summary: 'Save User Betting Parameters',
-        description: 'This endpoint is used to save or update betting parameters for a user',
-    })
-    @ApiParam({ name: 'user', type: 'number', description: 'User ID' })
-    @ApiBody({ type: SwaggerSettingsRequest })
-    @ApiOkResponse({ type: SwaggerCommonResponse })
-    saveUserBettingParameters(
-        @Param('userId') userId: number,
-        @Body() body,
-    ) {
-        
-        const payload: UserRiskSettingsRequest = {
-            userId,
-            period: body.period,
-            inputs: JSON.stringify(body)
-        }
-        return this.svc.saveUserRiskSettings(payload);
-    }
 }
