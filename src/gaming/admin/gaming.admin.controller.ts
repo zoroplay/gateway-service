@@ -21,6 +21,7 @@ import {
   FindOneCategoryDto,
   FindOneTournamentDto,
   GetGamesRequest,
+  GetPromotions,
   SaveCategoryRequest,
   SyncGameDto,
   UpdateGameDto,
@@ -252,9 +253,11 @@ async updatePromotion(@Body() payload: CreatePromotionDto, @UploadedFile() file?
   }
 
   @Get('promotions')
-  findPromotions() {
-    console.log('here');
-    return this.gamingService.findPromotions();
+  @ApiQuery({ name: 'clientId', type: String })
+  findPromotions(@Query('clientId') clientId: number) {
+    const payload: GetPromotions = { clientId };
+    console.log('payload', payload);
+    return this.gamingService.findPromotions(payload);
   }
 
   @Get('promotion')

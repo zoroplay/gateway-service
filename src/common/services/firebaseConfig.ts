@@ -1,10 +1,9 @@
 /* eslint-disable prettier/prettier */
-import { ServiceAccount} from 'firebase-admin';
+import { ServiceAccount } from 'firebase-admin';
 import * as dotenv from 'dotenv';
 dotenv.config();
 
 const { privateKey } = JSON.parse(process.env.FIREBASE_PRIVATE_KEY)
-
 
  export const firebaseServiceAccount = {
   'type': process.env.FIREBASE_PROJECT_TYPE,
@@ -19,5 +18,3 @@ const { privateKey } = JSON.parse(process.env.FIREBASE_PRIVATE_KEY)
   'client_x509_cert_url': process.env.FIREBASE_CLIENT_URL,
   'universe_domain': process.env.FIREBASE_DOMAIN
 } as ServiceAccount;
-
-

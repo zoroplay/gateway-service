@@ -27,6 +27,7 @@ import {
   GetGamesRequest,
   StartDto,
   SmatVirtualCallbackRequest,
+  GetPromotions,
 } from 'src/interfaces/gaming.pb';
 import { ClientGrpc } from '@nestjs/microservices';
 import { firstValueFrom, of } from 'rxjs';
@@ -237,8 +238,8 @@ export class GamingService implements OnModuleInit {
   }
   
 
-  async findPromotions() {
-    return firstValueFrom(this.service.findPromotions({}));
+  async findPromotions(payload: GetPromotions) {
+    return firstValueFrom(this.service.findPromotions(payload));
   }
 
   async findOnePromotion(payload: FindOnePromotionDto) {
