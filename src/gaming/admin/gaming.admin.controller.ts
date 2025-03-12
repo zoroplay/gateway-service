@@ -128,7 +128,7 @@ async getGames(
     return this.gamingService.addGameToCategories(payload);
   }
 
-  @Post('/delete-game-category')
+  @Delete('/delete-game-category')
   @ApiBody({ type: AddGameCategoriesDto })
   @ApiOkResponse({ type: [SwaggerOKGameResponse] })
   removeGameToCategories(@Body() payload: AddGameToCategoriesDto) {

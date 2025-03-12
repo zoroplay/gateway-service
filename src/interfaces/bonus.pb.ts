@@ -97,6 +97,7 @@ export interface CreateBonusRequest {
   casinoSpinCount?: number | undefined;
   providerId?: number | undefined;
   bonusId?: number | undefined;
+  userIds: string[];
 }
 
 export interface CreateBonusResponse {
