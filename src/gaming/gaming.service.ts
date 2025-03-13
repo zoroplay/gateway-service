@@ -136,64 +136,6 @@ export class GamingService implements OnModuleInit {
     return response;
   }
 
-  // async createPromotion(
-  //   createPromotionDto: CreatePromotionDto,
-  //   file?: Express.Multer.File, // Optional file input
-  // ): Promise<Promotion> {
-  
-  //   try {
-  //     // Send the request to the gRPC service
-  //     const promotion = await firstValueFrom(
-  //       this.service.createPromotion(createPromotionDto),
-  //     );
-
-  //     console.log('promotion:', promotion);
-  //     return promotion;
-  //   } catch (error) {
-  //     console.error('Error in createPromotion:', error);
-  //     throw new Error('Failed to create promotion. Please try again later.');
-  //   }
-  // }
-
-  // async createPromotion(
-  //   createPromotionDto: CreatePromotionDto,
-  //   file?: any, // Optional file input
-  // ): Promise<Promotion> {
-  //   console.log('createPromotionDto:', createPromotionDto);
-  //   console.log('file:', file);
-  
-  //   let fileBase64: string | undefined;
-  //   let fileString: string | undefined = file.toString();
-  
-  //   if (fileString) {
-  //     if (fileString.startsWith("data:image/")) {
-  //       fileBase64 = fileString.replace(/^data:image\/\w+;base64,/, '');
-  //     // Convert the file buffer to a Base64 string
-  //   } 
-  // }
-  //   // Construct the gRPC request payload
-  //   const createPromotionRequest: CreatePromotionRequest = {
-  //     metadata: createPromotionDto, // Metadata from DTO
-  //     file: fileBase64, // Base64 file string or undefined
-  //   };
-  
-  //   console.log('createPromotionRequest:', createPromotionRequest);
-  
-  //   try {
-  //     // Send the request to the gRPC service
-  //     const promotion = await firstValueFrom(
-  //       this.service.createPromotion(createPromotionRequest),
-  //     );
-  
-  //     console.log('promotion:', promotion);
-  //     return promotion;
-  //   } catch (error) {
-  //     console.error('Error in createPromotion:', error);
-  //     throw new Error('Failed to create promotion. Please try again later.');
-  //   }
-  // }
-
-
   async createPromotion(
     createPromotionDto: CreatePromotionDto,
     file?: any, // Optional file input
