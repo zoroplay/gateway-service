@@ -246,6 +246,34 @@ export class SwaggerFetchLastApprovedRequest {
   clientId: number;
 }
 
+export class TigoWebhookRequest {
+  @ApiProperty({ description: 'Unique transaction reference ID from Tigo' })
+  ReferenceID: string;
+
+  @ApiProperty({ description: 'Tigo response code for the payment' })
+  ResponseCode: string;
+
+  @ApiProperty({
+    description: 'Indicates if the payment was successful (true/false)',
+  })
+  Status: boolean;
+
+  @ApiProperty({ description: 'Amount paid by the customer' })
+  Amount: number;
+}
+
+export class WebhookResponse {
+  @ApiProperty({
+    description: 'Indicates if the webhook was processed successfully',
+  })
+  success: boolean;
+
+  @ApiProperty({
+    description: 'Message describing the webhook processing result',
+  })
+  message: string;
+}
+
 export class SwaggerFetchReportsRequest {
   @ApiProperty({ description: 'ClientID' })
   clientId: number;
