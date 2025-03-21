@@ -100,12 +100,22 @@ async getGames(
 }
 
 
+  // @Post('/update-game')
+  // @ApiBody({ type: UpdateGameRequestDto })
+  // @ApiOkResponse({ type: [SwaggerOKGameResponse] })
+  // updateGame(@Body() payload: UpdateGameDto) {
+  //   console.log("here", payload);
+  //   return this.gamingService.updateGame(payload);
+  // }
+
   @Put('/update-game')
   @ApiBody({ type: UpdateGameRequestDto })
   @ApiOkResponse({ type: [SwaggerOKGameResponse] })
-  updateGame(@Body() payload: UpdateGameDto) {
-    return this.gamingService.updateGame(payload);
+  async updateGame(@Body() payload: UpdateGameDto) {
+    const response = await this.gamingService.updateGame(payload);
+    return response;
   }
+
 
   @Get('categories')
   @ApiOkResponse({ type: [SwaggerOKGameResponse] })
