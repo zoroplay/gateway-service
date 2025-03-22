@@ -58,6 +58,11 @@ export class GamingController {
     description: 'Gaming provider ID',
     required: false,
   })
+  @ApiParam({
+    name: 'clientId',
+    description: 'Gaming client ID',
+    required: true,
+  })
   findAll(
     @Query('categoryId') categoryId: number,
     @Query('providerId') providerId: number,
@@ -70,6 +75,24 @@ export class GamingController {
     };
     return this.gamingService.fetchGames(payload);
   }
+
+
+  // @Get('get-games')
+  // @ApiOkResponse({ type: [SwaggerOKGameResponse] })
+  // @ApiQuery({ name: 'providerId', required: false, type: Number })
+  // @ApiQuery({ name: 'categoryId', required: false, type: Number })
+  // async getGames(
+  //   @Query('providerId') providerId?: string,
+  //   @Query('categoryId') categoryId?: string
+  // ): Promise<any> {
+  //   const request: GetGamesRequest = {
+  //     providerId: providerId ? Number(providerId) : undefined,
+  //     categoryId: categoryId ? Number(categoryId) : undefined,
+  //   };
+  
+  //   const val = await this.gamingService.getGames(request);
+  //   return val;
+  // }
 
   @Get('/:clientId/game-list')
   @ApiOkResponse({ type: [SwaggerOKGameResponse] })

@@ -17,6 +17,10 @@ export interface GetGamesRequest {
   categoryId?: number | undefined;
 }
 
+export interface GetPromotions {
+  clientId?: number | undefined;
+}
+
 export interface StartDto {
   clientId: number;
   userId: number;
@@ -637,7 +641,7 @@ export interface GamingServiceClient {
 
   createPromotion(request: CreatePromotionRequest): Observable<Promotion>;
 
-  findPromotions(request: Empty): Observable<Promotions>;
+  findPromotions(request: GetPromotions): Observable<Promotions>;
 
   findOnePromotion(request: FindOnePromotionDto): Observable<Promotion>;
 
@@ -743,7 +747,7 @@ export interface GamingServiceController {
 
   createPromotion(request: CreatePromotionRequest): Promise<Promotion> | Observable<Promotion> | Promotion;
 
-  findPromotions(request: Empty): Promise<Promotions> | Observable<Promotions> | Promotions;
+  findPromotions(request: GetPromotions): Promise<Promotions> | Observable<Promotions> | Promotions;
 
   findOnePromotion(request: FindOnePromotionDto): Promise<Promotion> | Observable<Promotion> | Promotion;
 
