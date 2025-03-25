@@ -67,6 +67,8 @@ import {
   SwaggerVerifyBankAccountRequest,
   SwaggerVerifyDepositReponse,
   SwaggerWithdrawalRequest,
+  TigoWebhookRequest,
+  WebhookResponse,
 } from './dto';
 
 import { AuthGuard } from 'src/identity/auth/auth.guard';
@@ -667,7 +669,9 @@ export class WalletController {
       userId: req.user.id,
       clientId,
     };
-    return this.walletService.getBankAccounts(payload);
+    setTimeout(() => {
+      return this.walletService.getBankAccounts(payload);
+    }, 1000);
   }
 
   @Get(':clientId/payment-methods')
@@ -977,7 +981,8 @@ export class WalletController {
   @Post('/stk-register-url/:clientId/:action')
   @ApiOperation({
     summary: 'post request to register url for stk push notification',
-    description: 'This endpoint to handle registration of required url for stk deposit/withdrawal push notifications',
+    description:
+      'This endpoint to handle registration of required url for stk deposit/withdrawal push notifications',
   })
   @ApiParam({
     name: 'action',
@@ -989,15 +994,20 @@ export class WalletController {
   stk90RegisterUrl(
     @Body() param,
     @Param('action') action: string,
-    @Param('clientId') clientId: number
+    @Param('clientId') clientId: number,
   ) {
-    return this.walletService.Pitch90RegisterUrl({ url: param.url, action, clientId });
+    return this.walletService.Pitch90RegisterUrl({
+      url: param.url,
+      action,
+      clientId,
+    });
   }
 
   @Post('/stk-transaction/:clientId/:action')
   @ApiOperation({
     summary: 'post request to handle stk push request',
-    description: 'This endpoint to handle stk deposit/withdrawal/stkStatus requests',
+    description:
+      'This endpoint to handle stk deposit/withdrawal/stkStatus requests',
   })
   @ApiParam({
     name: 'action',
@@ -1012,21 +1022,21 @@ export class WalletController {
     @Param('clientId') clientId: number,
   ) {
     try {
-    let res: any;
+      let res: any;
       const payload = {
         clientId,
         amount: param.amount,
         msisdn: param.msisdn,
         trxCode: param.trx_code,
         trxDate: param.trx_date,
-        refId: param.ref_id
-      }
+        refId: param.ref_id,
+      };
       switch (action) {
         case 'deposit':
           res = await this.walletService.stkDepositnotification(payload);
           break;
         case 'withdrawal':
-          res = await this.walletService.stkWithdrawNotification(payload)
+          res = await this.walletService.stkWithdrawNotification(payload);
         default:
           res = await this.walletService.stkStatusNotification(payload);
           break;
@@ -1036,15 +1046,15 @@ export class WalletController {
       if (res.success) {
         return {
           status: 'Success',
-          ref_id: res.data.refId
-        }
+          ref_id: res.data.refId,
+        };
       } else {
         return {
           status: 'Fail',
           ref_id: res.data.refId,
           error_no: res.data.error_no || '',
           error_desc: res.data.message || '',
-        }
+        };
       }
     } catch (e) {
       console.log('stk transaction error', e.message);

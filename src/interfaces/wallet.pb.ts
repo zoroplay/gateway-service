@@ -20,6 +20,19 @@ export interface FlutterwaveWebhookRequest {
   flutterwaveKey: string;
 }
 
+export interface TigoWebhookRequest {
+  clientId: number;
+  reference: string;
+  event: string;
+  body: string;
+  Status: boolean;
+}
+
+export interface TigoResponse {
+  success: boolean;
+  message: string;
+}
+
 export interface KoraPayWebhookRequest {
   clientId: number;
   reference: string;
@@ -1038,6 +1051,8 @@ export interface WalletServiceClient {
   flutterWaveWebhook(request: FlutterwaveWebhookRequest): Observable<WebhookResponse>;
 
   korapayWebhook(request: KoraPayWebhookRequest): Observable<WebhookResponse>;
+
+  tigoWebhook(request: TigoWebhookRequest): Observable<TigoResponse>;
 }
 
 export interface WalletServiceController {
@@ -1386,6 +1401,8 @@ export interface WalletServiceController {
   korapayWebhook(
     request: KoraPayWebhookRequest,
   ): Promise<WebhookResponse> | Observable<WebhookResponse> | WebhookResponse;
+
+  tigoWebhook(request: TigoWebhookRequest): Promise<TigoResponse> | Observable<TigoResponse> | TigoResponse;
 }
 
 export function WalletServiceControllerMethods() {
@@ -1480,6 +1497,7 @@ export function WalletServiceControllerMethods() {
       "debitAgentBalance",
       "flutterWaveWebhook",
       "korapayWebhook",
+      "tigoWebhook",
     ];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);

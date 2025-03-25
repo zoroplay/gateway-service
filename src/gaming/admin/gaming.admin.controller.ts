@@ -59,28 +59,6 @@ export class GamingAdminController {
     return this.gamingService.findAll();
   }
 
-  // @Get('get-games')
-  // @ApiOkResponse({ type: [SwaggerOKGameResponse] })
-  // @ApiQuery({ name: 'gameIds', required: false, isArray: true, type: Number })
-  // async getGames() {
-  //   const val = await this.gamingService.getGames();
-
-  //   console.log('val', val);
-  //   return val;
-  // }
-
-
-// @Get('get-games')
-// @ApiOkResponse({ type: [SwaggerOKGameResponse] })
-// @ApiQuery({ name: 'gameIds', required: false, isArray: true, type: Number })
-// async getGames(@Query('gameIds') gameIds?: string): Promise<any> {
-//   const request: GetGamesRequest = {
-//     gameIds: gameIds ? gameIds.split(',').map(Number) : [], // Construct the GetGamesRequest object
-//   };
-
-//   const val = await this.gamingService.getGames(request); // Pass the request object to the service
-//   return val;
-// }
 
 @Get('get-games')
 @ApiOkResponse({ type: [SwaggerOKGameResponse] })
@@ -103,9 +81,11 @@ async getGames(
   @Put('/update-game')
   @ApiBody({ type: UpdateGameRequestDto })
   @ApiOkResponse({ type: [SwaggerOKGameResponse] })
-  updateGame(@Body() payload: UpdateGameDto) {
-    return this.gamingService.updateGame(payload);
+  async updateGame(@Body() payload: UpdateGameDto) {
+    const response = await this.gamingService.updateGame(payload);
+    return response;
   }
+
 
   @Get('categories')
   @ApiOkResponse({ type: [SwaggerOKGameResponse] })
@@ -225,18 +205,6 @@ async updatePromotion(@Body() payload: CreatePromotionDto, @UploadedFile() file?
   console.log('promotion', promotion);
   return promotion;
 }
-
-
-// @Post('/update-promotion')
-// @ApiBody({ type: CreatePromotionRequestDto })
-// @ApiOkResponse({ type: [SwaggerOKPromotionResponse] })
-// @UseInterceptors(FileInterceptor('file'))
-// async updatePromotion(@Body() payload: CreatePromotionDto) {
-//   console.log('payload', payload);
-//   const promotion = await this.gamingService.updatePromotion(payload);
-//   console.log('promotion', promotion);
-//   return promotion;
-// }
 
 
   @Delete('promotion')
