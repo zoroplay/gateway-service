@@ -450,6 +450,7 @@ export interface BetHistory {
   pendingGames?: number | undefined;
   paidOut?: number | undefined;
   paidAt?: string | undefined;
+  isSim?: boolean | undefined;
 }
 
 export interface BetHistoryResponse {

@@ -147,6 +147,7 @@ export interface UpdateGameDto {
   status: boolean;
   type: string;
   providerId: number;
+  priority?: number | undefined;
 }
 
 export interface CreateProviderDto {

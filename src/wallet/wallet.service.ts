@@ -75,7 +75,8 @@ import {
   FlutterwaveWebhookRequest,
   KoraPayWebhookRequest,
   TigoWebhookRequest,
- 
+  PawapayRequest,
+  PawapayResponse,
 } from '../interfaces/wallet.pb';
 import { ClientGrpc } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
@@ -138,11 +139,14 @@ export class WalletService {
   ): Promise<WebhookResponse> {
     return await firstValueFrom(this.svc.flutterWaveWebhook(data));
   }
-  async tigoWebhook(
-    data: TigoWebhookRequest,
-  ): Promise<WebhookResponse> {
-    console.log("check44")
+  async tigoWebhook(data: TigoWebhookRequest): Promise<WebhookResponse> {
+    console.log('check44');
     return await firstValueFrom(this.svc.tigoWebhook(data));
+  }
+
+  async pawapayCallback(data: PawapayRequest): Promise<PawapayResponse> {
+    console.log('check44');
+    return await firstValueFrom(this.svc.pawapayCallback(data));
   }
   async korapayWaveWebhook(
     data: KoraPayWebhookRequest,
@@ -452,7 +456,7 @@ export class WalletService {
   async Pitch90RegisterUrl(
     data: StkRegisterUrlRequest,
   ): Promise<CommonResponseObj> {
-    console.log('register url data', data)
+    console.log('register url data', data);
     return await firstValueFrom(this.svc.stkRegisterUrl(data));
   }
   async stkDepositnotification(
