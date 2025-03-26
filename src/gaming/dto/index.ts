@@ -521,6 +521,12 @@ export class UpdateGameRequestDto {
     example: 42,
   })
   providerId: number;
+
+  @ApiProperty({
+    description: 'priority number for games',
+    example: 14,
+  })
+  priority: number;
 }
 
 export class AddGameCategoriesDto {
