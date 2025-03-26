@@ -12,6 +12,71 @@ import { Struct } from "./google/protobuf/struct.pb";
 
 export const protobufPackage = "identity";
 
+/** Request message for creating an audit log */
+export interface CreateLogRequest {
+  userId: string;
+  clientId: string;
+  action: string;
+  method: string;
+  endpoint: string;
+  statusCode: number;
+  payload: string;
+  response: string;
+  ipAddress: string;
+  userAgent: string;
+  additionalInfo: string;
+}
+
+/** Response message for creating an audit log */
+export interface CreateLogResponse {
+  success: boolean;
+  message: string;
+}
+
+/** GetAllLogs */
+export interface GetAllLogsRequest {
+  clientId: number;
+  page?: number | undefined;
+  limit?: number | undefined;
+}
+
+/** GetAllLogsResponse */
+export interface GetAllLogsResponse {
+  logs: AuditLog[];
+  meta?: Meta | undefined;
+}
+
+/** GetLogByUser */
+export interface GetLogsByUserRequest {
+  userId: number;
+  clientId: number;
+  page?: number | undefined;
+  limit?: number | undefined;
+}
+
+/** GetLogByUserResponse */
+export interface GetLogsByUserResponse {
+  logs: AuditLog[];
+  meta?: Meta | undefined;
+}
+
+/** AuditLog */
+export interface AuditLog {
+  id: number;
+  userId: number;
+  clientId: number;
+  action: string;
+  endpoint: string;
+  method: string;
+  statusCode: number;
+  payload: string;
+  response: string;
+  ipAddress: string;
+  userAgent: string;
+  additionalInfo: string;
+  timestamp: string;
+}
+
 /** HandlePin */
 export interface HandlePinRequest {
   pin: number;
@@ -1190,6 +1255,12 @@ export interface IdentityServiceClient {
   getNetworkSalesReport(request: GetNetworkSalesRequest): Observable<CommonResponseObj>;
 
   getTrackierKeys(request: SingleItemRequest): Observable<CommonResponseObj>;
+
+  getAllLogs(request: GetAllLogsRequest): Observable<GetAllLogsResponse>;
+
+  getLogsByUser(request: GetLogsByUserRequest): Observable<GetLogsByUserResponse>;
+
+  createlog(request: CreateLogRequest): Observable<CreateLogResponse>;
 }
 
 export interface IdentityServiceController {
@@ -1494,6 +1565,16 @@ export interface IdentityServiceController {
   getTrackierKeys(
     request: SingleItemRequest,
   ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
+
+  getAllLogs(
+    request: GetAllLogsRequest,
+  ): Promise<GetAllLogsResponse> | Observable<GetAllLogsResponse> | GetAllLogsResponse;
+
+  getLogsByUser(
+    request: GetLogsByUserRequest,
+  ): Promise<GetLogsByUserResponse> | Observable<GetLogsByUserResponse> | GetLogsByUserResponse;
+
+  createlog(request: CreateLogRequest): Promise<CreateLogResponse> | Observable<CreateLogResponse> | CreateLogResponse;
 }
 
 export function IdentityServiceControllerMethods() {
@@ -1582,6 +1663,9 @@ export function IdentityServiceControllerMethods() {
       "payOutNormalBonus",
       "getNetworkSalesReport",
       "getTrackierKeys",
+      "getAllLogs",
+      "getLogsByUser",
+      "createlog",
     ];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
