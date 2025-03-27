@@ -14,7 +14,7 @@ export const protobufPackage = "wallet";
 
 export interface PawapayRequest {
   clientId: number;
-  status: boolean;
+  status: string;
   depositId: string;
 }
 
