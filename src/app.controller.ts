@@ -150,6 +150,7 @@ export class AppController {
     description: 'Response confirming webhook processing',
   })
   async handleTigoCallback(@Body() webhookBody: any): Promise<WebhookResponse> {
+    console.log('TIGO-WEBHOOK')
     console.log(`📩 Received Tigo Webhook: ${JSON.stringify(webhookBody)}`);
 
     // ✅ Validate Webhook Data
@@ -165,6 +166,8 @@ export class AppController {
         message: 'Invalid webhook data: Missing ReferenceID',
       };
     }
+
+    console.log('TIGO-WEBHOOK')
 
     const isSuccess = webhookBody.Status === true;
     const rawReferenceId = webhookBody.ReferenceID || ''; // ✅ Ensure it's always a string
