@@ -20,11 +20,12 @@ export interface CreateLogRequest {
   method: string;
   endpoint: string;
   statusCode: number;
-  payload: string;
-  response: string;
+  payload: { [key: string]: any }[];
+  response: { [key: string]: any }[];
   ipAddress: string;
   userAgent: string;
-  additionalInfo: string;
+  additionalInfo?: { [key: string]: any } | undefined;
+  timestamp: string;
 }
 
 /** Response message for creating an audit log */
@@ -69,11 +70,11 @@ export interface AuditLog {
   endpoint: string;
   method: string;
   statusCode: number;
-  payload: string;
-  response: string;
+  payload: { [key: string]: any }[];
+  response: { [key: string]: any }[];
   ipAddress: string;
   userAgent: string;
-  additionalInfo: string;
+  additionalInfo?: { [key: string]: any } | undefined;
   timestamp: string;
 }
 
