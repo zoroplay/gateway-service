@@ -273,7 +273,7 @@ export interface GamingActivityRequest {
   clientID: number;
   displayType: string;
   userId?: number | undefined;
-  ticketType?: string | undefined;
+  ticketType?: number | undefined;
 }
 
 export interface GamingActivityResponse {
