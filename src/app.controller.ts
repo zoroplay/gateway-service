@@ -21,6 +21,7 @@ import { WalletService } from './wallet/wallet.service';
 import { SwaggerGetUserByUsernmae } from './identity/dto';
 import { OddsService } from './odds/odds.service';
 import { TigoWebhookRequest, WebhookResponse } from './wallet/dto';
+import { PawapayResponse } from './interfaces/wallet.pb';
 
 @Controller()
 export class AppController {
@@ -122,7 +123,6 @@ export class AppController {
       case 'flutterwave':
         break;
 
-     
       default:
         break;
     }
@@ -136,73 +136,149 @@ export class AppController {
     return this.oddsService.GetOddsStatus(body);
   }
   @ApiTags('Webhooks')
-@Post('/webhook/:clientId/tigo/callback')
-@ApiOperation({
-  summary: 'Handle Tigo Payment Webhook',
-  description: 'Receives payment notifications from Tigo and processes them',
-})
-@ApiParam({
-  name: 'clientId',
-  required: true,
-  description: 'The client ID associated with this payment',
-})
-@ApiBody({
-  type: TigoWebhookRequest,
-  description: 'The webhook payload sent by Tigo',
-})
-@ApiOkResponse({
-  type: WebhookResponse,
-  description: 'Response confirming webhook processing',
-})
-async handleTigoCallback(
-  @Body() webhookBody: any,
-  @Param('clientId') clientId: number,
-): Promise<WebhookResponse> {
-  console.log(`📩 Received Tigo Webhook: ${JSON.stringify(webhookBody)}`);
+  @Post('/webhook/4/tigo/callback')
+  @ApiOperation({
+    summary: 'Handle Tigo Payment Webhook',
+    description: 'Receives payment notifications from Tigo and processes them',
+  })
+  @ApiBody({
+    type: TigoWebhookRequest,
+    description: 'The webhook payload sent by Tigo',
+  })
+  @ApiOkResponse({
+    type: WebhookResponse,
+    description: 'Response confirming webhook processing',
+  })
+  async handleTigoCallback(@Body() webhookBody: any): Promise<WebhookResponse> {
+    console.log('TIGO-WEBHOOK')
+    console.log(`📩 Received Tigo Webhook: ${JSON.stringify(webhookBody)}`);
 
-  // ✅ Validate Webhook Data
-  if (!webhookBody || Object.keys(webhookBody).length === 0) {
-    console.error('❌ Received an empty webhook request');
-    return { success: false, message: 'Empty webhook data' };
+    // ✅ Validate Webhook Data
+    if (!webhookBody || Object.keys(webhookBody).length === 0) {
+      console.error('❌ Received an empty webhook request');
+      return { success: false, message: 'Empty webhook data' };
+    }
+
+    if (!webhookBody.ReferenceID) {
+      console.error('❌ Missing ReferenceID in webhook data');
+      return {
+        success: false,
+        message: 'Invalid webhook data: Missing ReferenceID',
+      };
+    }
+
+    console.log('TIGO-WEBHOOK')
+
+    const isSuccess = webhookBody.Status === true;
+    const rawReferenceId = webhookBody.ReferenceID || ''; // ✅ Ensure it's always a string
+    const amount = webhookBody.Amount || 0;
+
+    // ✅ Safely Remove 'KML' Prefix
+    const referenceId = rawReferenceId.startsWith('KML')
+      ? rawReferenceId.replace(/^KML/, '')
+      : rawReferenceId;
+
+    try {
+      if (isSuccess) {
+        console.log(
+          `✅ Payment Successful! Ref: ${referenceId}, Amount: ${amount}`,
+        );
+
+        // ✅ Call Wallet Service to Credit User
+        const response = await this.walletService.tigoWebhook({
+          clientId: 4,
+          reference: referenceId,
+          event: 'payment_success',
+          body: JSON.stringify(webhookBody),
+          Status: isSuccess,
+        });
+
+        console.log(
+          `🎉 User credited successfully: ${JSON.stringify(response)}`,
+        );
+      } else {
+        console.error(`❌ Payment Failed: ${JSON.stringify(webhookBody)}`);
+      }
+
+      return { success: true, message: 'Webhook processed' };
+    } catch (error) {
+      console.error(`❌ Error processing webhook: ${error.message}`);
+      return { success: false, message: 'Internal server error' };
+    }
   }
 
-  if (!webhookBody.ReferenceID) {
-    console.error('❌ Missing ReferenceID in webhook data');
-    return { success: false, message: 'Invalid webhook data: Missing ReferenceID' };
+  @ApiTags('Webhooks')
+  @Post('/webhook/4/pawapay/callback')
+  async handlePawapayCallback(
+    @Body() webhookBody: any,
+  ): Promise<PawapayResponse> {
+    console.log(`📩 Received Pawapay Webhook: ${JSON.stringify(webhookBody)}`);
+
+    // ✅ Validate Webhook Data
+    if (!webhookBody || Object.keys(webhookBody).length === 0) {
+      console.error('❌ Received an empty webhook request');
+      return { success: false, message: 'Empty webhook data' };
+    }
+
+    if (!webhookBody.depositId) {
+      console.error('❌ Missing DepositId in webhook data');
+      return {
+        success: false,
+        message: 'Invalid webhook data: Missing ReferenceID',
+      };
+    }
+
+    const isSuccess = webhookBody.status === 'COMPLETED';
+
+    try {
+      if (isSuccess) {
+        const response = await this.walletService.pawapayCallback({
+          clientId: 4,
+          depositId: webhookBody.depositId,
+          status: '',
+        });
+        console.log(
+          `🎉 User credited successfully: ${JSON.stringify(response)}`,
+        );
+      } else {
+        console.error(`❌ Payment Failed: ${JSON.stringify(webhookBody)}`);
+      }
+
+      return { success: true, message: 'Webhook processed' };
+    } catch (error) {
+      console.error(`❌ Error processing webhook: ${error.message}`);
+      return { success: false, message: 'Internal server error' };
+    }
   }
 
-  const isSuccess = webhookBody.Status === true;
-  const rawReferenceId = webhookBody.ReferenceID || ''; // ✅ Ensure it's always a string
-  const amount = webhookBody.Amount || 0;
+  @ApiTags('Webhooks')
+  @Get('/webhook/4/pawapay/callback')
+  async handlePawapayCallback1(
+    @Query('depositId') depositId: string,
+  ): Promise<PawapayResponse> {
+    console.log(`📩 Received Pawapay Webhook - depositId: ${depositId}`);
 
-  // ✅ Safely Remove 'KML' Prefix
-  const referenceId = rawReferenceId.startsWith('KML')
-    ? rawReferenceId.replace(/^KML/, '')
-    : rawReferenceId;
+    // ✅ Validate depositId
+    if (!depositId) {
+      console.error('❌ Missing depositId in query parameters');
+      return {
+        success: false,
+        message: 'Invalid webhook: Missing depositId',
+      };
+    }
 
-  try {
-    if (isSuccess) {
-      console.log(`✅ Payment Successful! Ref: ${referenceId}, Amount: ${amount}`);
-
-      // ✅ Call Wallet Service to Credit User
-      const response = await this.walletService.tigoWebhook({
-        clientId: clientId,
-        reference: referenceId,
-        event: 'payment_success',
-        body: JSON.stringify(webhookBody),
-        Status: isSuccess,
+    try {
+      const response = await this.walletService.pawapayCallback({
+        clientId: 4,
+        depositId,
+        status: 'COMPLETED',
       });
 
       console.log(`🎉 User credited successfully: ${JSON.stringify(response)}`);
-    } else {
-      console.error(`❌ Payment Failed: ${JSON.stringify(webhookBody)}`);
+      return { success: true, message: 'Webhook processed' };
+    } catch (error) {
+      console.error(`❌ Error processing webhook: ${error.message}`);
+      return { success: false, message: 'Internal server error' };
     }
-
-    return { success: true, message: 'Webhook processed' };
-  } catch (error) {
-    console.error(`❌ Error processing webhook: ${error.message}`);
-    return { success: false, message: 'Internal server error' };
   }
-}
-
 }

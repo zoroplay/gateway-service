@@ -47,10 +47,25 @@ export interface AuditUser {
   username: string;
 }
 
+/** Request message for creating an audit log */
+export interface CreateLogRequest {
+  userId: string;
+  clientId: string;
+  action: string;
+  method: string;
+  endpoint: string;
+  statusCode: number;
+  payload: { [key: string]: any }[];
+  response: { [key: string]: any }[];
+  ipAddress: string;
+  userAgent: string;
+  additionalInfo?: { [key: string]: any } | undefined;
+  timestamp: string;
+}
+
 /** Response message for creating an audit log */
 export interface CreateLogResponse {
   success: boolean;
-  status: number;
   message: string;
 }
 
