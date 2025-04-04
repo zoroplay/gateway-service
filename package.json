@@ -55,7 +55,8 @@
     "rxjs": "^7.8.1",
     "sbe-service-proto": "git+https://github.com/zoroplay/sbe-service-proto.git",
     "swagger-ui-express": "^5.0.0",
-    "typeorm": "^0.3.20"
+    "typeorm": "^0.3.20",
+    "ua-parser-js": "^2.0.3"
   },
   "devDependencies": {
     "@nestjs/cli": "^10.3.2",
