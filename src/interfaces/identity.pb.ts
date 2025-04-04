@@ -12,25 +12,45 @@ import { Struct } from "./google/protobuf/struct.pb";
 
 export const protobufPackage = "identity";
 
-/** Request message for creating an audit log */
-export interface CreateLogRequest {
-  userId: string;
-  clientId: string;
+/** Additional Audit Info */
+export interface AdditionalInfo {
+  browser: string;
+  os: string;
+  platform: string;
+}
+
+/** AuditLog */
+export interface AuditLog {
+  id: number;
+  userId: number;
+  clientId: number;
   action: string;
-  method: string;
   endpoint: string;
+  method: string;
   statusCode: number;
-  payload: { [key: string]: any }[];
-  response: { [key: string]: any }[];
+  payload: string;
+  response: string;
+  additionalInfo: AdditionalInfo | undefined;
   ipAddress: string;
   userAgent: string;
-  additionalInfo?: { [key: string]: any } | undefined;
   timestamp: string;
+}
+
+/** Request message for creating an audit log */
+export interface CreateLogRequest {
+  logs: AuditLog[];
+}
+
+/** audit User */
+export interface AuditUser {
+  roleId: number;
+  username: string;
 }
 
 /** Response message for creating an audit log */
 export interface CreateLogResponse {
   success: boolean;
+  status: number;
   message: string;
 }
 
@@ -39,6 +59,13 @@ export interface GetAllLogsRequest {
   clientId: number;
   page?: number | undefined;
   limit?: number | undefined;
+  ipAddress: string;
+  userAgent: string;
+  os: string;
+  browser: string;
+  platform: string;
+  endpoint: string;
+  method: string;
 }
 
 /** GetAllLogsResponse */
@@ -53,29 +80,20 @@ export interface GetLogsByUserRequest {
   clientId: number;
   page?: number | undefined;
   limit?: number | undefined;
+  ipAddress: string;
+  userAgent: string;
+  os: string;
+  browser: string;
+  platform: string;
+  endpoint: string;
+  method: string;
 }
 
 /** GetLogByUserResponse */
 export interface GetLogsByUserResponse {
   logs: AuditLog[];
+  user: AuditUser | undefined;
   meta?: Meta | undefined;
-}
-
-/** AuditLog */
-export interface AuditLog {
-  id: number;
-  userId: number;
-  clientId: number;
-  action: string;
-  endpoint: string;
-  method: string;
-  statusCode: number;
-  payload: { [key: string]: any }[];
-  response: { [key: string]: any }[];
-  ipAddress: string;
-  userAgent: string;
-  additionalInfo?: { [key: string]: any } | undefined;
-  timestamp: string;
 }
 
 /** HandlePin */
