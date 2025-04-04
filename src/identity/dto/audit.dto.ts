@@ -7,6 +7,12 @@ export class GetAllLogsDTO {
     example: '63278-dkjhw7-kdhwe-32389',
   })
   clientId: string;
+
+  @ApiProperty({
+    description: 'user ID',
+    example: '2389',
+  })
+  userId: string;
 }
 
 export class GetUserLogsDTO {
