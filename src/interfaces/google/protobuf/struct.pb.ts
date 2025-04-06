@@ -2,7 +2,6 @@
 // versions:
 //   protoc-gen-ts_proto  v1.181.2
 //   protoc               v6.30.1
-
 // source: google/protobuf/struct.proto
 
 /* eslint-disable */
