@@ -52,20 +52,32 @@ export interface CreateLogRequest {
   userId: string;
   clientId: string;
   action: string;
-  method: string;
   endpoint: string;
+  method: string;
   statusCode: number;
-  payload: { [key: string]: any }[];
-  response: { [key: string]: any }[];
+  payload: string;
+  response: string;
+  additionalInfo: AdditionalInfo | undefined;
   ipAddress: string;
   userAgent: string;
-  additionalInfo?: { [key: string]: any } | undefined;
   timestamp: string;
+}
+
+/** Request message for creating an audit log */
+export interface CreateLogRequest {
+  logs: AuditLog[];
+}
+
+/** audit User */
+export interface AuditUser {
+  roleId: number;
+  username: string;
 }
 
 /** Response message for creating an audit log */
 export interface CreateLogResponse {
   success: boolean;
+  status: number;
   message: string;
 }
 
