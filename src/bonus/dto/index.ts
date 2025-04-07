@@ -1,3 +1,4 @@
+import { Optional } from '@nestjs/common';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class SwaggerFilterBySportID {
@@ -63,58 +64,75 @@ export class SwaggerCreateBonusRequest {
     description: 'This bonus will expire after this number of hours',
     example: 'cashback|first_deposit|registration|free_bet|share_bet|referral' 
   })
-  bonusType: string;
+  @Optional()
+  bonusType?: string;
 
   @ApiProperty({ description: 'This bonus can only be used when a punter has atleast this number of selection in their betslip' })
-  minimumEvents: number;
+  @Optional()
+  minimumEvents?: number;
 
   @ApiProperty({ description: 'This bonus can only be used when each selection in a betslip has atleast this number of odds' })
-  minimumOddsPerEvent: number;
+  @Optional()
+  minimumOddsPerEvent?: number;
    
   @ApiProperty({ description: 'This bonus can only be used when total odds in a betslip has atleast this number of odds' })
-  minimumTotalOdds: number;
+  @Optional()
+  minimumTotalOdds?: number;
 
   @ApiProperty({ description: 'This bonus can be used for the following bet types, this should be a list separated by comma, available values are 1 (sportsbook), 2 (casino)' })
-  applicableBetType: string;
+  @Optional()
+  applicableBetType?: string;
 
   @ApiProperty({ description: 'The maximum win when this bonus is used' })
-  maximumWinning: number;
+  @Optional()
+  maximumWinning?: number;
 
   @ApiProperty({ description: 'Minimum lost games for a punter to qualify for this cashback' })
-  minimumLostGames: number;
+  @Optional()
+  minimumLostGames?: number;
 
   @ApiProperty({ description: 'Minimum number of games for a punter to qualify for this bonus' })
-  minimumSelection: number;
+  @Optional()
+  minimumSelection?: number;
 
   @ApiProperty({ description: 'Minimum entry amount to qualify for this bonus' })
-  minimumEntryAmount: number;
+  @Optional()
+  minimumEntryAmount?: number;
 
   @ApiProperty({ description: 'Minimum stake to qualify for this bonus' })
-  minimumBettingStake: number;
+  @Optional()
+  minimumBettingStake?: number;
 
   @ApiProperty({ description: 'Bonus amount to award' })
-  bonusAmount: number;
+  @Optional()
+  bonusAmount?: number;
 
   @ApiProperty({ description: 'Bonus amount multiplier to determine winning amount' })
-  bonusAmountMultiplier: number;
+  @Optional()
+  bonusAmountMultiplier?: number;
 
   @ApiProperty({ description: 'Total number of times to rollover' })
-  rolloverCount: number;
+  @Optional()
+  rolloverCount?: number;
 
   @ApiProperty({ description: 'Product type - Sport, casino, virtual' })
-  product: string;
+  @Optional()
+  product?: string;
 
   @ApiProperty({ description: 'Duration in days' })
-  duration: number;
+  @Optional()
+  duration?: number;
 
   @ApiProperty({ description: 'Array of gameIds to grant bonus' })
-  gameId: string[];
+  @Optional()
+  gameId?: string[];
 
   @ApiProperty({ description: 'Id of provider' })
   providerId: number;
 
   @ApiProperty({ description: 'no of spin count' })
-  casinoSpinCount: number;
+  @Optional()
+  casinoSpinCount?: number;
   
 }
 
