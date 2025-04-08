@@ -21,7 +21,6 @@ import {
   HandlePinRequest,
   HandleTransferRequest,
   GetAllLogsRequest,
-  GetLogsByUserRequest,
 } from 'src/interfaces/identity.pb';
 import {
   ApiBody,
@@ -211,15 +210,19 @@ export class AuthController {
     return this.authService.resetPassword(data);
   }
 
+  // @UseGuards(AuthGuard)
   @Post('/get_all_logs')
   @ApiOperation({
     summary: 'get client variables',
-    description:
-      'This endpoint retrieves the global variables of the SBE client',
+    description: 'This endpoint retrieves all the audits',
   })
   @ApiBody({ type: GetAllLogsDTO })
   @ApiOkResponse({ type: SwaggerCommonResponse })
-  getAllLogs(@Req() req, @Body() data: GetAllLogsRequest, @Ip() ip: any) {
+  getAllLogs(
+    @Body() data: GetAllLogsRequest,
+    @Req() req: IAuthorizedRequest,
+    @Ip() ip: any,
+  ) {
     try {
       const parser = new UAParser();
       const userAgent = req.headers['user-agent'] || 'unknown';
@@ -230,37 +233,9 @@ export class AuthController {
       data.browser = String(ua.getBrowser()) || 'unknown';
       data.platform = String(ua.getDevice()) || 'unknown';
       data.method = req.method;
-      data.endpoint = req.originalUrl;
+      data.endpoint = req.url;
 
       return this.authService.getAllLogs(data);
-    } catch (err) {
-      console.log(err);
-    }
-  }
-
-  @UseGuards(AuthGuard)
-  @Post('/get_logs_by_user')
-  @ApiOperation({
-    summary: 'get client variables',
-    description:
-      'This endpoint retrieves the global variables of the SBE client',
-  })
-  @ApiBody({ type: GetUserLogsDTO })
-  @ApiOkResponse({ type: SwaggerCommonResponse })
-  getLogsByUser(@Req() req, @Body() data: GetLogsByUserRequest, @Ip() ip: any) {
-    try {
-      const parser = new UAParser();
-      const userAgent = req.headers['user-agent'] || 'unknown';
-      const ua = parser.setUA(userAgent);
-
-      data.ipAddress = ip;
-      data.os = String(ua.getOS()) || 'unknown';
-      data.browser = String(ua.getBrowser()) || 'unknown';
-      data.platform = String(ua.getDevice()) || 'unknown';
-      data.method = req.method;
-      data.endpoint = req.originalUrl;
-
-      return this.authService.getLogsbyUser(data);
     } catch (err) {
       console.log(err);
     }

@@ -23,6 +23,7 @@ export interface AdditionalInfo {
 export interface AuditLog {
   id: number;
   userId: number;
+  userName: string;
   clientId: number;
   action: string;
   endpoint: string;
@@ -38,34 +39,7 @@ export interface AuditLog {
 
 /** Request message for creating an audit log */
 export interface CreateLogRequest {
-  logs: AuditLog[];
-}
-
-/** audit User */
-export interface AuditUser {
-  roleId: number;
-  username: string;
-}
-
-/** Request message for creating an audit log */
-export interface CreateLogRequest {
-  userId: string;
-  clientId: string;
-  action: string;
-  endpoint: string;
-  method: string;
-  statusCode: number;
-  payload: string;
-  response: string;
-  additionalInfo: AdditionalInfo | undefined;
-  ipAddress: string;
-  userAgent: string;
-  timestamp: string;
-}
-
-/** Request message for creating an audit log */
-export interface CreateLogRequest {
-  logs: AuditLog[];
+  auditLog: AuditLog | undefined;
 }
 
 /** audit User */
@@ -83,7 +57,8 @@ export interface CreateLogResponse {
 
 /** GetAllLogs */
 export interface GetAllLogsRequest {
-  clientId: number;
+  clientId?: number | undefined;
+  userName?: string | undefined;
   page?: number | undefined;
   limit?: number | undefined;
   ipAddress: string;
@@ -98,28 +73,6 @@ export interface GetAllLogsRequest {
 /** GetAllLogsResponse */
 export interface GetAllLogsResponse {
   logs: AuditLog[];
-  meta?: Meta | undefined;
-}
-
-/** GetLogByUser */
-export interface GetLogsByUserRequest {
-  userId: number;
-  clientId: number;
-  page?: number | undefined;
-  limit?: number | undefined;
-  ipAddress: string;
-  userAgent: string;
-  os: string;
-  browser: string;
-  platform: string;
-  endpoint: string;
-  method: string;
-}
-
-/** GetLogByUserResponse */
-export interface GetLogsByUserResponse {
-  logs: AuditLog[];
-  user: AuditUser | undefined;
   meta?: Meta | undefined;
 }
 
@@ -1304,9 +1257,7 @@ export interface IdentityServiceClient {
 
   getAllLogs(request: GetAllLogsRequest): Observable<GetAllLogsResponse>;
 
-  getLogsByUser(request: GetLogsByUserRequest): Observable<GetLogsByUserResponse>;
-
-  createlog(request: CreateLogRequest): Observable<CreateLogResponse>;
+  createLog(request: CreateLogRequest): Observable<CreateLogResponse>;
 }
 
 export interface IdentityServiceController {
@@ -1616,11 +1567,7 @@ export interface IdentityServiceController {
     request: GetAllLogsRequest,
   ): Promise<GetAllLogsResponse> | Observable<GetAllLogsResponse> | GetAllLogsResponse;
 
-  getLogsByUser(
-    request: GetLogsByUserRequest,
-  ): Promise<GetLogsByUserResponse> | Observable<GetLogsByUserResponse> | GetLogsByUserResponse;
-
-  createlog(request: CreateLogRequest): Promise<CreateLogResponse> | Observable<CreateLogResponse> | CreateLogResponse;
+  createLog(request: CreateLogRequest): Promise<CreateLogResponse> | Observable<CreateLogResponse> | CreateLogResponse;
 }
 
 export function IdentityServiceControllerMethods() {
@@ -1710,8 +1657,7 @@ export function IdentityServiceControllerMethods() {
       "getNetworkSalesReport",
       "getTrackierKeys",
       "getAllLogs",
-      "getLogsByUser",
-      "createlog",
+      "createLog",
     ];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
