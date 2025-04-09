@@ -150,24 +150,19 @@ export class AppController {
     description: 'Response confirming webhook processing',
   })
   async handleTigoCallback(@Body() webhookBody: any): Promise<WebhookResponse> {
-    console.log('TIGO-WEBHOOK')
+    console.log('TIGO-WEBHOOK');
     console.log(`📩 Received Tigo Webhook: ${JSON.stringify(webhookBody)}`);
 
     // ✅ Validate Webhook Data
     if (!webhookBody || Object.keys(webhookBody).length === 0) {
       console.error('❌ Received an empty webhook request');
-      return { success: false, message: 'Empty webhook data' };
     }
 
     if (!webhookBody.ReferenceID) {
       console.error('❌ Missing ReferenceID in webhook data');
-      return {
-        success: false,
-        message: 'Invalid webhook data: Missing ReferenceID',
-      };
     }
 
-    console.log('TIGO-WEBHOOK')
+    console.log('TIGO-WEBHOOK');
 
     const isSuccess = webhookBody.Status === true;
     const rawReferenceId = webhookBody.ReferenceID || ''; // ✅ Ensure it's always a string
@@ -200,10 +195,20 @@ export class AppController {
         console.error(`❌ Payment Failed: ${JSON.stringify(webhookBody)}`);
       }
 
-      return { success: true, message: 'Webhook processed' };
+      return {
+        ResponseCode: webhookBody.ResponseCode || 'BILLER-18-0000-S',
+        ResponseStatus: webhookBody.Status,
+        ResponseDescription: webhookBody.Description,
+        ReferenceID: webhookBody.ReferenceID,
+      };
     } catch (error) {
       console.error(`❌ Error processing webhook: ${error.message}`);
-      return { success: false, message: 'Internal server error' };
+      return {
+        ResponseCode: webhookBody.ResponseCode || 'BILLER-18-0000-S',
+        ResponseStatus: webhookBody.Status,
+        ResponseDescription: webhookBody.Description,
+        ReferenceID: webhookBody.ReferenceID,
+      };
     }
   }
 

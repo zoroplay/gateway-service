@@ -208,6 +208,42 @@ export class SwaggerSettingsResponse {
   updated: string;
 }
 
+export class ValidateSelectionRequest_Selections {
+  @ApiProperty({
+    description: "Match ID",
+    example: 554343344
+  })
+  matchId: number;
+
+  @ApiProperty({
+    description: "Market ID",
+    example: "18"
+  })
+  marketId: string;
+
+  @ApiProperty({
+    description: "outcome ID",
+    example: "13"
+  })
+  outcomeId: string;
+
+  @ApiProperty({
+    description: "Specifier option for markets like Over/Under, Handicap, etc",
+    example: "total=1.5"
+  })
+  specifier: string;
+}
+
+export class SwaggerValidateSelectionRequest {
+  @ApiProperty({
+    type: [ValidateSelectionRequest_Selections],
+    description: 'Array of selections to validate',
+  })
+  events: ValidateSelectionRequest_Selections[];
+}
+
+
+
 export class SwaggerAllSettings {
 
   @ApiProperty({

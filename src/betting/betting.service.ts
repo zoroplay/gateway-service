@@ -20,6 +20,7 @@ import {
   UserRiskSettingsRequest,
   GetSettingsRequest,
   GetRiskSettingRequest,
+  ValidateSelectionRequest,
 } from 'src/interfaces/betting.pb';
 import { ClientGrpc } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
@@ -158,5 +159,10 @@ export class BettingService implements OnModuleInit {
   getUserRiskSettings(data: GetRiskSettingRequest) {
     // console.log('get tickets ');
     return this.service.getUserRiskSettings(data);
+  }
+
+  checkEventsStatus(data: ValidateSelectionRequest) {
+    // console.log('validate selections ');
+    return this.service.validateSelections(data);
   }
 }
