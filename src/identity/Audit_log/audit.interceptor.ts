@@ -17,7 +17,6 @@ import { SKIP_AUDIT_KEY } from './skip-audit.decorator';
 export class AuditLogInterceptor implements NestInterceptor {
   private readonly sensitiveFields = [
     'password',
-    'token',
     'accessToken',
     'refreshToken',
     'authorization',
@@ -125,7 +124,7 @@ export class AuditLogInterceptor implements NestInterceptor {
     } else if (requestType === 'rpc') {
       // For GRPC requests, return className and handlerName
       endpoint = `${className}/${handlerName}`;
-      method = context.getType(); // This will be 'grpc'
+      method = context.getType(); // This will be 'grpc' or 'rpc'
     }
 
     return {
