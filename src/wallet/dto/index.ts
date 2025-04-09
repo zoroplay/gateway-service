@@ -264,14 +264,28 @@ export class TigoWebhookRequest {
 
 export class WebhookResponse {
   @ApiProperty({
-    description: 'Indicates if the webhook was processed successfully',
+    description: 'Response code indicating success or failure',
+    example: 'BILLER-18-0000-S',
   })
-  success: boolean;
+  ResponseCode: string;
+
+  @ApiProperty({
+    description: 'Indicates if the webhook was processed successfully',
+    example: true,
+  })
+  ResponseStatus: boolean;
 
   @ApiProperty({
     description: 'Message describing the webhook processing result',
+    example: 'Callback successful',
   })
-  message: string;
+  ResponseDescription: string;
+
+  @ApiProperty({
+    description: 'Reference ID of the transaction',
+    example: 'billercode20170724170909',
+  })
+  ReferenceID: string | null;
 }
 
 export class SwaggerFetchReportsRequest {

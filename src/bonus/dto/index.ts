@@ -104,7 +104,8 @@ export class SwaggerCreateBonusRequest {
   minimumBettingStake?: number;
 
   @ApiProperty({ description: 'Bonus amount to award' })
-  bonusAmount: number;
+  @Optional()
+  bonusAmount?: number;
 
   @ApiProperty({ description: 'Bonus amount multiplier to determine winning amount' })
   @Optional()
@@ -115,10 +116,12 @@ export class SwaggerCreateBonusRequest {
   rolloverCount?: number;
 
   @ApiProperty({ description: 'Product type - Sport, casino, virtual' })
-  product: string;
+  @Optional()
+  product?: string;
 
   @ApiProperty({ description: 'Duration in days' })
-  duration: number;
+  @Optional()
+  duration?: number;
 
   @ApiProperty({ description: 'Array of gameIds to grant bonus' })
   @Optional()
