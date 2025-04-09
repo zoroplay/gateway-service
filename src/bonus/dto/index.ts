@@ -130,6 +130,10 @@ export class SwaggerCreateBonusRequest {
   @ApiProperty({ description: 'Id of provider' })
   providerId: number;
 
+  @ApiProperty({ description: 'Name of provider' })
+  @Optional()
+  provider: string;
+
   @ApiProperty({ description: 'no of spin count' })
   @Optional()
   casinoSpinCount?: number;

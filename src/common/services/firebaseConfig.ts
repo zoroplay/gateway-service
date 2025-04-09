@@ -3,8 +3,8 @@ import { ServiceAccount } from 'firebase-admin';
 import * as dotenv from 'dotenv';
 dotenv.config();
 
-// const privateKey  = process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n')
 const { privateKey } = JSON.parse(process.env.FIREBASE_PRIVATE_KEY)
+// const privateKey  = process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n')
 
  export const firebaseServiceAccount = {
   'type': process.env.FIREBASE_PROJECT_TYPE,
@@ -20,6 +20,3 @@ const { privateKey } = JSON.parse(process.env.FIREBASE_PRIVATE_KEY)
   'universe_domain': process.env.FIREBASE_DOMAIN
 
 } as ServiceAccount;
-
-
-
