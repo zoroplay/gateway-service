@@ -26,8 +26,8 @@ import {
   HandleTransferRequest,
   GetAllLogsRequest,
   GetAllLogsResponse,
-  GetLogsByUserRequest,
-  GetLogsByUserResponse,
+  CreateLogRequest,
+  CreateLogResponse,
 } from 'src/interfaces/identity.pb';
 
 @Injectable()
@@ -109,15 +109,12 @@ export class AuthService {
     return firstValueFrom(this.svc.getGlobalVariables(data));
   }
 
+  public async createLog(data: CreateLogRequest): Promise<CreateLogResponse> {
+    return firstValueFrom(this.svc.createLog(data));
+  }
   public async getAllLogs(
     data: GetAllLogsRequest,
   ): Promise<GetAllLogsResponse> {
     return firstValueFrom(this.svc.getAllLogs(data));
-  }
-
-  public async getLogsbyUser(
-    data: GetLogsByUserRequest,
-  ): Promise<GetLogsByUserResponse> {
-    return firstValueFrom(this.svc.getLogsByUser(data));
   }
 }

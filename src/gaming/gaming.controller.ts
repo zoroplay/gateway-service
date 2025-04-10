@@ -405,7 +405,7 @@ export class GamingController {
       if (!balanceResponse.success) {
         return res
           .status(balanceResponse.status)
-          .send(balanceResponse);
+          .send(balanceResponse.data);
       }
 
       return res.status(balanceResponse.status).send(balanceResponse.data);
