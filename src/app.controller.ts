@@ -8,6 +8,7 @@ import {
   Res,
   Headers,
   Query,
+  Header,
 } from '@nestjs/common';
 import {
   ApiBody,
@@ -21,7 +22,10 @@ import { WalletService } from './wallet/wallet.service';
 import { SwaggerGetUserByUsernmae } from './identity/dto';
 import { OddsService } from './odds/odds.service';
 import { TigoWebhookRequest, WebhookResponse } from './wallet/dto';
-import { PawapayResponse } from './interfaces/wallet.pb';
+import { PawapayResponse, TigoW2aRequest } from './interfaces/wallet.pb';
+import * as xml2js from 'xml2js';
+import buildTigoW2AResponse from '../src/wallet/dto/utils';
+import { Response, Request } from 'express';
 
 @Controller()
 export class AppController {
@@ -209,6 +213,73 @@ export class AppController {
         ResponseDescription: webhookBody.Description,
         ReferenceID: webhookBody.ReferenceID,
       };
+    }
+  }
+
+  @ApiTags('Webhooks')
+  @Post('/webhook/4/tigo/w2a/notify')
+  async handleW2aWebhook(
+    @Body() body,
+    @Req() req: Request,
+    @Res() res: Response,
+  ) {
+    console.log('TIGO-W2A-WEBHOOK');
+
+    const rawXml = body;
+
+    // Parse XML into JS
+    const parsed = await new xml2js.Parser({
+      explicitArray: false,
+    }).parseStringPromise(rawXml);
+    const command = parsed?.COMMAND;
+
+    if (!command) {
+      console.error('❌ Invalid XML format from Tigo');
+      return {
+        success: false,
+        message: 'Invalid XML format from Tigo',
+      };
+    }
+
+    const { TXNID, MSISDN, AMOUNT, CUSTOMERREFERENCEID, SENDERNAME } = command;
+
+    console.log(`📩 Received Tigo W2A for ${TXNID}, amount: ${AMOUNT}`);
+
+    const payload: TigoW2aRequest = {
+      txnId: command.TXNID,
+      msisdn: command.MSISDN,
+      amount: command.AMOUNT,
+      customerReferenceId: command.CUSTOMERREFERENCEID,
+      senderName: command.SENDERNAME,
+      clientId: 4,
+    };
+    console.log(payload);
+
+    // Process payment success
+    try {
+      await this.walletService.handleW2aWebhook(payload);
+
+      const responseXml = {
+        txnId: TXNID,
+        refId: `REF-${Date.now()}`,
+        msisdn: MSISDN,
+      };
+
+      return res.type('text/xml').send(responseXml);
+    } catch (error) {
+      console.error('❌ Failed to process payment:', error.message);
+
+      const failXml = buildTigoW2AResponse({
+        txnId: TXNID,
+        refId: `REF-${Date.now()}`,
+        result: 'TF',
+        errorCode: 'error100',
+        errorDesc: 'Internal server error',
+        msisdn: MSISDN,
+        content: 'Something went wrong on our side.',
+      });
+
+      return res.type('text/xml').send(failXml);
     }
   }
 

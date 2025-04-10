@@ -4,16 +4,19 @@ import { Logger, ValidationPipe } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { HttpExceptionFilter } from './filter/http-exception.filter';
 import { urlencoded, json } from 'express';
-import { getBodyParserOptions } from "@nestjs/platform-express/adapters/utils/get-body-parser-options.util";
+import { getBodyParserOptions } from '@nestjs/platform-express/adapters/utils/get-body-parser-options.util';
+import * as xmlparser from 'express-xml-bodyparser';
 
 const logger = new Logger('Main');
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
-    rawBody: true
+    rawBody: true,
   });
 
   app.setGlobalPrefix('/api/v2');
+
+  app.use(xmlparser());
 
   const options = new DocumentBuilder()
     .setTitle('SportsBook Engine APIs')
@@ -23,8 +26,8 @@ async function bootstrap() {
     .build();
 
   app.enableCors();
-  app.use(json(getBodyParserOptions(true, { limit: '50mb'})));
-  app.use(urlencoded(getBodyParserOptions(true, { limit: '50mb'})));
+  app.use(json(getBodyParserOptions(true, { limit: '50mb' })));
+  app.use(urlencoded(getBodyParserOptions(true, { limit: '50mb' })));
   app.useGlobalFilters(new HttpExceptionFilter());
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
 

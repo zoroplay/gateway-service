@@ -12,6 +12,21 @@ import { Struct } from "./google/protobuf/struct.pb";
 
 export const protobufPackage = "wallet";
 
+export interface TigoW2aRequest {
+  txnId: string;
+  msisdn: string;
+  amount: string;
+  customerReferenceId: string;
+  senderName: string;
+  clientId: number;
+}
+
+export interface TigoW2aResponse {
+  success: boolean;
+  refId: string;
+  message: string;
+}
+
 export interface PawapayRequest {
   clientId: number;
   status: string;
@@ -1065,6 +1080,8 @@ export interface WalletServiceClient {
 
   tigoWebhook(request: TigoWebhookRequest): Observable<TigoResponse>;
 
+  tigoW2A(request: TigoW2aRequest): Observable<TigoW2aResponse>;
+
   pawapayCallback(request: PawapayRequest): Observable<PawapayResponse>;
 }
 
@@ -1417,6 +1434,8 @@ export interface WalletServiceController {
 
   tigoWebhook(request: TigoWebhookRequest): Promise<TigoResponse> | Observable<TigoResponse> | TigoResponse;
 
+  tigoW2A(request: TigoW2aRequest): Promise<TigoW2aResponse> | Observable<TigoW2aResponse> | TigoW2aResponse;
+
   pawapayCallback(request: PawapayRequest): Promise<PawapayResponse> | Observable<PawapayResponse> | PawapayResponse;
 }
 
@@ -1513,6 +1532,7 @@ export function WalletServiceControllerMethods() {
       "flutterWaveWebhook",
       "korapayWebhook",
       "tigoWebhook",
+      "tigoW2A",
       "pawapayCallback",
     ];
     for (const method of grpcMethods) {

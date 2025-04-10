@@ -61,6 +61,7 @@ export interface CreateBonusRequest {
   providerId?: number | undefined;
   bonusId?: number | undefined;
   userIds: string[];
+  provider?: string | undefined;
 }
 
 export interface CreateBonusResponse {
