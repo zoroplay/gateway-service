@@ -27,6 +27,20 @@ export class AuditLogInterceptor implements NestInterceptor {
     private readonly reflector: Reflector,
   ) {}
 
+  private safeStringify(obj: any): string {
+    const seen = new WeakSet();
+
+    return JSON.stringify(obj, function (key, value) {
+      if (typeof value === 'object' && value !== null) {
+        if (seen.has(value)) {
+          return '[Circular]';
+        }
+        seen.add(value);
+      }
+      return value;
+    });
+  }
+
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     if (this.shouldSkipAudit(context)) {
       return next.handle();
@@ -324,10 +338,13 @@ export class AuditLogInterceptor implements NestInterceptor {
           sanitized.data[field] = '**REDACTED**';
         }
       }
-      return JSON.stringify(sanitized);
+      return this.safeStringify(sanitized);
     } catch (error) {
       console.error('Error sanitizing data:', error);
-      return '{}';
+      return this.safeStringify({
+        error: 'Failed to sanitize',
+        message: error.message,
+      });
     }
   }
 

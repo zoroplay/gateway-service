@@ -8,8 +8,13 @@ import { getBodyParserOptions } from '@nestjs/platform-express/adapters/utils/ge
 import { AuditLogInterceptor } from './identity/Audit_log/audit.interceptor';
 import { Reflector } from '@nestjs/core';
 import { AuthService } from './identity/auth/auth.service';
+import * as xmlparser from 'express-xml-bodyparser';
+import * as bodyParser from 'body-parser';
+import * as bodyParserXml from 'body-parser-xml';
 
 const logger = new Logger('Main');
+
+bodyParserXml(bodyParser);
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -17,6 +22,11 @@ async function bootstrap() {
   });
 
   app.setGlobalPrefix('/api/v2');
+
+  app.use(
+    '/api/v2/webhook/:clientId/tigo/w2a/notify',
+    bodyParser.raw({ type: 'text/xml' }),
+  );
 
   const options = new DocumentBuilder()
     .setTitle('SportsBook Engine APIs')
