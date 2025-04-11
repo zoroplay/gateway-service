@@ -217,7 +217,7 @@ export class AppController {
   }
 
   @ApiTags('Webhooks')
-  @Post('/webhook/4/tigo/w2a/notify')
+  @Post('/webhook/4/tigo/notify')
   async handleW2aWebhook(@Req() req: Request, @Res() res: Response) {
     console.log('TIGO-W2A-WEBHOOK');
 
