@@ -24,8 +24,8 @@ import { OddsService } from './odds/odds.service';
 import { TigoWebhookRequest, WebhookResponse } from './wallet/dto';
 import { PawapayResponse, TigoW2aRequest } from './interfaces/wallet.pb';
 import * as xml2js from 'xml2js';
-import buildTigoW2AResponse from '../src/wallet/dto/utils';
 import { Response, Request } from 'express';
+import buildTigoW2AResponse from './wallet/dto/utils';
 
 @Controller()
 export class AppController {
@@ -218,27 +218,18 @@ export class AppController {
 
   @ApiTags('Webhooks')
   @Post('/webhook/4/tigo/w2a/notify')
-  async handleW2aWebhook(
-    @Body() body,
-    @Req() req: Request,
-    @Res() res: Response,
-  ) {
+  async handleW2aWebhook(@Req() req: Request, @Res() res: Response) {
     console.log('TIGO-W2A-WEBHOOK');
 
-    const rawXml = body;
+    const rawXml = req.body.toString();
 
-    // Parse XML into JS
     const parsed = await new xml2js.Parser({
       explicitArray: false,
     }).parseStringPromise(rawXml);
     const command = parsed?.COMMAND;
 
     if (!command) {
-      console.error('❌ Invalid XML format from Tigo');
-      return {
-        success: false,
-        message: 'Invalid XML format from Tigo',
-      };
+      return res.status(400).send('Invalid XML format');
     }
 
     const { TXNID, MSISDN, AMOUNT, CUSTOMERREFERENCEID, SENDERNAME } = command;
@@ -259,11 +250,19 @@ export class AppController {
     try {
       await this.walletService.handleW2aWebhook(payload);
 
-      const responseXml = {
+      const responseXml = buildTigoW2AResponse({
         txnId: TXNID,
         refId: `REF-${Date.now()}`,
+        result: 'TS',
+        errorCode: 'error000',
+        errorDesc: 'Successful transaction',
         msisdn: MSISDN,
-      };
+        content: 'Payment received successfully',
+      });
+
+      console.log(
+        `🎉 User credited successfully: ${JSON.stringify(responseXml)}`,
+      );
 
       return res.type('text/xml').send(responseXml);
     } catch (error) {
@@ -274,10 +273,11 @@ export class AppController {
         refId: `REF-${Date.now()}`,
         result: 'TF',
         errorCode: 'error100',
-        errorDesc: 'Internal server error',
+        errorDesc: 'General Error',
         msisdn: MSISDN,
         content: 'Something went wrong on our side.',
       });
+      console.error(`❌ Payment Failed: ${JSON.stringify(failXml)}`);
 
       return res.type('text/xml').send(failXml);
     }
