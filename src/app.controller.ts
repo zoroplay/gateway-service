@@ -8,6 +8,7 @@ import {
   Res,
   Headers,
   Query,
+  Header,
 } from '@nestjs/common';
 import {
   ApiBody,
@@ -21,7 +22,10 @@ import { WalletService } from './wallet/wallet.service';
 import { SwaggerGetUserByUsernmae } from './identity/dto';
 import { OddsService } from './odds/odds.service';
 import { TigoWebhookRequest, WebhookResponse } from './wallet/dto';
-import { PawapayResponse } from './interfaces/wallet.pb';
+import { PawapayResponse, TigoW2aRequest } from './interfaces/wallet.pb';
+import * as xml2js from 'xml2js';
+import { Response, Request } from 'express';
+import buildTigoW2AResponse from './wallet/dto/utils';
 
 @Controller()
 export class AppController {
@@ -150,24 +154,19 @@ export class AppController {
     description: 'Response confirming webhook processing',
   })
   async handleTigoCallback(@Body() webhookBody: any): Promise<WebhookResponse> {
-    console.log('TIGO-WEBHOOK')
+    console.log('TIGO-WEBHOOK');
     console.log(`📩 Received Tigo Webhook: ${JSON.stringify(webhookBody)}`);
 
     // ✅ Validate Webhook Data
     if (!webhookBody || Object.keys(webhookBody).length === 0) {
       console.error('❌ Received an empty webhook request');
-      return { success: false, message: 'Empty webhook data' };
     }
 
     if (!webhookBody.ReferenceID) {
       console.error('❌ Missing ReferenceID in webhook data');
-      return {
-        success: false,
-        message: 'Invalid webhook data: Missing ReferenceID',
-      };
     }
 
-    console.log('TIGO-WEBHOOK')
+    console.log('TIGO-WEBHOOK');
 
     const isSuccess = webhookBody.Status === true;
     const rawReferenceId = webhookBody.ReferenceID || ''; // ✅ Ensure it's always a string
@@ -200,10 +199,87 @@ export class AppController {
         console.error(`❌ Payment Failed: ${JSON.stringify(webhookBody)}`);
       }
 
-      return { success: true, message: 'Webhook processed' };
+      return {
+        ResponseCode: webhookBody.ResponseCode || 'BILLER-18-0000-S',
+        ResponseStatus: webhookBody.Status,
+        ResponseDescription: webhookBody.Description,
+        ReferenceID: webhookBody.ReferenceID,
+      };
     } catch (error) {
       console.error(`❌ Error processing webhook: ${error.message}`);
-      return { success: false, message: 'Internal server error' };
+      return {
+        ResponseCode: webhookBody.ResponseCode || 'BILLER-18-0000-S',
+        ResponseStatus: webhookBody.Status,
+        ResponseDescription: webhookBody.Description,
+        ReferenceID: webhookBody.ReferenceID,
+      };
+    }
+  }
+
+  @ApiTags('Webhooks')
+  @Post('/webhook/4/tigo/notify')
+  async handleW2aWebhook(@Req() req: Request, @Res() res: Response) {
+    console.log('TIGO-W2A-WEBHOOK');
+
+    const rawXml = req.body.toString();
+
+    const parsed = await new xml2js.Parser({
+      explicitArray: false,
+    }).parseStringPromise(rawXml);
+    const command = parsed?.COMMAND;
+
+    if (!command) {
+      return res.status(400).send('Invalid XML format');
+    }
+
+    const { TXNID, MSISDN, AMOUNT, CUSTOMERREFERENCEID, SENDERNAME } = command;
+
+    console.log(`📩 Received Tigo W2A for ${TXNID}, amount: ${AMOUNT}`);
+
+    const payload: TigoW2aRequest = {
+      txnId: command.TXNID,
+      msisdn: command.MSISDN,
+      amount: command.AMOUNT,
+      customerReferenceId: command.CUSTOMERREFERENCEID,
+      senderName: command.SENDERNAME,
+      clientId: 4,
+    };
+    console.log(payload);
+
+    // Process payment success
+    try {
+      await this.walletService.handleW2aWebhook(payload);
+
+      const responseXml = buildTigoW2AResponse({
+        txnId: TXNID,
+        refId: `REF-${Date.now()}`,
+        result: 'TS',
+        errorCode: 'error000',
+        errorDesc: 'Successful transaction',
+        msisdn: MSISDN,
+        content: 'Payment received successfully',
+      });
+
+      console.log(
+        `🎉 User credited successfully: ${JSON.stringify(responseXml)}`,
+      );
+
+      return res.type('text/xml').send(responseXml);
+    } catch (error) {
+      console.error('❌ Failed to process payment:', error.message);
+
+      const failXml = buildTigoW2AResponse({
+        txnId: TXNID,
+        refId: `REF-${Date.now()}`,
+        result: 'TF',
+        errorCode: 'error100',
+        errorDesc: 'General Error',
+        msisdn: MSISDN,
+        content: 'Something went wrong on our side.',
+      });
+      console.error(`❌ Payment Failed: ${JSON.stringify(failXml)}`);
+
+      return res.type('text/xml').send(failXml);
     }
   }
 

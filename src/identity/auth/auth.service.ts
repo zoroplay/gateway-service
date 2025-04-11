@@ -24,6 +24,10 @@ import {
   CommonResponseObj,
   HandlePinRequest,
   HandleTransferRequest,
+  GetAllLogsRequest,
+  GetAllLogsResponse,
+  CreateLogRequest,
+  CreateLogResponse,
 } from 'src/interfaces/identity.pb';
 
 @Injectable()
@@ -103,5 +107,14 @@ export class AuthService {
     data: GetSettingsRequest,
   ): Promise<CommonResponseObj> {
     return firstValueFrom(this.svc.getGlobalVariables(data));
+  }
+
+  public async createLog(data: CreateLogRequest): Promise<CreateLogResponse> {
+    return firstValueFrom(this.svc.createLog(data));
+  }
+  public async getAllLogs(
+    data: GetAllLogsRequest,
+  ): Promise<GetAllLogsResponse> {
+    return firstValueFrom(this.svc.getAllLogs(data));
   }
 }

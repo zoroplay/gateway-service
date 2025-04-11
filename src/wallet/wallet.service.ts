@@ -77,6 +77,8 @@ import {
   TigoWebhookRequest,
   PawapayRequest,
   PawapayResponse,
+  TigoW2aRequest,
+  TigoW2aResponse,
 } from '../interfaces/wallet.pb';
 import { ClientGrpc } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
@@ -142,6 +144,11 @@ export class WalletService {
   async tigoWebhook(data: TigoWebhookRequest): Promise<WebhookResponse> {
     console.log('check44');
     return await firstValueFrom(this.svc.tigoWebhook(data));
+  }
+
+  async handleW2aWebhook(data: TigoW2aRequest): Promise<TigoW2aResponse> {
+    console.log('check555');
+    return await firstValueFrom(this.svc.tigoW2A(data));
   }
 
   async pawapayCallback(data: PawapayRequest): Promise<PawapayResponse> {
