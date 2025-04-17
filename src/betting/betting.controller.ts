@@ -33,6 +33,7 @@ import {
   SwaggerSettingsResponse,
   SwaggerUpdateBetRequest,
   SwaggerUpdateBetResponse,
+  SwaggerValidateSelectionRequest,
 } from './dto';
 import {
   BetHistoryRequest,
@@ -42,6 +43,7 @@ import {
   ProcessCashoutRequest,
   Settings,
   UpdateBetRequest,
+  ValidateSelectionRequest,
 } from '../interfaces/betting.pb';
 import { SwaggerCommonResponse } from 'src/identity/dto';
 import { AuthGuard } from 'src/identity/auth/auth.guard';
@@ -112,6 +114,24 @@ export class BettingController {
       return this.bettingService.GetSettingsByID({
         clientID: params.client_id,
       });
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  @Post('/validate-selections')
+  @ApiOperation({
+    summary: 'Validate betslip selections',
+    description:
+      'Used to validate user selections on a bet slip',
+  })
+  @ApiBody({ type: SwaggerValidateSelectionRequest })
+  @ApiOkResponse({ type: SwaggerCommonResponse})
+  validateSelections(
+    @Body() data: ValidateSelectionRequest
+  ) {
+    try {
+      return this.bettingService.checkEventsStatus(data);
     } catch (error) {
       console.error(error);
     }

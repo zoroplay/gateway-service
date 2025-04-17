@@ -12,70 +12,68 @@ import { Struct } from "./google/protobuf/struct.pb";
 
 export const protobufPackage = "identity";
 
-/** Request message for creating an audit log */
-export interface CreateLogRequest {
-  userId: string;
-  clientId: string;
-  action: string;
-  method: string;
-  endpoint: string;
-  statusCode: number;
-  payload: { [key: string]: any }[];
-  response: { [key: string]: any }[];
-  ipAddress: string;
-  userAgent: string;
-  additionalInfo?: { [key: string]: any } | undefined;
-  timestamp: string;
-}
-
-/** Response message for creating an audit log */
-export interface CreateLogResponse {
-  success: boolean;
-  message: string;
-}
-
-/** GetAllLogs */
-export interface GetAllLogsRequest {
-  clientId: number;
-  page?: number | undefined;
-  limit?: number | undefined;
-}
-
-/** GetAllLogsResponse */
-export interface GetAllLogsResponse {
-  logs: AuditLog[];
-  meta?: Meta | undefined;
-}
-
-/** GetLogByUser */
-export interface GetLogsByUserRequest {
-  userId: number;
-  clientId: number;
-  page?: number | undefined;
-  limit?: number | undefined;
-}
-
-/** GetLogByUserResponse */
-export interface GetLogsByUserResponse {
-  logs: AuditLog[];
-  meta?: Meta | undefined;
+/** Additional Audit Info */
+export interface AdditionalInfo {
+  browser: string;
+  os: string;
+  platform: string;
 }
 
 /** AuditLog */
 export interface AuditLog {
   id: number;
   userId: number;
+  userName: string;
   clientId: number;
   action: string;
   endpoint: string;
   method: string;
   statusCode: number;
-  payload: { [key: string]: any }[];
-  response: { [key: string]: any }[];
+  payload: string;
+  response: string;
+  additionalInfo: AdditionalInfo | undefined;
   ipAddress: string;
   userAgent: string;
-  additionalInfo?: { [key: string]: any } | undefined;
   timestamp: string;
+}
+
+/** Request message for creating an audit log */
+export interface CreateLogRequest {
+  auditLog: AuditLog | undefined;
+}
+
+/** audit User */
+export interface AuditUser {
+  roleId: number;
+  username: string;
+}
+
+/** Response message for creating an audit log */
+export interface CreateLogResponse {
+  success: boolean;
+  status: number;
+  message: string;
+}
+
+/** GetAllLogs */
+export interface GetAllLogsRequest {
+  clientId?: number | undefined;
+  userName?: string | undefined;
+  page?: number | undefined;
+  limit?: number | undefined;
+  ipAddress: string;
+  userAgent: string;
+  os: string;
+  browser: string;
+  platform: string;
+  endpoint: string;
+  method: string;
+}
+
+/** GetAllLogsResponse */
+export interface GetAllLogsResponse {
+  logs: AuditLog[];
+  meta?: Meta | undefined;
 }
 
 /** HandlePin */
@@ -1259,9 +1257,7 @@ export interface IdentityServiceClient {
 
   getAllLogs(request: GetAllLogsRequest): Observable<GetAllLogsResponse>;
 
-  getLogsByUser(request: GetLogsByUserRequest): Observable<GetLogsByUserResponse>;
-
-  createlog(request: CreateLogRequest): Observable<CreateLogResponse>;
+  createLog(request: CreateLogRequest): Observable<CreateLogResponse>;
 }
 
 export interface IdentityServiceController {
@@ -1571,11 +1567,7 @@ export interface IdentityServiceController {
     request: GetAllLogsRequest,
   ): Promise<GetAllLogsResponse> | Observable<GetAllLogsResponse> | GetAllLogsResponse;
 
-  getLogsByUser(
-    request: GetLogsByUserRequest,
-  ): Promise<GetLogsByUserResponse> | Observable<GetLogsByUserResponse> | GetLogsByUserResponse;
-
-  createlog(request: CreateLogRequest): Promise<CreateLogResponse> | Observable<CreateLogResponse> | CreateLogResponse;
+  createLog(request: CreateLogRequest): Promise<CreateLogResponse> | Observable<CreateLogResponse> | CreateLogResponse;
 }
 
 export function IdentityServiceControllerMethods() {
@@ -1665,8 +1657,7 @@ export function IdentityServiceControllerMethods() {
       "getNetworkSalesReport",
       "getTrackierKeys",
       "getAllLogs",
-      "getLogsByUser",
-      "createlog",
+      "createLog",
     ];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
