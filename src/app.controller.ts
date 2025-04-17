@@ -284,7 +284,7 @@ export class AppController {
   }
 
   @ApiTags('Webhooks')
-  @Post('/webhook/4/pawapay/callback')
+  @Post('/webhook/7/pawapay/callback')
   async handlePawapayCallback(
     @Body() webhookBody: any,
   ): Promise<PawapayResponse> {
@@ -323,6 +323,52 @@ export class AppController {
       return { success: true, message: 'Webhook processed' };
     } catch (error) {
       console.error(`❌ Error processing webhook: ${error.message}`);
+      return { success: false, message: 'Internal server error' };
+    }
+  }
+
+  @ApiTags('Webhooks')
+  @Post('/webhook/4/mtnmomo/callback')
+  async handleMtnmomoCallback(@Body() webhookBody: any) {
+    console.log(`📩 Received MTN MoMo Webhook: ${JSON.stringify(webhookBody)}`);
+
+    // ✅ Validate required fields
+    if (!webhookBody || Object.keys(webhookBody).length === 0) {
+      console.error('❌ Received an empty webhook request');
+      return { success: false };
+    }
+
+    const isSuccess = webhookBody.status === 'SUCCESSFUL';
+
+    if (!webhookBody.externalId) {
+      console.error('❌ Missing externalId in webhook data');
+      return {
+        success: false,
+      };
+    }
+
+    try {
+      if (isSuccess) {
+        const response = await this.walletService.mtnmomoWebhook({
+          amount: webhookBody.amount,
+          externalId: webhookBody.externalId,
+          status: webhookBody.status,
+          clientId: 4, // hardcoded clientId for now
+        });
+
+        console.log(
+          `🎉 User credited successfully: ${JSON.stringify(response)}`,
+        );
+      } else {
+        console.warn(
+          `⚠️ Payment Failed or Pending: ${JSON.stringify(webhookBody)}`,
+        );
+        // You might want to update transaction status to FAILED here too
+      }
+
+      return { success: true, message: 'Webhook processed' };
+    } catch (error) {
+      console.error(`❌ Error processing webhook: ${error.message}`, error);
       return { success: false, message: 'Internal server error' };
     }
   }
