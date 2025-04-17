@@ -24,6 +24,11 @@ import {
   CommonResponseObj,
   HandlePinRequest,
   HandleTransferRequest,
+  GetAllLogsRequest,
+  GetAllLogsResponse,
+  CreateLogRequest,
+  CreateLogResponse,
+  ValidateGroupCodeResponse,
 } from 'src/interfaces/identity.pb';
 
 @Injectable()
@@ -70,11 +75,15 @@ export class AuthService {
   public async validate(token: string): Promise<ValidateResponse> {
     return firstValueFrom(this.svc.validate({ token }));
   }
-
   public async validateClient(token: string): Promise<ValidateClientResponse> {
     return firstValueFrom(this.svc.validateClient({ token }));
   }
 
+  public async validateGroupCode(
+    groupName: string,
+  ): Promise<ValidateGroupCodeResponse> {
+    return firstValueFrom(this.svc.validateGroupCode({ groupName }));
+  }
   public async getUserDetails(
     data: GetUserDetailsRequest,
   ): Promise<GetUserDetailsResponse> {
@@ -103,5 +112,14 @@ export class AuthService {
     data: GetSettingsRequest,
   ): Promise<CommonResponseObj> {
     return firstValueFrom(this.svc.getGlobalVariables(data));
+  }
+
+  public async createLog(data: CreateLogRequest): Promise<CreateLogResponse> {
+    return firstValueFrom(this.svc.createLog(data));
+  }
+  public async getAllLogs(
+    data: GetAllLogsRequest,
+  ): Promise<GetAllLogsResponse> {
+    return firstValueFrom(this.svc.getAllLogs(data));
   }
 }
