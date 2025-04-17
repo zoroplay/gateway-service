@@ -3,13 +3,15 @@ import {
   ExecutionContext,
   Injectable,
   NestInterceptor,
-  Inject,
+  BadRequestException,
+  HttpException,
 } from '@nestjs/common';
 import { Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { tap, map, catchError } from 'rxjs/operators';
 import * as useragent from 'express-useragent';
 import { Metadata } from '@grpc/grpc-js';
 import { AuthService } from '../auth/auth.service';
+import { CryptoService } from '../../crypto/crypto.service';
 import { Reflector } from '@nestjs/core';
 import { SKIP_AUDIT_KEY } from './skip-audit.decorator';
 
@@ -24,31 +26,79 @@ export class AuditLogInterceptor implements NestInterceptor {
 
   constructor(
     private readonly authService: AuthService,
+    private readonly cryptoService: CryptoService,
     private readonly reflector: Reflector,
   ) {}
 
-  intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
+  async intercept(
+    context: ExecutionContext,
+    next: CallHandler,
+  ): Promise<Observable<any>> {
     if (this.shouldSkipAudit(context)) {
       return next.handle();
     }
 
     const requestType = this.getRequestType(context);
+    const {
+      action,
+      endpoint,
+      method,
+      additionalInfo,
+      clientId,
+      ipAddress,
+      userAgent,
+      authHeader,
+      clientCode,
+    } = this.extractRequestData(context);
+
+    const keyBuffer = await this.cryptoService.validateClientAndGenerateKey(
+      clientCode,
+      clientId,
+    );
+
+    const key = keyBuffer.toString('hex');
 
     try {
-      const {
-        action,
-        endpoint,
-        method,
-        additionalInfo,
-        clientId,
-        ipAddress,
-        userAgent,
-        authHeader,
-      } = this.extractRequestData(context);
+      const request =
+        requestType === 'http'
+          ? context.switchToHttp().getRequest()
+          : context.switchToRpc().getData();
 
-      // console.log(context, '=== ontext');
+      // 🔓 DECRYPT incoming request body (only for HTTP for simplicity here)
+      // In your intercept() method, update the decryption block:
+      if (requestType === 'http') {
+        try {
+          if (!endpoint.includes('encrypt') && !endpoint.includes('decrypt')) {
+            if (!request.body?.data) {
+              throw new BadRequestException('Encrypted data required');
+            }
+            request.body = this.cryptoService.decrypt(request.body.data, key);
+          }
+        } catch (err) {
+          if (err.message.includes('decryption failed')) {
+            throw new BadRequestException('Decryption failed - invalid key or data');
+          }
+          throw err;  
+        }
+      }
 
       return next.handle().pipe(
+        map((response) => {
+          // Get the actual request URL
+          const requestUrl = requestType === 'http' 
+            ? context.switchToHttp().getRequest().url 
+            : endpoint;
+  
+          // Only skip encryption for /crypto/decrypt endpoint
+          const isDecryptEndpoint = requestUrl.toLowerCase().includes('crypto/decrypt');
+  
+          if (isDecryptEndpoint) {
+            return response; // Return raw response for decrypt endpoint
+          }
+  
+          // Encrypt all other responses
+          return this.cryptoService.encrypt(response, key);
+        }),
         tap(async (response) => {
           const user = await this.resolveUser(authHeader, action, response);
 
@@ -81,7 +131,8 @@ export class AuditLogInterceptor implements NestInterceptor {
       );
     } catch (error) {
       console.error('AuditLogInterceptor error:', error);
-      return next.handle(); // Continue processing even if audit fails
+      // next.handle(); // Continue processing even if audit fails
+      throw error; // disContinue and show error to client
     }
   }
 
@@ -104,7 +155,9 @@ export class AuditLogInterceptor implements NestInterceptor {
       ...this.getActionAndEndpoint(context),
       ...this.getNetworkInfo(context, requestType),
       additionalInfo: this.getUserAgentInfo(ua),
-      authHeader: this.getAuthHeader(context, requestType),
+      authHeader: this.getAuthHeader(context, requestType)?.authorization,
+      clientCode: this.getAuthHeader(context, requestType)?.clientCode,
+      clientId: this.getAuthHeader(context, requestType)?.clientId,
     };
   }
 
@@ -244,10 +297,23 @@ export class AuditLogInterceptor implements NestInterceptor {
   private getAuthHeader(
     context: ExecutionContext,
     requestType: 'http' | 'grpc',
-  ): string {
+  ) {
     try {
       if (requestType === 'http') {
-        return context.switchToHttp().getRequest().headers?.authorization || '';
+        const authorization =
+          context.switchToHttp().getRequest().headers?.authorization || '';
+        const clientCode = context.switchToHttp().getRequest().headers?.[
+          'client-code'
+        ];
+        const clientId = context.switchToHttp().getRequest().headers?.[
+          'client-id'
+        ];
+
+        if (!authorization && !clientCode) {
+          throw new BadRequestException('Client headers are required');
+        }
+
+        return { authorization, clientCode, clientId };
       }
 
       const grpcContext = context.switchToRpc().getContext();
@@ -255,9 +321,9 @@ export class AuditLogInterceptor implements NestInterceptor {
         const authHeader = grpcContext.metadata.get('authorization');
         return authHeader?.[0]?.toString() || '';
       }
-      return '';
+      return {};
     } catch {
-      return '';
+      return {};
     }
   }
 
@@ -302,6 +368,11 @@ export class AuditLogInterceptor implements NestInterceptor {
 
   private sanitizeData(data: any): any {
     if (!data) return 'null';
+
+    // Skip sanitizing for "login" action
+    if (data.action === 'login') {
+      return data;
+    }
 
     try {
       // Handle primitive types

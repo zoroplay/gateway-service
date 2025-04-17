@@ -740,6 +740,17 @@ export interface ValidateClientResponse {
   clientId: number;
 }
 
+export interface ValidateGroupCodeRequest {
+  groupName: string;
+}
+
+export interface ValidateGroupCodeResponse {
+  status: number;
+  error: string;
+  groupName: string;
+  clientId: number;
+}
+
 export interface ClientRequest {
   name: string;
   country: string;
@@ -1105,6 +1116,8 @@ export interface IdentityServiceClient {
 
   validate(request: ValidateRequest): Observable<ValidateResponse>;
 
+  validateGroupCode(request: ValidateGroupCodeRequest): Observable<ValidateGroupCodeResponse>;
+
   validateClient(request: ValidateRequest): Observable<ValidateClientResponse>;
 
   getUserDetails(request: GetUserDetailsRequest): Observable<GetUserDetailsResponse>;
@@ -1288,6 +1301,10 @@ export interface IdentityServiceController {
   ): Promise<XpressLoginResponse> | Observable<XpressLoginResponse> | XpressLoginResponse;
 
   validate(request: ValidateRequest): Promise<ValidateResponse> | Observable<ValidateResponse> | ValidateResponse;
+
+  validateGroupCode(
+    request: ValidateGroupCodeRequest,
+  ): Promise<ValidateGroupCodeResponse> | Observable<ValidateGroupCodeResponse> | ValidateGroupCodeResponse;
 
   validateClient(
     request: ValidateRequest,
@@ -1582,6 +1599,7 @@ export function IdentityServiceControllerMethods() {
       "validateAuthCode",
       "xpressGameLogout",
       "validate",
+      "validateGroupCode",
       "validateClient",
       "getUserDetails",
       "createClient",
