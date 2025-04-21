@@ -327,6 +327,53 @@ export class AppController {
     }
   }
 
+
+
+  @ApiTags('Webhooks')
+  @Post('/webhook/4/pawapay/callback')
+  async handlePawapayCallback4(
+    @Body() webhookBody: any,
+  ): Promise<PawapayResponse> {
+    console.log(`📩 Received Pawapay Webhook: ${JSON.stringify(webhookBody)}`);
+
+    // ✅ Validate Webhook Data
+    if (!webhookBody || Object.keys(webhookBody).length === 0) {
+      console.error('❌ Received an empty webhook request');
+      return { success: false, message: 'Empty webhook data' };
+    }
+
+    if (!webhookBody.depositId) {
+      console.error('❌ Missing DepositId in webhook data');
+      return {
+        success: false,
+        message: 'Invalid webhook data: Missing ReferenceID',
+      };
+    }
+
+    const isSuccess = webhookBody.status === 'COMPLETED';
+
+    try {
+      if (isSuccess) {
+        const response = await this.walletService.pawapayCallback({
+          clientId: 4,
+          depositId: webhookBody.depositId,
+          status: '',
+        });
+        console.log(
+          `🎉 User credited successfully: ${JSON.stringify(response)}`,
+        );
+      } else {
+        console.error(`❌ Payment Failed: ${JSON.stringify(webhookBody)}`);
+      }
+
+      return { success: true, message: 'Webhook processed' };
+    } catch (error) {
+      console.error(`❌ Error processing webhook: ${error.message}`);
+      return { success: false, message: 'Internal server error' };
+    }
+  }
+
+
   @ApiTags('Webhooks')
   @Post('/webhook/4/mtnmomo/callback')
   async handleMtnmomoCallback(@Body() webhookBody: any) {
