@@ -42,9 +42,9 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
 
   //intercept all requests and log them except the ones that are marked with @SkipAudit decorator
-  // app.useGlobalInterceptors(
-  //   new AuditLogInterceptor(app.get(AuthService), app.get(Reflector)),
-  // );
+  app.useGlobalInterceptors(
+    new AuditLogInterceptor(app.get(AuthService), app.get(Reflector)),
+  );
 
   console.log('Body Parser Options: works here');
 
