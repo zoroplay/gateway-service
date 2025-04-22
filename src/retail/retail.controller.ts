@@ -37,6 +37,7 @@ import { BettingService } from 'src/betting/betting.service';
 import { IAuthorizedRequest } from 'src/interfaces/authorized-request.interface';
 import { RetailService } from './retail.service';
 
+
 @ApiTags('Retail APIs')
 @UseGuards(AuthGuard)
 @Controller('retail')
@@ -45,7 +46,12 @@ export class RetailController {
     private readonly walletService: WalletService,
     private readonly bettingService: BettingService,
     private readonly retailService: RetailService,
+  
   ) {}
+
+
+
+
 
   @Post(':clientId/fund-user')
   @ApiOperation({
@@ -210,4 +216,7 @@ export class RetailController {
       console.error(error);
     }
   }
+
+
+  
 }

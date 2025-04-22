@@ -38,6 +38,7 @@ import {
   PawapayPredCorrRequest,
   StkRegisterUrlRequest,
   StkTransactionRequest,
+  SummaryRequest,
   UserTransactionRequest,
   VerifyBankAccountRequest,
   VerifyDepositRequest,
@@ -1091,5 +1092,23 @@ export class WalletController {
       clientId,
       pending: isPending,
     });
+  }
+
+  @Get('transaction-summary')
+  async getTransactionSummary(
+    @Query('clientId') clientId: number,
+    @Query('range') range?: string,
+    @Query('from') from?: string,
+    @Query('to') to?: string,
+  ) {
+    
+    const payload: SummaryRequest = {
+      clientId,
+      range: range || '',
+      from: from || '',
+      to: to || '',
+    };
+
+    return this.walletService.getSummeryMethod(payload);
   }
 }
