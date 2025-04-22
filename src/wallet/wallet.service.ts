@@ -82,6 +82,8 @@ import {
   MtnmomoRequest,
   SummaryResponse,
   SummaryRequest,
+  TrxSummaryRequest,
+  PagedSummaryResponse,
 } from '../interfaces/wallet.pb';
 import { ClientGrpc } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
@@ -105,6 +107,14 @@ export class WalletService {
 
   async getSummeryMethod(request: SummaryRequest): Promise<SummaryResponse> {
     return await firstValueFrom(this.svc.getTransactionSummary(request));
+  }
+
+  async getAllClientSummeryMethod(
+    request: TrxSummaryRequest,
+  ): Promise<PagedSummaryResponse> {
+    return await firstValueFrom(
+      this.svc.getAllClientsTransactionSummary(request),
+    );
   }
 
   async getPaymentMethods(

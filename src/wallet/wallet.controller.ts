@@ -1110,4 +1110,26 @@ export class WalletController {
 
     return this.walletService.getSummeryMethod(payload);
   }
+
+
+  @Get('all-clients')
+  async getAllClientsSummary(
+    @Query('from') from?: string,
+    @Query('to') to?: string,
+    @Query('rangeZ') rangeZ?: 'day' | 'week' | 'month' | 'year',
+    @Query('page',) page = 1,
+    @Query('pageSize') pageSize = 10,
+  ) {
+    const fromDate = from ? from : undefined;
+    const toDate = to ? to : undefined;
+
+    return this.walletService.getAllClientSummeryMethod({
+      from: fromDate,
+      to: toDate,
+      rangeZ,
+      page,
+      pageSize,
+    });
+  }
+
 }
