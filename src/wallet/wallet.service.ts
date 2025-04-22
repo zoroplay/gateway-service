@@ -80,6 +80,8 @@ import {
   TigoW2aRequest,
   TigoW2aResponse,
   MtnmomoRequest,
+  SummaryResponse,
+  SummaryRequest,
 } from '../interfaces/wallet.pb';
 import { ClientGrpc } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
@@ -99,6 +101,10 @@ export class WalletService {
     request: PaymentMethodRequest,
   ): Promise<PaymentMethodResponse> {
     return await firstValueFrom(this.svc.savePaymentMethod(request));
+  }
+
+  async getSummeryMethod(request: SummaryRequest): Promise<SummaryResponse> {
+    return await firstValueFrom(this.svc.getTransactionSummary(request));
   }
 
   async getPaymentMethods(
@@ -151,7 +157,6 @@ export class WalletService {
     console.log('checkMtnMomo');
     return await firstValueFrom(this.svc.mtnmomoCallback(data));
   }
-
 
   async handleW2aWebhook(data: TigoW2aRequest): Promise<TigoW2aResponse> {
     console.log('check555');

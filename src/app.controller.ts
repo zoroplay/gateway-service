@@ -420,34 +420,34 @@ export class AppController {
     }
   }
 
-  @ApiTags('Webhooks')
-  @Get('/webhook/4/pawapay/callback')
-  async handlePawapayCallback1(
-    @Query('depositId') depositId: string,
-  ): Promise<PawapayResponse> {
-    console.log(`📩 Received Pawapay Webhook - depositId: ${depositId}`);
+  // @ApiTags('Webhooks')
+  // @Get('/webhook/4/pawapay/callback')
+  // async handlePawapayCallback1(
+  //   @Query('depositId') depositId: string,
+  // ): Promise<PawapayResponse> {
+  //   console.log(`📩 Received Pawapay Webhook - depositId: ${depositId}`);
 
-    // ✅ Validate depositId
-    if (!depositId) {
-      console.error('❌ Missing depositId in query parameters');
-      return {
-        success: false,
-        message: 'Invalid webhook: Missing depositId',
-      };
-    }
+  //   // ✅ Validate depositId
+  //   if (!depositId) {
+  //     console.error('❌ Missing depositId in query parameters');
+  //     return {
+  //       success: false,
+  //       message: 'Invalid webhook: Missing depositId',
+  //     };
+  //   }
 
-    try {
-      const response = await this.walletService.pawapayCallback({
-        clientId: 4,
-        depositId,
-        status: 'COMPLETED',
-      });
+  //   try {
+  //     const response = await this.walletService.pawapayCallback({
+  //       clientId: 4,
+  //       depositId,
+  //       status: 'COMPLETED',
+  //     });
 
-      console.log(`🎉 User credited successfully: ${JSON.stringify(response)}`);
-      return { success: true, message: 'Webhook processed' };
-    } catch (error) {
-      console.error(`❌ Error processing webhook: ${error.message}`);
-      return { success: false, message: 'Internal server error' };
-    }
-  }
+  //     console.log(`🎉 User credited successfully: ${JSON.stringify(response)}`);
+  //     return { success: true, message: 'Webhook processed' };
+  //   } catch (error) {
+  //     console.error(`❌ Error processing webhook: ${error.message}`);
+  //     return { success: false, message: 'Internal server error' };
+  //   }
+  // }
 }

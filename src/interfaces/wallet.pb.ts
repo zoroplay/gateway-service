@@ -12,6 +12,25 @@ import { Struct } from "./google/protobuf/struct.pb";
 
 export const protobufPackage = "wallet";
 
+export interface SummaryRequest {
+  clientId: number;
+  /** optional: "day", "week", "month", "year" */
+  range: string;
+  /** optional ISO string */
+  from: string;
+  /** optional ISO string */
+  to: string;
+}
+
+export interface SummaryResponse {
+  from: string;
+  to: string;
+  deposit: number;
+  withdrawal: number;
+  creditBalance: number;
+  playerBalance: number;
+}
+
 export interface MtnmomoRequest {
   amount: string;
   externalId: string;
@@ -1081,6 +1100,8 @@ export interface WalletServiceClient {
 
   debitAgentBalance(request: DebitUserRequest): Observable<CommonResponseObj>;
 
+  getTransactionSummary(request: SummaryRequest): Observable<SummaryResponse>;
+
   flutterWaveWebhook(request: FlutterwaveWebhookRequest): Observable<WebhookResponse>;
 
   korapayWebhook(request: KoraPayWebhookRequest): Observable<WebhookResponse>;
@@ -1433,6 +1454,10 @@ export interface WalletServiceController {
     request: DebitUserRequest,
   ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
 
+  getTransactionSummary(
+    request: SummaryRequest,
+  ): Promise<SummaryResponse> | Observable<SummaryResponse> | SummaryResponse;
+
   flutterWaveWebhook(
     request: FlutterwaveWebhookRequest,
   ): Promise<WebhookResponse> | Observable<WebhookResponse> | WebhookResponse;
@@ -1540,6 +1565,7 @@ export function WalletServiceControllerMethods() {
       "validateWithdrawalCode",
       "processShopWithdrawal",
       "debitAgentBalance",
+      "getTransactionSummary",
       "flutterWaveWebhook",
       "korapayWebhook",
       "tigoWebhook",
