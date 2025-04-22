@@ -670,9 +670,8 @@ export class WalletController {
       userId: req.user.id,
       clientId,
     };
-    setTimeout(() => {
-      return this.walletService.getBankAccounts(payload);
-    }, 1000);
+    
+    return this.walletService.getBankAccounts(payload);
   }
 
   @Get(':clientId/payment-methods')
