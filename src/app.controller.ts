@@ -309,7 +309,7 @@ export class AppController {
     try {
       if (isSuccess) {
         const response = await this.walletService.pawapayCallback({
-          clientId: 4,
+          clientId: 7,
           depositId: webhookBody.depositId,
           status: '',
         });
