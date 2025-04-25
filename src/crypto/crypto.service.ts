@@ -31,17 +31,22 @@ export class CryptoService {
 
   encrypt(data: any, key: string): any {
     try {
+      if (!data){ 
+        console.log("entered here ======================>")
+        return;
+      }
       const iv = crypto.randomBytes(this.ivLength);
       const cipher = crypto.createCipheriv(
         this.algorithm,
         Buffer.from(key, 'hex'),
         iv,
       );
+      console.log(data, '====> data fron encrypt');
 
       let encrypted = cipher.update(JSON.stringify(data), 'utf8', 'hex');
       encrypted += cipher.final('hex');
 
-      return { data: `${iv.toString('hex')}:${encrypted}`};
+      return { data: `${iv.toString('hex')}:${encrypted}` };
     } catch (error) {
       console.error('Encryption failed:', error);
       throw new Error('Encryption failed');

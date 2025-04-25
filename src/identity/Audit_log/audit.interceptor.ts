@@ -5,6 +5,7 @@ import {
   NestInterceptor,
   BadRequestException,
   HttpException,
+  HttpStatus,
 } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { tap, map, catchError } from 'rxjs/operators';
@@ -23,12 +24,24 @@ export class AuditLogInterceptor implements NestInterceptor {
     'refreshToken',
     'authorization',
   ];
+  private readonly ADMIN_PATHS = ['/admin', '/v2/admin'];
 
   constructor(
     private readonly authService: AuthService,
     private readonly cryptoService: CryptoService,
     private readonly reflector: Reflector,
   ) {}
+
+  private shouldSkipAudit(context: ExecutionContext): boolean {
+    return this.reflector.getAllAndOverride<boolean>(SKIP_AUDIT_KEY, [
+      context.getHandler(),
+      context.getClass(),
+    ]);
+  }
+
+  private isAdminEndpoint(url: string): boolean {
+    return this.ADMIN_PATHS.some((path) => url.toLowerCase().includes(path));
+  }
 
   async intercept(
     context: ExecutionContext,
@@ -50,13 +63,37 @@ export class AuditLogInterceptor implements NestInterceptor {
       authHeader,
       clientCode,
     } = this.extractRequestData(context);
+    const isAdmin = this.isAdminEndpoint(endpoint);
 
-    const keyBuffer = await this.cryptoService.validateClientAndGenerateKey(
-      clientCode,
-      clientId,
-    );
+    // Key generation with validation
+    let key: string;
+    try {
+      const keyBuffer = await this.cryptoService.validateClientAndGenerateKey(
+        clientCode,
+        clientId,
+      );
 
-    const key = keyBuffer.toString('hex');
+      if (!keyBuffer) {
+        throw new HttpException(
+          'Failed to generate encryption key',
+          HttpStatus.INTERNAL_SERVER_ERROR,
+        );
+      }
+
+      key = keyBuffer.toString('hex');
+      if (!key || key.length === 0) {
+        throw new HttpException(
+          'Invalid encryption key',
+          HttpStatus.INTERNAL_SERVER_ERROR,
+        );
+      }
+    } catch (error) {
+      console.error('Key generation error:', error);
+      throw new HttpException(
+        'Encryption setup failed',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
 
     try {
       const request =
@@ -64,47 +101,75 @@ export class AuditLogInterceptor implements NestInterceptor {
           ? context.switchToHttp().getRequest()
           : context.switchToRpc().getData();
 
-      // 🔓 DECRYPT incoming request body (only for HTTP for simplicity here)
-      // In your intercept() method, update the decryption block:
-      if (requestType === 'http') {
+      // Decrypt incoming request body
+      if (
+        requestType === 'http' &&
+        ['POST', 'PUT', 'PATCH'].includes(request.method) &&
+        request?.body?.data
+      ) {
         try {
           if (!endpoint.includes('encrypt') && !endpoint.includes('decrypt')) {
-            if (!request.body?.data) {
-              throw new BadRequestException('Encrypted data required');
-            }
             request.body = this.cryptoService.decrypt(request.body.data, key);
           }
         } catch (err) {
           if (err.message.includes('decryption failed')) {
-            throw new BadRequestException('Decryption failed - invalid key or data');
+            throw new BadRequestException(
+              'Decryption failed - invalid key or data',
+            );
           }
-          throw err;  
+          throw err;
         }
       }
 
       return next.handle().pipe(
+        // Response handling and encryption
         map((response) => {
-          // Get the actual request URL
-          const requestUrl = requestType === 'http' 
-            ? context.switchToHttp().getRequest().url 
-            : endpoint;
-  
-          // Only skip encryption for /crypto/decrypt endpoint
-          const isDecryptEndpoint = requestUrl.toLowerCase().includes('crypto/decrypt');
-  
-          if (isDecryptEndpoint) {
-            return response; // Return raw response for decrypt endpoint
+          try {
+            const requestUrl =
+              requestType === 'http'
+                ? context.switchToHttp().getRequest().url
+                : endpoint;
+
+            const isDecryptEndpoint = requestUrl
+              .toLowerCase()
+              .includes('crypto/decrypt');
+
+            if (isDecryptEndpoint) {
+              return response;
+            }
+
+            // Ensure response is in encryptable format
+            let dataToEncrypt = response;
+            if (typeof response === 'string') {
+              try {
+                dataToEncrypt = JSON.parse(response);
+              } catch {
+                dataToEncrypt = { data: response };
+              }
+            }
+
+            const encrypted = this.cryptoService.encrypt(dataToEncrypt, key);
+
+            if (!encrypted) {
+              return
+            }
+
+            return encrypted;
+          } catch (error) {
+            console.error('Encryption failed:', error);
+            throw new HttpException(
+              'Response encryption failed',
+              HttpStatus.INTERNAL_SERVER_ERROR,
+            );
           }
-  
-          // Encrypt all other responses
-          return this.cryptoService.encrypt(response, key);
         }),
         tap(async (response) => {
+          if (!isAdmin) return; // skip non-admin logging
           const user = await this.resolveUser(authHeader, action, response);
 
           await this.authService.createLog({
             auditLog: {
-              id: undefined, // Replace with a default or generated value if needed
+              id: undefined,
               clientId,
               userId: typeof user === 'object' && 'id' in user ? user.id : 0,
               userName:
@@ -128,19 +193,22 @@ export class AuditLogInterceptor implements NestInterceptor {
             },
           });
         }),
+        // Error handling
+        catchError((error) => {
+          console.error('AuditLogInterceptor pipeline error:', error);
+          if (error instanceof HttpException) {
+            throw error;
+          }
+          throw new HttpException(
+            'Internal server error',
+            HttpStatus.INTERNAL_SERVER_ERROR,
+          );
+        }),
       );
     } catch (error) {
-      console.error('AuditLogInterceptor error:', error);
-      // next.handle(); // Continue processing even if audit fails
-      throw error; // disContinue and show error to client
+      console.error('AuditLogInterceptor setup error:', error);
+      throw error;
     }
-  }
-
-  private shouldSkipAudit(context: ExecutionContext): boolean {
-    return this.reflector.getAllAndOverride<boolean>(SKIP_AUDIT_KEY, [
-      context.getHandler(),
-      context.getClass(),
-    ]);
   }
 
   private getRequestType(context: ExecutionContext): 'http' | 'grpc' {
@@ -164,20 +232,18 @@ export class AuditLogInterceptor implements NestInterceptor {
   private getActionAndEndpoint(context: ExecutionContext) {
     const handlerName = context.getHandler().name;
     const className = context.getClass().name;
-    const requestType = context.getType(); // "http" or "grpc"
+    const requestType = context.getType();
 
     let endpoint = '';
     let method = '';
 
     if (requestType === 'http') {
-      // For HTTP requests, return originalUrl and method (POST or GET)
       endpoint = context.switchToHttp().getRequest().originalUrl;
       method =
         context.switchToHttp().getRequest().method === 'GET' ? 'GET' : 'POST';
     } else if (requestType === 'rpc') {
-      // For GRPC requests, return className and handlerName
       endpoint = `${className}/${handlerName}`;
-      method = context.getType(); // This will be 'grpc' or 'rpc'
+      method = context.getType();
     }
 
     return {
@@ -346,7 +412,7 @@ export class AuditLogInterceptor implements NestInterceptor {
   private mapGrpcStatusCode(grpcCode?: number): number {
     const mapping: Record<number, number> = {
       0: 200, // OK
-      1: 499, // CANCELLED (client closed request)
+      1: 499, // CANCELLED
       2: 500, // UNKNOWN
       3: 400, // INVALID_ARGUMENT
       4: 504, // DEADLINE_EXCEEDED
@@ -369,23 +435,19 @@ export class AuditLogInterceptor implements NestInterceptor {
   private sanitizeData(data: any): any {
     if (!data) return 'null';
 
-    // Skip sanitizing for "login" action
     if (data.action === 'login') {
       return data;
     }
 
     try {
-      // Handle primitive types
       if (typeof data !== 'object') {
         return JSON.stringify(data);
       }
 
-      // Handle arrays
       if (Array.isArray(data)) {
         return JSON.stringify(data.map((item) => this.sanitizeData(item)));
       }
 
-      // Handle objects
       const sanitized = { ...data };
       for (const field of this.sensitiveFields) {
         if (sanitized[field]) {
