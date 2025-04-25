@@ -84,6 +84,8 @@ import {
   SummaryRequest,
   TrxSummaryRequest,
   PagedSummaryResponse,
+  GetShopUserWalletSummaryRequest,
+  GetShopUserWalletSummaryResponse,
 } from '../interfaces/wallet.pb';
 import { ClientGrpc } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
@@ -109,11 +111,11 @@ export class WalletService {
     return await firstValueFrom(this.svc.getTransactionSummary(request));
   }
 
-  async getAllClientSummeryMethod(
-    request: TrxSummaryRequest,
-  ): Promise<PagedSummaryResponse> {
+  async AgentUsersSummaryRequestMethod(
+    request: GetShopUserWalletSummaryRequest,
+  ): Promise<GetShopUserWalletSummaryResponse> {
     return await firstValueFrom(
-      this.svc.getAllClientsTransactionSummary(request),
+      this.svc.shopTransactionSummary(request),
     );
   }
 

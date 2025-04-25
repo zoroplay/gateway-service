@@ -75,8 +75,11 @@ export class RetailAdminController {
     ) {
         body.clientId = clientId;
         body.userId = agentId || req.user.id;
-        // console.log(body);
-        return this.retailService.getAgentUsers(body);
+         console.log(body);
+        const result = this.retailService.getAgentUsers(body);
+
+        console.log(result);
+        return result;
     }
 
 

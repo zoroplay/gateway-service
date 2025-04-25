@@ -21,7 +21,9 @@ import {
 import { AuthGuard } from 'src/identity/auth/auth.guard';
 import { WalletService } from 'src/wallet/wallet.service';
 import {
+  GetShopUserWalletSummaryRequest,
   ProcessRetailTransaction,
+  SummaryRequest,
   ValidateTransactionRequest,
   WalletTransferRequest,
 } from 'src/interfaces/wallet.pb';
@@ -37,7 +39,6 @@ import { BettingService } from 'src/betting/betting.service';
 import { IAuthorizedRequest } from 'src/interfaces/authorized-request.interface';
 import { RetailService } from './retail.service';
 
-
 @ApiTags('Retail APIs')
 @UseGuards(AuthGuard)
 @Controller('retail')
@@ -46,12 +47,7 @@ export class RetailController {
     private readonly walletService: WalletService,
     private readonly bettingService: BettingService,
     private readonly retailService: RetailService,
-  
   ) {}
-
-
-
-
 
   @Post(':clientId/fund-user')
   @ApiOperation({
@@ -217,6 +213,30 @@ export class RetailController {
     }
   }
 
+  @Get('transaction-summary/:clientId')
+  async getTransactionSummary(
+    @Param('clientId') clientId: number,
+    @Query('range') range?: string,
+    @Query('from') from?: string,
+    @Query('to') to?: string,
+  ) {
+    const payload: SummaryRequest = {
+      clientId,
+      range: range || '',
+      from: from || '',
+      to: to || '',
+    };
 
-  
+    return this.walletService.getSummeryMethod(payload);
+  }
+
+  @Get('agent-agent-users/:clientId')
+  async getAllClientsSummary(
+    @Param('clientId') clientId: number,
+    @Query('dateRange') dateRange?: string,
+  ) {
+    const payload: GetShopUserWalletSummaryRequest = { clientId, dateRange };
+
+    return this.walletService.AgentUsersSummaryRequestMethod(payload);
+  }
 }
