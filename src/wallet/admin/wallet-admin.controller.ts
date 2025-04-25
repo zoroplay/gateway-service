@@ -17,7 +17,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import {
-    GetShopUserWalletSummaryRequest,
+  GetShopUserWalletSummaryRequest,
   GetTransactionsRequest,
   ListDepositRequests,
   ListWithdrawalRequests,
@@ -198,30 +198,36 @@ export class WalletAdminController {
     // return this.walletService.getSystemTransactions(body)
   }
 
-    @Get('transaction-summary/:clientId')
-    async getTransactionSummary(
-      @Param('clientId') clientId: number,
-      @Query('range') range?: string,
-      @Query('from') from?: string,
-      @Query('to') to?: string,
-    ) {
-      const payload: SummaryRequest = {
-        clientId,
-        range: range || '',
-        from: from || '',
-        to: to || '',
-      };
-  
-      return this.walletService.getSummeryMethod(payload);
-    }
-  
-    @Get('agent-agent-users/:clientId')
-    async getAllClientsSummary(
-      @Param('clientId') clientId: number,
-      @Query('dateRange') dateRange?: string,
-    ) {
-      const payload: GetShopUserWalletSummaryRequest = { clientId, dateRange };
-  
-      return this.walletService.AgentUsersSummaryRequestMethod(payload);
-    }
+  @Get('transaction-summary/:clientId')
+  @ApiOperation({ summary: 'Get client transaction summary' })
+  @ApiQuery({ name: 'range', required: false, type: String })
+  @ApiQuery({ name: 'from', required: false, type: String })
+  @ApiQuery({ name: 'to', required: false, type: String })
+  async getTransactionSummary(
+    @Param('clientId') clientId: number,
+    @Query('range') range?: string,
+    @Query('from') from?: string,
+    @Query('to') to?: string,
+  ) {
+    const payload: SummaryRequest = {
+      clientId,
+      range: range || '',
+      from: from || '',
+      to: to || '',
+    };
+
+    return this.walletService.getSummeryMethod(payload);
+  }
+
+  @Get('agent-agent-users/:clientId')
+  @ApiOperation({ summary: 'Get wallet summary for agent users' })
+  @ApiQuery({ name: 'dateRange', required: false, type: String })
+  async getAllClientsSummary(
+    @Param('clientId') clientId: number,
+    @Query('dateRange') dateRange?: string,
+  ) {
+    const payload: GetShopUserWalletSummaryRequest = { clientId, dateRange };
+
+    return this.walletService.AgentUsersSummaryRequestMethod(payload);
+  }
 }

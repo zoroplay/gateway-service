@@ -61,17 +61,13 @@ export interface TrxSummaryRequest {
 }
 
 export interface SummaryResponse {
-  from: string;
-  to: string;
-  totalDepositAmount: number;
-  totalWithdrawalAmount: number;
-}
-
-export interface PagedSummaryResponse {
-  data: SummaryResponse[];
-  total: number;
-  page: number;
-  pageSize: number;
+  /** Indicates success or failure of the request */
+  success: boolean;
+  /** HTTP status code (e.g., 200 for success, 500 for error) */
+  status: number;
+  message: string;
+  totalDeposit: number;
+  totalWithdrawal: number;
 }
 
 export interface MtnmomoRequest {
