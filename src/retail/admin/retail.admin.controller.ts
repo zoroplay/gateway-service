@@ -15,6 +15,8 @@ import { AssignUserCommissionProfile, CommissionProfile, CreateUserRequest, GetA
 import { BetHistoryRequest, GetCommissionsRequest, GetVirtualBetsRequest } from 'src/interfaces/betting.pb';
 import { BettingService } from 'src/betting/betting.service';
 import { SwaggerBetHistoryRequest, SwaggerPayoutCommission } from 'src/betting/dto';
+import { GetShopUserWalletSummaryRequest, SummaryRequest } from 'src/interfaces/wallet.pb';
+import { WalletService } from 'src/wallet/wallet.service';
 
 @ApiTags('BackOffice APIs')
 @Controller('admin/retail')
@@ -23,7 +25,8 @@ export class RetailAdminController {
     constructor(
         private readonly retailService: RetailService,
         private readonly authService: AuthService,
-        private readonly bettingService: BettingService
+        private readonly bettingService: BettingService,
+        private readonly walletService: WalletService
     ) {}
     
     @Post(':clientId/create-user')
@@ -75,8 +78,11 @@ export class RetailAdminController {
     ) {
         body.clientId = clientId;
         body.userId = agentId || req.user.id;
-        // console.log(body);
-        return this.retailService.getAgentUsers(body);
+         console.log(body);
+        const result = this.retailService.getAgentUsers(body);
+
+        console.log(result);
+        return result;
     }
 
 
@@ -328,7 +334,43 @@ export class RetailAdminController {
     } catch (error) {
       console.error(error);
     }
+
+    
   }
+
+
+  @Get('transaction-summary/:clientId')
+    @ApiOperation({ summary: 'Get client transaction summary' })
+    @ApiQuery({ name: 'range', required: false, type: String })
+    @ApiQuery({ name: 'from', required: false, type: String })
+    @ApiQuery({ name: 'to', required: false, type: String })
+    async getTransactionSummary(
+      @Param('clientId') clientId: number,
+      @Query('range') range?: string,
+      @Query('from') from?: string,
+      @Query('to') to?: string,
+    ) {
+      const payload: SummaryRequest = {
+        clientId,
+        range: range || '',
+        from: from || '',
+        to: to || '',
+      };
+  
+      return this.walletService.getSummeryMethod(payload);
+    }
+  
+    @Get('agent-agent-users/:clientId')
+    @ApiOperation({ summary: 'Get wallet summary for agent users' })
+    @ApiQuery({ name: 'dateRange', required: false, type: String })
+    async getAllClientsSummary(
+      @Param('clientId') clientId: number,
+      @Query('dateRange') dateRange?: string,
+    ) {
+      const payload: GetShopUserWalletSummaryRequest = { clientId, dateRange };
+  
+      return this.walletService.AgentUsersSummaryRequestMethod(payload);
+    }
 
   // @Get('/bonus-groups')
   // @ApiOperation({

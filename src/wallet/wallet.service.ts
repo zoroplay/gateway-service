@@ -80,10 +80,11 @@ import {
   TigoW2aRequest,
   TigoW2aResponse,
   MtnmomoRequest,
-  SummaryResponse,
   SummaryRequest,
   TrxSummaryRequest,
-  PagedSummaryResponse,
+  SummaryResponse,
+  GetShopUserWalletSummaryRequest,
+  GetShopUserWalletSummaryResponse,
 } from '../interfaces/wallet.pb';
 import { ClientGrpc } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
@@ -105,16 +106,16 @@ export class WalletService {
     return await firstValueFrom(this.svc.savePaymentMethod(request));
   }
 
-  async getSummeryMethod(request: SummaryRequest): Promise<SummaryResponse> {
+  async getSummeryMethod(
+    request: SummaryRequest,
+  ): Promise<SummaryResponse> {
     return await firstValueFrom(this.svc.getTransactionSummary(request));
   }
 
-  async getAllClientSummeryMethod(
-    request: TrxSummaryRequest,
-  ): Promise<PagedSummaryResponse> {
-    return await firstValueFrom(
-      this.svc.getAllClientsTransactionSummary(request),
-    );
+  async AgentUsersSummaryRequestMethod(
+    request: GetShopUserWalletSummaryRequest,
+  ): Promise<GetShopUserWalletSummaryResponse> {
+    return await firstValueFrom(this.svc.shopTransactionSummary(request));
   }
 
   async getPaymentMethods(

@@ -75,6 +75,7 @@ import {
 import { AuthGuard } from 'src/identity/auth/auth.guard';
 import { IAuthorizedRequest } from 'src/interfaces/authorized-request.interface';
 import { WalletService } from './wallet.service';
+import { GetShopUserWalletSummaryRequest } from '../interfaces/wallet.pb';
 import { FetchSalesReportRequest } from '../interfaces/wallet.pb';
 import { SwaggerCommonResponse } from 'src/identity/dto';
 
@@ -670,7 +671,7 @@ export class WalletController {
       userId: req.user.id,
       clientId,
     };
-    
+
     return this.walletService.getBankAccounts(payload);
   }
 
@@ -1092,44 +1093,4 @@ export class WalletController {
       pending: isPending,
     });
   }
-
-  @Get('transaction-summary')
-  async getTransactionSummary(
-    @Query('clientId') clientId: number,
-    @Query('range') range?: string,
-    @Query('from') from?: string,
-    @Query('to') to?: string,
-  ) {
-    
-    const payload: SummaryRequest = {
-      clientId,
-      range: range || '',
-      from: from || '',
-      to: to || '',
-    };
-
-    return this.walletService.getSummeryMethod(payload);
-  }
-
-
-  @Get('all-clients')
-  async getAllClientsSummary(
-    @Query('from') from?: string,
-    @Query('to') to?: string,
-    @Query('rangeZ') rangeZ?: 'day' | 'week' | 'month' | 'year',
-    @Query('page',) page = 1,
-    @Query('pageSize') pageSize = 10,
-  ) {
-    const fromDate = from ? from : undefined;
-    const toDate = to ? to : undefined;
-
-    return this.walletService.getAllClientSummeryMethod({
-      from: fromDate,
-      to: toDate,
-      rangeZ,
-      page,
-      pageSize,
-    });
-  }
-
 }
