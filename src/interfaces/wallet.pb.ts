@@ -12,6 +12,28 @@ import { Struct } from "./google/protobuf/struct.pb";
 
 export const protobufPackage = "wallet";
 
+export interface ShopUsersSummaryRequest {
+  clientId: number;
+  rangeZ: string;
+  from: string;
+  to: string;
+}
+
+export interface ShopUserSummary {
+  userId: number;
+  numberOfDeposits: number;
+  totalDeposits: number;
+  numberOfWithdrawals: number;
+  totalWithdrawals: number;
+}
+
+export interface ShopUsersSummaryResponse {
+  data: ShopUserSummary[];
+  success: boolean;
+  status: number;
+  message: string;
+}
+
 export interface GetShopUserWalletSummaryRequest {
   clientId: number;
   dateRange: string;
@@ -1143,6 +1165,8 @@ export interface WalletServiceClient {
 
   shopTransactionSummary(request: GetShopUserWalletSummaryRequest): Observable<GetShopUserWalletSummaryResponse>;
 
+  shopUsersSummary(request: ShopUsersSummaryRequest): Observable<ShopUsersSummaryResponse>;
+
   flutterWaveWebhook(request: FlutterwaveWebhookRequest): Observable<WebhookResponse>;
 
   korapayWebhook(request: KoraPayWebhookRequest): Observable<WebhookResponse>;
@@ -1506,6 +1530,10 @@ export interface WalletServiceController {
     | Observable<GetShopUserWalletSummaryResponse>
     | GetShopUserWalletSummaryResponse;
 
+  shopUsersSummary(
+    request: ShopUsersSummaryRequest,
+  ): Promise<ShopUsersSummaryResponse> | Observable<ShopUsersSummaryResponse> | ShopUsersSummaryResponse;
+
   flutterWaveWebhook(
     request: FlutterwaveWebhookRequest,
   ): Promise<WebhookResponse> | Observable<WebhookResponse> | WebhookResponse;
@@ -1615,6 +1643,7 @@ export function WalletServiceControllerMethods() {
       "debitAgentBalance",
       "getTransactionSummary",
       "shopTransactionSummary",
+      "shopUsersSummary",
       "flutterWaveWebhook",
       "korapayWebhook",
       "tigoWebhook",
