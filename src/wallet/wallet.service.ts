@@ -85,6 +85,8 @@ import {
   SummaryResponse,
   GetShopUserWalletSummaryRequest,
   GetShopUserWalletSummaryResponse,
+  ShopUsersSummaryRequest,
+  ShopUsersSummaryResponse,
 } from '../interfaces/wallet.pb';
 import { ClientGrpc } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
@@ -106,9 +108,7 @@ export class WalletService {
     return await firstValueFrom(this.svc.savePaymentMethod(request));
   }
 
-  async getSummeryMethod(
-    request: SummaryRequest,
-  ): Promise<SummaryResponse> {
+  async getSummeryMethod(request: SummaryRequest): Promise<SummaryResponse> {
     return await firstValueFrom(this.svc.getTransactionSummary(request));
   }
 
@@ -116,6 +116,12 @@ export class WalletService {
     request: GetShopUserWalletSummaryRequest,
   ): Promise<GetShopUserWalletSummaryResponse> {
     return await firstValueFrom(this.svc.shopTransactionSummary(request));
+  }
+
+  async getNetCashFlow(
+    payload: ShopUsersSummaryRequest,
+  ): Promise<ShopUsersSummaryResponse> {
+    return await firstValueFrom(this.svc.shopUsersSummary(payload));
   }
 
   async getPaymentMethods(
