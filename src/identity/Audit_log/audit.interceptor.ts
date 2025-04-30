@@ -21,6 +21,7 @@ export class AuditLogInterceptor implements NestInterceptor {
     'refreshToken',
     'authorization',
   ];
+  private readonly ADMIN_PATHS = ['/admin', '/v2/admin'];
 
   constructor(
     private readonly authService: AuthService,
@@ -41,6 +42,10 @@ export class AuditLogInterceptor implements NestInterceptor {
     });
   }
 
+  private isAdminEndpoint(url: string): boolean {
+    return this.ADMIN_PATHS.some((path) => url.toLowerCase().includes(path));
+  }
+
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     if (this.shouldSkipAudit(context)) {
       return next.handle();
@@ -59,11 +64,12 @@ export class AuditLogInterceptor implements NestInterceptor {
         userAgent,
         authHeader,
       } = this.extractRequestData(context);
-
+      const isAdmin = this.isAdminEndpoint(endpoint);
       // console.log(context, '=== ontext');
 
       return next.handle().pipe(
         tap(async (response) => {
+          if (!isAdmin) return; // skip non-admin logging
           const user = await this.resolveUser(authHeader, action, response);
 
           await this.authService.createLog({
