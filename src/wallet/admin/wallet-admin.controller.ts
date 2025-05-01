@@ -22,6 +22,7 @@ import {
   ListDepositRequests,
   ListWithdrawalRequests,
   PaymentMethodRequest,
+  ShopUsersSummaryRequest,
   SummaryRequest,
   UpdateWithdrawalRequest,
 } from 'src/interfaces/wallet.pb';
@@ -229,5 +230,31 @@ export class WalletAdminController {
     const payload: GetShopUserWalletSummaryRequest = { clientId, dateRange };
 
     return this.walletService.AgentUsersSummaryRequestMethod(payload);
+  }
+
+  @Get('net-cash/:clientId')
+  @ApiOperation({ summary: 'Get net cash flow summary for shop users' })
+  @ApiParam({ name: 'clientId', type: Number, description: 'Client ID' })
+  @ApiQuery({ name: 'range', required: false, type: String })
+  @ApiQuery({ name: 'from', required: false, type: String })
+  @ApiQuery({
+    name: 'to',
+    required: false,
+    type: String,
+    description: 'Range (day, week, month, yesterday, etc.)',
+  })
+  async getNetCash(
+    @Param('clientId') clientId: number,
+    @Query('range') range?: string,
+    @Query('from') from?: string,
+    @Query('to') to?: string,
+  ) {
+    const payload: ShopUsersSummaryRequest = {
+      clientId,
+      rangeZ: range || '',
+      from: from || '',
+      to: to || '',
+    };
+    return this.walletService.getNetCashFlow(payload);
   }
 }
