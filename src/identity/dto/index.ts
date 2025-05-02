@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
-import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty } from 'class-validator';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
 import { ValidateSelectionResponse_Data } from 'src/interfaces/fixture.pb';
 
 export class LoginDTO {
@@ -179,4 +179,153 @@ export class SwaggerSettingsRequest {
 export class SwaggerGetUserByUsernmae {
   @ApiProperty({ description: 'UseID from OPay' })
   UserID: string;
+}
+
+
+export class SaveSettingsDto {
+  @ApiPropertyOptional({ example: "1000" })
+  @IsString()
+  max_withdrawal: string;
+
+  @ApiPropertyOptional({ example: "1000" })
+  @IsString()
+  min_withdrawal: string;
+
+  @ApiPropertyOptional({ example: "" })
+  @IsString()
+  slider_speed: string;
+
+  @ApiPropertyOptional({ example: "" })
+  @IsString()
+  allow_registration: string;
+
+  @ApiPropertyOptional({ example: "" })
+  @IsString()
+  weekly_bonus: string;
+
+  @ApiPropertyOptional({ example: "" })
+  @IsString()
+  announcement: string;
+
+  @ApiPropertyOptional({ example: "" })
+  @IsString()
+  booking_duration: string;
+
+  @ApiPropertyOptional({ example: "" })
+  @IsString()
+  max_event_weeks: string;
+
+  @ApiPropertyOptional({ example: "" })
+  @IsString()
+  min_tipster_length: string;
+
+  @ApiPropertyOptional({ example: "" })
+  @IsString()
+  currency_symbol: string;
+
+  @ApiPropertyOptional({ example: "" })
+  @IsString()
+  min_deposit: string;
+
+  @ApiPropertyOptional({ example: "" })
+  @IsString()
+  payment_day: string;
+
+  @ApiPropertyOptional({ example: 1 })
+  @IsNumber()
+  ticket_type: number;
+
+  @ApiPropertyOptional({ example: 1 })
+  @IsNumber()
+  enable_bank_account: number;
+
+  @ApiPropertyOptional({ example: 1 })
+  @IsNumber()
+  auto_disbursement: number;
+
+  @ApiPropertyOptional({ example: 1 })
+  @IsNumber()
+  auto_disbursement_min: number;
+
+  @ApiPropertyOptional({ example: 1 })
+  @IsNumber()
+  auto_disbursement_max: number;
+
+  @ApiPropertyOptional({ example: 1 })
+  @IsNumber()
+  auto_disbursement_per_day: number;
+
+  @ApiPropertyOptional({ example: 1 })
+  @IsNumber()
+  uses_accts: number;
+
+  @ApiPropertyOptional({ example: 1 })
+  @IsNumber()
+  liability_threshold: number;
+
+  @ApiPropertyOptional({ example: 1 })
+  @IsNumber()
+  enable_elbet_user: number;
+
+  @ApiPropertyOptional({ example: 1 })
+  @IsNumber()
+  allow_deposit_commission: number;
+
+  @ApiPropertyOptional({ example: 1 })
+  @IsNumber()
+  allow_withdrawal_commission: number;
+
+  @ApiPropertyOptional({ example: 1 })
+  @IsNumber()
+  deposit_commission_percent: number;
+
+  @ApiPropertyOptional({ example: 1 })
+  @IsNumber()
+  withdrawal_commission_percent: number;
+
+  @ApiPropertyOptional({ example: "Nigeria" })
+  @IsString()
+  country: string;
+
+  @ApiPropertyOptional({ example: "NGN" })
+  @IsString()
+  currency_code: string;
+
+  @ApiPropertyOptional({ example: "NGN" })
+  @IsString()
+  dial_code: string;
+
+  @ApiPropertyOptional({ example: 1 })
+  @IsNumber()
+  enable_power_bonus: number;
+
+  @ApiPropertyOptional({ example: "tuesday" })
+  @IsString()
+  power_bonus_start_day: string;
+
+  @ApiPropertyOptional({ example: "" })
+  @IsString()
+  trackier_api_key: string;
+
+  @ApiPropertyOptional({ example: "" })
+  @IsString()
+  trackier_auth_code: string;
+
+  @ApiPropertyOptional({ example: 1 })
+  @IsNumber()
+  enable_tax: number;
+
+  @ApiPropertyOptional({
+    description: 'File to be uploaded with the settings',
+    type: 'string',
+    format: 'binary',
+  })
+  logo: any;
+
+  @ApiPropertyOptional({
+    description: 'File to be uploaded with the settings',
+    type: 'string',
+    format: 'binary',
+  })
+  print_logo: any;
 }
