@@ -35,14 +35,14 @@ export class SettingsController {
     @ApiParam({ name: 'client', type: 'number', description: 'SBE Client ID' })
     @ApiBody({ type: SwaggerSettingsRequest })
     @ApiOkResponse({ type: SwaggerCommonResponse })
-    // @UseInterceptors(FileFieldsInterceptor([
-    //     { name: 'logo', maxCount: 1 },
-    //     { name: 'print_logo', maxCount: 1 },
-    // ]))
+    @UseInterceptors(FileFieldsInterceptor([
+        { name: 'logo', maxCount: 1 },
+        { name: 'print_logo', maxCount: 1 },
+    ]))
     saveSettings(
         @Param('clientId') clientId: number,
-        @Body() body
-        // @UploadedFiles() files: { logo?: Express.Multer.File, printLogo?: Express.Multer.File }
+        @Body() body,
+        @UploadedFiles() files: { logo?: Express.Multer.File, printLogo?: Express.Multer.File }
     ) {
         // console.log(files);
         // if (files.logo)
