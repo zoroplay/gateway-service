@@ -87,6 +87,8 @@ import {
   GetShopUserWalletSummaryResponse,
   ShopUsersSummaryRequest,
   ShopUsersSummaryResponse,
+  OpayResponse,
+  OpayRequest,
 } from '../interfaces/wallet.pb';
 import { ClientGrpc } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
@@ -168,6 +170,11 @@ export class WalletService {
   async tigoWebhook(data: TigoWebhookRequest): Promise<WebhookResponse> {
     console.log('check44');
     return await firstValueFrom(this.svc.tigoWebhook(data));
+  }
+
+  async opayWebhook(data: OpayRequest): Promise<OpayResponse> {
+    console.log('check44');
+    return await firstValueFrom(this.svc.opayWebhook(data));
   }
 
   async mtnmomoWebhook(data: MtnmomoRequest): Promise<WebhookResponse> {

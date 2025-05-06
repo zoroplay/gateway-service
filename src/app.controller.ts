@@ -9,6 +9,7 @@ import {
   Headers,
   Query,
   Header,
+  HttpStatus,
 } from '@nestjs/common';
 import {
   ApiBody,
@@ -413,6 +414,58 @@ export class AppController {
       return { success: true, message: 'Webhook processed' };
     } catch (error) {
       console.error(`❌ Error processing webhook: ${error.message}`, error);
+      return { success: false, message: 'Internal server error' };
+    }
+  }
+
+  @ApiTags('Webhooks')
+  @Post('/webhook/4/opay/callback')
+  async handleOpayCallback(@Body() webhookBody: any, @Res() res: Response) {
+    console.log(`📩 Received Pawapay Webhook: ${JSON.stringify(webhookBody)}`);
+
+    // ✅ Validate Webhook Data
+    if (!webhookBody || Object.keys(webhookBody).length === 0) {
+      console.error('❌ Received an empty webhook request');
+      return { success: false, message: 'Empty webhook data' };
+    }
+
+    if (!webhookBody.reference) {
+      console.error('❌ Missing DepositId in webhook data');
+      return {
+        success: false,
+        message: 'Invalid webhook data: Missing ReferenceID',
+      };
+    }
+
+    const { status, reference, type, sha512 } = webhookBody;
+
+    const isSuccess =
+      webhookBody.status === 'SUCCESS' &&
+      webhookBody.type === 'transaction-status';
+
+    try {
+      if (isSuccess) {
+        const response = await this.walletService.opayWebhook({
+          clientId: 4,
+          status: status,
+          reference: reference,
+          type: type,
+          sha512: sha512,
+        });
+        console.log(
+          `🎉 User credited successfully: ${JSON.stringify(response)}`,
+        );
+      } else {
+        console.warn(
+          `⚠️ Unsuccessful or irrelevant webhook: ${status} / ${type}`,
+        );
+      }
+
+      res.status(200).send('OK');
+
+      return res.status(HttpStatus.OK).send('OK');
+    } catch (error) {
+      console.error(`❌ Error processing webhook: ${error.message}`);
       return { success: false, message: 'Internal server error' };
     }
   }
