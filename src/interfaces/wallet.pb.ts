@@ -21,6 +21,7 @@ export interface OpayRequest {
 }
 
 export interface OpayResponse {
+  statusCode: number;
   success: boolean;
   message: string;
 }
@@ -1192,7 +1193,7 @@ export interface WalletServiceClient {
 
   mtnmomoCallback(request: MtnmomoRequest): Observable<WebhookResponse>;
 
-  opayWebhook(request: OpayRequest): Observable<OpayResponse>;
+  opayCallback(request: OpayRequest): Observable<OpayResponse>;
 }
 
 export interface WalletServiceController {
@@ -1565,7 +1566,7 @@ export interface WalletServiceController {
 
   mtnmomoCallback(request: MtnmomoRequest): Promise<WebhookResponse> | Observable<WebhookResponse> | WebhookResponse;
 
-  opayWebhook(request: OpayRequest): Promise<OpayResponse> | Observable<OpayResponse> | OpayResponse;
+  opayCallback(request: OpayRequest): Promise<OpayResponse> | Observable<OpayResponse> | OpayResponse;
 }
 
 export function WalletServiceControllerMethods() {
@@ -1667,7 +1668,7 @@ export function WalletServiceControllerMethods() {
       "tigoW2A",
       "pawapayCallback",
       "mtnmomoCallback",
-      "opayWebhook",
+      "opayCallback",
     ];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);

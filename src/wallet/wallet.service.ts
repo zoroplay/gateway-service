@@ -172,9 +172,9 @@ export class WalletService {
     return await firstValueFrom(this.svc.tigoWebhook(data));
   }
 
-  async opayWebhook(data: OpayRequest): Promise<OpayResponse> {
+  async OpayWebhook(data: OpayRequest): Promise<OpayResponse> {
     console.log('check44');
-    return await firstValueFrom(this.svc.opayWebhook(data));
+    return await firstValueFrom(this.svc.opayCallback(data));
   }
 
   async mtnmomoWebhook(data: MtnmomoRequest): Promise<WebhookResponse> {
