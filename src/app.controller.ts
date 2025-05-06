@@ -425,25 +425,20 @@ export class AppController {
   @ApiTags('Webhooks')
   @Post('/webhook/checkout/4/opay/callback')
   async handleOpayCallback(@Body() webhookBody: any): Promise<OpayResponse> {
-    
-    console.log('➡️ Forwarding to walletService.opayWebhook with payload:', {
-      clientId: 4,
-      status: webhookBody.status,
-      reference: webhookBody.reference,
-      type: webhookBody.type,
-      sha512: webhookBody.sha512,
-    });
-    
-    console.log(`📩 Received Pawapay Webhook: ${JSON.stringify(webhookBody)}`);
+    console.log(webhookBody.payload);
+
+    console.log(
+      `📩 Received Opay Webhook: ${JSON.stringify(webhookBody.payload)}`,
+    );
 
     // ✅ Validate Webhook Data
-    if (!webhookBody || Object.keys(webhookBody).length === 0) {
+    if (!webhookBody.payload || Object.keys(webhookBody.payload).length === 0) {
       console.error('❌ Received an empty webhook request');
       return { statusCode: 500, success: false, message: 'Empty webhook data' };
     }
 
-    if (!webhookBody.reference) {
-      console.error('❌ Missing DepositId in webhook data');
+    if (!webhookBody.payload.reference) {
+      console.error('❌ Missing ReferenceID in webhook data');
       return {
         statusCode: 500,
         success: false,
@@ -452,15 +447,15 @@ export class AppController {
     }
 
     const isSuccess =
-      webhookBody.status === 'SUCCESS' &&
+      webhookBody.payload.status === 'SUCCESS' &&
       webhookBody.type === 'transaction-status';
 
     try {
       if (isSuccess) {
         const response = await this.walletService.OpayWebhook({
           clientId: 4,
-          status: webhookBody.status,
-          reference: webhookBody.reference,
+          status: webhookBody.payload.status,
+          reference: webhookBody.payload.reference,
           type: webhookBody.type,
           sha512: webhookBody.sha512,
         });
@@ -469,7 +464,7 @@ export class AppController {
         );
       } else {
         console.warn(
-          `⚠️ Unsuccessful or irrelevant webhook: ${webhookBody.status} / ${webhookBody.type}`,
+          `⚠️ Unsuccessful or irrelevant webhook: ${webhookBody.payload.reference} / ${webhookBody.status} / ${webhookBody.type}`,
         );
       }
 
