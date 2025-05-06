@@ -231,7 +231,7 @@ export class RetailController {
     return this.walletService.getSummeryMethod(payload);
   }
 
-  @Get('agent-agent-users/:clientId')
+  @Get('agent-users/:clientId')
   @ApiOperation({ summary: 'Get wallet summary for agent users' })
   @ApiQuery({ name: 'dateRange', required: false, type: String })
   async getAllClientsSummary(
