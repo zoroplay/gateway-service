@@ -35,14 +35,14 @@ export class SettingsController {
     @ApiParam({ name: 'client', type: 'number', description: 'SBE Client ID' })
     @ApiBody({ type: SwaggerSettingsRequest })
     @ApiOkResponse({ type: SwaggerCommonResponse })
-    @UseInterceptors(FileFieldsInterceptor([
-        { name: 'logo', maxCount: 1 },
-        { name: 'print_logo', maxCount: 1 },
-    ]))
+    // @UseInterceptors(FileFieldsInterceptor([
+    //     { name: 'logo', maxCount: 1 },
+    //     { name: 'print_logo', maxCount: 1 },
+    // ]))
     saveSettings(
         @Param('clientId') clientId: number,
-        @Body() body,
-        @UploadedFiles() files: { logo?: Express.Multer.File, printLogo?: Express.Multer.File }
+        @Body() body
+        // @UploadedFiles() files: { logo?: Express.Multer.File, printLogo?: Express.Multer.File }
     ) {
         // console.log(files);
         // if (files.logo)
@@ -57,65 +57,6 @@ export class SettingsController {
         }
         return this.svc.saveSettings(payload);
     }
-
-   
-
-//     @Post(':clientId/save')
-// @ApiConsumes('multipart/form-data')
-// @ApiOperation({
-//     summary: 'Save system settings',
-//     description: 'This endpoint is used to save or update settings for a client',
-// })
-// @ApiBody({ type: SaveSettingsDto })
-// @ApiOkResponse({ type: [SwaggerCommonResponse] })
-// @UseInterceptors(FileFieldsInterceptor([
-//     { name: 'logo', maxCount: 1 },
-//     { name: 'print_logo', maxCount: 1 },
-// ]))
-// async saveSettings(
-//     @Param('clientId') clientId: number, 
-//     @Body() payload: SaveSettingsDto, 
-//     @UploadedFiles() files: { logo?: Express.Multer.File[], print_logo?: Express.Multer.File[] }
-// ) {
-//     try {
-//         console.log("Entered save settings");
-        
-//         // Handle file paths if files are uploaded
-//         let logoPath = null;
-//         let printLogoPath = null;
-        
-//         if (files.logo && files.logo.length > 0) {
-//             logoPath = files.logo[0].path; // Or however you store file references
-//             console.log('Logo file received:', files.logo[0].originalname);
-//         }
-        
-//         if (files.print_logo && files.print_logo.length > 0) {
-//             printLogoPath = files.print_logo[0].path;
-//             console.log('Print logo file received:', files.print_logo[0].originalname);
-//         }
-        
-//         // Create a clean payload object
-//         const settingsData = {
-//             ...payload,
-//             logoPath,
-//             printLogoPath
-//         };
-        
-//         const payloadObject: SettingsRequest = {
-//             clientId,
-//             inputs: JSON.stringify(settingsData)
-//         };
-      
-//         console.log('Processing payload with files');
-//         const setting = await this.svc.saveSettings(payloadObject);
-//         console.log('Settings saved successfully');
-        
-//         return setting;
-//     } catch (error) {
-//         console.error('Error saving settings:', error);
-//     }
-// }
-
 
 
     @Post(':clientId/risk-management/save')
