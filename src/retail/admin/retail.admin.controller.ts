@@ -15,7 +15,7 @@ import { AssignUserCommissionProfile, CommissionProfile, CreateUserRequest, GetA
 import { BetHistoryRequest, GetCommissionsRequest, GetVirtualBetsRequest } from 'src/interfaces/betting.pb';
 import { BettingService } from 'src/betting/betting.service';
 import { SwaggerBetHistoryRequest, SwaggerPayoutCommission } from 'src/betting/dto';
-import { GetShopUserWalletSummaryRequest, SummaryRequest } from 'src/interfaces/wallet.pb';
+import { GetShopUserWalletSummaryRequest, ShopUsersSummaryRequest, SummaryRequest } from 'src/interfaces/wallet.pb';
 import { WalletService } from 'src/wallet/wallet.service';
 
 @ApiTags('BackOffice APIs')
@@ -371,6 +371,33 @@ export class RetailAdminController {
   
       return this.walletService.AgentUsersSummaryRequestMethod(payload);
     }
+
+
+      @Get('net-cash/:clientId')
+      @ApiOperation({ summary: 'Get net cash flow summary for shop users' })
+      @ApiParam({ name: 'clientId', type: Number, description: 'Client ID' })
+      @ApiQuery({ name: 'range', required: false, type: String })
+      @ApiQuery({ name: 'from', required: false, type: String })
+      @ApiQuery({
+        name: 'to',
+        required: false,
+        type: String,
+        description: 'Range (day, week, month, yesterday, etc.)',
+      })
+      async getNetCash(
+        @Param('clientId') clientId: number,
+        @Query('range') range?: string,
+        @Query('from') from?: string,
+        @Query('to') to?: string,
+      ) {
+        const payload: ShopUsersSummaryRequest = {
+          clientId,
+          rangeZ: range || '',
+          from: from || '',
+          to: to || '',
+        };
+        return this.walletService.getNetCashFlow(payload);
+      }
 
   // @Get('/bonus-groups')
   // @ApiOperation({
