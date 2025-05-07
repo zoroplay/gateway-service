@@ -227,7 +227,12 @@ export class AuditLogInterceptor implements NestInterceptor {
   //   }
   // }
 
-  intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
+
+  async intercept(
+    context: ExecutionContext,
+    next: CallHandler,
+  ): Promise<Observable<any>> {
+    
     if (this.shouldSkipAudit(context)) {
       return next.handle();
     }
@@ -535,13 +540,15 @@ export class AuditLogInterceptor implements NestInterceptor {
           sanitized.data[field] = '**REDACTED**';
         }
       }
-      return this.safeStringify(sanitized);
+      // return this.safeStringify(sanitized);
+      return true
     } catch (error) {
       console.error('Error sanitizing data:', error);
-      return this.safeStringify({
-        error: 'Failed to sanitize',
-        message: error.message,
-      });
+      return true;
+      // return this.safeStringify({
+      //   error: 'Failed to sanitize',
+      //   message: error.message,
+      // });
     }
   }
 
