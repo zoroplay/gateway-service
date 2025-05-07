@@ -29,11 +29,11 @@ async function bootstrap() {
   });
 
   app.setGlobalPrefix('/api/v2');
-  const ipWhitelist = IpFilter({
-    filter: whitelist,
-    strict: false
-  });
-  app.use(ipWhitelist);
+  // const ipWhitelist = IpFilter({
+  //   filter: whitelist,
+  //   strict: false
+  // });
+  // app.use(ipWhitelist);
   
   app.use(
     '/api/v2/webhook/4/tigo/notify',
