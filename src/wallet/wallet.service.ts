@@ -77,6 +77,18 @@ import {
   TigoWebhookRequest,
   PawapayRequest,
   PawapayResponse,
+  TigoW2aRequest,
+  TigoW2aResponse,
+  MtnmomoRequest,
+  SummaryRequest,
+  TrxSummaryRequest,
+  SummaryResponse,
+  GetShopUserWalletSummaryRequest,
+  GetShopUserWalletSummaryResponse,
+  ShopUsersSummaryRequest,
+  ShopUsersSummaryResponse,
+  OpayResponse,
+  OpayRequest,
 } from '../interfaces/wallet.pb';
 import { ClientGrpc } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
@@ -96,6 +108,22 @@ export class WalletService {
     request: PaymentMethodRequest,
   ): Promise<PaymentMethodResponse> {
     return await firstValueFrom(this.svc.savePaymentMethod(request));
+  }
+
+  async getSummeryMethod(request: SummaryRequest): Promise<SummaryResponse> {
+    return await firstValueFrom(this.svc.getTransactionSummary(request));
+  }
+
+  async AgentUsersSummaryRequestMethod(
+    request: GetShopUserWalletSummaryRequest,
+  ): Promise<GetShopUserWalletSummaryResponse> {
+    return await firstValueFrom(this.svc.shopTransactionSummary(request));
+  }
+
+  async getNetCashFlow(
+    payload: ShopUsersSummaryRequest,
+  ): Promise<ShopUsersSummaryResponse> {
+    return await firstValueFrom(this.svc.shopUsersSummary(payload));
   }
 
   async getPaymentMethods(
@@ -142,6 +170,21 @@ export class WalletService {
   async tigoWebhook(data: TigoWebhookRequest): Promise<WebhookResponse> {
     console.log('check44');
     return await firstValueFrom(this.svc.tigoWebhook(data));
+  }
+
+  async OpayWebhook(data: OpayRequest): Promise<OpayResponse> {
+    console.log('check44');
+    return await firstValueFrom(this.svc.opayCallback(data));
+  }
+
+  async mtnmomoWebhook(data: MtnmomoRequest): Promise<WebhookResponse> {
+    console.log('checkMtnMomo');
+    return await firstValueFrom(this.svc.mtnmomoCallback(data));
+  }
+
+  async handleW2aWebhook(data: TigoW2aRequest): Promise<TigoW2aResponse> {
+    console.log('check555');
+    return await firstValueFrom(this.svc.tigoW2A(data));
   }
 
   async pawapayCallback(data: PawapayRequest): Promise<PawapayResponse> {

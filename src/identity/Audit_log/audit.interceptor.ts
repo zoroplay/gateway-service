@@ -32,7 +32,7 @@ export class AuditLogInterceptor implements NestInterceptor {
     private readonly reflector: Reflector,
   ) {}
 
-  private shouldSkipAudit(context: ExecutionContext): boolean {
+private shouldSkipAudit(context: ExecutionContext): boolean {
     return this.reflector.getAllAndOverride<boolean>(SKIP_AUDIT_KEY, [
       context.getHandler(),
       context.getClass(),
@@ -47,6 +47,7 @@ export class AuditLogInterceptor implements NestInterceptor {
     context: ExecutionContext,
     next: CallHandler,
   ): Promise<Observable<any>> {
+  intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     if (this.shouldSkipAudit(context)) {
       return next.handle();
     }
@@ -457,10 +458,13 @@ export class AuditLogInterceptor implements NestInterceptor {
           sanitized.data[field] = '**REDACTED**';
         }
       }
-      return JSON.stringify(sanitized);
+      return this.safeStringify(sanitized);
     } catch (error) {
       console.error('Error sanitizing data:', error);
-      return '{}';
+      return this.safeStringify({
+        error: 'Failed to sanitize',
+        message: error.message,
+      });
     }
   }
 
