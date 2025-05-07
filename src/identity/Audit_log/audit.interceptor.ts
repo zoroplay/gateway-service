@@ -47,10 +47,10 @@ private shouldSkipAudit(context: ExecutionContext): boolean {
     context: ExecutionContext,
     next: CallHandler,
   ): Promise<Observable<any>> {
-  intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
-    if (this.shouldSkipAudit(context)) {
-      return next.handle();
-    }
+  // intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
+  //   if (this.shouldSkipAudit(context)) {
+  //     return next.handle();
+  //   }
 
     const requestType = this.getRequestType(context);
     const {
@@ -458,13 +458,15 @@ private shouldSkipAudit(context: ExecutionContext): boolean {
           sanitized.data[field] = '**REDACTED**';
         }
       }
-      return this.safeStringify(sanitized);
+      // return this.safeStringify(sanitized);
+      return true
     } catch (error) {
       console.error('Error sanitizing data:', error);
-      return this.safeStringify({
-        error: 'Failed to sanitize',
-        message: error.message,
-      });
+      return true;
+      // return this.safeStringify({
+      //   error: 'Failed to sanitize',
+      //   message: error.message,
+      // });
     }
   }
 
@@ -476,3 +478,4 @@ private shouldSkipAudit(context: ExecutionContext): boolean {
     return authHeader?.split(' ')[1] || '';
   }
 }
+
