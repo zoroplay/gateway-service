@@ -9,6 +9,7 @@ import {
   Headers,
   Query,
   Header,
+  HttpStatus,
 } from '@nestjs/common';
 import {
   ApiBody,
@@ -22,7 +23,11 @@ import { WalletService } from './wallet/wallet.service';
 import { SwaggerGetUserByUsernmae } from './identity/dto';
 import { OddsService } from './odds/odds.service';
 import { TigoWebhookRequest, WebhookResponse } from './wallet/dto';
-import { PawapayResponse, TigoW2aRequest } from './interfaces/wallet.pb';
+import {
+  OpayResponse,
+  PawapayResponse,
+  TigoW2aRequest,
+} from './interfaces/wallet.pb';
 import * as xml2js from 'xml2js';
 import { Response, Request } from 'express';
 import buildTigoW2AResponse from './wallet/dto/utils';
@@ -309,6 +314,50 @@ export class AppController {
     try {
       if (isSuccess) {
         const response = await this.walletService.pawapayCallback({
+          clientId: 7,
+          depositId: webhookBody.depositId,
+          status: '',
+        });
+        console.log(
+          `🎉 User credited successfully: ${JSON.stringify(response)}`,
+        );
+      } else {
+        console.error(`❌ Payment Failed: ${JSON.stringify(webhookBody)}`);
+      }
+
+      return { success: true, message: 'Webhook processed' };
+    } catch (error) {
+      console.error(`❌ Error processing webhook: ${error.message}`);
+      return { success: false, message: 'Internal server error' };
+    }
+  }
+
+  @ApiTags('Webhooks')
+  @Post('/webhook/4/pawapay/callback')
+  async handlePawapayCallback4(
+    @Body() webhookBody: any,
+  ): Promise<PawapayResponse> {
+    console.log(`📩 Received Pawapay Webhook: ${JSON.stringify(webhookBody)}`);
+
+    // ✅ Validate Webhook Data
+    if (!webhookBody || Object.keys(webhookBody).length === 0) {
+      console.error('❌ Received an empty webhook request');
+      return { success: false, message: 'Empty webhook data' };
+    }
+
+    if (!webhookBody.depositId) {
+      console.error('❌ Missing DepositId in webhook data');
+      return {
+        success: false,
+        message: 'Invalid webhook data: Missing ReferenceID',
+      };
+    }
+
+    const isSuccess = webhookBody.status === 'COMPLETED';
+
+    try {
+      if (isSuccess) {
+        const response = await this.walletService.pawapayCallback({
           clientId: 4,
           depositId: webhookBody.depositId,
           status: '',
@@ -374,33 +423,59 @@ export class AppController {
   }
 
   @ApiTags('Webhooks')
-  @Get('/webhook/4/pawapay/callback')
-  async handlePawapayCallback1(
-    @Query('depositId') depositId: string,
-  ): Promise<PawapayResponse> {
-    console.log(`📩 Received Pawapay Webhook - depositId: ${depositId}`);
+  @Post('/webhook/checkout/4/opay/callback')
+  async handleOpayCallback(@Body() webhookBody: any): Promise<OpayResponse> {
+    console.log(webhookBody.payload);
 
-    // ✅ Validate depositId
-    if (!depositId) {
-      console.error('❌ Missing depositId in query parameters');
+    console.log(
+      `📩 Received Opay Webhook: ${JSON.stringify(webhookBody.payload)}`,
+    );
+
+    // ✅ Validate Webhook Data
+    if (!webhookBody.payload || Object.keys(webhookBody.payload).length === 0) {
+      console.error('❌ Received an empty webhook request');
+      return { statusCode: 500, success: false, message: 'Empty webhook data' };
+    }
+
+    if (!webhookBody.payload.reference) {
+      console.error('❌ Missing ReferenceID in webhook data');
       return {
+        statusCode: 500,
         success: false,
-        message: 'Invalid webhook: Missing depositId',
+        message: 'Invalid webhook data: Missing ReferenceID',
       };
     }
 
-    try {
-      const response = await this.walletService.pawapayCallback({
-        clientId: 4,
-        depositId,
-        status: 'COMPLETED',
-      });
+    const isSuccess =
+      webhookBody.payload.status === 'SUCCESS' &&
+      webhookBody.type === 'transaction-status';
 
-      console.log(`🎉 User credited successfully: ${JSON.stringify(response)}`);
-      return { success: true, message: 'Webhook processed' };
+    try {
+      if (isSuccess) {
+        const response = await this.walletService.OpayWebhook({
+          clientId: 4,
+          status: webhookBody.payload.status,
+          reference: webhookBody.payload.reference,
+          type: webhookBody.type,
+          sha512: webhookBody.sha512,
+        });
+        console.log(
+          `🎉 User credited successfully: ${JSON.stringify(response)}`,
+        );
+      } else {
+        console.warn(
+          `⚠️ Unsuccessful or irrelevant webhook: ${webhookBody.payload.reference} / ${webhookBody.status} / ${webhookBody.type}`,
+        );
+      }
+
+      return { statusCode: 200, success: true, message: 'OK' };
     } catch (error) {
       console.error(`❌ Error processing webhook: ${error.message}`);
-      return { success: false, message: 'Internal server error' };
+      return {
+        statusCode: 500,
+        success: false,
+        message: 'Internal server error',
+      };
     }
   }
 }

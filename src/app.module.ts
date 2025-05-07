@@ -11,6 +11,7 @@ import { NotificationModule } from './notification/notification.module';
 import { WalletModule } from './wallet/wallet.module';
 import { RetailModule } from './retail/retail.module';
 import { OddsModule } from './odds/odds.module';
+import { CryptoModule } from './crypto/crypto.module';
 import 'dotenv/config';
 
 @Module({
@@ -25,9 +26,10 @@ import 'dotenv/config';
     WalletModule,
     RetailModule,
     OddsModule,
+    CryptoModule,
   ],
   controllers: [AppController],
   providers: [AppService],
-  exports: [AppService]
+  exports: [AppService],
 })
 export class AppModule {}

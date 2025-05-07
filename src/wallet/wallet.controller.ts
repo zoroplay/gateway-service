@@ -38,6 +38,7 @@ import {
   PawapayPredCorrRequest,
   StkRegisterUrlRequest,
   StkTransactionRequest,
+  SummaryRequest,
   UserTransactionRequest,
   VerifyBankAccountRequest,
   VerifyDepositRequest,
@@ -74,6 +75,7 @@ import {
 import { AuthGuard } from 'src/identity/auth/auth.guard';
 import { IAuthorizedRequest } from 'src/interfaces/authorized-request.interface';
 import { WalletService } from './wallet.service';
+import { GetShopUserWalletSummaryRequest } from '../interfaces/wallet.pb';
 import { FetchSalesReportRequest } from '../interfaces/wallet.pb';
 import { SwaggerCommonResponse } from 'src/identity/dto';
 
@@ -669,9 +671,8 @@ export class WalletController {
       userId: req.user.id,
       clientId,
     };
-    setTimeout(() => {
-      return this.walletService.getBankAccounts(payload);
-    }, 1000);
+
+    return this.walletService.getBankAccounts(payload);
   }
 
   @Get(':clientId/payment-methods')
