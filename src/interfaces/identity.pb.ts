@@ -1116,7 +1116,7 @@ export interface IdentityServiceClient {
 
   validate(request: ValidateRequest): Observable<ValidateResponse>;
 
-  validateGroupCode(request: ValidateGroupCodeRequest): Observable<ValidateGroupCodeResponse>;
+  validateGroupCode(request: GetClientRequest): Observable<ValidateGroupCodeResponse>;
 
   validateClient(request: ValidateRequest): Observable<ValidateClientResponse>;
 
@@ -1303,7 +1303,7 @@ export interface IdentityServiceController {
   validate(request: ValidateRequest): Promise<ValidateResponse> | Observable<ValidateResponse> | ValidateResponse;
 
   validateGroupCode(
-    request: ValidateGroupCodeRequest,
+    request: GetClientRequest,
   ): Promise<ValidateGroupCodeResponse> | Observable<ValidateGroupCodeResponse> | ValidateGroupCodeResponse;
 
   validateClient(

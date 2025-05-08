@@ -6,35 +6,32 @@ import { CryptoService } from './crypto.service';
 export class CryptoController {
   constructor(private readonly cryptoService: CryptoService) {}
 
-  @Post('encrypt')
+  @Get('encrypt')
   async encrypt(
     @Body() data: any,
-    @Headers() headers: { 'client-code': string; 'client-id': number },
+    @Headers() headers: { 'sbe-api-signature': string; 'sbe-client-id': number },
   ) {
     try {
-      // const clientCode = headers['client-code'];
-      // const clientId = headers['client-id'];
-      // const key = await this.cryptoService.validateClientAndGenerateKey(
-      //   clientCode,
-      //   clientId,
-      // );
-      // return this.cryptoService.encrypt(data, key.toString('hex'));
-      return data;
+      const clientId = headers['sbe-client-id'];
+      const signature = headers['sbe-api-signature'];
+      const key = await this.cryptoService.validateClientAndGenerateKey(
+        clientId,
+      );
+      return this.cryptoService.encrypt(key.toString('hex'), signature);
     } catch (error) {
       return { error: error.message };
     }
   }
 
-  @Post('decrypt')
+  @Get('decrypt')
   async decrypt(
     @Body() body: { data: string },
     @Headers() headers: { 'client-code': string; 'client-id': number },
   ) {
     try {
-      const clientCode = headers['client-code'];
-      const clientId = headers['client-id'];
+      // const clientCode = headers['client-code'];
+      const clientId = headers['sbe-client-id'];
       const key = await this.cryptoService.validateClientAndGenerateKey(
-        clientCode,
         clientId,
       );
 

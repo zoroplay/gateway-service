@@ -80,9 +80,9 @@ export class AuthService {
   }
 
   public async validateGroupCode(
-    groupName: string,
+    clientId: number,
   ): Promise<ValidateGroupCodeResponse> {
-    return firstValueFrom(this.svc.validateGroupCode({ groupName }));
+    return firstValueFrom(this.svc.validateGroupCode({ id: clientId }));
   }
   public async getUserDetails(
     data: GetUserDetailsRequest,
