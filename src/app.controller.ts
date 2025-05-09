@@ -31,6 +31,7 @@ import {
 import * as xml2js from 'xml2js';
 import { Response, Request } from 'express';
 import buildTigoW2AResponse from './wallet/dto/utils';
+import * as crypto from 'crypto';
 
 @Controller()
 export class AppController {
@@ -424,20 +425,20 @@ export class AppController {
 
   @ApiTags('Webhooks')
   @Post('/webhook/checkout/4/opay/callback')
-  async handleOpayCallback(@Body() webhookBody: any): Promise<OpayResponse> {
-    console.log(webhookBody.payload);
+  async handleOpayCallback(
+    @Req() req,
+    @Headers() headers,
+  ): Promise<OpayResponse> {
+    const webhookBody = JSON.stringify(req.body);
+    console.log('WEBHOOK:::', webhookBody);
+    const signature = headers['x-opay-signature'];
 
-    console.log(
-      `📩 Received Opay Webhook: ${JSON.stringify(webhookBody.payload)}`,
-    );
+    console.log('WOW::::', signature);
 
-    // ✅ Validate Webhook Data
-    if (!webhookBody.payload || Object.keys(webhookBody.payload).length === 0) {
-      console.error('❌ Received an empty webhook request');
-      return { statusCode: 500, success: false, message: 'Empty webhook data' };
-    }
+    const parsedBody = JSON.parse(webhookBody.toString());
+    console.log('✅ Verified Webhook Payload:', parsedBody);
 
-    if (!webhookBody.payload.reference) {
+    if (!parsedBody.payload.reference) {
       console.error('❌ Missing ReferenceID in webhook data');
       return {
         statusCode: 500,
@@ -446,27 +447,15 @@ export class AppController {
       };
     }
 
-    const isSuccess =
-      webhookBody.payload.status === 'SUCCESS' &&
-      webhookBody.type === 'transaction-status';
-
     try {
-      if (isSuccess) {
-        const response = await this.walletService.OpayWebhook({
-          clientId: 4,
-          status: webhookBody.payload.status,
-          reference: webhookBody.payload.reference,
-          type: webhookBody.type,
-          sha512: webhookBody.sha512,
-        });
-        console.log(
-          `🎉 User credited successfully: ${JSON.stringify(response)}`,
-        );
-      } else {
-        console.warn(
-          `⚠️ Unsuccessful or irrelevant webhook: ${webhookBody.payload.reference} / ${webhookBody.status} / ${webhookBody.type}`,
-        );
-      }
+      await this.walletService.OpayWebhook({
+        clientId: 4,
+        status: parsedBody.payload.status,
+        reference: parsedBody.payload.reference,
+        type: parsedBody.type,
+        sha512: signature,
+      });
+      console.log(`🎉 User credited successfully: `);
 
       return { statusCode: 200, success: true, message: 'OK' };
     } catch (error) {
