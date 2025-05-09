@@ -28,6 +28,7 @@ import {
   StartDto,
   SmatVirtualCallbackRequest,
   GetPromotions,
+  SpribeCallbackRequest,
 } from 'src/interfaces/gaming.pb';
 import { ClientGrpc } from '@nestjs/microservices';
 import { firstValueFrom, of } from 'rxjs';
@@ -316,6 +317,19 @@ export class GamingService implements OnModuleInit {
 
     return resp;
   }
+
+   async handleSpribeGamesCallback(request: SpribeCallbackRequest) {
+    console.log('Spribe service start');
+    // //(request);
+    const resp = await firstValueFrom(
+      this.service.handleSpribeCallback(request),
+    );
+
+    console.log('respVERIFY', resp);
+
+    return resp;
+  }
+
 
 
   async handleSmatVirtualGamesCallback(request: SmatVirtualCallbackRequest) {
