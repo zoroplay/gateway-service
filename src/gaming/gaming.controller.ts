@@ -696,9 +696,10 @@ export class GamingController {
 
   // https://staging.api.sportsbookengine.com/api/v2/games/4/spribe/callback
 
-  @Post(':clientId/spribe/callback/:action')
+  @Post(':clientId/:provider_id/callback/:action')
   @ApiParam({ name: 'clientId', type: 'string' })
   @ApiParam({ name: 'action', type: 'string' })
+  @ApiParam({ name: 'provider_id', type: 'string' })
   @ApiHeader({ name: 'X-Spribe-Client-ID', description: 'clientId' })
   @ApiHeader({ name: 'X-Spribe-Client-TS', description: 'timestamp' })
   @ApiHeader({ name: 'X-Spribe-Client-Signature', description: 'signature' })
@@ -706,6 +707,7 @@ export class GamingController {
 
     @Param('clientId') clientId: number,
     @Param('action') action,
+    @Param('provider_id') provider,
     @Headers() headers: Record<string, string>,
     @Req() req: RawBodyRequest<Request>,
     @Res() res: Response,
@@ -722,6 +724,7 @@ export class GamingController {
       // Handle the response if session is valid
       console.log("req", req);
       const response = await this.gamingService.handleSpribeGamesCallback({
+        provider: provider,
         signature,
         body: Object.keys(data).length === 0 ? '' : JSON.stringify(data),
         clientId,

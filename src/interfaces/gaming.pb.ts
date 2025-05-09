@@ -83,6 +83,7 @@ export interface QtechCallbackRequest {
 
 export interface SpribeCallbackRequest {
   clientId: number;
+  provider: string;
   signature?: string | undefined;
   body?: string | undefined;
   action: string;
