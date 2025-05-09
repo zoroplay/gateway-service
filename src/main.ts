@@ -11,19 +11,31 @@ import { AuthService } from './identity/auth/auth.service';
 import { CryptoService } from './crypto/crypto.service';
 import * as bodyParser from 'body-parser';
 import * as bodyParserXml from 'body-parser-xml';
+import * as IpFilter from 'express-ip-filter';
 
 
 const logger = new Logger('Main');
 
 bodyParserXml(bodyParser);
 
+const whitelist = [
+  '206.189.229.191', //staging IP
+  '127.??.??.1*' //localhost
+];
+
 async function bootstrap() {
+  
   const app = await NestFactory.create(AppModule, {
     rawBody: true,
   });
 
   app.setGlobalPrefix('/api/v2');
-
+  // const ipWhitelist = IpFilter({
+  //   filter: whitelist,
+  //   strict: false
+  // });
+  // app.use(ipWhitelist);
+  
   app.use(
     '/api/v2/webhook/4/tigo/notify',
     bodyParser.raw({ type: 'text/xml' }),

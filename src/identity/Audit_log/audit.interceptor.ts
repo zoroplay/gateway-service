@@ -25,6 +25,7 @@ export class AuditLogInterceptor implements NestInterceptor {
     'authorization',
   ];
   private readonly ADMIN_PATHS = ['/admin', '/v2/admin'];
+  private readonly NON_ENCRYPT_PATHS = ['/gaming', '/webhook'];
 
   constructor(
     private readonly authService: AuthService,
@@ -57,176 +58,10 @@ export class AuditLogInterceptor implements NestInterceptor {
     return this.ADMIN_PATHS.some((path) => url.toLowerCase().includes(path));
   }
 
-  // async intercept(
-  //   context: ExecutionContext,
-  //   next: CallHandler,
-  // ): Promise<Observable<any>> {
-    
-  //   if (this.shouldSkipAudit(context)) {
-  //     return next.handle();
-  //   }
-
-  //   const requestType = this.getRequestType(context);
-  //   const {
-  //     action,
-  //     endpoint,
-  //     method,
-  //     additionalInfo,
-  //     clientId,
-  //     ipAddress,
-  //     userAgent,
-  //     authHeader,
-  //     clientCode,
-  //   } = this.extractRequestData(context);
-  //   const isAdmin = this.isAdminEndpoint(endpoint);
-
-  //   // Key generation with validation
-  //   let key: string;
-  //   try {
-  //     const keyBuffer = await this.cryptoService.validateClientAndGenerateKey(
-  //       clientCode,
-  //       clientId,
-  //     );
-
-  //     if (!keyBuffer) {
-  //       throw new HttpException(
-  //         'Failed to generate encryption key',
-  //         HttpStatus.INTERNAL_SERVER_ERROR,
-  //       );
-  //     }
-
-  //     key = keyBuffer.toString('hex');
-  //     if (!key || key.length === 0) {
-  //       throw new HttpException(
-  //         'Invalid encryption key',
-  //         HttpStatus.INTERNAL_SERVER_ERROR,
-  //       );
-  //     }
-  //   } catch (error) {
-  //     console.error('Key generation error:', error);
-  //     throw new HttpException(
-  //       'Encryption setup failed',
-  //       HttpStatus.INTERNAL_SERVER_ERROR,
-  //     );
-  //   }
-
-  //   try {
-  //     const request =
-  //       requestType === 'http'
-  //         ? context.switchToHttp().getRequest()
-  //         : context.switchToRpc().getData();
-
-  //     // Decrypt incoming request body
-  //     if (
-  //       requestType === 'http' &&
-  //       ['POST', 'PUT', 'PATCH'].includes(request.method) &&
-  //       request?.body?.data
-  //     ) {
-  //       try {
-  //         if (!endpoint.includes('encrypt') && !endpoint.includes('decrypt')) {
-  //           request.body = this.cryptoService.decrypt(request.body.data, key);
-  //         }
-  //       } catch (err) {
-  //         if (err.message.includes('decryption failed')) {
-  //           throw new BadRequestException(
-  //             'Decryption failed - invalid key or data',
-  //           );
-  //         }
-  //         throw err;
-  //       }
-  //     }
-
-  //     return next.handle().pipe(
-  //       // Response handling and encryption
-  //       map((response) => {
-  //         try {
-  //           const requestUrl =
-  //             requestType === 'http'
-  //               ? context.switchToHttp().getRequest().url
-  //               : endpoint;
-
-  //           const isDecryptEndpoint = requestUrl
-  //             .toLowerCase()
-  //             .includes('crypto/decrypt');
-
-  //           if (isDecryptEndpoint) {
-  //             return response;
-  //           }
-
-  //           // Ensure response is in encryptable format
-  //           let dataToEncrypt = response;
-  //           if (typeof response === 'string') {
-  //             try {
-  //               dataToEncrypt = JSON.parse(response);
-  //             } catch {
-  //               dataToEncrypt = { data: response };
-  //             }
-  //           }
-
-  //           const encrypted = this.cryptoService.encrypt(dataToEncrypt, key);
-
-  //           if (!encrypted) {
-  //             return
-  //           }
-
-  //           return encrypted;
-  //         } catch (error) {
-  //           console.error('Encryption failed:', error);
-  //           throw new HttpException(
-  //             'Response encryption failed',
-  //             HttpStatus.INTERNAL_SERVER_ERROR,
-  //           );
-  //         }
-  //       }),
-        
-  //       tap(async (response) => {
-  //         if (!isAdmin) return; // skip non-admin logging
-  //         const user = await this.resolveUser(authHeader, action, response);
-
-  //         await this.authService.createLog({
-  //           auditLog: {
-  //             id: undefined,
-  //             clientId,
-  //             userId: typeof user === 'object' && 'id' in user ? user.id : 0,
-  //             userName:
-  //               (typeof user === 'object' &&
-  //                 'username' in user &&
-  //                 user.username) ||
-  //               response.username ||
-  //               '',
-  //             action,
-  //             endpoint,
-  //             method,
-  //             statusCode: this.getStatusCode(response, requestType),
-  //             payload: this.sanitizeData(
-  //               this.getRequestPayload(context, requestType),
-  //             ),
-  //             response: this.sanitizeData(response),
-  //             ipAddress,
-  //             userAgent,
-  //             additionalInfo,
-  //             timestamp: new Date().toISOString(),
-  //           },
-  //         });
-  //       }),
-  //       // Error handling
-  //       catchError((error) => {
-  //         console.error('AuditLogInterceptor pipeline error:', error);
-  //         if (error instanceof HttpException) {
-  //           throw error;
-  //         }
-  //         throw new HttpException(
-  //           'Internal server error',
-  //           HttpStatus.INTERNAL_SERVER_ERROR,
-  //         );
-  //       }),
-  //     );
-  //   } catch (error) {
-  //     console.error('AuditLogInterceptor setup error:', error);
-  //     throw error;
-  //   }
-  // }
-
+  private isEncryptPath(url: string): boolean {
+    console.log('accessed endpoint', url);
+    return !this.NON_ENCRYPT_PATHS.some((path) => url.toLowerCase().includes(path));
+  }
 
   async intercept(
     context: ExecutionContext,
@@ -238,32 +73,110 @@ export class AuditLogInterceptor implements NestInterceptor {
     }
 
     const requestType = this.getRequestType(context);
+    const {
+      action,
+      endpoint,
+      method,
+      additionalInfo,
+      clientId,
+      ipAddress,
+      userAgent,
+      authHeader,
+      signature,
+      apiKey
+    } = this.extractRequestData(context);
+
+    const isAdmin = this.isAdminEndpoint(endpoint);
+    const isEncryptEndpoint = this.isEncryptPath(endpoint);
+
+    // Key generation with validation
+    let key: string;
+    try {
+      if (isEncryptEndpoint && clientId !== '4') {
+
+        const keyBuffer = await this.cryptoService.validateClientAndGenerateKey(
+          clientId
+        );
+
+        if (!keyBuffer) {
+          throw new HttpException(
+            'Failed to generate encryption key',
+            HttpStatus.INTERNAL_SERVER_ERROR,
+          );
+        }
+
+        key = keyBuffer.toString('hex');
+
+        if (!key || key.length === 0) {
+          throw new HttpException(
+            'Invalid encryption key',
+            HttpStatus.BAD_REQUEST,
+          );
+        }
+
+        if (key !== apiKey) {
+          throw new HttpException(
+            'Invalid api key provided',
+            HttpStatus.BAD_REQUEST,
+          );
+        }
+
+        const encrypted = this.cryptoService.compareKeys(key, signature);
+
+        if (!encrypted) {
+          throw new HttpException(
+            'Invalid signature key provided',
+            HttpStatus.BAD_REQUEST,
+          );
+        }
+      }
+    } catch (error) {
+      console.error('Key generation error:', error);
+      throw new HttpException(
+        'Encryption setup failed',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
 
     try {
-      const {
-        action,
-        endpoint,
-        method,
-        additionalInfo,
-        clientId,
-        ipAddress,
-        userAgent,
-        authHeader,
-      } = this.extractRequestData(context);
+      // const request =
+      //   requestType === 'http'
+      //     ? context.switchToHttp().getRequest()
+      //     : context.switchToRpc().getData();
 
-        const isAdmin = this.isAdminEndpoint(endpoint)
-      // console.log(context, '=== ontext');
+      // // Decrypt incoming request body
+      // if (
+      //   requestType === 'http' &&
+      //   ['POST', 'PUT', 'PATCH'].includes(request.method) &&
+      //   request?.body?.data
+      // ) {
+      //   try {
+      //     if (!endpoint.includes('encrypt') && !endpoint.includes('decrypt')) {
+      //       request.body = this.cryptoService.decrypt(request.body.data, key);
+      //     }
+      //   } catch (err) {
+      //     if (err.message.includes('decryption failed')) {
+      //       throw new BadRequestException(
+      //         'Decryption failed - invalid key or data',
+      //       );
+      //     }
+      //     throw err;
+      //   }
+      // }
 
       return next.handle().pipe(
-        tap(async (response) => {
-
-          if (!isAdmin) return; // skip non-admin logging
+        // Response handling and encryption
+        // map((response) => {
           
+        // }),
+        
+        tap(async (response) => {
+          if (!isAdmin) return; // skip non-admin logging
           const user = await this.resolveUser(authHeader, action, response);
 
           await this.authService.createLog({
             auditLog: {
-              id: undefined, // Replace with a default or generated value if needed
+              id: undefined,
               clientId,
               userId: typeof user === 'object' && 'id' in user ? user.id : 0,
               userName:
@@ -287,10 +200,21 @@ export class AuditLogInterceptor implements NestInterceptor {
             },
           });
         }),
+        // Error handling
+        catchError((error) => {
+          console.error('AuditLogInterceptor pipeline error:', error);
+          if (error instanceof HttpException) {
+            throw error;
+          }
+          throw new HttpException(
+            'Internal server error',
+            HttpStatus.INTERNAL_SERVER_ERROR,
+          );
+        }),
       );
     } catch (error) {
-      console.error('AuditLogInterceptor error:', error);
-      return next.handle(); // Continue processing even if audit fails
+      console.error('AuditLogInterceptor setup error:', error);
+      throw error;
     }
   }
 
@@ -307,8 +231,9 @@ export class AuditLogInterceptor implements NestInterceptor {
       ...this.getNetworkInfo(context, requestType),
       additionalInfo: this.getUserAgentInfo(ua),
       authHeader: this.getAuthHeader(context, requestType)?.authorization,
-      clientCode: this.getAuthHeader(context, requestType)?.clientCode,
       clientId: this.getAuthHeader(context, requestType)?.clientId,
+      apiKey: this.getAuthHeader(context, requestType)?.apiKey,
+      signature: this.getAuthHeader(context, requestType)?.signature,
     };
   }
 
@@ -451,18 +376,22 @@ export class AuditLogInterceptor implements NestInterceptor {
       if (requestType === 'http') {
         const authorization =
           context.switchToHttp().getRequest().headers?.authorization || '';
-        const clientCode = context.switchToHttp().getRequest().headers?.[
-          'client-code'
-        ];
         const clientId = context.switchToHttp().getRequest().headers?.[
-          'client-id'
+          'sbe-client-id'
+        ];
+        const apiKey = context.switchToHttp().getRequest().headers?.[
+          'sbe-api-key'
         ];
 
-        if (!authorization && !clientCode) {
+        const signature = context.switchToHttp().getRequest().headers?.[
+          'sbe-api-signature'
+        ];
+
+        if (!authorization && !clientId) {
           throw new BadRequestException('Client headers are required');
         }
 
-        return { authorization, clientCode, clientId };
+        return { authorization, clientId, signature, apiKey };
       }
 
       const grpcContext = context.switchToRpc().getContext();
