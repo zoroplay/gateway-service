@@ -725,7 +725,7 @@ export class GamingController {
         signature,
         body: Object.keys(data).length === 0 ? '' : JSON.stringify(data),
         clientId,
-        action: 'auth'
+        action: action ? action : 'auth'
       });
 
       console.log('Game Callback Response:', response);
