@@ -9,9 +9,9 @@ import { AuditLogInterceptor } from './identity/Audit_log/audit.interceptor';
 import { Reflector } from '@nestjs/core';
 import { AuthService } from './identity/auth/auth.service';
 import { CryptoService } from './crypto/crypto.service';
-import * as xmlparser from 'express-xml-bodyparser';
 import * as bodyParser from 'body-parser';
 import * as bodyParserXml from 'body-parser-xml';
+
 
 const logger = new Logger('Main');
 
@@ -27,6 +27,11 @@ async function bootstrap() {
   app.use(
     '/api/v2/webhook/4/tigo/notify',
     bodyParser.raw({ type: 'text/xml' }),
+  );
+
+  app.use(
+    '/webhook/checkout/4/opay/callback',
+    bodyParser.raw({ type: 'application/json' }),
   );
 
   const options = new DocumentBuilder()
