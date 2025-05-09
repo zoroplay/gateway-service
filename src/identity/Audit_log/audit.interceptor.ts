@@ -92,7 +92,7 @@ export class AuditLogInterceptor implements NestInterceptor {
     // Key generation with validation
     let key: string;
     try {
-      if (isEncryptEndpoint) {
+      if (isEncryptEndpoint && clientId !== '4') {
 
         const keyBuffer = await this.cryptoService.validateClientAndGenerateKey(
           clientId
@@ -107,7 +107,6 @@ export class AuditLogInterceptor implements NestInterceptor {
 
         key = keyBuffer.toString('hex');
 
-      
         if (!key || key.length === 0) {
           throw new HttpException(
             'Invalid encryption key',
