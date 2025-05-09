@@ -23,6 +23,7 @@ import { WalletService } from 'src/wallet/wallet.service';
 import {
   GetShopUserWalletSummaryRequest,
   ProcessRetailTransaction,
+  ShopUsersSummaryRequest,
   SummaryRequest,
   ValidateTransactionRequest,
   WalletTransferRequest,
@@ -230,7 +231,9 @@ export class RetailController {
     return this.walletService.getSummeryMethod(payload);
   }
 
-  @Get('agent-agent-users/:clientId')
+  @Get('agent-users/:clientId')
+  @ApiOperation({ summary: 'Get wallet summary for agent users' })
+  @ApiQuery({ name: 'dateRange', required: false, type: String })
   async getAllClientsSummary(
     @Param('clientId') clientId: number,
     @Query('dateRange') dateRange?: string,
@@ -238,5 +241,31 @@ export class RetailController {
     const payload: GetShopUserWalletSummaryRequest = { clientId, dateRange };
 
     return this.walletService.AgentUsersSummaryRequestMethod(payload);
+  }
+
+  @Get('net-cash/:clientId')
+  @ApiOperation({ summary: 'Get net cash flow summary for shop users' })
+  @ApiParam({ name: 'clientId', type: Number, description: 'Client ID' })
+  @ApiQuery({ name: 'range', required: false, type: String })
+  @ApiQuery({ name: 'from', required: false, type: String })
+  @ApiQuery({
+    name: 'to',
+    required: false,
+    type: String,
+    description: 'Range (day, week, month, yesterday, etc.)',
+  })
+  async getNetCash(
+    @Param('clientId') clientId: number,
+    @Query('range') range?: string,
+    @Query('from') from?: string,
+    @Query('to') to?: string,
+  ) {
+    const payload: ShopUsersSummaryRequest = {
+      clientId,
+      rangeZ: range || '',
+      from: from || '',
+      to: to || '',
+    };
+    return this.walletService.getNetCashFlow(payload);
   }
 }

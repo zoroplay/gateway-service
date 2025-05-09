@@ -9,6 +9,7 @@ import {
   Headers,
   Query,
   Header,
+  HttpStatus,
 } from '@nestjs/common';
 import {
   ApiBody,
@@ -22,10 +23,15 @@ import { WalletService } from './wallet/wallet.service';
 import { SwaggerGetUserByUsernmae } from './identity/dto';
 import { OddsService } from './odds/odds.service';
 import { TigoWebhookRequest, WebhookResponse } from './wallet/dto';
-import { PawapayResponse, TigoW2aRequest } from './interfaces/wallet.pb';
+import {
+  OpayResponse,
+  PawapayResponse,
+  TigoW2aRequest,
+} from './interfaces/wallet.pb';
 import * as xml2js from 'xml2js';
 import { Response, Request } from 'express';
 import buildTigoW2AResponse from './wallet/dto/utils';
+import * as crypto from 'crypto';
 
 @Controller()
 export class AppController {
@@ -414,6 +420,51 @@ export class AppController {
     } catch (error) {
       console.error(`❌ Error processing webhook: ${error.message}`, error);
       return { success: false, message: 'Internal server error' };
+    }
+  }
+
+  @ApiTags('Webhooks')
+  @Post('/webhook/checkout/4/opay/callback')
+  async handleOpayCallback(
+    @Req() req,
+    @Headers() headers,
+  ): Promise<OpayResponse> {
+    const webhookBody = JSON.stringify(req.body);
+    console.log('WEBHOOK:::', webhookBody);
+    const signature = headers['x-opay-signature'];
+
+    console.log('WOW::::', signature);
+
+    const parsedBody = JSON.parse(webhookBody.toString());
+    console.log('✅ Verified Webhook Payload:', parsedBody);
+
+    if (!parsedBody.payload.reference) {
+      console.error('❌ Missing ReferenceID in webhook data');
+      return {
+        statusCode: 500,
+        success: false,
+        message: 'Invalid webhook data: Missing ReferenceID',
+      };
+    }
+
+    try {
+      await this.walletService.OpayWebhook({
+        clientId: 4,
+        status: parsedBody.payload.status,
+        reference: parsedBody.payload.reference,
+        type: parsedBody.type,
+        sha512: signature,
+      });
+      console.log(`🎉 User credited successfully: `);
+
+      return { statusCode: 200, success: true, message: 'OK' };
+    } catch (error) {
+      console.error(`❌ Error processing webhook: ${error.message}`);
+      return {
+        statusCode: 500,
+        success: false,
+        message: 'Internal server error',
+      };
     }
   }
 }
