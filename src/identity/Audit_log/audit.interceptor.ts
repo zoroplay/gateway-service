@@ -25,7 +25,7 @@ export class AuditLogInterceptor implements NestInterceptor {
     'authorization',
   ];
   private readonly ADMIN_PATHS = ['/admin', '/v2/admin'];
-  private readonly NON_ENCRYPT_PATHS = ['/gaming', '/webhook'];
+  private readonly NON_ENCRYPT_PATHS = ['/games', '/gaming', '/webhook'];
 
   constructor(
     private readonly authService: AuthService,
