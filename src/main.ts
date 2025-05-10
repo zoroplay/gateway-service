@@ -11,7 +11,7 @@ import { AuthService } from './identity/auth/auth.service';
 import { CryptoService } from './crypto/crypto.service';
 import * as bodyParser from 'body-parser';
 import * as bodyParserXml from 'body-parser-xml';
-import * as IpFilter from 'express-ip-filter';
+//import * as IpFilter from 'express-ip-filter';
 
 
 const logger = new Logger('Main');
