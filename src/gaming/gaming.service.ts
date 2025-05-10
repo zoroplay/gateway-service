@@ -318,7 +318,7 @@ export class GamingService implements OnModuleInit {
     return resp;
   }
 
-   async handleSpribeGamesCallback(request: SpribeCallbackRequest) {
+   async handleSpribeGamesCallback(request: CallbackGameDto) {
     console.log('Spribe service start');
     // //(request);
     const resp = await firstValueFrom(
