@@ -26,11 +26,7 @@ import {
 } from '@nestjs/swagger';
 import { Response } from 'express';
 import { GamingService } from './gaming.service';
-import {
-  StartDto,
-  StartGameDto,
-  SyncGameDto,
-} from 'src/interfaces/gaming.pb';
+import { StartDto, StartGameDto, SyncGameDto } from 'src/interfaces/gaming.pb';
 import {
   SwaggerOKGameResponse,
   SwaggerOKProviderArrayResponse,
@@ -77,7 +73,6 @@ export class GamingController {
     return this.gamingService.fetchGames(payload);
   }
 
-
   // @Get('get-games')
   // @ApiOkResponse({ type: [SwaggerOKGameResponse] })
   // @ApiQuery({ name: 'providerId', required: false, type: Number })
@@ -90,7 +85,7 @@ export class GamingController {
   //     providerId: providerId ? Number(providerId) : undefined,
   //     categoryId: categoryId ? Number(categoryId) : undefined,
   //   };
-  
+
   //   const val = await this.gamingService.getGames(request);
   //   return val;
   // }
@@ -127,7 +122,7 @@ export class GamingController {
     @Body() startGameDto: StartGameDto,
     @Param('clientId') clientId,
   ) {
-    console.log("got here")
+    console.log('got here');
     startGameDto.clientId = parseInt(clientId);
 
     // Set default language if it is not provided
@@ -153,7 +148,6 @@ export class GamingController {
     // }
     return this.gamingService.startSmatGame(startGameDto);
   }
-
 
   @Get('/provider')
   @ApiOkResponse({ type: [SwaggerOKProviderArrayResponse] })
@@ -335,7 +329,6 @@ export class GamingController {
     @Res() res: Response,
     @Body() data: Record<string, any>,
   ) {
-
     // Validate required headers
     const walletSessionId = headers['wallet-session'];
     const passkey = headers['pass-key'];
@@ -356,21 +349,16 @@ export class GamingController {
 
       // Send appropriate response back
       if (!response.success) {
-        return res
-          .status(response.status)
-          .send(response.data);
+        return res.status(response.status).send(response.data);
       }
 
       return res.status(response.status).send(response.data);
-
     } catch (error) {
       console.error('Error in handleCallbackWithQtechActionGet:', error);
-      return res
-        .status(HttpStatus.INTERNAL_SERVER_ERROR)
-        .send({
-          message: 'Unexpected error',
-          code: "UNKNOWN_ERROR",
-        });
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).send({
+        message: 'Unexpected error',
+        code: 'UNKNOWN_ERROR',
+      });
     }
   }
 
@@ -388,7 +376,6 @@ export class GamingController {
     @Param('clientId') clientId: number,
     @Query('gameId') gameId?: string,
   ) {
-
     try {
       // Fetch the player's balance
       const balanceResponse = await this.gamingService.handleQtechGamesCallback(
@@ -404,21 +391,16 @@ export class GamingController {
       );
 
       if (!balanceResponse.success) {
-        return res
-          .status(balanceResponse.status)
-          .send(balanceResponse.data);
+        return res.status(balanceResponse.status).send(balanceResponse.data);
       }
 
       return res.status(balanceResponse.status).send(balanceResponse.data);
-
     } catch (error) {
       console.error('Error in handleCallbackWithQtechActionGet:', error);
-      return res
-        .status(HttpStatus.INTERNAL_SERVER_ERROR)
-        .send({
-          message: 'Unexpected error',
-          code: "UNKNOWN_ERROR",
-        });
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).send({
+        message: 'Unexpected error',
+        code: 'UNKNOWN_ERROR',
+      });
     }
   }
 
@@ -438,9 +420,7 @@ export class GamingController {
     @Param('clientId') clientId: number,
     @Body() data: Record<string, any>,
   ) {
-
     try {
-
       console.log('Hit Transaction');
 
       const response = await this.gamingService.handleQtechGamesCallback({
@@ -454,17 +434,14 @@ export class GamingController {
       });
 
       if (!response.success) {
-        return res
-          .status(response.status)
-          .send(response.data);
+        return res.status(response.status).send(response.data);
       }
 
       return res.status(response.status).send(response.data);
-      
     } catch (error) {
       console.error('Error in QtechBet:', error);
       return res.status(500).json({
-        code: "UNKNOWN_ERROR",
+        code: 'UNKNOWN_ERROR',
         message:
           'An unexpected error occurred while processing the transaction.',
       });
@@ -480,7 +457,6 @@ export class GamingController {
     @Body() data: Record<string, any>,
     @Param('clientId') clientId: number,
   ) {
-
     try {
       console.log('ROLLBACK Transaction');
 
@@ -495,17 +471,14 @@ export class GamingController {
       });
 
       if (!response.success) {
-        return res
-          .status(response.status)
-          .send(response.data);
+        return res.status(response.status).send(response.data);
       }
 
       return res.status(response.status).send(response.data);
-
     } catch (error) {
       console.error('Error in QtechBet:', error);
       return res.status(500).json({
-        code: "UNKNOWN_ERROR",
+        code: 'UNKNOWN_ERROR',
         message:
           'An unexpected error occurred while processing the transaction.',
       });
@@ -521,7 +494,6 @@ export class GamingController {
     @Body() data: Record<string, any>,
     @Param('clientId') clientId: number,
   ) {
-
     try {
       console.log('Bonus Reward');
 
@@ -536,17 +508,14 @@ export class GamingController {
       });
 
       if (!response.success) {
-        return res
-          .status(response.status)
-          .send(response.data);
+        return res.status(response.status).send(response.data);
       }
 
       return res.status(response.status).send(response.data);
-
     } catch (error) {
       console.error('Error in QtechBet:', error);
       return res.status(500).json({
-        code: "UNKNOWN_ERROR",
+        code: 'UNKNOWN_ERROR',
         message:
           'An unexpected error occurred while processing the transaction.',
       });
@@ -580,9 +549,11 @@ export class GamingController {
     console.log("req", req);	
     console.log("data", data);	
  
+    // console.log(req.rawBody)
+
     const rawBody = req.rawBody;
-    let body = rawBody.toString().replace(/\r?\n|\r/g, "");
-    body = body.replace(/\s/g, "");
+    let body = rawBody.toString().replace(/\r?\n|\r/g, '');
+    body = body.replace(/\s/g, '');
 
     console.log("body", body);
     console.log("headers", headers);
@@ -634,10 +605,10 @@ export class GamingController {
     //@ts-ignore
     @UploadedFile() file: Express.Multer.File,
   ) {
-    console.log("file", file);
+    console.log('file', file);
     const value = await this.gamingService.uploadFile(file);
 
-    console.log("value", value);
+    console.log('value', value);
 
     return value;
   }
@@ -645,17 +616,15 @@ export class GamingController {
   @Get('active-jackpot')
   @ApiOkResponse({ type: [SwaggerOKGameResponse] })
   @ApiQuery({ name: 'provider', type: String, required: true }) // Documenting query parameters
-  @ApiQuery({ name: 'clientId', type: Number, required: false }) 
+  @ApiQuery({ name: 'clientId', type: Number, required: false })
   handleCasinoJackpot(@Query() query: SyncGameDto) {
     return this.gamingService.handleCasinoJackpot(query);
   }
 
-
-
   @Get('jackpot-winners')
   @ApiOkResponse({ type: [SwaggerOKGameResponse] })
   @ApiQuery({ name: 'provider', type: String, required: true }) // Documenting query parameters
-  @ApiQuery({ name: 'clientId', type: Number, required: false }) 
+  @ApiQuery({ name: 'clientId', type: Number, required: false })
   handleCasinoJackpotWinners(@Query() query: SyncGameDto) {
     return this.gamingService.handleCasinoJackpotWinners(query);
   }
@@ -671,38 +640,29 @@ export class GamingController {
     @Query('playerId') playerId: string,
     @Query('sessionId') sessionId: string,
     @Param('clientId') clientId: number,
-
   ) {
-
     try {
-      console.log("data", playerId, sessionId);
+      console.log('data', playerId, sessionId);
       // Fetch the player's balance
-      const response = await this.gamingService.handleSmatVirtualGamesCallback(
-        {
-          playerId: playerId,
-          body: Object.keys(data).length === 0 ? '' : JSON.stringify(data),
-          clientId,
-          sessionId,
-          action: 'player-information',
-        },
-      );
+      const response = await this.gamingService.handleSmatVirtualGamesCallback({
+        playerId: playerId,
+        body: Object.keys(data).length === 0 ? '' : JSON.stringify(data),
+        clientId,
+        sessionId,
+        action: 'player-information',
+      });
 
       if (!response.success) {
-        return res
-          .status(response.status)
-          .send(response);
+        return res.status(response.status).send(response);
       }
 
       return res.status(response.status).send(response);
-
     } catch (error) {
       console.error('Error in handleSmatVirtualGamesCallback:', error);
-      return res
-        .status(HttpStatus.INTERNAL_SERVER_ERROR)
-        .send({
-          message: 'Unexpected error',
-          code: "UNKNOWN_ERROR",
-        });
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).send({
+        message: 'Unexpected error',
+        code: 'UNKNOWN_ERROR',
+      });
     }
   }
 
@@ -727,41 +687,79 @@ export class GamingController {
   // ) {
 
   //   console.log("spribe-gateway");
+//   @Post(':clientId/spribe/callback/:action')
+//   @ApiParam({ name: 'clientId', type: 'string' })
+//   @ApiParam({ name: 'action', type: 'string' })
+//   @ApiHeader({ name: 'X-Spribe-Client-ID', description: 'clientId' })
+//   @ApiHeader({ name: 'X-Spribe-Client-TS', description: 'timestamp' })
+//   @ApiHeader({ name: 'X-Spribe-Client-Signature', description: 'signature' })
+//   async handleCallbackWithSpribehActionPost(
+//     @Param('clientId') clientId: number,
+//     @Param('action') action,
+//     @Headers() headers: Record<string, string>,
+//     @Req() req: RawBodyRequest<Request>,
+//     @Res() res: Response,
+//     @Body() data: Record<string, any>,
+//   ) {
+//     console.log('spribe-gateway');
 
-  //   // Validate required headers
-  //   // const walletSessionId = headers['wallet-session'];
-  //   const signature = headers['X-Spribe-Client-Signature'];
+//   //   // Validate required headers
+//   //   // const walletSessionId = headers['wallet-session'];
+//   //   const signature = headers['X-Spribe-Client-Signature'];
 
-  //   try {
-  //     // Handle the response if session is valid
-  //     console.log("req", req);
-  //     const response = await this.gamingService.handleSpribeGamesCallback({
-  //       provider: provider,
-  //       signature,
-  //       body: Object.keys(data).length === 0 ? '' : JSON.stringify(data),
-  //       clientId,
-  //       action: action ? action : 'auth'
-  //     });
+//   //   try {
+//   //     // Handle the response if session is valid
+//   //     console.log("req", req);
+//   //     const response = await this.gamingService.handleSpribeGamesCallback({
+//   //       provider: provider,
+//   //       signature,
+//   //       body: Object.keys(data).length === 0 ? '' : JSON.stringify(data),
+//   //       clientId,
+//   //       action: action ? action : 'auth'
+//   //     });
+//     try {
+//       // Handle the response if session is valid
+//       console.log('req', req);
+//       const response = await this.gamingService.handleSpribeGamesCallback({
+//         signature,
+//         body: Object.keys(data).length === 0 ? '' : JSON.stringify(data),
+//         clientId,
+//         action: action ? action : 'auth',
+//       });
 
-  //     console.log('Game Callback Response:', response);
+//   //     console.log('Game Callback Response:', response);
 
-  //     // Send appropriate response back
-  //     if (!response.success) {
-  //       return res
-  //         .status(response.status)
-  //         .send(response.data);
-  //     }
+//   //     // Send appropriate response back
+//   //     if (!response.success) {
+//   //       return res
+//   //         .status(response.status)
+//   //         .send(response.data);
+//   //     }
 
-  //     return res.status(response.status).send(response.data);
+//   //     return res.status(response.status).send(response.data);
 
-  //   } catch (error) {
-  //     console.error('Error in handleCallbackWithQtechActionGet:', error);
-  //     return res
-  //       .status(HttpStatus.INTERNAL_SERVER_ERROR)
-  //       .send({
-  //         message: 'Unexpected error',
-  //         code: "UNKNOWN_ERROR",
-  //       });
-  //   }
-  // }
-}
+//   //   } catch (error) {
+//   //     console.error('Error in handleCallbackWithQtechActionGet:', error);
+//   //     return res
+//   //       .status(HttpStatus.INTERNAL_SERVER_ERROR)
+//   //       .send({
+//   //         message: 'Unexpected error',
+//   //         code: "UNKNOWN_ERROR",
+//   //       });
+//   //   }
+//   // }
+//       // Send appropriate response back
+//       if (!response.success) {
+//         return res.status(response.status).send(response.data);
+//       }
+
+//       return res.status(response.status).send(response.data);
+//     } catch (error) {
+//       console.error('Error in handleCallbackWithQtechActionGet:', error);
+//       return res.status(HttpStatus.INTERNAL_SERVER_ERROR).send({
+//         message: 'Unexpected error',
+//         code: 'UNKNOWN_ERROR',
+//       });
+//     }
+//   }
+// }
