@@ -453,7 +453,7 @@ export class AppController {
         status: parsedBody.payload.status,
         reference: parsedBody.payload.reference,
         type: parsedBody.type,
-        sha512: signature,
+        sha512: parsedBody.sha512,
       });
       console.log(`🎉 User credited successfully: `);
 
