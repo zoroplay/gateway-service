@@ -376,6 +376,7 @@ export class AuditLogInterceptor implements NestInterceptor {
       if (requestType === 'http') {
         const authorization =
           context.switchToHttp().getRequest().headers?.authorization || '';
+
         const clientId = context.switchToHttp().getRequest().headers?.[
           'sbe-client-id'
         ];
@@ -387,9 +388,9 @@ export class AuditLogInterceptor implements NestInterceptor {
           'sbe-api-signature'
         ];
 
-        if (!authorization && !clientId) {
-          throw new BadRequestException('Client headers are required');
-        }
+        // if (!authorization && !clientId) {
+        //   throw new BadRequestException('Client headers are required');
+        // }
 
         return { authorization, clientId, signature, apiKey };
       }
