@@ -558,13 +558,14 @@ export class GamingController {
     console.log("body", body);
     console.log("headers", headers);
 
-    const signature = headers['X-Spribe-Client-Signature'] || '';
+    const signature = headers['x-spribe-client-signature'] || '';
 
     try {
       const response = await this.gamingService.handleGamesCallback({
         provider: provider,
         action: action,
         signature,
+        path: req.url || '',
         method: req.method,
         header: headers,
         body: rawBody === null ? JSON.stringify(data) : body,
@@ -596,6 +597,8 @@ export class GamingController {
         });
     }
   }
+
+  
 
   @Post('upload')
   @ApiOperation({ summary: 'Upload a single file' })
