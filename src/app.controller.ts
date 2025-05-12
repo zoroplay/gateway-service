@@ -425,36 +425,27 @@ export class AppController {
 
   @ApiTags('Webhooks')
   @Post('/webhook/checkout/4/opay/callback')
-  async handleOpayCallback(
-    @Req() req,
-    @Headers() headers,
-  ): Promise<OpayResponse> {
-    const webhookBody = JSON.stringify(req.body);
-    console.log('Opay-WEBHOOK:::', webhookBody);
-    const signature = headers['x-opay-signature'];
+  async handleOpayCallback(@Body() webhookBody: any): Promise<OpayResponse> {
+    console.log(webhookBody);
+    const { payload, sha512 } = webhookBody;
 
-    console.log('WOW::::', signature);
+    console.log('✅ Verified Webhook Payload:', payload);
 
-    const parsedBody = JSON.parse(webhookBody.toString());
-    console.log('✅ Verified Webhook Payload:', parsedBody);
-
-    if (!parsedBody.payload.reference) {
-      console.error('❌ Missing ReferenceID in webhook data');
+    if (!payload?.reference) {
       return {
-        statusCode: 500,
+        statusCode: 400,
         success: false,
-        message: 'Invalid webhook data: Missing ReferenceID',
+        message: 'Missing reference ID in webhook payload.',
       };
     }
 
+    const data = {
+      clientId: 4,
+      rawBody: webhookBody,
+      sha512: sha512,
+    };
     try {
-      await this.walletService.OpayWebhook({
-        clientId: 4,
-        status: parsedBody.payload.status,
-        reference: parsedBody.payload.reference,
-        type: parsedBody.type,
-        sha512: parsedBody.sha512,
-      });
+      await this.walletService.OpayWebhook(data);
       console.log(`🎉 User credited successfully: `);
 
       return { statusCode: 200, success: true, message: 'OK' };

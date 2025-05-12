@@ -558,13 +558,14 @@ export class GamingController {
     console.log("body", body);
     console.log("headers", headers);
 
-    const signature = headers['X-Spribe-Client-Signature'] || '';
+    const signature = headers['x-spribe-client-signature'] || '';
 
     try {
       const response = await this.gamingService.handleGamesCallback({
         provider: provider,
         action: action,
         signature,
+        path: req.url || '',
         method: req.method,
         header: headers,
         body: rawBody === null ? JSON.stringify(data) : body,
@@ -596,6 +597,8 @@ export class GamingController {
         });
     }
   }
+
+  
 
   @Post('upload')
   @ApiOperation({ summary: 'Upload a single file' })
@@ -666,100 +669,4 @@ export class GamingController {
     }
   }
 
-  // https://staging.api.sportsbookengine.com/api/v2/games/4/spribe/callback
-
-  // @Post(':clientId/:provider_id/callback/:action')
-  // @ApiParam({ name: 'clientId', type: 'string' })
-  // @ApiParam({ name: 'action', type: 'string' })
-  // @ApiParam({ name: 'provider_id', type: 'string' })
-  // @ApiHeader({ name: 'X-Spribe-Client-ID', description: 'clientId' })
-  // @ApiHeader({ name: 'X-Spribe-Client-TS', description: 'timestamp' })
-  // @ApiHeader({ name: 'X-Spribe-Client-Signature', description: 'signature' })
-  // async handleCallbackWithSpribehActionPost(
-
-  //   @Param('clientId') clientId: number,
-  //   @Param('action') action,
-  //   @Param('provider_id') provider,
-  //   @Headers() headers: Record<string, string>,
-  //   @Req() req: RawBodyRequest<Request>,
-  //   @Res() res: Response,
-  //   @Body() data: Record<string, any>,
-  // ) {
-
-  //   console.log("spribe-gateway");
-//   @Post(':clientId/spribe/callback/:action')
-//   @ApiParam({ name: 'clientId', type: 'string' })
-//   @ApiParam({ name: 'action', type: 'string' })
-//   @ApiHeader({ name: 'X-Spribe-Client-ID', description: 'clientId' })
-//   @ApiHeader({ name: 'X-Spribe-Client-TS', description: 'timestamp' })
-//   @ApiHeader({ name: 'X-Spribe-Client-Signature', description: 'signature' })
-//   async handleCallbackWithSpribehActionPost(
-//     @Param('clientId') clientId: number,
-//     @Param('action') action,
-//     @Headers() headers: Record<string, string>,
-//     @Req() req: RawBodyRequest<Request>,
-//     @Res() res: Response,
-//     @Body() data: Record<string, any>,
-//   ) {
-//     console.log('spribe-gateway');
-
-//   //   // Validate required headers
-//   //   // const walletSessionId = headers['wallet-session'];
-//   //   const signature = headers['X-Spribe-Client-Signature'];
-
-//   //   try {
-//   //     // Handle the response if session is valid
-//   //     console.log("req", req);
-//   //     const response = await this.gamingService.handleSpribeGamesCallback({
-//   //       provider: provider,
-//   //       signature,
-//   //       body: Object.keys(data).length === 0 ? '' : JSON.stringify(data),
-//   //       clientId,
-//   //       action: action ? action : 'auth'
-//   //     });
-//     try {
-//       // Handle the response if session is valid
-//       console.log('req', req);
-//       const response = await this.gamingService.handleSpribeGamesCallback({
-//         signature,
-//         body: Object.keys(data).length === 0 ? '' : JSON.stringify(data),
-//         clientId,
-//         action: action ? action : 'auth',
-//       });
-
-//   //     console.log('Game Callback Response:', response);
-
-//   //     // Send appropriate response back
-//   //     if (!response.success) {
-//   //       return res
-//   //         .status(response.status)
-//   //         .send(response.data);
-//   //     }
-
-//   //     return res.status(response.status).send(response.data);
-
-//   //   } catch (error) {
-//   //     console.error('Error in handleCallbackWithQtechActionGet:', error);
-//   //     return res
-//   //       .status(HttpStatus.INTERNAL_SERVER_ERROR)
-//   //       .send({
-//   //         message: 'Unexpected error',
-//   //         code: "UNKNOWN_ERROR",
-//   //       });
-//   //   }
-//   // }
-//       // Send appropriate response back
-//       if (!response.success) {
-//         return res.status(response.status).send(response.data);
-//       }
-
-//       return res.status(response.status).send(response.data);
-//     } catch (error) {
-//       console.error('Error in handleCallbackWithQtechActionGet:', error);
-//       return res.status(HttpStatus.INTERNAL_SERVER_ERROR).send({
-//         message: 'Unexpected error',
-//         code: 'UNKNOWN_ERROR',
-//       });
-//     }
-//   }
 }
