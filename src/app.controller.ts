@@ -10,6 +10,7 @@ import {
   Query,
   Header,
   HttpStatus,
+  HttpCode,
 } from '@nestjs/common';
 import {
   ApiBody,
@@ -449,6 +450,36 @@ export class AppController {
       console.log(`🎉 User credited successfully: `);
 
       return { statusCode: 200, success: true, message: 'OK' };
+    } catch (error) {
+      console.error(`❌ Error processing webhook: ${error.message}`);
+      return {
+        statusCode: 500,
+        success: false,
+        message: 'Internal server error',
+      };
+    }
+  }
+
+  @ApiTags('Webhooks')
+  @Post('/webhook/4/coralpay/callback')
+  @HttpCode(200)
+  async handleCorapayWebhook(
+    @Headers('authorization') authHeader: string,
+    @Body() callbackData: any,
+  ): Promise<OpayResponse> {
+    console.log('✅ Verified Webhook Payload:', callbackData);
+    console.log('THE HEADERS', authHeader);
+    const clientId = 4;
+    try {
+      const result = await this.walletService.CorapayWebhook({
+        clientId,
+        authHeader,
+        callbackData,
+      });
+
+      console.log(`🎉 User credited successfully: `);
+
+      return result;
     } catch (error) {
       console.error(`❌ Error processing webhook: ${error.message}`);
       return {

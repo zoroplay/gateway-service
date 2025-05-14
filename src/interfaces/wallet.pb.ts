@@ -12,6 +12,18 @@ import { Struct } from "./google/protobuf/struct.pb";
 
 export const protobufPackage = "wallet";
 
+export interface CorapayWebhookRequest {
+  clientId: number;
+  authHeader: string;
+  callbackData: { [key: string]: any } | undefined;
+}
+
+export interface CorapayResponse {
+  statusCode: number;
+  success: boolean;
+  message: string;
+}
+
 export interface OpayRequest {
   clientId: number;
   sha512: string;
@@ -1192,6 +1204,8 @@ export interface WalletServiceClient {
   mtnmomoCallback(request: MtnmomoRequest): Observable<WebhookResponse>;
 
   opayCallback(request: OpayRequest): Observable<OpayResponse>;
+
+  corapayWebhook(request: CorapayWebhookRequest): Observable<CorapayResponse>;
 }
 
 export interface WalletServiceController {
@@ -1565,6 +1579,10 @@ export interface WalletServiceController {
   mtnmomoCallback(request: MtnmomoRequest): Promise<WebhookResponse> | Observable<WebhookResponse> | WebhookResponse;
 
   opayCallback(request: OpayRequest): Promise<OpayResponse> | Observable<OpayResponse> | OpayResponse;
+
+  corapayWebhook(
+    request: CorapayWebhookRequest,
+  ): Promise<CorapayResponse> | Observable<CorapayResponse> | CorapayResponse;
 }
 
 export function WalletServiceControllerMethods() {
@@ -1667,6 +1685,7 @@ export function WalletServiceControllerMethods() {
       "pawapayCallback",
       "mtnmomoCallback",
       "opayCallback",
+      "corapayWebhook",
     ];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
