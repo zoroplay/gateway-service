@@ -89,6 +89,8 @@ import {
   ShopUsersSummaryResponse,
   OpayResponse,
   OpayRequest,
+  CorapayResponse,
+  CorapayWebhookRequest,
 } from '../interfaces/wallet.pb';
 import { ClientGrpc } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
@@ -175,6 +177,11 @@ export class WalletService {
   async OpayWebhook(data: OpayRequest): Promise<OpayResponse> {
     console.log('check44');
     return await firstValueFrom(this.svc.opayCallback(data));
+  }
+
+  async CorapayWebhook(data: CorapayWebhookRequest): Promise<CorapayResponse> {
+    console.log('check555');
+    return await firstValueFrom(this.svc.corapayWebhook(data));
   }
 
   async mtnmomoWebhook(data: MtnmomoRequest): Promise<WebhookResponse> {
