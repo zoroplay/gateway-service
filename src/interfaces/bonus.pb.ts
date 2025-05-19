@@ -24,6 +24,11 @@ export interface CheckDepositBonusRequest {
   userId: number;
 }
 
+export interface BonusRequest {
+  clientId: number;
+  userId: number;
+}
+
 export interface CheckDepositBonusResponse {
   success: boolean;
   value: number;
@@ -388,6 +393,8 @@ export interface BonusServiceClient {
 
   awardBonus(request: AwardBonusRequest): Observable<UserBonusResponse>;
 
+  deactivateUserBonus(request: BonusRequest): Observable<CommonResponseObj>;
+
   placeBonusBet(request: UserBet): Observable<PlaceBetResponse>;
 
   updateBonusStatus(request: BonusStatusRequest): Observable<CreateBonusResponse>;
@@ -452,6 +459,10 @@ export interface BonusServiceController {
     request: AwardBonusRequest,
   ): Promise<UserBonusResponse> | Observable<UserBonusResponse> | UserBonusResponse;
 
+  deactivateUserBonus(
+    request: BonusRequest,
+  ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
+
   placeBonusBet(request: UserBet): Promise<PlaceBetResponse> | Observable<PlaceBetResponse> | PlaceBetResponse;
 
   updateBonusStatus(
@@ -497,6 +508,7 @@ export function BonusServiceControllerMethods() {
       "deleteBonus",
       "getUserBonus",
       "awardBonus",
+      "deactivateUserBonus",
       "placeBonusBet",
       "updateBonusStatus",
       "createCampaignBonus",
