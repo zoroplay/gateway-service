@@ -883,6 +883,10 @@ export interface ListWithdrawalRequests {
   to: string;
   status: number;
   userId: number;
+  username: string;
+  bankName: string;
+  page: number;
+  limit: number;
 }
 
 export interface ListWithdrawalRequestResponse {
@@ -890,6 +894,10 @@ export interface ListWithdrawalRequestResponse {
   status: number;
   message: string;
   data: WithdrawalRequest[];
+  totalAmount: number;
+  total: number;
+  page: number;
+  limit: number;
 }
 
 export interface WithdrawalRequest {
@@ -981,6 +989,7 @@ export interface ListDepositRequests {
   paymentMethod: string;
   status: number;
   username: string;
+  bank: string;
   transactionId: string;
   page: number;
 }
@@ -992,6 +1001,7 @@ export interface PaginationResponse {
   nextPage: number;
   prevPage: number;
   lastPage: number;
+  totalAmount: number;
   data: { [key: string]: any }[];
 }
 
