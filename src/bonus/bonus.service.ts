@@ -17,6 +17,7 @@ import {
   FetchReportRequest,
   CheckDepositBonusRequest,
   SettleBetRequest,
+  BonusRequest,
 } from 'src/interfaces/bonus.pb';
 import { ClientGrpc } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
@@ -105,6 +106,11 @@ export class BonusService implements OnModuleInit {
   AwardBonus(data: AwardBonusRequest) {
     console.log('AwardBonus ', data);
     return this.service.awardBonus(data);
+  }
+
+  DeactivateUserBonus(data: BonusRequest) {
+    console.log('deactivateBonus ', data);
+    return this.service.deactivateUserBonus(data);
   }
 
   CheckFirstDeposit(data: CheckDepositBonusRequest) {
