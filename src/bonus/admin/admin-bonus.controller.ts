@@ -25,6 +25,7 @@ import {
   CreateBonusRequest,
   CreateCampaignBonusDto,
   FetchReportRequest,
+  GetAllBonusRequest,
   GetBonusRequest,
   SettleBetRequest,
   UpdateCampaignBonusDto,
@@ -297,6 +298,27 @@ export class AdminBonusController {
       data.clientId = query.client_id;
 
       return this.bonusService.AwardBonus(data);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+
+  @Get('/awarded-bonus-list')
+  @ApiOperation({
+    summary: 'Award user a bonus ',
+    description:
+      'This endpoint awards a user a bonus, this endpoint is meant to be used for administrative purposes only',
+  })
+  @ApiQuery({ name: 'clientId', description: 'SBE client ID' })
+  @ApiOkResponse({ type: SwaggerGetUserBonusResponse })
+  GetAllAwardedBonus(
+    @Query() query: GetAllBonusRequest,
+    // @Req() req: IAuthorizedRequest,
+  ) {
+    try {
+
+      return this.bonusService.GetAllAwardedBonus(query);
     } catch (error) {
       console.error(error);
     }

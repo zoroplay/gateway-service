@@ -117,6 +117,10 @@ export interface GetBonusRequest {
   clientId: number;
 }
 
+export interface GetAllBonusRequest {
+  clientId: number;
+}
+
 export interface DeleteBonusRequest {
   clientId: number;
   id: number;
@@ -387,6 +391,8 @@ export interface BonusServiceClient {
 
   getBonus(request: GetBonusRequest): Observable<GetBonusResponse>;
 
+  getAllAwardedBonus(request: GetAllBonusRequest): Observable<CommonResponseObj>;
+
   deleteBonus(request: DeleteBonusRequest): Observable<BonusResponse>;
 
   getUserBonus(request: GetUserBonusRequest): Observable<GetUserBonusResponse>;
@@ -449,6 +455,10 @@ export interface BonusServiceController {
 
   getBonus(request: GetBonusRequest): Promise<GetBonusResponse> | Observable<GetBonusResponse> | GetBonusResponse;
 
+  getAllAwardedBonus(
+    request: GetAllBonusRequest,
+  ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
+
   deleteBonus(request: DeleteBonusRequest): Promise<BonusResponse> | Observable<BonusResponse> | BonusResponse;
 
   getUserBonus(
@@ -505,6 +515,7 @@ export function BonusServiceControllerMethods() {
       "searchBonus",
       "getActiveUserBonus",
       "getBonus",
+      "getAllAwardedBonus",
       "deleteBonus",
       "getUserBonus",
       "awardBonus",
