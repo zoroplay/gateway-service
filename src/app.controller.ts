@@ -111,6 +111,10 @@ export class AppController {
   })
   paymentWebhook(@Param() param, @Body() body, @Res() res, @Req() req) {
     if (!param.provider) return res.sendStatus(404);
+    console.log('🔥 Webhook HIT');
+    console.log('Headers:', req.headers);
+    console.log('Params:', param);
+    console.log('Body:', body);
 
     switch (param.provider) {
       case 'paystack':
@@ -134,9 +138,9 @@ export class AppController {
       case 'flutterwave':
         this.walletService.flutterWaveWebhook({
           clientId: param.client,
-          body: JSON.stringify(body),
           txRef: body.data.tx_ref,
           event: body.event,
+          body: JSON.stringify(body),
           flutterwaveKey: req.headers['x-flutterwave-signature'],
         });
         break;
@@ -495,5 +499,42 @@ export class AppController {
         message: 'Internal server error',
       };
     }
+  }
+
+  @Post('webhook/flutterwave')
+  @ApiTags('Webhooks')
+  async handleFlutterwaveWebhook(
+    @Body() body: any,
+    @Req() req: Request,
+    @Res() res: Response,
+  ) {
+    console.log('🔥 Flutterwave Webhook Hit');
+    console.log('Headers:', req.headers);
+    console.log('Body:', body);
+
+    const signature = req.headers['x-flutterwave-signature'] as string;
+
+    // Option 1: Client ID sent in metadata
+    const clientId = body?.data?.meta?.client_id;
+
+    // Option 2: Embed client ID in tx_ref or custom field
+    const txRef = body?.data?.tx_ref;
+
+    const client = clientId;
+
+    if (!client) {
+      console.warn('❌ Client ID missing from webhook');
+      return res.status(400).json({ message: 'Client ID missing' });
+    }
+
+    await this.walletService.flutterWaveWebhook({
+      clientId: client,
+      txRef,
+      event: body.event,
+      body: JSON.stringify(body),
+      flutterwaveKey: signature,
+    });
+
+    return res.status(200).json({ message: 'Received' });
   }
 }
