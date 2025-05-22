@@ -135,7 +135,7 @@ export class AppController {
           event: body.eventType,
         });
         break;
-     // case 'flutterwave':
+        // case 'flutterwave':
         // this.walletService.flutterWaveWebhook({
         //   clientId: param.client,
         //   txRef: body.data.tx_ref,
@@ -502,7 +502,7 @@ export class AppController {
   }
 
   @ApiTags('Webhooks')
-  @Post('webhook/:clientId/flutterwave')
+  @Post('webhook/check-out/:clientId/flutterwave')
   @ApiParam({ name: 'clientId', type: 'number', description: 'SBE Client ID' })
   async handleFlutterwaveWebhook(
     @Param('clientId') clientId: number,
@@ -510,6 +510,7 @@ export class AppController {
     @Req() req,
     @Res() res,
   ) {
+    console.log('THE MAIN F-FUNC');
     if (!clientId) return res.sendStatus(400);
 
     const signature = req.headers['x-flutterwave-signature'] as string;
@@ -536,7 +537,7 @@ export class AppController {
   }
 
   @ApiTags('Webhooks')
-  @Post('webhook/:clientId/korapay')
+  @Post('webhook/checkout/:clientId/korapay')
   @ApiParam({ name: 'clientId', type: 'number', description: 'SBE Client ID' })
   async handleKorapayWebhook(
     @Param('clientId') clientId: number,
