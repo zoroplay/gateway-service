@@ -135,14 +135,14 @@ export class AppController {
           event: body.eventType,
         });
         break;
-      case 'flutterwave':
-        this.walletService.flutterWaveWebhook({
-          clientId: param.client,
-          txRef: body.data.tx_ref,
-          event: body.event,
-          body: JSON.stringify(body),
-          flutterwaveKey: req.headers['x-flutterwave-signature'],
-        });
+     // case 'flutterwave':
+        // this.walletService.flutterWaveWebhook({
+        //   clientId: param.client,
+        //   txRef: body.data.tx_ref,
+        //   event: body.event,
+        //   body: JSON.stringify(body),
+        //   flutterwaveKey: req.headers['x-flutterwave-signature'],
+        // });
         break;
 
       default:
