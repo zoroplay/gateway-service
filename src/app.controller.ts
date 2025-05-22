@@ -534,4 +534,40 @@ export class AppController {
 
     return res.status(200).json({ message: 'Received' });
   }
+
+  @ApiTags('Webhooks')
+  @Post('webhook/:clientId/korapay')
+  @ApiParam({ name: 'clientId', type: 'number', description: 'SBE Client ID' })
+  async handleKorapayWebhook(
+    @Param('clientId') clientId: number,
+    @Body() body,
+    @Req() req,
+    @Res() res,
+  ) {
+    if (!clientId) return res.sendStatus(400);
+
+    console.log('THE-BODY:::', body);
+
+    const signature = req.headers['x-korapay-signature'] as string;
+
+    // Option 2: Embed client ID in tx_ref or custom field
+    const reference = body?.data?.reference;
+
+    const client = clientId;
+
+    if (!client) {
+      console.warn('❌ Client ID missing from webhook');
+      return res.status(400).json({ message: 'Client ID missing' });
+    }
+
+    await this.walletService.korapayWaveWebhook({
+      clientId: client,
+      reference,
+      event: body.event,
+      body: JSON.stringify(body),
+      korapayKey: signature,
+    });
+
+    return res.status(200).json({ message: 'Received' });
+  }
 }
