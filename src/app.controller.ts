@@ -501,21 +501,18 @@ export class AppController {
     }
   }
 
-  @Post('webhook/flutterwave')
   @ApiTags('Webhooks')
+  @Post('webhook/:clientId/flutterwave')
+  @ApiParam({ name: 'clientId', type: 'number', description: 'SBE Client ID' })
   async handleFlutterwaveWebhook(
-    @Body() body: any,
-    @Req() req: Request,
-    @Res() res: Response,
+    @Param('clientId') clientId: number,
+    @Body() body,
+    @Req() req,
+    @Res() res,
   ) {
-    console.log('🔥 Flutterwave Webhook Hit');
-    console.log('Headers:', req.headers);
-    console.log('Body:', body);
+    if (!clientId) return res.sendStatus(400);
 
     const signature = req.headers['x-flutterwave-signature'] as string;
-
-    // Option 1: Client ID sent in metadata
-    const clientId = body?.data?.meta?.client_id;
 
     // Option 2: Embed client ID in tx_ref or custom field
     const txRef = body?.data?.tx_ref;
