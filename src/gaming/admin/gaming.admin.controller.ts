@@ -15,6 +15,7 @@ import {
   AddGameToCategoriesDto,
   AddGameToTournamentDto,
   CreateGameDto,
+  CreateGameKeyRequest,
   CreatePromotionDto,
   CreateProviderDto,
   CreateTournamentDto,
@@ -28,6 +29,7 @@ import {
 } from 'src/interfaces/gaming.pb';
 import {
   AddGameCategoriesDto,
+  AddGameKeyDto,
   AddTournamentGameDto,
   CreatePromotionRequestDto,
   CreateTournamentRequestDto,
@@ -322,6 +324,15 @@ async updatePromotion(@Body() payload: CreatePromotionDto, @UploadedFile() file?
     console.log('payload', payload);
     return this.gamingService.addTournamentGame(payload);
   }
+
+  @Post('/add-game-key')
+  @ApiBody({ type: AddGameKeyDto })
+  @ApiOkResponse({ type: [SwaggerOKGameResponse] })
+  addGameKeys(@Body() payload: CreateGameKeyRequest) {
+    console.log('payload', payload);
+    return this.gamingService.addGameKeys(payload);
+  }
+
 
   @Delete('/delete-tournament-game')
   @ApiBody({ type: AddTournamentGameDto })
