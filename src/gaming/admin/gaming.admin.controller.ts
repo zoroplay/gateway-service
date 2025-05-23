@@ -66,13 +66,19 @@ export class GamingAdminController {
 @ApiOkResponse({ type: [SwaggerOKGameResponse] })
 @ApiQuery({ name: 'providerId', required: false, type: Number })
 @ApiQuery({ name: 'categoryId', required: false, type: Number })
+@ApiQuery({ name: 'page', required: false, type: Number })
+@ApiQuery({ name: 'limit', required: false, type: Number })
 async getGames(
   @Query('providerId') providerId?: string,
-  @Query('categoryId') categoryId?: string
+  @Query('categoryId') categoryId?: string,
+  @Query('page') page?: string,
+  @Query('limit') limit?: string
 ): Promise<any> {
   const request: GetGamesRequest = {
     providerId: providerId ? Number(providerId) : undefined,
     categoryId: categoryId ? Number(categoryId) : undefined,
+    page: page ? Number(page) : 1,
+    limit: limit ? Number(limit) : 50,
   };
 
   const val = await this.gamingService.getGames(request);
