@@ -30,6 +30,7 @@ import {
   GetPromotions,
   SpribeCallbackRequest,
   CreateGameKeyRequest,
+  GetKeysRequest,
 } from 'src/interfaces/gaming.pb';
 import { ClientGrpc } from '@nestjs/microservices';
 import { firstValueFrom, of } from 'rxjs';
@@ -532,9 +533,9 @@ export class GamingService implements OnModuleInit {
     return gamekey;
   }
 
-  async fetchGameKeys() {
+  async fetchGameKeys(payload: GetKeysRequest) {
     //('fetch games');
-    return firstValueFrom(this.service.fetchGameKeys({}));
+    return firstValueFrom(this.service.fetchGameKeys(payload));
   }
 
 }
