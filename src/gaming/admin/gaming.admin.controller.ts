@@ -340,7 +340,7 @@ async updatePromotion(@Body() payload: CreatePromotionDto, @UploadedFile() file?
     return this.gamingService.addGameKeys(payload);
   }
 
-  @Get('/game-keys/:clientId')
+  @Get('/game-keys/')
   @ApiQuery({ name: 'clientId', type: String })
   @ApiOkResponse({ type: [SwaggerOKGameResponse] })
   fetchGameKeys(@Query('clientId') clientId: string) {
