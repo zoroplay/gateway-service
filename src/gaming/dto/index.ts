@@ -807,6 +807,12 @@ export class EntryRequest {
     example: 'value',
   })
   value: string;
+
+  @ApiProperty({
+    description: 'Provider name, e.g., shack-evolution',
+    example: 'evo-play',
+  })
+  provider: string;
 }
 
 export class AddGameKeyDto {
@@ -815,12 +821,6 @@ export class AddGameKeyDto {
     example: 1,
   })
   clientId: number;
-
-  @ApiProperty({
-    description: 'Provider name, e.g., shack-evolution',
-    example: 'evo-play',
-  })
-  provider: string;
 
   @ApiProperty({
     type: [EntryRequest],
