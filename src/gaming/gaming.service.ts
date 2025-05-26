@@ -532,4 +532,9 @@ export class GamingService implements OnModuleInit {
     return gamekey;
   }
 
+  async fetchGameKeys() {
+    //('fetch games');
+    return firstValueFrom(this.service.fetchGameKeys({}));
+  }
+
 }

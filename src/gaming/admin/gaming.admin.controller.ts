@@ -339,6 +339,12 @@ async updatePromotion(@Body() payload: CreatePromotionDto, @UploadedFile() file?
     return this.gamingService.addGameKeys(payload);
   }
 
+  @Get('/game-keys')
+  @ApiOkResponse({ type: [SwaggerOKGameResponse] })
+  fetchGameKeys() {
+    return this.gamingService.fetchGameKeys();
+  }
+
 
   @Delete('/delete-tournament-game')
   @ApiBody({ type: AddTournamentGameDto })
