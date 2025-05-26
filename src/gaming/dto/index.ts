@@ -795,6 +795,20 @@ export class SwaggerOKPromotionResponse {
   updatedAt: Date;
 }
 
+export class EntryRequest {
+  @ApiProperty({
+    description: 'unique name of the option',
+    example: 'GAME_API_KEY',
+  })
+  option: string;
+
+  @ApiProperty({
+    description: 'Value of the option',
+    example: 'value',
+  })
+  value: string;
+}
+
 export class AddGameKeyDto {
   @ApiProperty({
     description: 'ID of the game to which categories will be added',
@@ -809,14 +823,8 @@ export class AddGameKeyDto {
   provider: string;
 
   @ApiProperty({
-    description: 'unique name of the option',
-    example: 'GAME_API_KEY',
+    type: [EntryRequest],
   })
-  option: string;
+  keys: EntryRequest[];
 
-  @ApiProperty({
-    description: 'Value of the option',
-    example: 'value',
-  })
-  value: string;
 }
