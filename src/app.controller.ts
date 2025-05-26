@@ -501,76 +501,76 @@ export class AppController {
     }
   }
 
-  @ApiTags('Webhooks')
-  @Post('webhook/check-out/:clientId/flutterwave')
-  @ApiParam({ name: 'clientId', type: 'number', description: 'SBE Client ID' })
-  async handleFlutterwaveWebhook(
-    @Param('clientId') clientId: number,
-    @Body() body,
-    @Req() req,
-    @Res() res,
-  ) {
-    console.log('THE MAIN F-FUNC');
-    if (!clientId) return res.sendStatus(400);
+  // @ApiTags('Webhooks')
+  // @Post('webhook/check-out/:clientId/flutterwave')
+  // @ApiParam({ name: 'clientId', type: 'number', description: 'SBE Client ID' })
+  // async handleFlutterwaveWebhook(
+  //   @Param('clientId') clientId: number,
+  //   @Body() body,
+  //   @Req() req,
+  //   @Res() res,
+  // ) {
+  //   console.log('THE MAIN F-FUNC');
+  //   if (!clientId) return res.sendStatus(400);
 
-    const signature = req.headers['x-flutterwave-signature'] as string;
+  //   const signature = req.headers['x-flutterwave-signature'] as string;
 
-    // Option 2: Embed client ID in tx_ref or custom field
-    const txRef = body?.data?.tx_ref;
+  //   // Option 2: Embed client ID in tx_ref or custom field
+  //   const txRef = body?.data?.tx_ref;
 
-    const client = clientId;
+  //   const client = clientId;
 
-    if (!client) {
-      console.warn('❌ Client ID missing from webhook');
-      return res.status(400).json({ message: 'Client ID missing' });
-    }
+  //   if (!client) {
+  //     console.warn('❌ Client ID missing from webhook');
+  //     return res.status(400).json({ message: 'Client ID missing' });
+  //   }
 
-    await this.walletService.flutterWaveWebhook({
-      clientId: client,
-      txRef,
-      event: body.event,
-      body: JSON.stringify(body),
-      flutterwaveKey: signature,
-    });
+  //   await this.walletService.flutterWaveWebhook({
+  //     clientId: client,
+  //     txRef,
+  //     event: body.event,
+  //     body: JSON.stringify(body),
+  //     flutterwaveKey: signature,
+  //   });
 
-    return res.status(200).json({ message: 'Received' });
-  }
+  //   return res.status(200).json({ message: 'Received' });
+  // }
 
-  @ApiTags('Webhooks')
-  @Post('webhook/checkout/:clientId/korapay')
-  @ApiParam({ name: 'clientId', type: 'number', description: 'SBE Client ID' })
-  async handleKorapayWebhook(
-    @Param('clientId') clientId: number,
-    @Body() body,
-    @Req() req,
-    @Res() res,
-  ) {
-    if (!clientId) return res.sendStatus(400);
+  // @ApiTags('Webhooks')
+  // @Post('webhook/checkout/:clientId/korapay')
+  // @ApiParam({ name: 'clientId', type: 'number', description: 'SBE Client ID' })
+  // async handleKorapayWebhook(
+  //   @Param('clientId') clientId: number,
+  //   @Body() body,
+  //   @Req() req,
+  //   @Res() res,
+  // ) {
+  //   if (!clientId) return res.sendStatus(400);
 
-    console.log('THE-BODY:::', body);
+  //   console.log('THE-BODY:::', body);
 
-    console.log('REF:::', body.reference);
+  //   console.log('REF:::', body.reference);
 
-    const signature = req.headers['x-korapay-signature'] as string;
+  //   const signature = req.headers['x-korapay-signature'] as string;
 
-    // Option 2: Embed client ID in tx_ref or custom field
-    const reference = body?.data?.reference;
+  //   // Option 2: Embed client ID in tx_ref or custom field
+  //   const reference = body?.data?.reference;
 
-    const client = clientId;
+  //   const client = clientId;
 
-    if (!client) {
-      console.warn('❌ Client ID missing from webhook');
-      return res.status(400).json({ message: 'Client ID missing' });
-    }
+  //   if (!client) {
+  //     console.warn('❌ Client ID missing from webhook');
+  //     return res.status(400).json({ message: 'Client ID missing' });
+  //   }
 
-    await this.walletService.korapayWaveWebhook({
-      clientId: client,
-      reference,
-      event: body.event,
-      body: JSON.stringify(body),
-      korapayKey: signature,
-    });
+  //   await this.walletService.korapayWaveWebhook({
+  //     clientId: client,
+  //     reference,
+  //     event: body.event,
+  //     body: JSON.stringify(body),
+  //     korapayKey: signature,
+  //   });
 
-    return res.status(200).json({ message: 'Received' });
-  }
+  //   return res.status(200).json({ message: 'Received' });
+  // }
 }
