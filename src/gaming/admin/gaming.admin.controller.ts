@@ -22,6 +22,7 @@ import {
   FindOneCategoryDto,
   FindOneTournamentDto,
   GetGamesRequest,
+  GetKeysRequest,
   GetPromotions,
   SaveCategoryRequest,
   SyncGameDto,
@@ -339,10 +340,14 @@ async updatePromotion(@Body() payload: CreatePromotionDto, @UploadedFile() file?
     return this.gamingService.addGameKeys(payload);
   }
 
-  @Get('/game-keys')
+  @Get('/game-keys/')
+  @ApiQuery({ name: 'clientId', type: String })
   @ApiOkResponse({ type: [SwaggerOKGameResponse] })
-  fetchGameKeys() {
-    return this.gamingService.fetchGameKeys();
+  fetchGameKeys(@Query('clientId') clientId: string) {
+
+    const payload: GetKeysRequest = { clientId: parseInt(clientId, 10) }; // Ensure it matches the expected structure
+
+    return this.gamingService.fetchGameKeys(payload);
   }
 
 
