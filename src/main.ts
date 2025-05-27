@@ -1,3 +1,5 @@
+import * as dotenv from 'dotenv';
+dotenv.config();
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { Logger, ValidationPipe } from '@nestjs/common';
@@ -13,7 +15,7 @@ import * as bodyParser from 'body-parser';
 import * as bodyParserXml from 'body-parser-xml';
 //import * as IpFilter from 'express-ip-filter';
 
-
+ 
 const logger = new Logger('Main');
 
 bodyParserXml(bodyParser);
@@ -24,6 +26,8 @@ const whitelist = [
 ];
 
 async function bootstrap() {
+
+ 
   
   const app = await NestFactory.create(AppModule, {
     rawBody: true,

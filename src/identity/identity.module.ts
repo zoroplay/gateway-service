@@ -18,6 +18,8 @@ import { RetailService } from '../retail/retail.service';
 import { NotificationModule } from 'src/notification/notification.module';
 import { NotificationService } from 'src/notification/notification.service';
 import { FirebaseService } from 'src/common/services/firebaseUpload';
+import * as dotenv from 'dotenv';
+dotenv.config();
 
 @Module({
   imports: [
