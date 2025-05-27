@@ -519,6 +519,8 @@ export class AppController {
     // Option 2: Embed client ID in tx_ref or custom field
     const txRef = body?.data?.tx_ref;
 
+    console.log("TRANSACTION_REF:::",txRef)
+
     const client = clientId;
 
     if (!client) {
