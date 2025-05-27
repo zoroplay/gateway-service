@@ -516,10 +516,11 @@ export class AppController {
 
     const signature = req.headers['x-flutterwave-signature'] as string;
 
+    console.log('THE SIGNATURE', signature);
+    console.log('Headers:', req.headers);
+
     // Option 2: Embed client ID in tx_ref or custom field
     const txRef = body?.data?.tx_ref;
-
-    console.log("TRANSACTION_REF:::",txRef)
 
     const client = clientId;
 
