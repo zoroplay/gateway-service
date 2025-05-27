@@ -28,6 +28,9 @@ import {
   StartDto,
   SmatVirtualCallbackRequest,
   GetPromotions,
+  SpribeCallbackRequest,
+  CreateGameKeyRequest,
+  GetKeysRequest,
 } from 'src/interfaces/gaming.pb';
 import { ClientGrpc } from '@nestjs/microservices';
 import { firstValueFrom, of } from 'rxjs';
@@ -317,6 +320,19 @@ export class GamingService implements OnModuleInit {
     return resp;
   }
 
+   async handleSpribeGamesCallback(request: CallbackGameDto) {
+    console.log('Spribe service start');
+    // //(request);
+    const resp = await firstValueFrom(
+      this.service.handleSpribeCallback(request),
+    );
+
+    console.log('respVERIFY', resp);
+
+    return resp;
+  }
+
+
 
   async handleSmatVirtualGamesCallback(request: SmatVirtualCallbackRequest) {
     console.log('Smat-virtual service start');
@@ -506,6 +522,20 @@ export class GamingService implements OnModuleInit {
     return firstValueFrom(
       this.service.handleCasinoJackpotWinners(payload),
     );
+  }
+
+  async addGameKeys(createGameKeyDto: CreateGameKeyRequest) {
+    console.log('createGameKeyDto', createGameKeyDto);
+    const gamekey = await firstValueFrom(
+      this.service.addGameKeys(createGameKeyDto),
+    );
+    console.log('gamekey', gamekey);
+    return gamekey;
+  }
+
+  async fetchGameKeys(payload: GetKeysRequest) {
+    //('fetch games');
+    return firstValueFrom(this.service.fetchGameKeys(payload));
   }
 
 }

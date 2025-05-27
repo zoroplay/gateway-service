@@ -12,6 +12,77 @@ import { Struct } from "./google/protobuf/struct.pb";
 
 export const protobufPackage = "wallet";
 
+export interface CorapayWebhookRequest {
+  clientId: number;
+  authHeader: string;
+  callbackData: { [key: string]: any } | undefined;
+}
+
+export interface CorapayResponse {
+  statusCode: number;
+  success: boolean;
+  message: string;
+}
+
+export interface OpayRequest {
+  clientId: number;
+  sha512: string;
+  rawBody: { [key: string]: any } | undefined;
+}
+
+export interface OpayResponse {
+  statusCode: number;
+  success: boolean;
+  message: string;
+}
+
+export interface ShopUsersSummaryRequest {
+  clientId: number;
+  rangeZ: string;
+  from: string;
+  to: string;
+}
+
+export interface ShopUserSummary {
+  userId: number;
+  numberOfDeposits: number;
+  totalDeposits: number;
+  numberOfWithdrawals: number;
+  totalWithdrawals: number;
+}
+
+export interface ShopUsersSummaryResponse {
+  data: ShopUserSummary[];
+  success: boolean;
+  status: number;
+  message: string;
+}
+
+export interface GetShopUserWalletSummaryRequest {
+  clientId: number;
+  dateRange: string;
+}
+
+export interface GetShopUserWalletSummaryResponse {
+  /** Indicates success or failure of the request */
+  success: boolean;
+  /** HTTP status code (e.g., 200 for success, 500 for error) */
+  status: number;
+  /** Message with success/error information */
+  message: string;
+  /** Array of the summary data for each agent user */
+  data: DailyTotals[];
+}
+
+export interface DailyTotals {
+  /** User ID (as a string) */
+  userId: string;
+  /** Total deposit amount for the specified range */
+  totalDepositAmount: number;
+  /** Total withdrawal amount for the specified range */
+  totalWithdrawalAmount: number;
+}
+
 export interface SummaryRequest {
   clientId: number;
   /** optional: "day", "week", "month", "year" */
@@ -36,19 +107,13 @@ export interface TrxSummaryRequest {
 }
 
 export interface SummaryResponse {
-  from: string;
-  to: string;
-  deposit: number;
-  withdrawal: number;
-  creditBalance: number;
-  playerBalance: number;
-}
-
-export interface PagedSummaryResponse {
-  data: SummaryResponse[];
-  total: number;
-  page: number;
-  pageSize: number;
+  /** Indicates success or failure of the request */
+  success: boolean;
+  /** HTTP status code (e.g., 200 for success, 500 for error) */
+  status: number;
+  message: string;
+  totalDeposit: number;
+  totalWithdrawal: number;
 }
 
 export interface MtnmomoRequest {
@@ -818,6 +883,10 @@ export interface ListWithdrawalRequests {
   to: string;
   status: number;
   userId: number;
+  username: string;
+  bankName: string;
+  page: number;
+  limit: number;
 }
 
 export interface ListWithdrawalRequestResponse {
@@ -825,6 +894,10 @@ export interface ListWithdrawalRequestResponse {
   status: number;
   message: string;
   data: WithdrawalRequest[];
+  totalAmount: number;
+  total: number;
+  page: number;
+  limit: number;
 }
 
 export interface WithdrawalRequest {
@@ -916,6 +989,7 @@ export interface ListDepositRequests {
   paymentMethod: string;
   status: number;
   username: string;
+  bank: string;
   transactionId: string;
   page: number;
 }
@@ -927,6 +1001,7 @@ export interface PaginationResponse {
   nextPage: number;
   prevPage: number;
   lastPage: number;
+  totalAmount: number;
   data: { [key: string]: any }[];
 }
 
@@ -1122,7 +1197,9 @@ export interface WalletServiceClient {
 
   getTransactionSummary(request: SummaryRequest): Observable<SummaryResponse>;
 
-  getAllClientsTransactionSummary(request: TrxSummaryRequest): Observable<PagedSummaryResponse>;
+  shopTransactionSummary(request: GetShopUserWalletSummaryRequest): Observable<GetShopUserWalletSummaryResponse>;
+
+  shopUsersSummary(request: ShopUsersSummaryRequest): Observable<ShopUsersSummaryResponse>;
 
   flutterWaveWebhook(request: FlutterwaveWebhookRequest): Observable<WebhookResponse>;
 
@@ -1135,6 +1212,10 @@ export interface WalletServiceClient {
   pawapayCallback(request: PawapayRequest): Observable<PawapayResponse>;
 
   mtnmomoCallback(request: MtnmomoRequest): Observable<WebhookResponse>;
+
+  opayCallback(request: OpayRequest): Observable<OpayResponse>;
+
+  corapayWebhook(request: CorapayWebhookRequest): Observable<CorapayResponse>;
 }
 
 export interface WalletServiceController {
@@ -1480,9 +1561,16 @@ export interface WalletServiceController {
     request: SummaryRequest,
   ): Promise<SummaryResponse> | Observable<SummaryResponse> | SummaryResponse;
 
-  getAllClientsTransactionSummary(
-    request: TrxSummaryRequest,
-  ): Promise<PagedSummaryResponse> | Observable<PagedSummaryResponse> | PagedSummaryResponse;
+  shopTransactionSummary(
+    request: GetShopUserWalletSummaryRequest,
+  ):
+    | Promise<GetShopUserWalletSummaryResponse>
+    | Observable<GetShopUserWalletSummaryResponse>
+    | GetShopUserWalletSummaryResponse;
+
+  shopUsersSummary(
+    request: ShopUsersSummaryRequest,
+  ): Promise<ShopUsersSummaryResponse> | Observable<ShopUsersSummaryResponse> | ShopUsersSummaryResponse;
 
   flutterWaveWebhook(
     request: FlutterwaveWebhookRequest,
@@ -1499,6 +1587,12 @@ export interface WalletServiceController {
   pawapayCallback(request: PawapayRequest): Promise<PawapayResponse> | Observable<PawapayResponse> | PawapayResponse;
 
   mtnmomoCallback(request: MtnmomoRequest): Promise<WebhookResponse> | Observable<WebhookResponse> | WebhookResponse;
+
+  opayCallback(request: OpayRequest): Promise<OpayResponse> | Observable<OpayResponse> | OpayResponse;
+
+  corapayWebhook(
+    request: CorapayWebhookRequest,
+  ): Promise<CorapayResponse> | Observable<CorapayResponse> | CorapayResponse;
 }
 
 export function WalletServiceControllerMethods() {
@@ -1592,13 +1686,16 @@ export function WalletServiceControllerMethods() {
       "processShopWithdrawal",
       "debitAgentBalance",
       "getTransactionSummary",
-      "getAllClientsTransactionSummary",
+      "shopTransactionSummary",
+      "shopUsersSummary",
       "flutterWaveWebhook",
       "korapayWebhook",
       "tigoWebhook",
       "tigoW2A",
       "pawapayCallback",
       "mtnmomoCallback",
+      "opayCallback",
+      "corapayWebhook",
     ];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);

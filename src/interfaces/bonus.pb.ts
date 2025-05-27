@@ -24,6 +24,11 @@ export interface CheckDepositBonusRequest {
   userId: number;
 }
 
+export interface BonusRequest {
+  clientId: number;
+  userId: number;
+}
+
 export interface CheckDepositBonusResponse {
   success: boolean;
   value: number;
@@ -109,6 +114,11 @@ export interface CreateBonusResponse {
 }
 
 export interface GetBonusRequest {
+  clientId: number;
+  bonusType?: string | undefined;
+}
+
+export interface GetAllBonusRequest {
   clientId: number;
 }
 
@@ -374,6 +384,8 @@ export interface BonusServiceClient {
 
   checkDepositBonus(request: CheckDepositBonusRequest): Observable<CheckDepositBonusResponse>;
 
+  checkRegisterBonus(request: GetBonusRequest): Observable<CommonResponseObj>;
+
   settleBet(request: SettleBetRequest): Observable<CommonResponseObj>;
 
   searchBonus(request: GetBonusByClientID): Observable<SearchBonusResponse>;
@@ -382,11 +394,15 @@ export interface BonusServiceClient {
 
   getBonus(request: GetBonusRequest): Observable<GetBonusResponse>;
 
+  getAllAwardedBonus(request: GetAllBonusRequest): Observable<CommonResponseObj>;
+
   deleteBonus(request: DeleteBonusRequest): Observable<BonusResponse>;
 
   getUserBonus(request: GetUserBonusRequest): Observable<GetUserBonusResponse>;
 
   awardBonus(request: AwardBonusRequest): Observable<UserBonusResponse>;
+
+  deactivateUserBonus(request: BonusRequest): Observable<CommonResponseObj>;
 
   placeBonusBet(request: UserBet): Observable<PlaceBetResponse>;
 
@@ -430,6 +446,10 @@ export interface BonusServiceController {
     request: CheckDepositBonusRequest,
   ): Promise<CheckDepositBonusResponse> | Observable<CheckDepositBonusResponse> | CheckDepositBonusResponse;
 
+  checkRegisterBonus(
+    request: GetBonusRequest,
+  ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
+
   settleBet(request: SettleBetRequest): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
 
   searchBonus(
@@ -442,6 +462,10 @@ export interface BonusServiceController {
 
   getBonus(request: GetBonusRequest): Promise<GetBonusResponse> | Observable<GetBonusResponse> | GetBonusResponse;
 
+  getAllAwardedBonus(
+    request: GetAllBonusRequest,
+  ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
+
   deleteBonus(request: DeleteBonusRequest): Promise<BonusResponse> | Observable<BonusResponse> | BonusResponse;
 
   getUserBonus(
@@ -451,6 +475,10 @@ export interface BonusServiceController {
   awardBonus(
     request: AwardBonusRequest,
   ): Promise<UserBonusResponse> | Observable<UserBonusResponse> | UserBonusResponse;
+
+  deactivateUserBonus(
+    request: BonusRequest,
+  ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
 
   placeBonusBet(request: UserBet): Promise<PlaceBetResponse> | Observable<PlaceBetResponse> | PlaceBetResponse;
 
@@ -490,13 +518,16 @@ export function BonusServiceControllerMethods() {
       "getCampaign",
       "validateBetSelections",
       "checkDepositBonus",
+      "checkRegisterBonus",
       "settleBet",
       "searchBonus",
       "getActiveUserBonus",
       "getBonus",
+      "getAllAwardedBonus",
       "deleteBonus",
       "getUserBonus",
       "awardBonus",
+      "deactivateUserBonus",
       "placeBonusBet",
       "updateBonusStatus",
       "createCampaignBonus",
