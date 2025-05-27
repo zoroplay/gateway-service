@@ -50,6 +50,12 @@ async function bootstrap() {
     bodyParser.raw({ type: 'application/json' }),
   );
 
+
+  app.use(
+    '/webhook/check-out/:clientId/flutterwave',
+    bodyParser.raw({ type: 'application/json' }),
+  );
+
   const options = new DocumentBuilder()
     .setTitle('SportsBook Engine APIs')
     .setDescription('API Description for SBE sportsbook platform')
