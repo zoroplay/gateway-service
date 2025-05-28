@@ -8,6 +8,7 @@ import {
   Patch,
   Post,
   Put,
+  Query,
   Req,
   UseGuards,
 } from '@nestjs/common';
@@ -47,6 +48,7 @@ import { NotificationService } from 'src/notification/notification.service';
 import { GetAllLogsDTO, GetUserLogsDTO } from '../dto/audit.dto';
 import { Ip } from '@nestjs/common';
 import { UAParser } from 'ua-parser-js';
+import { query } from 'express';
 
 @ApiTags('Auth APIs')
 @Controller('auth')
@@ -221,6 +223,7 @@ export class AuthController {
   getAllLogs(
     @Body() data: GetAllLogsRequest,
     @Req() req: IAuthorizedRequest,
+    @Query() query: any,
     @Ip() ip: any,
   ) {
     try {
@@ -234,6 +237,7 @@ export class AuthController {
       data.platform = String(ua.getDevice()) || 'unknown';
       data.method = req.method;
       data.endpoint = req.url;
+      data.auditQuery = query || {};
 
       return this.authService.getAllLogs(data);
     } catch (err) {

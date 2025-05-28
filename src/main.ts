@@ -1,5 +1,3 @@
-import * as dotenv from 'dotenv';
-dotenv.config();
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { Logger, ValidationPipe } from '@nestjs/common';
@@ -15,20 +13,16 @@ import * as bodyParser from 'body-parser';
 import * as bodyParserXml from 'body-parser-xml';
 //import * as IpFilter from 'express-ip-filter';
 
- 
 const logger = new Logger('Main');
 
 bodyParserXml(bodyParser);
 
 const whitelist = [
   '206.189.229.191', //staging IP
-  '127.??.??.1*' //localhost
+  '127.??.??.1*', //localhost
 ];
 
 async function bootstrap() {
-
- 
-  
   const app = await NestFactory.create(AppModule, {
     rawBody: true,
   });
@@ -39,7 +33,7 @@ async function bootstrap() {
   //   strict: false
   // });
   // app.use(ipWhitelist);
-  
+
   app.use(
     '/api/v2/webhook/4/tigo/notify',
     bodyParser.raw({ type: 'text/xml' }),
@@ -47,12 +41,6 @@ async function bootstrap() {
 
   app.use(
     '/webhook/checkout/4/opay/callback',
-    bodyParser.raw({ type: 'application/json' }),
-  );
-
-
-  app.use(
-    '/webhook/check-out/:clientId/flutterwave',
     bodyParser.raw({ type: 'application/json' }),
   );
 
