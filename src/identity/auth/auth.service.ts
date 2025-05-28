@@ -117,9 +117,4 @@ export class AuthService {
   public async createLog(data: CreateLogRequest): Promise<CreateLogResponse> {
     return firstValueFrom(this.svc.createLog(data));
   }
-  public async getAllLogs(
-    data: GetAllLogsRequest,
-  ): Promise<GetAllLogsResponse> {
-    return firstValueFrom(this.svc.getAllLogs(data));
-  }
 }
