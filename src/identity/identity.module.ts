@@ -20,7 +20,7 @@ import { NotificationService } from 'src/notification/notification.service';
 import { FirebaseService } from 'src/common/services/firebaseUpload';
 import * as dotenv from 'dotenv';
 dotenv.config();
-
+console.log('URL::', process.env.IDENTITY_SERVICE_URL);
 @Module({
   imports: [
     forwardRef(() => WalletModule),

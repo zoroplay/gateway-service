@@ -17,6 +17,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import {
+  FetchPlayerFilterRequest,
   IDENTITY_SERVICE_NAME,
   IdentityServiceClient,
   OnlinePlayersRequest,
@@ -93,6 +94,27 @@ export class PlayersController {
       clientId: req.clientId,
     };
     return this.svc.getPlayerData(payload);
+  }
+
+  @Get('bet-loss/:clientId')
+  async getLosersByBetCount(
+    @Query() query: FetchPlayerFilterRequest & { page?: string },
+  ) {
+    const page = parseInt(query.page || '1', 10);
+
+    const filter: FetchPlayerFilterRequest = {
+      clientId: Number(query.clientId),
+      minAmount: query.minAmount ? Number(query.minAmount) : undefined,
+      maxAmount: query.maxAmount ? Number(query.maxAmount) : undefined,
+      startDate: '',
+      endDate: '',
+      depositCount: 0,
+      filterType: 0,
+      page: 1
+    };
+
+    const result = this.svc.fetchPlayerLosersByBetCount(filter);
+    return result;
   }
 
   @Put('/:id/update-details')
