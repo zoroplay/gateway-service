@@ -501,40 +501,44 @@ export class AppController {
     }
   }
 
-  // @ApiTags('Webhooks')
-  // @Post('webhook/check-out/:clientId/flutterwave')
-  // @ApiParam({ name: 'clientId', type: 'number', description: 'SBE Client ID' })
-  // async handleFlutterwaveWebhook(
-  //   @Param('clientId') clientId: number,
-  //   @Body() body,
-  //   @Req() req,
-  //   @Res() res,
-  // ) {
-  //   console.log('THE MAIN F-FUNC');
-  //   if (!clientId) return res.sendStatus(400);
+  @ApiTags('Webhooks')
+  @Post('webhook/check-out/:clientId/flutterwave')
+  @ApiParam({ name: 'clientId', type: 'number', description: 'SBE Client ID' })
+  async handleFlutterwaveWebhook(
+    @Param('clientId') clientId: number,
+    @Body() body: any,
+    @Req() req,
+    @Res() res,
+  ) {
+    console.log('THE MAIN F-FUNC');
+    console.log('THE BODY', body);
+    if (!clientId) return res.sendStatus(400);
 
-  //   const signature = req.headers['x-flutterwave-signature'] as string;
+    const signature = req.headers['x-flutterwave-signature'] as string;
 
-  //   // Option 2: Embed client ID in tx_ref or custom field
-  //   const txRef = body?.data?.tx_ref;
+    console.log('THE SIGNATURE', signature);
+    console.log('Headers:', req.headers);
 
-  //   const client = clientId;
+    // Option 2: Embed client ID in tx_ref or custom field
+    const txRef = body?.data?.tx_ref;
 
-  //   if (!client) {
-  //     console.warn('❌ Client ID missing from webhook');
-  //     return res.status(400).json({ message: 'Client ID missing' });
-  //   }
+    const client = clientId;
 
-  //   await this.walletService.flutterWaveWebhook({
-  //     clientId: client,
-  //     txRef,
-  //     event: body.event,
-  //     body: JSON.stringify(body),
-  //     flutterwaveKey: signature,
-  //   });
+    if (!client) {
+      console.warn('❌ Client ID missing from webhook');
+      return res.status(400).json({ message: 'Client ID missing' });
+    }
 
-  //   return res.status(200).json({ message: 'Received' });
-  // }
+    await this.walletService.flutterWaveWebhook({
+      clientId: client,
+      txRef,
+      event: body.event,
+      body: JSON.stringify(body),
+      flutterwaveKey: signature,
+    });
+
+    return res.status(200).json({ message: 'Received' });
+  }
 
   // @ApiTags('Webhooks')
   // @Post('webhook/checkout/:clientId/korapay')
