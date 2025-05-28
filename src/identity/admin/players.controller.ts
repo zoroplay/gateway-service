@@ -110,7 +110,7 @@ export class PlayersController {
       endDate: '',
       depositCount: 0,
       filterType: 0,
-      page: 0
+      page: 1
     };
 
     const result = this.svc.fetchPlayerLosersByBetCount(filter);
