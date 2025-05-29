@@ -147,7 +147,7 @@ export class GamingController {
     if (!startGameDto.language) {
       startGameDto.language = 'en';
     }
-    return this.gamingService.startGame(startGameDto);
+    return this.gamingService.startGameLobby(startGameDto);
   }
 
   @Post('/:clientId/start-url')
