@@ -211,37 +211,4 @@ export class AuthController {
   resetPassword(@Body() data: ResetPasswordRequest) {
     return this.authService.resetPassword(data);
   }
-
-  // @UseGuards(AuthGuard)
-  @Post('/get_all_logs')
-  @ApiOperation({
-    summary: 'get client variables',
-    description: 'This endpoint retrieves all the audits',
-  })
-  @ApiBody({ type: GetAllLogsDTO })
-  @ApiOkResponse({ type: SwaggerCommonResponse })
-  getAllLogs(
-    @Body() data: GetAllLogsRequest,
-    @Req() req: IAuthorizedRequest,
-    @Query() query: any,
-    @Ip() ip: any,
-  ) {
-    try {
-      const parser = new UAParser();
-      const userAgent = req.headers['user-agent'] || 'unknown';
-      const ua = parser.setUA(userAgent);
-
-      data.ipAddress = ip;
-      data.os = String(ua.getOS()) || 'unknown';
-      data.browser = String(ua.getBrowser()) || 'unknown';
-      data.platform = String(ua.getDevice()) || 'unknown';
-      data.method = req.method;
-      data.endpoint = req.url;
-      data.auditQuery = query || {};
-
-      return this.authService.getAllLogs(data);
-    } catch (err) {
-      console.log(err);
-    }
-  }
 }
