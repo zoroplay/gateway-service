@@ -12,12 +12,22 @@ import { Struct } from "./google/protobuf/struct.pb";
 
 export const protobufPackage = "wallet";
 
+export interface CorapayWebhookRequest {
+  clientId: number;
+  authHeader: string;
+  callbackData: { [key: string]: any } | undefined;
+}
+
+export interface CorapayResponse {
+  statusCode: number;
+  success: boolean;
+  message: string;
+}
+
 export interface OpayRequest {
   clientId: number;
-  status: string;
-  reference: string;
-  type: string;
   sha512: string;
+  rawBody: { [key: string]: any } | undefined;
 }
 
 export interface OpayResponse {
@@ -873,6 +883,10 @@ export interface ListWithdrawalRequests {
   to: string;
   status: number;
   userId: number;
+  username: string;
+  bankName: string;
+  page: number;
+  limit: number;
 }
 
 export interface ListWithdrawalRequestResponse {
@@ -880,6 +894,10 @@ export interface ListWithdrawalRequestResponse {
   status: number;
   message: string;
   data: WithdrawalRequest[];
+  totalAmount: number;
+  total: number;
+  page: number;
+  limit: number;
 }
 
 export interface WithdrawalRequest {
@@ -971,6 +989,7 @@ export interface ListDepositRequests {
   paymentMethod: string;
   status: number;
   username: string;
+  bank: string;
   transactionId: string;
   page: number;
 }
@@ -982,6 +1001,7 @@ export interface PaginationResponse {
   nextPage: number;
   prevPage: number;
   lastPage: number;
+  totalAmount: number;
   data: { [key: string]: any }[];
 }
 
@@ -1194,6 +1214,8 @@ export interface WalletServiceClient {
   mtnmomoCallback(request: MtnmomoRequest): Observable<WebhookResponse>;
 
   opayCallback(request: OpayRequest): Observable<OpayResponse>;
+
+  corapayWebhook(request: CorapayWebhookRequest): Observable<CorapayResponse>;
 }
 
 export interface WalletServiceController {
@@ -1567,6 +1589,10 @@ export interface WalletServiceController {
   mtnmomoCallback(request: MtnmomoRequest): Promise<WebhookResponse> | Observable<WebhookResponse> | WebhookResponse;
 
   opayCallback(request: OpayRequest): Promise<OpayResponse> | Observable<OpayResponse> | OpayResponse;
+
+  corapayWebhook(
+    request: CorapayWebhookRequest,
+  ): Promise<CorapayResponse> | Observable<CorapayResponse> | CorapayResponse;
 }
 
 export function WalletServiceControllerMethods() {
@@ -1669,6 +1695,7 @@ export function WalletServiceControllerMethods() {
       "pawapayCallback",
       "mtnmomoCallback",
       "opayCallback",
+      "corapayWebhook",
     ];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);

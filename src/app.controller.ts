@@ -10,6 +10,7 @@ import {
   Query,
   Header,
   HttpStatus,
+  HttpCode,
 } from '@nestjs/common';
 import {
   ApiBody,
@@ -110,6 +111,10 @@ export class AppController {
   })
   paymentWebhook(@Param() param, @Body() body, @Res() res, @Req() req) {
     if (!param.provider) return res.sendStatus(404);
+    console.log('🔥 Webhook HIT');
+    console.log('Headers:', req.headers);
+    console.log('Params:', param);
+    console.log('Body:', body);
 
     switch (param.provider) {
       case 'paystack':
@@ -130,7 +135,14 @@ export class AppController {
           event: body.eventType,
         });
         break;
-      case 'flutterwave':
+        // case 'flutterwave':
+        // this.walletService.flutterWaveWebhook({
+        //   clientId: param.client,
+        //   txRef: body.data.tx_ref,
+        //   event: body.event,
+        //   body: JSON.stringify(body),
+        //   flutterwaveKey: req.headers['x-flutterwave-signature'],
+        // });
         break;
 
       default:
@@ -425,36 +437,27 @@ export class AppController {
 
   @ApiTags('Webhooks')
   @Post('/webhook/checkout/4/opay/callback')
-  async handleOpayCallback(
-    @Req() req,
-    @Headers() headers,
-  ): Promise<OpayResponse> {
-    const webhookBody = JSON.stringify(req.body);
-    console.log('WEBHOOK:::', webhookBody);
-    const signature = headers['x-opay-signature'];
+  async handleOpayCallback(@Body() webhookBody: any): Promise<OpayResponse> {
+    console.log(webhookBody);
+    const { payload, sha512 } = webhookBody;
 
-    console.log('WOW::::', signature);
+    console.log('✅ Verified Webhook Payload:', payload);
 
-    const parsedBody = JSON.parse(webhookBody.toString());
-    console.log('✅ Verified Webhook Payload:', parsedBody);
-
-    if (!parsedBody.payload.reference) {
-      console.error('❌ Missing ReferenceID in webhook data');
+    if (!payload?.reference) {
       return {
-        statusCode: 500,
+        statusCode: 400,
         success: false,
-        message: 'Invalid webhook data: Missing ReferenceID',
+        message: 'Missing reference ID in webhook payload.',
       };
     }
 
+    const data = {
+      clientId: 4,
+      rawBody: webhookBody,
+      sha512: sha512,
+    };
     try {
-      await this.walletService.OpayWebhook({
-        clientId: 4,
-        status: parsedBody.payload.status,
-        reference: parsedBody.payload.reference,
-        type: parsedBody.type,
-        sha512: signature,
-      });
+      await this.walletService.OpayWebhook(data);
       console.log(`🎉 User credited successfully: `);
 
       return { statusCode: 200, success: true, message: 'OK' };
@@ -466,5 +469,112 @@ export class AppController {
         message: 'Internal server error',
       };
     }
+  }
+
+  @ApiTags('Webhooks')
+  @Post('/webhook/4/coralpay/callback')
+  @HttpCode(200)
+  async handleCorapayWebhook(
+    @Headers('authorization') authHeader: string,
+    @Body() callbackData: any,
+  ): Promise<OpayResponse> {
+    console.log('✅ Verified Webhook Payload:', callbackData);
+    console.log('THE HEADERS', authHeader);
+    const clientId = 4;
+    try {
+      const result = await this.walletService.CorapayWebhook({
+        clientId,
+        authHeader,
+        callbackData,
+      });
+
+      console.log(`🎉 User credited successfully: `);
+
+      return result;
+    } catch (error) {
+      console.error(`❌ Error processing webhook: ${error.message}`);
+      return {
+        statusCode: 500,
+        success: false,
+        message: 'Internal server error',
+      };
+    }
+  }
+
+  @ApiTags('Webhooks')
+  @Post('webhook/check-out/:clientId/flutterwave')
+  @ApiParam({ name: 'clientId', type: 'number', description: 'SBE Client ID' })
+  async handleFlutterwaveWebhook(
+    @Param('clientId') clientId: number,
+    @Body() body: any,
+    @Req() req,
+    @Res() res,
+  ) {
+    console.log('THE MAIN F-FUNC');
+    console.log('THE BODY', body);
+    if (!clientId) return res.sendStatus(400);
+
+    const signature = req.headers['x-flutterwave-signature'] as string;
+
+    console.log('THE SIGNATURE', signature);
+    console.log('Headers:', req.headers);
+
+    // Option 2: Embed client ID in tx_ref or custom field
+    const txRef = body?.data?.tx_ref;
+
+    const client = clientId;
+
+    if (!client) {
+      console.warn('❌ Client ID missing from webhook');
+      return res.status(400).json({ message: 'Client ID missing' });
+    }
+
+    await this.walletService.flutterWaveWebhook({
+      clientId: client,
+      txRef,
+      event: body.event,
+      body: JSON.stringify(body),
+      flutterwaveKey: signature,
+    });
+
+    return res.status(200).json({ message: 'Received' });
+  }
+
+  @ApiTags('Webhooks')
+  @Post('webhook/checkout/:clientId/korapay')
+  @ApiParam({ name: 'clientId', type: 'number', description: 'SBE Client ID' })
+  async handleKorapayWebhook(
+    @Param('clientId') clientId: number,
+    @Body() body: any,
+    @Req() req,
+    @Res() res,
+  ) {
+    if (!clientId) return res.sendStatus(400);
+
+    console.log('THE-BODY:::', body);
+
+    console.log('REF:::', body.reference);
+
+    const signature = req.headers['x-korapay-signature'] as string;
+
+    // Option 2: Embed client ID in tx_ref or custom field
+    const reference = body?.data?.reference;
+
+    const client = clientId;
+
+    if (!client) {
+      console.warn('❌ Client ID missing from webhook');
+      return res.status(400).json({ message: 'Client ID missing' });
+    }
+
+    await this.walletService.korapayWaveWebhook({
+      clientId: client,
+      reference,
+      event: body.event,
+      body: JSON.stringify(body),
+      korapayKey: signature,
+    });
+
+    return res.status(200).json({ message: 'Received' });
   }
 }

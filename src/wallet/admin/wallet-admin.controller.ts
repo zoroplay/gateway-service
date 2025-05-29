@@ -10,6 +10,7 @@ import {
 } from '@nestjs/common';
 import {
   ApiBody,
+  ApiHeader,
   ApiOkResponse,
   ApiOperation,
   ApiParam,
@@ -88,21 +89,58 @@ export class WalletAdminController {
       to: param.to,
       status: query.status,
       userId: param.userId,
+      username: '',
+      bankName: '',
+      page: 0,
+      limit: 0
     });
   }
 
   @Post('deposits')
   @ApiOperation({
     summary: 'Fetch Deposit Transactions',
-    description:
-      'This endpoint is used to fetch deposit transactions for a period',
+    description: 'Fetch deposit transactions for a given period and filters.',
   })
-  @ApiBody({ type: SwaggerListWithdrawalRequests })
-  @ApiOkResponse({ type: SwaggerListDepositRequest })
-  deposits(@Body() body: ListDepositRequests, @Query('page') page: number = 1) {
+  @ApiHeader({
+    name: 'Sbe-client-id',
+    description: 'Client ID for identifying the requesting client',
+    required: true,
+    schema: { type: 'string' },
+  })
+  @ApiBody({ type: SwaggerListWithdrawalRequests }) // should match DTO class/interface name
+  @ApiOkResponse({ type: SwaggerListDepositRequest }) // this should be the actual response DTO
+  async deposits(
+    @Body() body: ListDepositRequests,
+    @Query('page') page: number = 1,
+    @Req() req,
+  ) {
     body.page = page;
     return this.walletService.listDeposits(body);
   }
+
+  // @Post('deposits')
+  // @ApiOperation({
+  //   summary: 'Fetch Deposit Transactions',
+  //   description:
+  //     'This endpoint is used to fetch deposit transactions for a period',
+  // })
+  // @ApiHeader({
+  //   name: 'Sbe-client-id',
+  //   description: 'Client ID for identifying the requesting client',
+  //   required: true,
+  //   schema: { type: 'string' },
+  // })
+  // @ApiBody({ type: SwaggerListWithdrawalRequests })
+  // @ApiOkResponse({ type: SwaggerListDepositRequest })
+  // deposits(
+  //   @Body() body: ListDepositRequests,
+  //   @Query('page') page: number = 1,
+  //   @Req() req,
+  // ) {
+  //   body.page = page;
+
+  //   return this.walletService.listDeposits(body);
+  // }
 
   @Put('withdrawals/update')
   @ApiOperation({

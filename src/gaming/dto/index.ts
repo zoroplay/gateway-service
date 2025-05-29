@@ -794,3 +794,37 @@ export class SwaggerOKPromotionResponse {
   })
   updatedAt: Date;
 }
+
+export class EntryRequest {
+  @ApiProperty({
+    description: 'unique name of the option',
+    example: 'GAME_API_KEY',
+  })
+  option: string;
+
+  @ApiProperty({
+    description: 'Value of the option',
+    example: 'value',
+  })
+  value: string;
+
+  @ApiProperty({
+    description: 'Provider name, e.g., shack-evolution',
+    example: 'evo-play',
+  })
+  provider: string;
+}
+
+export class AddGameKeyDto {
+  @ApiProperty({
+    description: 'ID of the game to which categories will be added',
+    example: 1,
+  })
+  clientId: number;
+
+  @ApiProperty({
+    type: [EntryRequest],
+  })
+  keys: EntryRequest[];
+
+}
