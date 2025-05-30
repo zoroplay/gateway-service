@@ -45,6 +45,7 @@ export interface ShopUsersSummaryRequest {
 
 export interface ShopUserSummary {
   userId: number;
+  username: string;
   numberOfDeposits: number;
   totalDeposits: number;
   numberOfWithdrawals: number;
