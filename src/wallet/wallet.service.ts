@@ -91,6 +91,8 @@ import {
   OpayRequest,
   CorapayResponse,
   CorapayWebhookRequest,
+  DeletePaymentMethodRequest,
+  DeletePaymentMethodResponse,
 } from '../interfaces/wallet.pb';
 import { ClientGrpc } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
@@ -150,6 +152,18 @@ export class WalletService {
   ): Promise<PaginationResponse> {
     //('list deposits');
     return await firstValueFrom(this.svc.listDeposits(request));
+  }
+
+  async UpdatePaymentMethod(
+    request: PaymentMethodRequest,
+  ): Promise<GetPaymentMethodResponse> {
+    return await firstValueFrom(this.svc.updatePaymentMethod(request));
+  }
+
+  async DeletePaymentMethod(
+    request: DeletePaymentMethodRequest,
+  ): Promise<DeletePaymentMethodResponse> {
+    return await firstValueFrom(this.svc.deletePaymentMethod(request));
   }
 
   async updateWithdrawal(

@@ -472,6 +472,7 @@ export class AppController {
   }
 
   @ApiTags('Webhooks')
+  @Post('/webhook/12/coralpay/callback')
   @Post('/webhook/4/coralpay/callback')
   @HttpCode(200)
   async handleCorapayWebhook(

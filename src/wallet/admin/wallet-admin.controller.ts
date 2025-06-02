@@ -1,8 +1,10 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
+  Patch,
   Post,
   Put,
   Query,
@@ -92,7 +94,7 @@ export class WalletAdminController {
       username: '',
       bankName: '',
       page: 0,
-      limit: 0
+      limit: 0,
     });
   }
 
@@ -294,5 +296,18 @@ export class WalletAdminController {
       to: to || '',
     };
     return this.walletService.getNetCashFlow(payload);
+  }
+
+  @Patch('update/payment-method')
+  async updatePaymentMethod(@Body() payload: PaymentMethodRequest) {
+    return this.walletService.UpdatePaymentMethod(payload);
+  }
+
+  @Delete('payment-method/:clientId')
+  async deletePaymentMethod(
+    @Query('id') id: number,
+    @Param('clientId') clientId: number,
+  ) {
+    return this.walletService.DeletePaymentMethod({ id, clientId });
   }
 }
