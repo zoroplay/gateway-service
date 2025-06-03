@@ -12,6 +12,17 @@ import { Struct } from "./google/protobuf/struct.pb";
 
 export const protobufPackage = "wallet";
 
+export interface DeletePaymentMethodRequest {
+  id: number;
+  clientId: number;
+}
+
+export interface DeletePaymentMethodResponse {
+  success: boolean;
+  status: number;
+  message: string;
+}
+
 export interface CorapayWebhookRequest {
   clientId: number;
   authHeader: string;
@@ -45,6 +56,7 @@ export interface ShopUsersSummaryRequest {
 
 export interface ShopUserSummary {
   userId: number;
+  username: string;
   numberOfDeposits: number;
   totalDeposits: number;
   numberOfWithdrawals: number;
@@ -1181,6 +1193,10 @@ export interface WalletServiceClient {
 
   getSystemTransaction(request: GetTransactionsRequest): Observable<CommonResponseObj>;
 
+  updatePaymentMethod(request: PaymentMethodRequest): Observable<GetPaymentMethodResponse>;
+
+  deletePaymentMethod(request: DeletePaymentMethodRequest): Observable<DeletePaymentMethodResponse>;
+
   /** RETAIL SERVICES */
 
   walletTransfer(request: WalletTransferRequest): Observable<CommonResponseObj>;
@@ -1531,6 +1547,14 @@ export interface WalletServiceController {
     request: GetTransactionsRequest,
   ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
 
+  updatePaymentMethod(
+    request: PaymentMethodRequest,
+  ): Promise<GetPaymentMethodResponse> | Observable<GetPaymentMethodResponse> | GetPaymentMethodResponse;
+
+  deletePaymentMethod(
+    request: DeletePaymentMethodRequest,
+  ): Promise<DeletePaymentMethodResponse> | Observable<DeletePaymentMethodResponse> | DeletePaymentMethodResponse;
+
   /** RETAIL SERVICES */
 
   walletTransfer(
@@ -1679,6 +1703,8 @@ export function WalletServiceControllerMethods() {
       "getNetworkBalance",
       "getMoneyTransaction",
       "getSystemTransaction",
+      "updatePaymentMethod",
+      "deletePaymentMethod",
       "walletTransfer",
       "validateDepositCode",
       "processShopDeposit",
