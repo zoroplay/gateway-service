@@ -353,9 +353,10 @@ async updatePromotion(@Body() payload: CreatePromotionDto, @UploadedFile() file?
   }
 
   @Delete('/delete-game-key')
-  @ApiBody({ type: DeleteKeyRequest })
+  @ApiQuery({ name: 'id', type: String })
   @ApiOkResponse({ type: [SwaggerOKGameResponse] })
-  deleteGameKey(@Body() payload: FindOneGameDto) {
+  deleteGameKey(@Query('id') id: string) {
+    const payload: FindOneGameDto = { id: parseInt(id, 10) };
     return this.gamingService.deleteGameKey(payload);
   }
 
