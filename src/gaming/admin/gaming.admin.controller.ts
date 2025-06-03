@@ -20,6 +20,7 @@ import {
   CreateProviderDto,
   CreateTournamentDto,
   FindOneCategoryDto,
+  FindOneGameDto,
   FindOneTournamentDto,
   GetGamesRequest,
   GetKeysRequest,
@@ -34,6 +35,7 @@ import {
   AddTournamentGameDto,
   CreatePromotionRequestDto,
   CreateTournamentRequestDto,
+  DeleteKeyRequest,
   // CreatePromotionDto,
   FindCategoryDto,
   FindPromotionDto,
@@ -350,9 +352,16 @@ async updatePromotion(@Body() payload: CreatePromotionDto, @UploadedFile() file?
     return this.gamingService.fetchGameKeys(payload);
   }
 
+  @Delete('/delete-game-key')
+  @ApiBody({ type: DeleteKeyRequest })
+  @ApiOkResponse({ type: [SwaggerOKGameResponse] })
+  deleteGameKey(@Body() payload: FindOneGameDto) {
+    return this.gamingService.deleteGameKey(payload);
+  }
+
 
   @Delete('/delete-tournament-game')
-  @ApiBody({ type: AddTournamentGameDto })
+  @ApiBody({ type: DeleteKeyRequest })
   @ApiOkResponse({ type: [SwaggerOKGameResponse] })
   removeTournamentGame(@Body() payload: AddGameToTournamentDto) {
     return this.gamingService.removeTournamentGame(payload);

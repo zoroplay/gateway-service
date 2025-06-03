@@ -31,6 +31,8 @@ import {
   SpribeCallbackRequest,
   CreateGameKeyRequest,
   GetKeysRequest,
+  BonusGameRequest,
+  FindOneGameDto,
 } from 'src/interfaces/gaming.pb';
 import { ClientGrpc } from '@nestjs/microservices';
 import { firstValueFrom, of } from 'rxjs';
@@ -545,6 +547,16 @@ export class GamingService implements OnModuleInit {
   async fetchGameKeys(payload: GetKeysRequest) {
     //('fetch games');
     return firstValueFrom(this.service.fetchGameKeys(payload));
+  }
+
+  async deleteGameKey(payload: FindOneGameDto) {
+    //('fetch games');
+    return firstValueFrom(this.service.deleteGameKeys(payload));
+  }
+
+  async getUserBonusGames(payload: BonusGameRequest) {
+    //('fetch games');
+    return firstValueFrom(this.service.fetchBonusGames(payload));
   }
 
 }

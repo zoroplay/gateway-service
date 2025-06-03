@@ -147,6 +147,21 @@ export class SwaggerStartSmatGameDto {
   
 }
 
+export class BonusGameRequestDto {
+  @ApiProperty({
+    description: 'Client Id',
+    example: 2,
+  })
+  clientId: number;
+
+  @ApiProperty({
+    description: 'User Id',
+    example: 2,
+  })
+  userId: number;
+  
+}
+
 export class SwaggerStartGameResponseDto {
   @ApiProperty({
     description: 'Url tto Initiate Game',
@@ -557,6 +572,14 @@ export class AddTournamentGameDto {
     type: [Number], // Indicates an array of numbers
   })
   gameId: number[]; // Array of category IDs
+}
+
+export class DeleteKeyRequest {
+  @ApiProperty({
+    description: 'ID of the game to which categories will be added',
+    example: 1,
+  })
+  id: number;
 }
 
 export class CreatePromotionRequestDto {

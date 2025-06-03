@@ -26,8 +26,9 @@ import {
 } from '@nestjs/swagger';
 import { Response } from 'express';
 import { GamingService } from './gaming.service';
-import { StartDto, StartGameDto, SyncGameDto } from 'src/interfaces/gaming.pb';
+import { BonusGameRequest, StartDto, StartGameDto, SyncGameDto } from 'src/interfaces/gaming.pb';
 import {
+  BonusGameRequestDto,
   SwaggerOKGameResponse,
   SwaggerOKProviderArrayResponse,
   SwaggerStartGameDto,
@@ -685,6 +686,20 @@ export class GamingController {
         code: 'UNKNOWN_ERROR',
       });
     }
+  }
+
+
+  @Get('bonus-games')
+  @ApiOkResponse({ type: [SwaggerOKGameResponse] })
+  @ApiQuery({ name: 'clientId', type: Number, required: false })
+  @ApiQuery({ name: 'userId', type: Number, required: false })
+  getUserBonusGames( @Query('clientId') clientId: number, @Query('userId') userId: number,) {
+    const payload = {
+      clientId,
+      userId
+    };
+
+    return this.gamingService.getUserBonusGames(payload);
   }
 
 }
