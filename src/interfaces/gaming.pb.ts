@@ -44,6 +44,11 @@ export interface GameKeyEntry {
   provider: string;
 }
 
+export interface BonusGameRequest {
+  clientId: number;
+  userId: number;
+}
+
 export interface SmatVirtualCallbackRequest {
   clientId: number;
   action?: string | undefined;
@@ -693,6 +698,10 @@ export interface GamingServiceClient {
 
   fetchGameKeys(request: GetKeysRequest): Observable<CommonResponse>;
 
+  deleteGameKeys(request: FindOneGameDto): Observable<CommonResponse>;
+
+  fetchBonusGames(request: BonusGameRequest): Observable<CommonResponse>;
+
   handleCasinoJackpot(request: SyncGameDto): Observable<CommonResponse>;
 
   handleCasinoJackpotWinners(request: SyncGameDto): Observable<CommonResponse>;
@@ -811,6 +820,10 @@ export interface GamingServiceController {
 
   fetchGameKeys(request: GetKeysRequest): Promise<CommonResponse> | Observable<CommonResponse> | CommonResponse;
 
+  deleteGameKeys(request: FindOneGameDto): Promise<CommonResponse> | Observable<CommonResponse> | CommonResponse;
+
+  fetchBonusGames(request: BonusGameRequest): Promise<CommonResponse> | Observable<CommonResponse> | CommonResponse;
+
   handleCasinoJackpot(request: SyncGameDto): Promise<CommonResponse> | Observable<CommonResponse> | CommonResponse;
 
   handleCasinoJackpotWinners(
@@ -893,6 +906,8 @@ export function GamingServiceControllerMethods() {
       "handleCasinoBonus",
       "addGameKeys",
       "fetchGameKeys",
+      "deleteGameKeys",
+      "fetchBonusGames",
       "handleCasinoJackpot",
       "handleCasinoJackpotWinners",
       "startGame",
