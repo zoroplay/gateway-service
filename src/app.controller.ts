@@ -471,9 +471,45 @@ export class AppController {
     }
   }
 
+   @ApiTags('Webhooks')
+  @Post('/webhook/checkout/13/opay/callback')
+  async handleProdOpayCallback(@Body() webhookBody: any): Promise<OpayResponse> {
+    console.log(webhookBody);
+    const { payload, sha512 } = webhookBody;
+
+    console.log('✅ Verified Webhook Payload:', payload);
+
+    if (!payload?.reference) {
+      return {
+        statusCode: 400,
+        success: false,
+        message: 'Missing reference ID in webhook payload.',
+      };
+    }
+
+    const data = {
+      clientId: 4,
+      rawBody: webhookBody,
+      sha512: sha512,
+    };
+    try {
+      await this.walletService.OpayWebhook(data);
+      console.log(`🎉 User credited successfully: `);
+
+      return { statusCode: 200, success: true, message: 'OK' };
+    } catch (error) {
+      console.error(`❌ Error processing webhook: ${error.message}`);
+      return {
+        statusCode: 500,
+        success: false,
+        message: 'Internal server error',
+      };
+    }
+  }
+
   @ApiTags('Webhooks')
   @Post('/webhook/12/coralpay/callback')
-    @HttpCode(200)
+  @HttpCode(200)
   async handleCorapayWebhook(
     @Headers('authorization') authHeader: string,
     @Body() callbackData: any,
@@ -576,5 +612,33 @@ export class AppController {
     });
 
     return res.status(200).json({ message: 'Received' });
+  }
+
+  @ApiTags('Webhooks')
+  @Post('/webhook/4/fidelity/callback')
+  async handleWebhook(@Body() webhookBody: any) {
+    try {
+      console.log(webhookBody);
+
+      const {
+        type,
+        status,
+        data: { transactionReference, statusOk },
+      } = webhookBody;
+      const clientId = 4;
+
+      if (type === 'success' && statusOk === true && status === 201) {
+        const data = {
+          transactionReference,
+          clientId,
+        };
+        // Credit user's wallet
+        await this.walletService.FidelityWebhook(data);
+
+        return { statusCode: 200, success: true, message: 'OK' };
+      }
+    } catch (error) {
+      return { statusCode: 400, success: true, message: 'OK' };
+    }
   }
 }

@@ -12,6 +12,17 @@ import { Struct } from "./google/protobuf/struct.pb";
 
 export const protobufPackage = "wallet";
 
+export interface FidelityWebhookRequest {
+  transactionReference: string;
+  clientId: number;
+}
+
+export interface FidelityResponse {
+  statusCode: number;
+  success: boolean;
+  message: string;
+}
+
 export interface DeletePaymentMethodRequest {
   id: number;
   clientId: number;
@@ -21,6 +32,18 @@ export interface DeletePaymentMethodResponse {
   success: boolean;
   status: number;
   message: string;
+}
+
+export interface UpdatePaymentMethodRes {
+  title: string;
+  provider: string;
+  secretKey: string;
+  publicKey: string;
+  merchantId: string;
+  baseUrl: string;
+  status: number;
+  forDisbursement: number;
+  id: number;
 }
 
 export interface CorapayWebhookRequest {
@@ -1232,6 +1255,8 @@ export interface WalletServiceClient {
   opayCallback(request: OpayRequest): Observable<OpayResponse>;
 
   corapayWebhook(request: CorapayWebhookRequest): Observable<CorapayResponse>;
+
+  fidelityWebhook(request: FidelityWebhookRequest): Observable<FidelityResponse>;
 }
 
 export interface WalletServiceController {
@@ -1617,6 +1642,10 @@ export interface WalletServiceController {
   corapayWebhook(
     request: CorapayWebhookRequest,
   ): Promise<CorapayResponse> | Observable<CorapayResponse> | CorapayResponse;
+
+  fidelityWebhook(
+    request: FidelityWebhookRequest,
+  ): Promise<FidelityResponse> | Observable<FidelityResponse> | FidelityResponse;
 }
 
 export function WalletServiceControllerMethods() {
@@ -1722,6 +1751,7 @@ export function WalletServiceControllerMethods() {
       "mtnmomoCallback",
       "opayCallback",
       "corapayWebhook",
+      "fidelityWebhook",
     ];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);

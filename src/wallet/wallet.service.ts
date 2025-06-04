@@ -93,6 +93,8 @@ import {
   CorapayWebhookRequest,
   DeletePaymentMethodRequest,
   DeletePaymentMethodResponse,
+  FidelityResponse,
+  FidelityWebhookRequest,
 } from '../interfaces/wallet.pb';
 import { ClientGrpc } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
@@ -191,6 +193,13 @@ export class WalletService {
   async OpayWebhook(data: OpayRequest): Promise<OpayResponse> {
     console.log('check44');
     return await firstValueFrom(this.svc.opayCallback(data));
+  }
+
+  async FidelityWebhook(
+    data: FidelityWebhookRequest,
+  ): Promise<FidelityResponse> {
+    console.log('fidelity');
+    return await firstValueFrom(this.svc.fidelityWebhook(data));
   }
 
   async CorapayWebhook(data: CorapayWebhookRequest): Promise<CorapayResponse> {
