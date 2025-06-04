@@ -104,6 +104,11 @@ export class GamingService implements OnModuleInit {
     return firstValueFrom(this.service.fetchGamesByName(payload));
   }
 
+  async adminFetchGamesByName(payload: FetchGamesRequest) {
+    //('fetch games');
+    return firstValueFrom(this.service.adminFetchGamesByName(payload));
+  }
+
   async addGameToCategories(addgameCategoryDto: AddGameToCategoriesDto) {
     console.log('addGameToCategories');
     return firstValueFrom(this.service.addGameToCategories(addgameCategoryDto));
