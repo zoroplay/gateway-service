@@ -12,6 +12,18 @@ import { Struct } from "./google/protobuf/struct.pb";
 
 export const protobufPackage = "wallet";
 
+export interface ProvidusRequest {
+  accountNumber: string;
+  clientId: number;
+}
+
+export interface ProvidusResponse {
+  requestSuccessful: boolean;
+  sessionId: string;
+  responseMessage: string;
+  responseCode: string;
+}
+
 export interface FidelityWebhookRequest {
   transactionReference: string;
   clientId: number;
@@ -1257,6 +1269,8 @@ export interface WalletServiceClient {
   corapayWebhook(request: CorapayWebhookRequest): Observable<CorapayResponse>;
 
   fidelityWebhook(request: FidelityWebhookRequest): Observable<FidelityResponse>;
+
+  providusWebhook(request: ProvidusRequest): Observable<ProvidusResponse>;
 }
 
 export interface WalletServiceController {
@@ -1646,6 +1660,10 @@ export interface WalletServiceController {
   fidelityWebhook(
     request: FidelityWebhookRequest,
   ): Promise<FidelityResponse> | Observable<FidelityResponse> | FidelityResponse;
+
+  providusWebhook(
+    request: ProvidusRequest,
+  ): Promise<ProvidusResponse> | Observable<ProvidusResponse> | ProvidusResponse;
 }
 
 export function WalletServiceControllerMethods() {
@@ -1752,6 +1770,7 @@ export function WalletServiceControllerMethods() {
       "opayCallback",
       "corapayWebhook",
       "fidelityWebhook",
+      "providusWebhook",
     ];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
