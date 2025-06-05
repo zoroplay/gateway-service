@@ -646,18 +646,15 @@ export class AppController {
   }
 
   @ApiTags('Webhooks')
-  @Post('/webhook/:clientId/providus/webhook')
+  @Post('/webhook/:clientId/providus/callback')
   async handleProvidusWebhook(
     @Param() param,
     @Body() webhookBody: any,
-    @Res() res,
-    @Req() req,
     @Headers() headers,
   ): Promise<ProvidusResponse> {
     try {
-      if (!param.provider) return res.sendStatus(404);
       console.log('🔥 Webhook HIT');
-      console.log('Headers:', req.headers);
+      console.log('Headers:', headers);
       console.log('Params:', param);
       console.log('Body:', webhookBody);
 
@@ -679,7 +676,6 @@ export class AppController {
       };
 
       const result = await this.walletService.handleProvidusWebhook(data);
-
       return result;
     } catch (error) {
       return {
