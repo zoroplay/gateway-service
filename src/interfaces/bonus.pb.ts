@@ -104,6 +104,9 @@ export interface CreateBonusRequest {
   bonusId?: number | undefined;
   userIds: string[];
   provider?: string | undefined;
+  country?: string | undefined;
+  tournament?: string | undefined;
+  fixture?: string | undefined;
 }
 
 export interface CreateBonusResponse {
