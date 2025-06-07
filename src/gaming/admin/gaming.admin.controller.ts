@@ -4,6 +4,7 @@ import {
   Controller,
   Delete,
   Get,
+  Param,
   Post,
   Put,
   Query,
@@ -87,6 +88,25 @@ async getGames(
   const val = await this.gamingService.getGames(request);
   return val;
 }
+
+
+  @Get('/:clientId/game-list')
+  @ApiOkResponse({ type: [SwaggerOKGameResponse] })
+  @ApiQuery({
+    name: 'gameName',
+    description: 'Game title in the DB',
+    required: false,
+  })
+  fetchGamesByName(
+    @Query('gameName') gameName: string,
+    @Param('clientId') clientId: number,
+  ) {
+    const payload = {
+      gameName,
+      clientId,
+    };
+    return this.gamingService.adminFetchGamesByName(payload);
+  }
 
 
   @Put('/update-game')
