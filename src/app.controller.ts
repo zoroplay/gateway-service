@@ -674,6 +674,7 @@ export class AppController {
       const data = {
         accountNumber: webhookBody.accountNumber,
         clientId: param.clientId,
+        sessionId: webhookBody.sessionId,
       };
 
       const result = await this.walletService.handleProvidusWebhook(data);
