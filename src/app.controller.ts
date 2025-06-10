@@ -646,6 +646,7 @@ export class AppController {
   }
 
   @ApiTags('Webhooks')
+  @HttpCode(200)
   @Post('/webhook/:clientId/providus/callback')
   async handleProvidusWebhook(
     @Param() param,
