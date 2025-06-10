@@ -27,6 +27,7 @@ import { TigoWebhookRequest, WebhookResponse } from './wallet/dto';
 import {
   OpayResponse,
   PawapayResponse,
+  ProvidusResponse,
   TigoW2aRequest,
 } from './interfaces/wallet.pb';
 import * as xml2js from 'xml2js';
@@ -471,9 +472,11 @@ export class AppController {
     }
   }
 
-   @ApiTags('Webhooks')
+  @ApiTags('Webhooks')
   @Post('/webhook/checkout/13/opay/callback')
-  async handleProdOpayCallback(@Body() webhookBody: any): Promise<OpayResponse> {
+  async handleProdOpayCallback(
+    @Body() webhookBody: any,
+  ): Promise<OpayResponse> {
     console.log(webhookBody);
     const { payload, sha512 } = webhookBody;
 
@@ -639,6 +642,50 @@ export class AppController {
       }
     } catch (error) {
       return { statusCode: 400, success: true, message: 'OK' };
+    }
+  }
+
+  @ApiTags('Webhooks')
+  @HttpCode(200)
+  @Post('/webhook/:clientId/providus/callback')
+  async handleProvidusWebhook(
+    @Param() param,
+    @Body() webhookBody: any,
+    @Headers() headers,
+  ): Promise<ProvidusResponse> {
+    try {
+      console.log('🔥 Webhook HIT');
+      console.log('Headers:', headers);
+      console.log('Params:', param);
+      console.log('Body:', webhookBody);
+
+      const authorization: string = headers['x-auth-signature'];
+
+      console.log(authorization);
+      // if (!authorization) {
+      //   return {
+      //     requestSuccessful: true,
+      //     sessionId: webhookBody.sessionId,
+      //     responseMessage: 'rejected transaction',
+      //     responseCode: '02',
+      //   };
+      // }
+
+      const data = {
+        accountNumber: webhookBody.accountNumber,
+        clientId: param.clientId,
+        sessionId: webhookBody.sessionId,
+      };
+
+      const result = await this.walletService.handleProvidusWebhook(data);
+      return result;
+    } catch (error) {
+      return {
+        requestSuccessful: true,
+        sessionId: webhookBody.sessionId,
+        responseMessage: 'rejected transaction',
+        responseCode: '02',
+      };
     }
   }
 }

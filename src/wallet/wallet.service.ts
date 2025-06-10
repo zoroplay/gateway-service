@@ -95,6 +95,8 @@ import {
   DeletePaymentMethodResponse,
   FidelityResponse,
   FidelityWebhookRequest,
+  ProvidusRequest,
+  ProvidusResponse,
 } from '../interfaces/wallet.pb';
 import { ClientGrpc } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
@@ -215,6 +217,13 @@ export class WalletService {
   async handleW2aWebhook(data: TigoW2aRequest): Promise<TigoW2aResponse> {
     console.log('check555');
     return await firstValueFrom(this.svc.tigoW2A(data));
+  }
+
+  async handleProvidusWebhook(
+    data: ProvidusRequest,
+  ): Promise<ProvidusResponse> {
+    console.log('Providus-service');
+    return await firstValueFrom(this.svc.providusWebhook(data));
   }
 
   async pawapayCallback(data: PawapayRequest): Promise<PawapayResponse> {
