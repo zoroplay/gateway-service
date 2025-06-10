@@ -15,6 +15,8 @@ export const protobufPackage = "wallet";
 export interface ProvidusRequest {
   accountNumber: string;
   clientId: number;
+  sessionId: string;
+  headers: string;
 }
 
 export interface ProvidusResponse {

@@ -661,20 +661,16 @@ export class AppController {
 
       const authorization: string = headers['x-auth-signature'];
 
-      console.log(authorization);
-      // if (!authorization) {
-      //   return {
-      //     requestSuccessful: true,
-      //     sessionId: webhookBody.sessionId,
-      //     responseMessage: 'rejected transaction',
-      //     responseCode: '02',
-      //   };
-      // }
+      console.log('AUTH::', authorization);
 
       const data = {
         accountNumber: webhookBody.accountNumber,
         clientId: param.clientId,
+        sessionId: webhookBody.sessionId,
+        headers: authorization,
       };
+
+      console.log('THE_DATA', data);
 
       const result = await this.walletService.handleProvidusWebhook(data);
       return result;
@@ -682,8 +678,8 @@ export class AppController {
       return {
         requestSuccessful: true,
         sessionId: webhookBody.sessionId,
-        responseMessage: 'rejected transaction',
-        responseCode: '02',
+        responseMessage: 'system failure, retry',
+        responseCode: '03',
       };
     }
   }
