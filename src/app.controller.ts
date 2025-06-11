@@ -612,7 +612,7 @@ export class AppController {
       console.log('Params:', param);
       console.log('Body:', webhookBody);
 
-      const authorization: string = headers['x-auth-signature'];
+      const authorization: string = headers['X-Auth-Signature'];
 
       console.log('AUTH::', authorization);
 
