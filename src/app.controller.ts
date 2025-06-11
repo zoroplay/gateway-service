@@ -582,6 +582,7 @@ export class AppController {
         clientId: param.clientId,
         sessionId: webhookBody.sessionId,
         headers: authorization,
+        settlementId: webhookBody.settlementId,
       };
 
       console.log('THE_DATA', data);
@@ -608,17 +609,17 @@ export class AppController {
   ): Promise<GlobusResponse> {
     try {
       console.log('🔥 Webhook HIT');
-      console.log('Headers:', headers);
       console.log('Params:', param);
       console.log('Body:', webhookBody);
 
-      const authorization: string = headers['X-Auth-Signature'];
+      const authorization: string = headers['ClientId'];
 
       console.log('AUTH::', authorization);
 
       const data = {
         clientId: param.clientId,
         callbackData: webhookBody,
+        headers: authorization,
       };
 
       console.log('THE_DATA', data);

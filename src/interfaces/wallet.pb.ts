@@ -15,6 +15,7 @@ export const protobufPackage = "wallet";
 export interface GlobusRequest {
   clientId: number;
   callbackData: { [key: string]: any } | undefined;
+  headers: string;
 }
 
 export interface GlobusResponse {
@@ -28,6 +29,7 @@ export interface ProvidusRequest {
   clientId: number;
   sessionId: string;
   headers: string;
+  settlementId: string;
 }
 
 export interface ProvidusResponse {
