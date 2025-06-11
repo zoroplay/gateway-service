@@ -611,8 +611,9 @@ export class AppController {
       console.log('🔥 Webhook HIT');
       console.log('Params:', param);
       console.log('Body:', webhookBody);
+      console.log('All headers:', headers);
 
-      const authorization: string = headers['ClientId'];
+      const authorization: string = headers['clientid'];
 
       console.log('AUTH::', authorization);
 
