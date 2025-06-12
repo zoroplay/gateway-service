@@ -591,6 +591,40 @@ export class WalletController {
     return this.walletService.verifyDeposit(query);
   }
 
+  @Get('/verify-payment/smileandpay')
+  @ApiOperation({
+    summary: 'Verify SmileAndPay transaction',
+    description: 'Verifies deposit using SmileAndPay with orderReference',
+  })
+  @ApiQuery({
+    name: 'clientId',
+    type: Number,
+    required: true,
+    description: 'SBE client ID',
+  })
+  @ApiQuery({
+    name: 'orderReference',
+    type: String,
+    required: true,
+    description: 'SmileAndPay Order Reference',
+  })
+  @ApiQuery({
+    name: 'status',
+    type: String,
+    required: false,
+    description: 'Optional status sent by SmileAndPay',
+  })
+  async verifySmileAndPay(
+    @Query('clientId') clientId: number,
+    @Query('orderReference') orderReference: string,
+    @Query('status') status?: string,
+  ) {
+    return this.walletService.handleSmileNPayVerify({
+      clientId,
+      orderReference,
+    });
+  }
+
   @UseGuards(AuthGuard)
   @Post('/verify-bank-account')
   @ApiOperation({
