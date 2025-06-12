@@ -554,8 +554,16 @@ export class WalletController {
   @ApiQuery({
     name: 'transactionRef',
     type: 'string',
+    required: false,
     description: 'Transaction reference number',
-    example: '',
+    example: 'YU3ZQDI',
+  })
+  @ApiQuery({
+    name: 'orderReference',
+    type: 'string',
+    required: false,
+    description: 'Order reference for SmileAndPay',
+    example: 'WT6SO7T',
   })
   @ApiBody({ type: SwaggerInitiateDepositRequest })
   @ApiOkResponse({ type: SwaggerVerifyDepositReponse })
