@@ -12,6 +12,17 @@ import { Struct } from "./google/protobuf/struct.pb";
 
 export const protobufPackage = "wallet";
 
+export interface SmileAndPayRequest {
+  clientId: number;
+  callbackData: { [key: string]: any } | undefined;
+}
+
+export interface SmileAndPayResponse {
+  statusCode: number;
+  success: boolean;
+  message: string;
+}
+
 export interface GlobusRequest {
   clientId: number;
   callbackData: { [key: string]: any } | undefined;
@@ -1288,6 +1299,8 @@ export interface WalletServiceClient {
   providusWebhook(request: ProvidusRequest): Observable<ProvidusResponse>;
 
   globusWebhook(request: GlobusRequest): Observable<GlobusResponse>;
+
+  smileAndPayWebhook(request: SmileAndPayRequest): Observable<SmileAndPayResponse>;
 }
 
 export interface WalletServiceController {
@@ -1683,6 +1696,10 @@ export interface WalletServiceController {
   ): Promise<ProvidusResponse> | Observable<ProvidusResponse> | ProvidusResponse;
 
   globusWebhook(request: GlobusRequest): Promise<GlobusResponse> | Observable<GlobusResponse> | GlobusResponse;
+
+  smileAndPayWebhook(
+    request: SmileAndPayRequest,
+  ): Promise<SmileAndPayResponse> | Observable<SmileAndPayResponse> | SmileAndPayResponse;
 }
 
 export function WalletServiceControllerMethods() {
@@ -1791,6 +1808,7 @@ export function WalletServiceControllerMethods() {
       "fidelityWebhook",
       "providusWebhook",
       "globusWebhook",
+      "smileAndPayWebhook",
     ];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);

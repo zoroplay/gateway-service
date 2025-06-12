@@ -99,6 +99,8 @@ import {
   ProvidusResponse,
   GlobusRequest,
   GlobusResponse,
+  SmileAndPayRequest,
+  SmileAndPayResponse,
 } from '../interfaces/wallet.pb';
 import { ClientGrpc } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
@@ -231,6 +233,13 @@ export class WalletService {
   async handleGlobusWebhook(data: GlobusRequest): Promise<GlobusResponse> {
     console.log('Globus-service');
     return await firstValueFrom(this.svc.globusWebhook(data));
+  }
+
+  async handleSmileNPayWebhook(
+    data: SmileAndPayRequest,
+  ): Promise<SmileAndPayResponse> {
+    console.log('Globus-service');
+    return await firstValueFrom(this.svc.smileAndPayWebhook(data));
   }
 
   async pawapayCallback(data: PawapayRequest): Promise<PawapayResponse> {
