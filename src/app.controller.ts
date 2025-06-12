@@ -482,6 +482,7 @@ export class AppController {
   ) {
     console.log('THE MAIN F-FUNC');
     console.log('THE BODY', body);
+    console.log('THE HEADERS', headers);
 
     const signature = headers['x-flutterwave-signature'] as string;
 
@@ -512,9 +513,7 @@ export class AppController {
     @Headers() headers,
   ) {
     console.log('THE-BODY:::', body);
-
-    console.log('REF:::', body.reference);
-
+    console.log('HEADERS:::', headers);
     const signature = headers['x-korapay-signature'] as string;
 
     // Option 2: Embed client ID in tx_ref or custom field
