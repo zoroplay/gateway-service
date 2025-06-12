@@ -542,7 +542,7 @@ export class WalletController {
   @ApiQuery({
     name: 'paymentChannel',
     type: 'string',
-    description: 'name of the payment gateway',
+    description: 'Name of the payment gateway',
     example: 'paystack',
   })
   @ApiQuery({
@@ -565,9 +565,29 @@ export class WalletController {
     description: 'Order reference for SmileAndPay',
     example: 'WT6SO7T',
   })
-  @ApiBody({ type: SwaggerInitiateDepositRequest })
   @ApiOkResponse({ type: SwaggerVerifyDepositReponse })
   verifyPayment(@Query() query: VerifyDepositRequest) {
+    // Sanitize undefined string values
+    if (query.transactionRef === 'undefined') {
+      query.transactionRef = undefined;
+    }
+
+    if (query.orderReference === 'undefined') {
+      query.orderReference = undefined;
+    }
+
+    // Check if at least one identifier is provided
+    const hasValidTransactionRef = !!query.transactionRef;
+    const hasValidOrderRef =
+      query.paymentChannel === 'smileandpay' && !!query.orderReference;
+
+    if (!hasValidTransactionRef && !hasValidOrderRef) {
+      return {
+        success: false,
+        message: 'Either transactionRef or orderReference is required',
+      };
+    }
+
     return this.walletService.verifyDeposit(query);
   }
 
