@@ -709,8 +709,9 @@ export interface PaymentMethodRequest {
 
 export interface VerifyDepositRequest {
   clientId: number;
-  transactionRef: string;
   paymentChannel: string;
+  transactionRef?: string | undefined;
+  orderReference?: string | undefined;
 }
 
 export interface VerifyDepositResponse {

@@ -29,6 +29,7 @@ import {
   OpayResponse,
   PawapayResponse,
   ProvidusResponse,
+  SmileAndPayResponse,
   TigoW2aRequest,
 } from './interfaces/wallet.pb';
 import * as xml2js from 'xml2js';
@@ -644,7 +645,7 @@ export class AppController {
     @Param() param,
     @Body() webhookBody: any,
     @Headers() headers,
-  ): Promise<GlobusResponse> {
+  ): Promise<SmileAndPayResponse> {
     try {
       console.log('🔥 Webhook HIT');
       console.log('Params:', param);
