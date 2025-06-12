@@ -613,7 +613,8 @@ export class AppController {
       console.log('Body:', webhookBody);
       console.log('All headers:', headers);
 
-      const authorization: string = headers['clientid'];
+      const authorization: string =
+        headers['clientid'] || headers['ClientId'] || headers['CLIENTID'];
 
       console.log('AUTH::', authorization);
 
@@ -626,6 +627,44 @@ export class AppController {
       console.log('THE_DATA', data);
 
       const result = await this.walletService.handleGlobusWebhook(data);
+      return result;
+    } catch (error) {
+      return {
+        statusCode: 500,
+        success: true,
+        message: 'system failure, retry',
+      };
+    }
+  }
+
+  @ApiTags('Webhooks')
+  @HttpCode(200)
+  @Post('/webhook/:clientId/smileandpay/callback')
+  async handleSmileNPayWebhook(
+    @Param() param,
+    @Body() webhookBody: any,
+    @Headers() headers,
+  ): Promise<GlobusResponse> {
+    try {
+      console.log('🔥 Webhook HIT');
+      console.log('Params:', param);
+      console.log('Body:', webhookBody);
+      console.log('All headers:', headers);
+
+      // const authorization: string =
+      //   headers['clientid'] || headers['ClientId'] || headers['CLIENTID'];
+
+      // console.log('AUTH::', authorization);
+
+      const data = {
+        clientId: param.clientId,
+        callbackData: webhookBody,
+        headers: '',
+      };
+
+      console.log('THE_DATA', data);
+
+      const result = await this.walletService.handleSmileNPayWebhook(data);
       return result;
     } catch (error) {
       return {
