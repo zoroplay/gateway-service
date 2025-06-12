@@ -101,6 +101,8 @@ import {
   GlobusResponse,
   SmileAndPayRequest,
   SmileAndPayResponse,
+  VerifySmile,
+  VerifySmileRes,
 } from '../interfaces/wallet.pb';
 import { ClientGrpc } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
@@ -240,6 +242,13 @@ export class WalletService {
   ): Promise<SmileAndPayResponse> {
     console.log('Globus-service');
     return await firstValueFrom(this.svc.smileAndPayWebhook(data));
+  }
+
+  async handleSmileNPayVerify(
+    data: VerifySmile,
+  ): Promise<VerifySmileRes> {
+    console.log('Smile And Pay');
+    return await firstValueFrom(this.svc.verifySmileAndPay(data));
   }
 
   async pawapayCallback(data: PawapayRequest): Promise<PawapayResponse> {
