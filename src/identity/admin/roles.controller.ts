@@ -10,6 +10,7 @@ import {
 } from '@nestjs/common';
 import { ApiBody, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import {
+  CreateUserRequest,
   IDENTITY_SERVICE_NAME,
   IdentityServiceClient,
   protobufPackage,
@@ -65,6 +66,16 @@ export class RolesController {
   @ApiOkResponse({ type: SwaggerCommonResponse })
   agencyRoles() {
     return this.svc.getAgencyRoles({});
+  }
+
+  @Post('/create-admin-user')
+  @ApiOperation({
+    summary: 'Create Admin User',
+    description: 'This endpoint is used to create an admin user',
+  })
+  @ApiOkResponse({ type: SwaggerCommonResponse })
+  createAdminUser(@Body() body: CreateUserRequest) {
+    return this.svc.createAdminUser(body);
   }
 
   @Post('/get_all_logs')

@@ -187,7 +187,7 @@ export class AuditLogInterceptor implements NestInterceptor {
               action,
               endpoint,
               method,
-              statusCode: this.getStatusCode(response, requestType),
+              statusCode: 200, // this.getStatusCode(response, requestType),
               payload: this.sanitizeData(
                 this.getRequestPayload(context, requestType),
               ),
