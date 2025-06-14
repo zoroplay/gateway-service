@@ -542,7 +542,7 @@ export class WalletController {
   @ApiQuery({
     name: 'paymentChannel',
     type: 'string',
-    description: 'Name of the payment gateway',
+    description: 'name of the payment gateway',
     example: 'paystack',
   })
   @ApiQuery({
@@ -554,40 +554,12 @@ export class WalletController {
   @ApiQuery({
     name: 'transactionRef',
     type: 'string',
-    required: false,
     description: 'Transaction reference number',
-    example: 'YU3ZQDI',
+    example: '',
   })
-  @ApiQuery({
-    name: 'orderReference',
-    type: 'string',
-    required: false,
-    description: 'Order reference for SmileAndPay',
-    example: 'WT6SO7T',
-  })
+  @ApiBody({ type: SwaggerInitiateDepositRequest })
   @ApiOkResponse({ type: SwaggerVerifyDepositReponse })
   verifyPayment(@Query() query: VerifyDepositRequest) {
-    // Sanitize undefined string values
-    if (query.transactionRef === 'undefined') {
-      query.transactionRef = undefined;
-    }
-
-    if (query.orderReference === 'undefined') {
-      query.orderReference = undefined;
-    }
-
-    // Check if at least one identifier is provided
-    const hasValidTransactionRef = !!query.transactionRef;
-    const hasValidOrderRef =
-      query.paymentChannel === 'smileandpay' && !!query.orderReference;
-
-    if (!hasValidTransactionRef && !hasValidOrderRef) {
-      return {
-        success: false,
-        message: 'Either transactionRef or orderReference is required',
-      };
-    }
-
     return this.walletService.verifyDeposit(query);
   }
 
@@ -796,7 +768,7 @@ export class WalletController {
   }
 
   @UseGuards(AuthGuard)
-  @Post('/pawapay-create/:action/:clientId')
+  @Post('/pawapay-create/:clientId')
   @ApiOperation({
     summary:
       'handle deposit/payouts/refunds/cancel-payouts request for pawapay',
@@ -817,14 +789,18 @@ export class WalletController {
   HandleCreatePawaPay(
     @Body() body: CreatePawapayRequest,
     @Param('clientId') clientId: number,
-    @Param('action') action: string,
     @Req() req: IAuthorizedRequest,
+    @Query() query: any,
   ) {
+    const u = req.user.id;
+
+    console.log('GATEWAY:::', u);
     return this.walletService.HandleCreatePawaPay({
       ...body,
-      userId: req.user.id,
+      userId: u,
+      source: query.source,
       clientId,
-      action,
+      action: body.action,
       depositId: body.depositId ? body.depositId : null,
     });
   }
