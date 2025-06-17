@@ -577,6 +577,18 @@ export class AppController {
 
       console.log('AUTH::', authorization);
 
+      if (
+        webhookBody.settlementId === undefined ||
+        webhookBody.settlementId === null ||
+        webhookBody.settlementId === ''
+      ) {
+        return {
+          requestSuccessful: true,
+          sessionId: webhookBody.sessionId,
+          responseMessage: 'rejected transaction',
+          responseCode: '02',
+        };
+      }
       const data = {
         accountNumber: webhookBody.accountNumber,
         clientId: param.clientId,
