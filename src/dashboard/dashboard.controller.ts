@@ -16,4 +16,6 @@ export class DashBoardAdminController {
   Balances(@Param('clientId') clientId: number) {
     return this.walletService.Balances({ clientId });
   }
+
+  //TODO: add the rest
 }
