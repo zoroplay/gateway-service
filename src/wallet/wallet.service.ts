@@ -103,6 +103,9 @@ import {
   SmileAndPayResponse,
   VerifySmile,
   VerifySmileRes,
+  ClientRequest,
+  FinancialPerformanceResponse,
+  PlayerBalanceResponse,
 } from '../interfaces/wallet.pb';
 import { ClientGrpc } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
@@ -117,6 +120,21 @@ export class WalletService {
   public onModuleInit(): void {
     this.svc = this.client.getService<WalletServiceClient>(WALLET_SERVICE_NAME);
   }
+
+
+  async FinancialPerformanceResponse(
+    request: ClientRequest,
+  ): Promise<FinancialPerformanceResponse> {
+    return await firstValueFrom(this.svc.financialPerformance(request));
+  }
+
+
+  async Balances(
+    request: ClientRequest,
+  ): Promise<PlayerBalanceResponse> {
+    return await firstValueFrom(this.svc.playerBalances(request));
+  }
+
 
   async savePaymentMethod(
     request: PaymentMethodRequest,

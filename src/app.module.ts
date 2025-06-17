@@ -13,6 +13,7 @@ import { RetailModule } from './retail/retail.module';
 import { OddsModule } from './odds/odds.module';
 import { CryptoModule } from './crypto/crypto.module';
 import 'dotenv/config';
+import { DashboardModule } from './dashboard/dasboard.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import 'dotenv/config';
     RetailModule,
     OddsModule,
     CryptoModule,
+    DashboardModule,
   ],
   controllers: [AppController],
   providers: [AppService],
