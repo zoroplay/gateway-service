@@ -218,4 +218,5 @@ export class PlayersController {
   ) {
     return await firstValueFrom(this.svc.updatePlayerStatus({userId: id, status}));
   }
+
 }
