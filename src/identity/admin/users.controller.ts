@@ -1,12 +1,13 @@
 import { Body, Controller, Delete, Get, HttpException, HttpStatus, Inject, Param, Patch, Post, Put, Query, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { ApiBody, ApiOkResponse, ApiOperation, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
-import { AddToSegmentRequest, ClientRequest, DeleteItemRequest, FetchPlayerSegmentRequest, GrantBonusRequest, IDENTITY_SERVICE_NAME, IdentityServiceClient, ResetPasswordRequest, SaveSegmentRequest, protobufPackage } from 'src/interfaces/identity.pb';
+import { AddToSegmentRequest, ClientIdRequest, ClientRequest, DeleteItemRequest, FetchPlayerSegmentRequest, GrantBonusRequest, IDENTITY_SERVICE_NAME, IdentityServiceClient, ResetPasswordRequest, SaveSegmentRequest, protobufPackage } from 'src/interfaces/identity.pb';
 import { ClientGrpc } from '@nestjs/microservices';
 import { SwaggerAddToSegmentRequest, SwaggerGrantBonusToSegment, SwaggerSaveClientRequest, SwaggerSaveSegmentRequest } from '../dto/admin.dto';
 import { SwaggerChangePasswordRequest, SwaggerCommonResponse } from '../dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { PATH_DOWNLOADED_FILE, SUPPORTED_FILES, multerOptions } from 'src/uploads';
 import * as Excel from 'exceljs';
+import { firstValueFrom } from 'rxjs';
 
 const getCellValue = (row:  Excel.Row, cellIndex: number) => {
     const cell = row.getCell(cellIndex);
@@ -188,5 +189,18 @@ export class UsersController {
     ) {
         body.segmentId = param.id
         return this.svc.grantBonusToSegment(body);
+    }
+
+    @Get('/dashboard/realtime-data')
+    @ApiOperation({
+        summary: 'Update Player Status',
+        description:
+        'This endpoint is used to update a user status',
+    })
+    @ApiQuery({ name: 'clientId', description: 'SBE Client ID' })
+    async getPlayerStatistics(
+        @Query() payload: ClientIdRequest
+    ) {
+        return await firstValueFrom(this.svc.getPlayerStatistics(payload));
     }
 }
