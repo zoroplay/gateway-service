@@ -12,6 +12,31 @@ import { Struct } from "./google/protobuf/struct.pb";
 
 export const protobufPackage = "wallet";
 
+export interface ClientRequest {
+  clientId: number;
+}
+
+export interface FinancialPerformanceResponse {
+  success: boolean;
+  status: number;
+  message: string;
+  totalDeposit: number;
+  totalWithdrawal: number;
+}
+
+export interface PlayerBalanceResponse {
+  success: boolean;
+  status: number;
+  message: string;
+  totalOnlinePlayerBalance: number;
+  totalOnlinePlayerBonus: number;
+  totalRetailBalance: number;
+  totalRetailTrustBalance: number;
+}
+
+export interface Balances {
+}
+
 export interface VerifySmile {
   clientId: number;
   orderReference: string;
@@ -1314,6 +1339,10 @@ export interface WalletServiceClient {
   smileAndPayWebhook(request: SmileAndPayRequest): Observable<SmileAndPayResponse>;
 
   verifySmileAndPay(request: VerifySmile): Observable<VerifySmileRes>;
+
+  financialPerformance(request: ClientRequest): Observable<FinancialPerformanceResponse>;
+
+  playerBalances(request: ClientRequest): Observable<PlayerBalanceResponse>;
 }
 
 export interface WalletServiceController {
@@ -1715,6 +1744,14 @@ export interface WalletServiceController {
   ): Promise<SmileAndPayResponse> | Observable<SmileAndPayResponse> | SmileAndPayResponse;
 
   verifySmileAndPay(request: VerifySmile): Promise<VerifySmileRes> | Observable<VerifySmileRes> | VerifySmileRes;
+
+  financialPerformance(
+    request: ClientRequest,
+  ): Promise<FinancialPerformanceResponse> | Observable<FinancialPerformanceResponse> | FinancialPerformanceResponse;
+
+  playerBalances(
+    request: ClientRequest,
+  ): Promise<PlayerBalanceResponse> | Observable<PlayerBalanceResponse> | PlayerBalanceResponse;
 }
 
 export function WalletServiceControllerMethods() {
@@ -1825,6 +1862,8 @@ export function WalletServiceControllerMethods() {
       "globusWebhook",
       "smileAndPayWebhook",
       "verifySmileAndPay",
+      "financialPerformance",
+      "playerBalances",
     ];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
