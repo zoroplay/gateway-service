@@ -12,6 +12,29 @@ import { Struct } from "./google/protobuf/struct.pb";
 
 export const protobufPackage = "wallet";
 
+export interface OverallGamesRequest {
+  clientId: number;
+  rangeZ: string;
+  from: string;
+  to: string;
+}
+
+export interface ProductSummary {
+  product: string;
+  turnover: number;
+  margin: string;
+  ggr: number;
+  bonusGiven: number;
+  bonusSpent: number;
+  ngr: number;
+}
+
+export interface OverallGamesResponse {
+  startDate: string;
+  endDate: string;
+  data: ProductSummary[];
+}
+
 export interface ClientRequest {
   clientId: number;
 }
@@ -1343,6 +1366,12 @@ export interface WalletServiceClient {
   financialPerformance(request: ClientRequest): Observable<FinancialPerformanceResponse>;
 
   playerBalances(request: ClientRequest): Observable<PlayerBalanceResponse>;
+
+  overallGames(request: OverallGamesRequest): Observable<OverallGamesResponse>;
+
+  overallGamesOnline(request: OverallGamesRequest): Observable<OverallGamesResponse>;
+
+  overallGamesRetail(request: OverallGamesRequest): Observable<OverallGamesResponse>;
 }
 
 export interface WalletServiceController {
@@ -1752,6 +1781,18 @@ export interface WalletServiceController {
   playerBalances(
     request: ClientRequest,
   ): Promise<PlayerBalanceResponse> | Observable<PlayerBalanceResponse> | PlayerBalanceResponse;
+
+  overallGames(
+    request: OverallGamesRequest,
+  ): Promise<OverallGamesResponse> | Observable<OverallGamesResponse> | OverallGamesResponse;
+
+  overallGamesOnline(
+    request: OverallGamesRequest,
+  ): Promise<OverallGamesResponse> | Observable<OverallGamesResponse> | OverallGamesResponse;
+
+  overallGamesRetail(
+    request: OverallGamesRequest,
+  ): Promise<OverallGamesResponse> | Observable<OverallGamesResponse> | OverallGamesResponse;
 }
 
 export function WalletServiceControllerMethods() {
@@ -1864,6 +1905,9 @@ export function WalletServiceControllerMethods() {
       "verifySmileAndPay",
       "financialPerformance",
       "playerBalances",
+      "overallGames",
+      "overallGamesOnline",
+      "overallGamesRetail",
     ];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);

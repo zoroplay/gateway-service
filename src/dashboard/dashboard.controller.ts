@@ -1,5 +1,6 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get, Param, Query } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+import { OverallGamesRequest } from 'src/interfaces/wallet.pb';
 import { WalletService } from 'src/wallet/wallet.service';
 
 @ApiTags('BackOffice APIs')
@@ -17,5 +18,51 @@ export class DashBoardAdminController {
     return this.walletService.Balances({ clientId });
   }
 
-  //TODO: add the rest
+  @Get('overall-gamin/:clientId')
+  OverallGames(
+    @Param('clientId') clientId: number,
+    @Query('range') range?: string,
+    @Query('from') from?: string,
+    @Query('to') to?: string,
+  ) {
+    const payload: OverallGamesRequest = {
+      clientId,
+      rangeZ: range || '',
+      from: from || '',
+      to: to || '',
+    };
+    return this.walletService.OverallGames(payload);
+  }
+
+  @Get('online-data/:clientId')
+  OverallGamesOnline(
+    @Param('clientId') clientId: number,
+    @Query('range') range?: string,
+    @Query('from') from?: string,
+    @Query('to') to?: string,
+  ) {
+    const payload: OverallGamesRequest = {
+      clientId,
+      rangeZ: range || '',
+      from: from || '',
+      to: to || '',
+    };
+    return this.walletService.OverallGamesOnline(payload);
+  }
+
+  @Get('shop-data/:clientId')
+  OverallGamesRetail(
+    @Param('clientId') clientId: number,
+    @Query('start') from?: string,
+    @Query('end') to?: string,
+    @Query('range') range?: string,
+  ) {
+    const payload: OverallGamesRequest = {
+      clientId,
+      rangeZ: range || '',
+      from: from || '',
+      to: to || '',
+    };
+    return this.walletService.OverallGamesRetail(payload);
+  }
 }
