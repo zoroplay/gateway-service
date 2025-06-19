@@ -97,6 +97,17 @@ import {
   FidelityWebhookRequest,
   ProvidusRequest,
   ProvidusResponse,
+  GlobusRequest,
+  GlobusResponse,
+  SmileAndPayRequest,
+  SmileAndPayResponse,
+  VerifySmile,
+  VerifySmileRes,
+  ClientRequest,
+  FinancialPerformanceResponse,
+  PlayerBalanceResponse,
+  OverallGamesRequest,
+  OverallGamesResponse,
 } from '../interfaces/wallet.pb';
 import { ClientGrpc } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
@@ -110,6 +121,34 @@ export class WalletService {
 
   public onModuleInit(): void {
     this.svc = this.client.getService<WalletServiceClient>(WALLET_SERVICE_NAME);
+  }
+
+  async OverallGames(
+    request: OverallGamesRequest,
+  ): Promise<OverallGamesResponse> {
+    return await firstValueFrom(this.svc.overallGames(request));
+  }
+
+  async OverallGamesOnline(
+    request: OverallGamesRequest,
+  ): Promise<OverallGamesResponse> {
+    return await firstValueFrom(this.svc.overallGamesOnline(request));
+  }
+
+  async OverallGamesRetail(
+    request: OverallGamesRequest,
+  ): Promise<OverallGamesResponse> {
+    return await firstValueFrom(this.svc.overallGamesRetail(request));
+  }
+
+  async FinancialPerformanceResponse(
+    request: ClientRequest,
+  ): Promise<FinancialPerformanceResponse> {
+    return await firstValueFrom(this.svc.financialPerformance(request));
+  }
+
+  async Balances(request: ClientRequest): Promise<PlayerBalanceResponse> {
+    return await firstValueFrom(this.svc.playerBalances(request));
   }
 
   async savePaymentMethod(
@@ -224,6 +263,23 @@ export class WalletService {
   ): Promise<ProvidusResponse> {
     console.log('Providus-service');
     return await firstValueFrom(this.svc.providusWebhook(data));
+  }
+
+  async handleGlobusWebhook(data: GlobusRequest): Promise<GlobusResponse> {
+    console.log('Globus-service');
+    return await firstValueFrom(this.svc.globusWebhook(data));
+  }
+
+  async handleSmileNPayWebhook(
+    data: SmileAndPayRequest,
+  ): Promise<SmileAndPayResponse> {
+    console.log('Globus-service');
+    return await firstValueFrom(this.svc.smileAndPayWebhook(data));
+  }
+
+  async handleSmileNPayVerify(data: VerifySmile): Promise<VerifySmileRes> {
+    console.log('Smile And Pay');
+    return await firstValueFrom(this.svc.verifySmileAndPay(data));
   }
 
   async pawapayCallback(data: PawapayRequest): Promise<PawapayResponse> {

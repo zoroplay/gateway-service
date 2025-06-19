@@ -310,4 +310,5 @@ export class WalletAdminController {
   ) {
     return this.walletService.DeletePaymentMethod({ id, clientId });
   }
+
 }
