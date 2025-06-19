@@ -3,6 +3,7 @@
 //   protoc-gen-ts_proto  v1.181.2
 //   protoc               v6.30.1
 //   protoc               v5.28.0
+
 // source: identity.proto
 
 /* eslint-disable */

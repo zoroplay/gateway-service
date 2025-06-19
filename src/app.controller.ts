@@ -589,6 +589,19 @@ export class AppController {
           responseCode: '02',
         };
       }
+
+      if (
+        webhookBody.accountNumber === undefined ||
+        webhookBody.accountNumber === null ||
+        webhookBody.accountNumber === ''
+      ) {
+        return {
+          requestSuccessful: true,
+          sessionId: webhookBody.sessionId,
+          responseMessage: 'rejected transaction',
+          responseCode: '02',
+        };
+      }
       const data = {
         accountNumber: webhookBody.accountNumber,
         clientId: param.clientId,
