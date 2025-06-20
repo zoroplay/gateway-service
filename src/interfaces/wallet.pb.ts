@@ -12,6 +12,21 @@ import { Struct } from "./google/protobuf/struct.pb";
 
 export const protobufPackage = "wallet";
 
+export interface StatisticsRequest {
+  clientId: number;
+  year: string;
+}
+
+export interface ProductStatistics {
+  product: string;
+  monthlyTurnover: number[];
+}
+
+export interface StatisticsResponse {
+  year: string;
+  data: ProductStatistics[];
+}
+
 export interface OverallGamesRequest {
   clientId: number;
   rangeZ: string;
@@ -1372,6 +1387,10 @@ export interface WalletServiceClient {
   overallGamesOnline(request: OverallGamesRequest): Observable<OverallGamesResponse>;
 
   overallGamesRetail(request: OverallGamesRequest): Observable<OverallGamesResponse>;
+
+  overallGamesSport(request: OverallGamesRequest): Observable<OverallGamesResponse>;
+
+  statistics(request: StatisticsRequest): Observable<StatisticsResponse>;
 }
 
 export interface WalletServiceController {
@@ -1793,6 +1812,14 @@ export interface WalletServiceController {
   overallGamesRetail(
     request: OverallGamesRequest,
   ): Promise<OverallGamesResponse> | Observable<OverallGamesResponse> | OverallGamesResponse;
+
+  overallGamesSport(
+    request: OverallGamesRequest,
+  ): Promise<OverallGamesResponse> | Observable<OverallGamesResponse> | OverallGamesResponse;
+
+  statistics(
+    request: StatisticsRequest,
+  ): Promise<StatisticsResponse> | Observable<StatisticsResponse> | StatisticsResponse;
 }
 
 export function WalletServiceControllerMethods() {
@@ -1908,6 +1935,8 @@ export function WalletServiceControllerMethods() {
       "overallGames",
       "overallGamesOnline",
       "overallGamesRetail",
+      "overallGamesSport",
+      "statistics",
     ];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);

@@ -16,6 +16,11 @@ export interface ClientIdRequest {
   clientId: number;
 }
 
+export interface FindOneRequest {
+  clientId: number;
+  id: number;
+}
+
 export interface BasicUser {
   id: number;
   username: string;
@@ -37,7 +42,23 @@ export interface AdditionalInfo {
   platform: string;
 }
 
-/** AuditLog */
+/** Banner */
+export interface CreateBannerRequest {
+  title: string;
+  bannerType: string;
+  clientId: number;
+  target: string;
+  position: string;
+  link: string;
+  content: string;
+  image: string;
+  sport?: string | undefined;
+  category?: string | undefined;
+  tournament?: string | undefined;
+  event?: string | undefined;
+  id?: number | undefined;
+}
+
 export interface AuditLog {
   id: number;
   userId: number;
@@ -727,6 +748,7 @@ export interface LoginRequest {
   clientId: number;
   username: string;
   password: string;
+  source?: string | undefined;
 }
 
 export interface LoginResponse {
@@ -1321,6 +1343,16 @@ export interface IdentityServiceClient {
   clintUsers(request: ClientIdRequest): Observable<UsersResponse>;
 
   getPlayerStatistics(request: ClientIdRequest): Observable<CommonResponseObj>;
+
+  findOneBanner(request: FindOneRequest): Observable<CommonResponseObj>;
+
+  findAllBanners(request: ClientIdRequest): Observable<CommonResponseObj>;
+
+  updateBanner(request: CreateBannerRequest): Observable<CommonResponseObj>;
+
+  deleteBanner(request: FindOneRequest): Observable<CommonResponseObj>;
+
+  createBanner(request: CreateBannerRequest): Observable<CommonResponseObj>;
 }
 
 export interface IdentityServiceController {
@@ -1649,6 +1681,24 @@ export interface IdentityServiceController {
   getPlayerStatistics(
     request: ClientIdRequest,
   ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
+
+  findOneBanner(
+    request: FindOneRequest,
+  ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
+
+  findAllBanners(
+    request: ClientIdRequest,
+  ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
+
+  updateBanner(
+    request: CreateBannerRequest,
+  ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
+
+  deleteBanner(request: FindOneRequest): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
+
+  createBanner(
+    request: CreateBannerRequest,
+  ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
 }
 
 export function IdentityServiceControllerMethods() {
@@ -1744,6 +1794,11 @@ export function IdentityServiceControllerMethods() {
       "createLog",
       "clintUsers",
       "getPlayerStatistics",
+      "findOneBanner",
+      "findAllBanners",
+      "updateBanner",
+      "deleteBanner",
+      "createBanner",
     ];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);

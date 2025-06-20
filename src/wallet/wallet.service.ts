@@ -108,6 +108,8 @@ import {
   PlayerBalanceResponse,
   OverallGamesRequest,
   OverallGamesResponse,
+  StatisticsRequest,
+  StatisticsResponse,
 } from '../interfaces/wallet.pb';
 import { ClientGrpc } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
@@ -139,6 +141,18 @@ export class WalletService {
     request: OverallGamesRequest,
   ): Promise<OverallGamesResponse> {
     return await firstValueFrom(this.svc.overallGamesRetail(request));
+  }
+
+  async OverallGamesSport(
+    request: OverallGamesRequest,
+  ): Promise<OverallGamesResponse> {
+    return await firstValueFrom(this.svc.overallGamesSport(request));
+  }
+
+   async Statistics(
+    request: StatisticsRequest,
+  ): Promise<StatisticsResponse> {
+    return await firstValueFrom(this.svc.statistics(request));
   }
 
   async FinancialPerformanceResponse(
