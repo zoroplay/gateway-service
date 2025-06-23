@@ -18,6 +18,11 @@ export interface ClientIdRequest {
   clientId: number;
 }
 
+export interface FindOneRequest {
+  clientId: number;
+  id: number;
+}
+
 export interface BasicUser {
   id: number;
   username: string;
@@ -39,7 +44,47 @@ export interface AdditionalInfo {
   platform: string;
 }
 
-/** AuditLog */
+/** Banner */
+export interface CreateBannerRequest {
+  title: string;
+  bannerType: string;
+  clientId: number;
+  target: string;
+  position: string;
+  link: string;
+  content: string;
+  image: string;
+  sport?: string | undefined;
+  category?: string | undefined;
+  tournament?: string | undefined;
+  event?: string | undefined;
+  id?: number | undefined;
+}
+
+/** Pages */
+export interface CreatePageRequest {
+  title: string;
+  clientId: number;
+  url?: string | undefined;
+  content: string;
+  createdBy: string;
+  target: string;
+  id?: number | undefined;
+}
+
+/** Menu */
+export interface CreateMenuRequest {
+  title: string;
+  clientId: number;
+  link: string;
+  newWindow: boolean;
+  status: boolean;
+  target: string;
+  id?: number | undefined;
+  order?: string | undefined;
+  parentId?: string | undefined;
+}
+
 export interface AuditLog {
   id: number;
   userId: number;
@@ -729,6 +774,7 @@ export interface LoginRequest {
   clientId: number;
   username: string;
   password: string;
+  source?: string | undefined;
 }
 
 export interface LoginResponse {
@@ -1323,6 +1369,36 @@ export interface IdentityServiceClient {
   clintUsers(request: ClientIdRequest): Observable<UsersResponse>;
 
   getPlayerStatistics(request: ClientIdRequest): Observable<CommonResponseObj>;
+
+  findOneBanner(request: FindOneRequest): Observable<CommonResponseObj>;
+
+  findAllBanners(request: ClientIdRequest): Observable<CommonResponseObj>;
+
+  updateBanner(request: CreateBannerRequest): Observable<CommonResponseObj>;
+
+  deleteBanner(request: FindOneRequest): Observable<CommonResponseObj>;
+
+  createBanner(request: CreateBannerRequest): Observable<CommonResponseObj>;
+
+  findOnePage(request: FindOneRequest): Observable<CommonResponseObj>;
+
+  findAllPages(request: ClientIdRequest): Observable<CommonResponseObj>;
+
+  updatePage(request: CreatePageRequest): Observable<CommonResponseObj>;
+
+  deletePage(request: FindOneRequest): Observable<CommonResponseObj>;
+
+  createPage(request: CreatePageRequest): Observable<CommonResponseObj>;
+
+  findOneMenu(request: FindOneRequest): Observable<CommonResponseObj>;
+
+  findAllMenu(request: ClientIdRequest): Observable<CommonResponseObj>;
+
+  updateMenu(request: CreateMenuRequest): Observable<CommonResponseObj>;
+
+  deleteMenu(request: FindOneRequest): Observable<CommonResponseObj>;
+
+  createMenu(request: CreateMenuRequest): Observable<CommonResponseObj>;
 }
 
 export interface IdentityServiceController {
@@ -1651,6 +1727,54 @@ export interface IdentityServiceController {
   getPlayerStatistics(
     request: ClientIdRequest,
   ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
+
+  findOneBanner(
+    request: FindOneRequest,
+  ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
+
+  findAllBanners(
+    request: ClientIdRequest,
+  ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
+
+  updateBanner(
+    request: CreateBannerRequest,
+  ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
+
+  deleteBanner(request: FindOneRequest): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
+
+  createBanner(
+    request: CreateBannerRequest,
+  ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
+
+  findOnePage(request: FindOneRequest): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
+
+  findAllPages(
+    request: ClientIdRequest,
+  ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
+
+  updatePage(
+    request: CreatePageRequest,
+  ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
+
+  deletePage(request: FindOneRequest): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
+
+  createPage(
+    request: CreatePageRequest,
+  ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
+
+  findOneMenu(request: FindOneRequest): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
+
+  findAllMenu(request: ClientIdRequest): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
+
+  updateMenu(
+    request: CreateMenuRequest,
+  ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
+
+  deleteMenu(request: FindOneRequest): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
+
+  createMenu(
+    request: CreateMenuRequest,
+  ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
 }
 
 export function IdentityServiceControllerMethods() {
@@ -1746,6 +1870,21 @@ export function IdentityServiceControllerMethods() {
       "createLog",
       "clintUsers",
       "getPlayerStatistics",
+      "findOneBanner",
+      "findAllBanners",
+      "updateBanner",
+      "deleteBanner",
+      "createBanner",
+      "findOnePage",
+      "findAllPages",
+      "updatePage",
+      "deletePage",
+      "createPage",
+      "findOneMenu",
+      "findAllMenu",
+      "updateMenu",
+      "deleteMenu",
+      "createMenu",
     ];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
