@@ -1,5 +1,5 @@
-import { ApiProperty } from "@nestjs/swagger";
-import { IsNotEmpty } from "class-validator";
+import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
+import { IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
 
 export class SaveRoleRequest {
     @ApiProperty({ description: 'Name of role', example: 'admin' })
@@ -237,4 +237,277 @@ interface Player {
     lifeTimeWithdrawal: number;
     openBets: number;
     role: string;
+}
+
+
+
+export class CreateBannerDto {
+  @ApiPropertyOptional({
+    description: 'Banner ID (auto-generated if not provided)',
+    example: 1,
+    type: Number,
+  })
+  @IsOptional()
+  id?: number;
+
+  @ApiProperty({
+    description: 'Banner title',
+    example: 'Summer Sports Promotion',
+    type: String,
+    maxLength: 255,
+  })
+  @IsString()
+  @IsNotEmpty()
+  title: string;
+
+  @ApiProperty({
+    description: 'Type of banner',
+    example: 'sport',
+    enum: ['sport', 'promotion', 'advertisement', 'news', 'event'],
+    type: String,
+  })
+  @IsString()
+  @IsNotEmpty()
+  bannerType: string;
+
+  @ApiProperty({
+    description: 'Client ID associated with the banner',
+    example: 4,
+    type: Number,
+  })
+  @IsNumber()
+  @IsNotEmpty()
+  clientId: number;
+
+  @ApiProperty({
+    description: 'Target URL for the banner',
+    example: 'https://example.com/sports',
+    type: String,
+  })
+  @IsString()
+  @IsNotEmpty()
+  target: string;
+
+  @ApiProperty({
+    description: 'Position of the banner on the page',
+    example: 'right',
+    enum: ['top', 'bottom', 'left', 'right', 'center', 'header', 'footer', 'sidebar'],
+    type: String,
+  })
+  @IsString()
+  @IsNotEmpty()
+  position: string;
+
+  @ApiProperty({
+    description: 'Clickable link URL',
+    example: 'https://example.com/click',
+    type: String,
+  })
+  @IsString()
+  @IsNotEmpty()
+  link: string;
+
+  @ApiProperty({
+    description: 'Banner content/description',
+    example: 'Join our summer sports tournament and win amazing prizes!',
+    type: String,
+    maxLength: 1000,
+  })
+  @IsString()
+  @IsNotEmpty()
+  content: string;
+
+  @ApiProperty({
+    description: 'Banner image URL',
+    example: 'https://example.com/images/summer-banner.jpg',
+    type: String,
+  })
+  @IsString()
+  @IsNotEmpty()
+  image: string;
+
+  @ApiPropertyOptional({
+    description: 'Sport category (optional)',
+    example: 'football',
+    type: String,
+    enum: ['football', 'basketball', 'tennis', 'cricket', 'soccer', 'baseball', 'hockey'],
+  })
+  @IsOptional()
+  @IsString()
+  sport?: string;
+
+  @ApiPropertyOptional({
+    description: 'Banner category (optional)',
+    example: 'sports',
+    type: String,
+    enum: ['sports', 'entertainment', 'news', 'technology', 'lifestyle'],
+  })
+  @IsOptional()
+  @IsString()
+  category?: string;
+
+  @ApiPropertyOptional({
+    description: 'Tournament name (optional)',
+    example: 'Summer Championship 2025',
+    type: String,
+    maxLength: 255,
+  })
+  @IsOptional()
+  @IsString()
+  tournament?: string;
+
+  @ApiPropertyOptional({
+    description: 'Event name (optional)',
+    example: 'Finals Match',
+    type: String,
+    maxLength: 255,
+  })
+  @IsOptional()
+  @IsString()
+  event?: string;
+}
+
+export class CreateMenuDto {
+  @ApiPropertyOptional({
+    description: 'Menu ID (auto-generated if not provided)',
+    example: 1,
+    type: Number,
+  })
+  @IsOptional()
+  id?: number;
+
+  @ApiProperty({
+    description: 'Menu title/name displayed to users',
+    example: 'Home',
+    type: String,
+    maxLength: 255,
+  })
+  @IsString()
+  @IsNotEmpty()
+  title: string;
+
+  @ApiProperty({
+    description: 'Client ID associated with the menu',
+    example: 4,
+    type: Number,
+  })
+  @IsNumber()
+  @IsNotEmpty()
+  clientId: number;
+
+  @ApiProperty({
+    description: 'Menu link URL',
+    example: 'https://example.com/home',
+    type: String,
+  })
+  @IsString()
+  @IsNotEmpty()
+  link: string;
+
+  @ApiProperty({
+    description: 'Whether to open link in a new window/tab',
+    example: false,
+    type: Boolean,
+  })
+  newWindow: boolean;
+
+  @ApiProperty({
+    description: 'Menu status (active/inactive)',
+    example: true,
+    type: Boolean,
+  })
+  status: boolean;
+
+  @ApiProperty({
+    description: 'Target attribute for the link',
+    example: 'web',
+    type: String,
+  })
+  @IsString()
+  @IsNotEmpty()
+  target: string;
+
+  @ApiPropertyOptional({
+    description: 'Menu display order (for sorting)',
+    example: '1',
+    type: String,
+  })
+  @IsOptional()
+  @IsString()
+  order?: string;
+
+  @ApiPropertyOptional({
+    description: 'Parent menu ID for hierarchical menu structure',
+    example: '1',
+    type: String,
+  })
+  @IsOptional()
+  @IsString()
+  parentId?: string;
+}
+
+export class CreatePageDto {
+  @ApiPropertyOptional({
+    description: 'Page ID (auto-generated if not provided)',
+    example: 1,
+    type: Number,
+  })
+  @IsOptional()
+  id?: number;
+
+  @ApiProperty({
+    description: 'Page title displayed to users',
+    example: 'About Us',
+    type: String,
+    maxLength: 255,
+  })
+  @IsString()
+  @IsNotEmpty()
+  title: string;
+
+  @ApiProperty({
+    description: 'Client ID associated with the page',
+    example: 4,
+    type: Number,
+  })
+  @IsNumber()
+  @IsNotEmpty()
+  clientId: number;
+
+  @ApiPropertyOptional({
+    description: 'Custom URL for the page (optional)',
+    example: 'https://example.com/about-us',
+    type: String,
+  })
+  @IsOptional()
+  @IsString()
+  url?: string;
+
+  @ApiProperty({
+    description: 'Page content (HTML/text)',
+    example: '<h1>About Us</h1><p>Welcome to our company...</p>',
+    type: String,
+  })
+  @IsString()
+  @IsNotEmpty()
+  content: string;
+
+  @ApiProperty({
+    description: 'Username or ID of the user who created the page',
+    example: 'admin',
+    type: String,
+    maxLength: 100,
+  })
+  @IsString()
+  @IsNotEmpty()
+  createdBy: string;
+
+  @ApiProperty({
+    description: 'Target attribute for page links',
+    example: 'web',
+    type: String,
+  })
+  @IsString()
+  @IsNotEmpty()
+  target: string;
 }
