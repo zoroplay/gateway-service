@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Get,
+  Delete,
   Query,
   Ip,
   Req,
@@ -65,6 +66,73 @@ export class RolesController {
   @ApiOkResponse({ type: SwaggerCommonResponse })
   agencyRoles() {
     return this.svc.getAgencyRoles({});
+  }
+
+  @Delete('/roles')
+  @ApiOperation({
+    summary: 'Delete Role',
+    description: 'This endpoint is used to delete a role',
+  })
+  removeRole(@Query('roleId') roleId: string, @Req() req: IAuthorizedRequest) {
+    const data = {
+      roleID: roleId,
+      // initiateDelete: req.user.id,
+    };
+
+    return this.svc.removeRole(data);
+  }
+
+  @Post('/permission')
+  @ApiOperation({
+    summary: 'create Permissions',
+    description: 'This endpoint is used to create or update permissions',
+  })
+  @ApiOkResponse({ type: SwaggerCommonResponse })
+  createPermission(@Body() body) {
+    return this.svc.createPermission(body);
+  }
+
+  @Get('/permissions')
+  @ApiOperation({
+    summary: 'Fetch all Permissions',
+    description: 'This endpoint is fetch all system permissions',
+  })
+  @ApiOkResponse({ type: SwaggerCommonResponse })
+  findAllPermissions(@Query() query: number) {
+    return this.svc.findAllPermissions({});
+  }
+
+  @Delete('/permission')
+  @ApiOperation({
+    summary: 'Delete Permission',
+    description: 'This endpoint is used to delete a permission',
+  })
+  removePermission(
+    @Query('permissionId') permissionId: string,
+    @Req() req: IAuthorizedRequest,
+  ) {
+    const data = {
+      permissionID: permissionId,
+      // initiateDelete: req.user.id,
+    };
+    return this.svc.removePermission(data);
+  }
+
+  @Post('/assign_permission')
+  @ApiOperation({
+    summary: 'Assign Permissions to Role',
+    description: 'This endpoint is used to assign permissions to a role',
+  })
+  assignROlePermission(
+    @Body() body: { roleId: number; permissionIds: number[] },
+    @Req() req: IAuthorizedRequest,
+  ) {
+    const data = {
+      roleID: body.roleId,
+      permissionIDs: body.permissionIds,
+      // initiatedBy: req.user.id,
+    };
+    return this.svc.assignRolePermission(data);
   }
 
   @Post('/get_all_logs')

@@ -106,6 +106,8 @@ import {
   ClientRequest,
   FinancialPerformanceResponse,
   PlayerBalanceResponse,
+  OverallGamesRequest,
+  OverallGamesResponse,
 } from '../interfaces/wallet.pb';
 import { ClientGrpc } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
@@ -121,6 +123,23 @@ export class WalletService {
     this.svc = this.client.getService<WalletServiceClient>(WALLET_SERVICE_NAME);
   }
 
+  async OverallGames(
+    request: OverallGamesRequest,
+  ): Promise<OverallGamesResponse> {
+    return await firstValueFrom(this.svc.overallGames(request));
+  }
+
+  async OverallGamesOnline(
+    request: OverallGamesRequest,
+  ): Promise<OverallGamesResponse> {
+    return await firstValueFrom(this.svc.overallGamesOnline(request));
+  }
+
+  async OverallGamesRetail(
+    request: OverallGamesRequest,
+  ): Promise<OverallGamesResponse> {
+    return await firstValueFrom(this.svc.overallGamesRetail(request));
+  }
 
   async FinancialPerformanceResponse(
     request: ClientRequest,
@@ -128,13 +147,9 @@ export class WalletService {
     return await firstValueFrom(this.svc.financialPerformance(request));
   }
 
-
-  async Balances(
-    request: ClientRequest,
-  ): Promise<PlayerBalanceResponse> {
+  async Balances(request: ClientRequest): Promise<PlayerBalanceResponse> {
     return await firstValueFrom(this.svc.playerBalances(request));
   }
-
 
   async savePaymentMethod(
     request: PaymentMethodRequest,
@@ -262,9 +277,7 @@ export class WalletService {
     return await firstValueFrom(this.svc.smileAndPayWebhook(data));
   }
 
-  async handleSmileNPayVerify(
-    data: VerifySmile,
-  ): Promise<VerifySmileRes> {
+  async handleSmileNPayVerify(data: VerifySmile): Promise<VerifySmileRes> {
     console.log('Smile And Pay');
     return await firstValueFrom(this.svc.verifySmileAndPay(data));
   }
