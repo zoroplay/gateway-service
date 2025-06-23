@@ -59,6 +59,30 @@ export interface CreateBannerRequest {
   id?: number | undefined;
 }
 
+/** Pages */
+export interface CreatePageRequest {
+  title: string;
+  clientId: number;
+  url?: string | undefined;
+  content: string;
+  createdBy: string;
+  target: string;
+  id?: number | undefined;
+}
+
+/** Menu */
+export interface CreateMenuRequest {
+  title: string;
+  clientId: number;
+  link: string;
+  newWindow: boolean;
+  status: boolean;
+  target: string;
+  id?: number | undefined;
+  order?: string | undefined;
+  parentId?: string | undefined;
+}
+
 export interface AuditLog {
   id: number;
   userId: number;
@@ -1353,6 +1377,26 @@ export interface IdentityServiceClient {
   deleteBanner(request: FindOneRequest): Observable<CommonResponseObj>;
 
   createBanner(request: CreateBannerRequest): Observable<CommonResponseObj>;
+
+  findOnePage(request: FindOneRequest): Observable<CommonResponseObj>;
+
+  findAllPages(request: ClientIdRequest): Observable<CommonResponseObj>;
+
+  updatePage(request: CreatePageRequest): Observable<CommonResponseObj>;
+
+  deletePage(request: FindOneRequest): Observable<CommonResponseObj>;
+
+  createPage(request: CreatePageRequest): Observable<CommonResponseObj>;
+
+  findOneMenu(request: FindOneRequest): Observable<CommonResponseObj>;
+
+  findAllMenu(request: ClientIdRequest): Observable<CommonResponseObj>;
+
+  updateMenu(request: CreateMenuRequest): Observable<CommonResponseObj>;
+
+  deleteMenu(request: FindOneRequest): Observable<CommonResponseObj>;
+
+  createMenu(request: CreateMenuRequest): Observable<CommonResponseObj>;
 }
 
 export interface IdentityServiceController {
@@ -1699,6 +1743,36 @@ export interface IdentityServiceController {
   createBanner(
     request: CreateBannerRequest,
   ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
+
+  findOnePage(request: FindOneRequest): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
+
+  findAllPages(
+    request: ClientIdRequest,
+  ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
+
+  updatePage(
+    request: CreatePageRequest,
+  ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
+
+  deletePage(request: FindOneRequest): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
+
+  createPage(
+    request: CreatePageRequest,
+  ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
+
+  findOneMenu(request: FindOneRequest): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
+
+  findAllMenu(request: ClientIdRequest): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
+
+  updateMenu(
+    request: CreateMenuRequest,
+  ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
+
+  deleteMenu(request: FindOneRequest): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
+
+  createMenu(
+    request: CreateMenuRequest,
+  ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
 }
 
 export function IdentityServiceControllerMethods() {
@@ -1799,6 +1873,16 @@ export function IdentityServiceControllerMethods() {
       "updateBanner",
       "deleteBanner",
       "createBanner",
+      "findOnePage",
+      "findAllPages",
+      "updatePage",
+      "deletePage",
+      "createPage",
+      "findOneMenu",
+      "findAllMenu",
+      "updateMenu",
+      "deleteMenu",
+      "createMenu",
     ];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);

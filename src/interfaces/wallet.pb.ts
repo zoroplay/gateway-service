@@ -12,6 +12,11 @@ import { Struct } from "./google/protobuf/struct.pb";
 
 export const protobufPackage = "wallet";
 
+export interface MonthlyData {
+  month: string;
+  turnover: number;
+}
+
 export interface StatisticsRequest {
   clientId: number;
   year: string;
@@ -19,7 +24,7 @@ export interface StatisticsRequest {
 
 export interface ProductStatistics {
   product: string;
-  monthlyTurnover: number[];
+  monthlyData: MonthlyData[];
 }
 
 export interface StatisticsResponse {
