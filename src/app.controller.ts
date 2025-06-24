@@ -138,14 +138,24 @@ export class AppController {
           event: body.eventType,
         });
         break;
-        // case 'flutterwave':
-        // this.walletService.flutterWaveWebhook({
-        //   clientId: param.client,
-        //   txRef: body.data.tx_ref,
-        //   event: body.event,
-        //   body: JSON.stringify(body),
-        //   flutterwaveKey: req.headers['x-flutterwave-signature'],
-        // });
+      case 'flutterwave':
+        this.walletService.flutterWaveWebhook({
+          clientId: param.client,
+          txRef: body.data.tx_ref,
+          event: body.event,
+          body: JSON.stringify(body),
+          flutterwaveKey: req.headers['x-flutterwave-signature'],
+        });
+        break;
+
+      case 'korapay':
+        this.walletService.flutterWaveWebhook({
+          clientId: param.client,
+          txRef: body.data.reference,
+          event: body.event,
+          body: JSON.stringify(body),
+          flutterwaveKey: req.headers['x-korapay-signature'] as string,
+        });
         break;
 
       default:
@@ -312,6 +322,7 @@ export class AppController {
   }
 
   @ApiTags('Webhooks')
+  @HttpCode(200)
   @Post('/webhook/:clientId/pawapay/callback')
   async handlePawapayCallback(
     @Body() webhookBody: any,
@@ -357,6 +368,7 @@ export class AppController {
   }
 
   @ApiTags('Webhooks')
+  @HttpCode(200)
   @Post('/webhook/:clientId/mtnmomo/callback')
   async handleMtnmomoCallback(@Body() webhookBody: any, @Param() param) {
     console.log(`📩 Received MTN MoMo Webhook: ${JSON.stringify(webhookBody)}`);
@@ -404,6 +416,7 @@ export class AppController {
 
   @ApiTags('Webhooks')
   @Post('/webhook/checkout/:clientId/opay/callback')
+  @HttpCode(200)
   async handleOpayCallback(
     @Body() webhookBody: any,
     @Param() param,
@@ -412,14 +425,7 @@ export class AppController {
     const { payload, sha512 } = webhookBody;
 
     console.log('✅ Verified Webhook Payload:', payload);
-
-    if (!payload?.reference) {
-      return {
-        statusCode: 400,
-        success: false,
-        message: 'Missing reference ID in webhook payload.',
-      };
-    }
+  
 
     const data = {
       clientId: param.clientId,
@@ -473,66 +479,7 @@ export class AppController {
   }
 
   @ApiTags('Webhooks')
-  @Post('webhook/check-out/:clientId/flutterwave')
-  @ApiParam({ name: 'clientId', type: 'number', description: 'SBE Client ID' })
-  async handleFlutterwaveWebhook(
-    @Param() param,
-    @Body() body: any,
-    @Headers() headers,
-  ) {
-    console.log('THE MAIN F-FUNC');
-    console.log('THE BODY', body);
-    console.log('THE HEADERS', headers);
-
-    const signature = headers['x-flutterwave-signature'] as string;
-
-    console.log('THE SIGNATURE', signature);
-
-    // Option 2: Embed client ID in tx_ref or custom field
-    const txRef = body?.data?.tx_ref;
-
-    const client = param.clientId;
-
-    const result = await this.walletService.flutterWaveWebhook({
-      clientId: client,
-      txRef,
-      event: body.event,
-      body: JSON.stringify(body),
-      flutterwaveKey: signature,
-    });
-
-    return result;
-  }
-
-  @ApiTags('Webhooks')
-  @Post('webhook/checkout/:clientId/korapay')
-  @ApiParam({ name: 'clientId', type: 'number', description: 'SBE Client ID' })
-  async handleKorapayWebhook(
-    @Param() param,
-    @Body() body: any,
-    @Headers() headers,
-  ) {
-    console.log('THE-BODY:::', body);
-    console.log('HEADERS:::', headers);
-    const signature = headers['x-korapay-signature'] as string;
-
-    // Option 2: Embed client ID in tx_ref or custom field
-    const reference = body?.data?.reference;
-
-    const client = param.clientId;
-
-    const result = await this.walletService.korapayWaveWebhook({
-      clientId: client,
-      reference,
-      event: body.event,
-      body: JSON.stringify(body),
-      korapayKey: signature,
-    });
-
-    return result;
-  }
-
-  @ApiTags('Webhooks')
+  @HttpCode(200)
   @Post('/webhook/:clientId/fidelity/callback')
   async handleWebhook(@Body() webhookBody: any, @Param() param) {
     try {
