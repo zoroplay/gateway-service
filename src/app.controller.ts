@@ -36,6 +36,7 @@ import * as xml2js from 'xml2js';
 import { Response, Request } from 'express';
 import buildTigoW2AResponse from './wallet/dto/utils';
 import * as crypto from 'crypto';
+import { raw } from 'body-parser';
 
 @Controller()
 export class AppController {
@@ -105,6 +106,7 @@ export class AppController {
   }
 
   @ApiTags('Webhooks')
+  @HttpCode(200)
   @Post('webhook/:client/:provider')
   @ApiParam({ name: 'client', type: 'number', description: 'SBE Client ID' })
   @ApiParam({
@@ -224,6 +226,7 @@ export class AppController {
           event: 'payment_success',
           body: JSON.stringify(webhookBody),
           Status: isSuccess,
+          rawBody: webhookBody,
         });
 
         console.log(
@@ -251,6 +254,7 @@ export class AppController {
   }
 
   @ApiTags('Webhooks')
+  @HttpCode(200)
   @Post('/webhook/:clientId/tigo/notify')
   async handleW2aWebhook(
     @Req() req: Request,
@@ -281,6 +285,7 @@ export class AppController {
       customerReferenceId: command.CUSTOMERREFERENCEID,
       senderName: command.SENDERNAME,
       clientId: param.clientId,
+      rawBody: command,
     };
     console.log(payload);
 
@@ -352,6 +357,7 @@ export class AppController {
           clientId: param.clientId,
           depositId: webhookBody.depositId,
           status: '',
+          rawBody: webhookBody,
         });
         console.log(
           `🎉 User credited successfully: ${JSON.stringify(response)}`,
@@ -395,6 +401,7 @@ export class AppController {
           externalId: webhookBody.externalId,
           status: webhookBody.status,
           clientId: param.clientId,
+          rawBody: webhookBody,
         });
 
         console.log(
@@ -425,7 +432,6 @@ export class AppController {
     const { payload, sha512 } = webhookBody;
 
     console.log('✅ Verified Webhook Payload:', payload);
-  
 
     const data = {
       clientId: param.clientId,
@@ -555,6 +561,7 @@ export class AppController {
         sessionId: webhookBody.sessionId,
         headers: authorization,
         settlementId: webhookBody.settlementId,
+        rawBody: webhookBody,
       };
 
       console.log('THE_DATA', data);

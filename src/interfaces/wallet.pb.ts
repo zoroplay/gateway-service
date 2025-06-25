@@ -119,6 +119,7 @@ export interface ProvidusRequest {
   sessionId: string;
   headers: string;
   settlementId: string;
+  rawBody: { [key: string]: any } | undefined;
 }
 
 export interface ProvidusResponse {
@@ -272,6 +273,7 @@ export interface MtnmomoRequest {
   externalId: string;
   status: string;
   clientId: number;
+  rawBody: { [key: string]: any } | undefined;
 }
 
 export interface TigoW2aRequest {
@@ -281,6 +283,7 @@ export interface TigoW2aRequest {
   customerReferenceId: string;
   senderName: string;
   clientId: number;
+  rawBody: { [key: string]: any } | undefined;
 }
 
 export interface TigoW2aResponse {
@@ -293,6 +296,7 @@ export interface PawapayRequest {
   clientId: number;
   status: string;
   depositId: string;
+  rawBody: { [key: string]: any } | undefined;
 }
 
 export interface PawapayResponse {
@@ -314,6 +318,7 @@ export interface TigoWebhookRequest {
   event: string;
   body: string;
   Status: boolean;
+  rawBody: { [key: string]: any } | undefined;
 }
 
 export interface TigoResponse {
