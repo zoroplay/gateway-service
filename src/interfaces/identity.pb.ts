@@ -2,8 +2,6 @@
 // versions:
 //   protoc-gen-ts_proto  v1.181.2
 //   protoc               v6.30.1
-//   protoc               v5.28.0
-
 // source: identity.proto
 
 /* eslint-disable */
@@ -1240,6 +1238,8 @@ export interface IdentityServiceClient {
 
   createRetailUser(request: CreateUserRequest): Observable<CommonResponseObj>;
 
+  updateRetailUser(request: UpdateUserRequest): Observable<UpdateUserResponse>;
+
   createAdminUser(request: CreateUserRequest): Observable<CommonResponseObj>;
 
   getAdminUsers(request: EmptyRequest): Observable<GetUsersResponse>;
@@ -1483,6 +1483,10 @@ export interface IdentityServiceController {
   createRetailUser(
     request: CreateUserRequest,
   ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
+
+  updateRetailUser(
+    request: UpdateUserRequest,
+  ): Promise<UpdateUserResponse> | Observable<UpdateUserResponse> | UpdateUserResponse;
 
   createAdminUser(
     request: CreateUserRequest,
@@ -1806,6 +1810,7 @@ export function IdentityServiceControllerMethods() {
       "removePermission",
       "updateDetails",
       "createRetailUser",
+      "updateRetailUser",
       "createAdminUser",
       "getAdminUsers",
       "getClient",
