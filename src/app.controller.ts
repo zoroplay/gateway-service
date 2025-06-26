@@ -25,6 +25,7 @@ import { SwaggerGetUserByUsernmae } from './identity/dto';
 import { OddsService } from './odds/odds.service';
 import { TigoWebhookRequest, WebhookResponse } from './wallet/dto';
 import {
+  FidelityWebhookRequest,
   GlobusResponse,
   OpayResponse,
   PawapayResponse,
@@ -498,9 +499,10 @@ export class AppController {
       } = webhookBody;
 
       if (type === 'success' && statusOk === true && status === 201) {
-        const data = {
+        const data: FidelityWebhookRequest = {
           transactionReference,
           clientId: param.clientId,
+          rawBody: {}
         };
         // Credit user's wallet
         await this.walletService.FidelityWebhook(data);
