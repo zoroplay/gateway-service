@@ -136,6 +136,24 @@ export class GamingController {
     return this.gamingService.startGame(startGameDto);
   }
 
+  @Post('/:clientId/lobby-url')
+  @ApiBody({ type: SwaggerStartGameDto })
+  @ApiOkResponse({ type: SwaggerStartGameResponseDto })
+  @ApiParam({ name: 'clientId', description: 'SBE CLient ID' })
+  constructGameLobbyUrl(
+    @Body() startGameDto: StartGameDto,
+    @Param('clientId') clientId,
+  ) {
+    console.log('got here');
+    startGameDto.clientId = parseInt(clientId);
+
+    // Set default language if it is not provided
+    if (!startGameDto.language) {
+      startGameDto.language = 'en';
+    }
+    return this.gamingService.startGameLobby(startGameDto);
+  }
+
   @Post('/:clientId/start-url')
   @ApiBody({ type: SwaggerStartSmatGameDto })
   @ApiOkResponse({ type: SwaggerStartGameResponseDto })
@@ -722,6 +740,7 @@ export class GamingController {
       // Handle the response if session is valid
       console.log("req", req);
       const response = await this.gamingService.handleSpribeGamesCallback({
+        provider: '',
         signature,
         body: Object.keys(data).length === 0 ? '' : JSON.stringify(data),
         clientId,
