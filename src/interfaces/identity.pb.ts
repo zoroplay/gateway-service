@@ -697,6 +697,28 @@ export interface UserData {
   virtualToken?: string | undefined;
 }
 
+export interface GetUsersTypeRequest {
+  userType?: string | undefined;
+  page?: number | undefined;
+  perPage?: number | undefined;
+  search?: string | undefined;
+}
+
+export interface GetUsersTypeResponse {
+  status: number;
+  success: boolean;
+  data?: UserData | undefined;
+  message?: string | undefined;
+  totalPages: number;
+  totalUsers: number;
+}
+
+export interface ChangeUserTypeStatusRequest {
+  userId: number;
+  initialType: number;
+  currentType: number;
+}
+
 export interface CreateUserRequest {
   clientId: number;
   username: string;
@@ -1244,6 +1266,10 @@ export interface IdentityServiceClient {
 
   getAdminUsers(request: EmptyRequest): Observable<GetUsersResponse>;
 
+  getUsers(request: GetUsersTypeRequest): Observable<GetUsersTypeResponse>;
+
+  changeUserTypeStatus(request: ChangeUserTypeStatusRequest): Observable<CommonResponseObj>;
+
   getClient(request: GetClientRequest): Observable<GetClientResponse>;
 
   getPaymentData(request: GetPaymentDataRequest): Observable<GetPaymentDataResponse>;
@@ -1493,6 +1519,14 @@ export interface IdentityServiceController {
   ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
 
   getAdminUsers(request: EmptyRequest): Promise<GetUsersResponse> | Observable<GetUsersResponse> | GetUsersResponse;
+
+  getUsers(
+    request: GetUsersTypeRequest,
+  ): Promise<GetUsersTypeResponse> | Observable<GetUsersTypeResponse> | GetUsersTypeResponse;
+
+  changeUserTypeStatus(
+    request: ChangeUserTypeStatusRequest,
+  ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
 
   getClient(request: GetClientRequest): Promise<GetClientResponse> | Observable<GetClientResponse> | GetClientResponse;
 
@@ -1813,6 +1847,8 @@ export function IdentityServiceControllerMethods() {
       "updateRetailUser",
       "createAdminUser",
       "getAdminUsers",
+      "getUsers",
+      "changeUserTypeStatus",
       "getClient",
       "getPaymentData",
       "searchPlayers",
