@@ -29,6 +29,10 @@ import {
   SmatVirtualCallbackRequest,
   GetPromotions,
   SpribeCallbackRequest,
+  CreateGameKeyRequest,
+  GetKeysRequest,
+  BonusGameRequest,
+  FindOneGameDto,
 } from 'src/interfaces/gaming.pb';
 import { ClientGrpc } from '@nestjs/microservices';
 import { firstValueFrom, of } from 'rxjs';
@@ -98,6 +102,11 @@ export class GamingService implements OnModuleInit {
   async fetchGamesByName(payload: FetchGamesRequest) {
     //('fetch games');
     return firstValueFrom(this.service.fetchGamesByName(payload));
+  }
+
+  async adminFetchGamesByName(payload: FetchGamesRequest) {
+    //('fetch games');
+    return firstValueFrom(this.service.adminFetchGamesByName(payload));
   }
 
   async addGameToCategories(addgameCategoryDto: AddGameToCategoriesDto) {
@@ -327,7 +336,7 @@ export class GamingService implements OnModuleInit {
     return resp;
   }
 
-   async handleSpribeGamesCallback(request: SpribeCallbackRequest) {
+   async handleSpribeGamesCallback(request: CallbackGameDto) {
     console.log('Spribe service start');
     // //(request);
     const resp = await firstValueFrom(
@@ -529,6 +538,30 @@ export class GamingService implements OnModuleInit {
     return firstValueFrom(
       this.service.handleCasinoJackpotWinners(payload),
     );
+  }
+
+  async addGameKeys(createGameKeyDto: CreateGameKeyRequest) {
+    console.log('createGameKeyDto', createGameKeyDto);
+    const gamekey = await firstValueFrom(
+      this.service.addGameKeys(createGameKeyDto),
+    );
+    console.log('gamekey', gamekey);
+    return gamekey;
+  }
+
+  async fetchGameKeys(payload: GetKeysRequest) {
+    //('fetch games');
+    return firstValueFrom(this.service.fetchGameKeys(payload));
+  }
+
+  async deleteGameKey(payload: FindOneGameDto) {
+    //('fetch games');
+    return firstValueFrom(this.service.deleteGameKeys(payload));
+  }
+
+  async getUserBonusGames(payload: BonusGameRequest) {
+    //('fetch games');
+    return firstValueFrom(this.service.fetchBonusGames(payload));
   }
 
 }

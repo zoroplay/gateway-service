@@ -8,6 +8,7 @@ import {
   Patch,
   Post,
   Put,
+  Query,
   Req,
   UseGuards,
 } from '@nestjs/common';
@@ -47,6 +48,7 @@ import { NotificationService } from 'src/notification/notification.service';
 import { GetAllLogsDTO, GetUserLogsDTO } from '../dto/audit.dto';
 import { Ip } from '@nestjs/common';
 import { UAParser } from 'ua-parser-js';
+import { query } from 'express';
 
 @ApiTags('Auth APIs')
 @Controller('auth')
@@ -208,36 +210,5 @@ export class AuthController {
   @ApiOkResponse({ type: SwaggerCommonResponse })
   resetPassword(@Body() data: ResetPasswordRequest) {
     return this.authService.resetPassword(data);
-  }
-
-  // @UseGuards(AuthGuard)
-  @Post('/get_all_logs')
-  @ApiOperation({
-    summary: 'get client variables',
-    description: 'This endpoint retrieves all the audits',
-  })
-  @ApiBody({ type: GetAllLogsDTO })
-  @ApiOkResponse({ type: SwaggerCommonResponse })
-  getAllLogs(
-    @Body() data: GetAllLogsRequest,
-    @Req() req: IAuthorizedRequest,
-    @Ip() ip: any,
-  ) {
-    try {
-      const parser = new UAParser();
-      const userAgent = req.headers['user-agent'] || 'unknown';
-      const ua = parser.setUA(userAgent);
-
-      data.ipAddress = ip;
-      data.os = String(ua.getOS()) || 'unknown';
-      data.browser = String(ua.getBrowser()) || 'unknown';
-      data.platform = String(ua.getDevice()) || 'unknown';
-      data.method = req.method;
-      data.endpoint = req.url;
-
-      return this.authService.getAllLogs(data);
-    } catch (err) {
-      console.log(err);
-    }
   }
 }

@@ -60,14 +60,15 @@ export class AuditLogInterceptor implements NestInterceptor {
 
   private isEncryptPath(url: string): boolean {
     console.log('accessed endpoint', url);
-    return !this.NON_ENCRYPT_PATHS.some((path) => url.toLowerCase().includes(path));
+    return !this.NON_ENCRYPT_PATHS.some((path) =>
+      url.toLowerCase().includes(path),
+    );
   }
 
   async intercept(
     context: ExecutionContext,
     next: CallHandler,
   ): Promise<Observable<any>> {
-    
     if (this.shouldSkipAudit(context)) {
       return next.handle();
     }
@@ -83,7 +84,7 @@ export class AuditLogInterceptor implements NestInterceptor {
       userAgent,
       authHeader,
       signature,
-      apiKey
+      apiKey,
     } = this.extractRequestData(context);
 
     const isAdmin = this.isAdminEndpoint(endpoint);
@@ -93,10 +94,8 @@ export class AuditLogInterceptor implements NestInterceptor {
     let key: string;
     try {
       if (isEncryptEndpoint && clientId !== '4') {
-
-        const keyBuffer = await this.cryptoService.validateClientAndGenerateKey(
-          clientId
-        );
+        const keyBuffer =
+          await this.cryptoService.validateClientAndGenerateKey(clientId);
 
         if (!keyBuffer) {
           throw new HttpException(
@@ -167,9 +166,9 @@ export class AuditLogInterceptor implements NestInterceptor {
       return next.handle().pipe(
         // Response handling and encryption
         // map((response) => {
-          
+
         // }),
-        
+
         tap(async (response) => {
           if (!isAdmin) return; // skip non-admin logging
           const user = await this.resolveUser(authHeader, action, response);
@@ -470,8 +469,8 @@ export class AuditLogInterceptor implements NestInterceptor {
           sanitized.data[field] = '**REDACTED**';
         }
       }
-      // return this.safeStringify(sanitized);
-      return true
+      return this.safeStringify(sanitized);
+      // return true
     } catch (error) {
       console.error('Error sanitizing data:', error);
       return true;

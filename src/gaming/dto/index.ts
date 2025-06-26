@@ -147,6 +147,21 @@ export class SwaggerStartSmatGameDto {
   
 }
 
+export class BonusGameRequestDto {
+  @ApiProperty({
+    description: 'Client Id',
+    example: 2,
+  })
+  clientId: number;
+
+  @ApiProperty({
+    description: 'User Id',
+    example: 2,
+  })
+  userId: number;
+  
+}
+
 export class SwaggerStartGameResponseDto {
   @ApiProperty({
     description: 'Url tto Initiate Game',
@@ -559,6 +574,14 @@ export class AddTournamentGameDto {
   gameId: number[]; // Array of category IDs
 }
 
+export class DeleteKeyRequest {
+  @ApiProperty({
+    description: 'ID of the game to which categories will be added',
+    example: 1,
+  })
+  id: number;
+}
+
 export class CreatePromotionRequestDto {
   @ApiProperty({
     description: 'The unique ID of the client creating the promotion',
@@ -793,4 +816,38 @@ export class SwaggerOKPromotionResponse {
     description: 'date game was updated',
   })
   updatedAt: Date;
+}
+
+export class EntryRequest {
+  @ApiProperty({
+    description: 'unique name of the option',
+    example: 'GAME_API_KEY',
+  })
+  option: string;
+
+  @ApiProperty({
+    description: 'Value of the option',
+    example: 'value',
+  })
+  value: string;
+
+  @ApiProperty({
+    description: 'Provider name, e.g., shack-evolution',
+    example: 'evo-play',
+  })
+  provider: string;
+}
+
+export class AddGameKeyDto {
+  @ApiProperty({
+    description: 'ID of the game to which categories will be added',
+    example: 1,
+  })
+  clientId: number;
+
+  @ApiProperty({
+    type: [EntryRequest],
+  })
+  keys: EntryRequest[];
+
 }

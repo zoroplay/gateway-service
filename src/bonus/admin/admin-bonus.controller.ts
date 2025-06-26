@@ -21,9 +21,11 @@ import { BonusService } from '../bonus.service';
 
 import {
   AwardBonusRequest,
+  BonusRequest,
   CreateBonusRequest,
   CreateCampaignBonusDto,
   FetchReportRequest,
+  GetAllBonusRequest,
   GetBonusRequest,
   SettleBetRequest,
   UpdateCampaignBonusDto,
@@ -296,6 +298,51 @@ export class AdminBonusController {
       data.clientId = query.client_id;
 
       return this.bonusService.AwardBonus(data);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+
+  @Get('/awarded-bonus-list')
+  @ApiOperation({
+    summary: 'Award user a bonus ',
+    description:
+      'This endpoint awards a user a bonus, this endpoint is meant to be used for administrative purposes only',
+  })
+  @ApiQuery({ name: 'clientId', description: 'SBE client ID' })
+  @ApiOkResponse({ type: SwaggerGetUserBonusResponse })
+  GetAllAwardedBonus(
+    @Query() query: GetAllBonusRequest,
+    // @Req() req: IAuthorizedRequest,
+  ) {
+    try {
+
+      return this.bonusService.GetAllAwardedBonus(query);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  @Post('/deactivate-bonus')
+  @ApiOperation({
+    summary: 'Deactivate user a bonus ',
+    description:
+      'This endpoint deactivates a user a bonus, this endpoint is meant to be used for administrative purposes only',
+  })
+  @ApiQuery({ name: 'client_id', description: 'SBE client ID' })
+  @ApiBody({ type: AwardBonusRequestDto })
+  @ApiOkResponse({ type: SwaggerGetUserBonusResponse })
+  DeactivateUserBonus(
+    @Body() data: BonusRequest,
+    @Query() query,
+    // @Req() req: IAuthorizedRequest,
+  ) {
+    try {
+      console.log("data", data)
+      data.clientId = query.client_id;
+
+      return this.bonusService.DeactivateUserBonus(data);
     } catch (error) {
       console.error(error);
     }

@@ -132,7 +132,19 @@ export class SwaggerCreateBonusRequest {
 
   @ApiProperty({ description: 'Name of provider' })
   @Optional()
-  provider: string;
+  provider?: string;
+
+  @ApiProperty({ description: 'Name of provider' })
+  @Optional()
+  country?: string;
+
+  @ApiProperty({ description: 'Name of provider' })
+  @Optional()
+  tournament?: string;
+
+  @ApiProperty({ description: 'Name of provider' })
+  @Optional()
+  fixture?: string;
 
   @ApiProperty({ description: 'no of spin count' })
   @Optional()

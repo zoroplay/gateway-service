@@ -89,6 +89,25 @@ import {
   ShopUsersSummaryResponse,
   OpayResponse,
   OpayRequest,
+  CorapayResponse,
+  CorapayWebhookRequest,
+  DeletePaymentMethodRequest,
+  DeletePaymentMethodResponse,
+  FidelityResponse,
+  FidelityWebhookRequest,
+  ProvidusRequest,
+  ProvidusResponse,
+  GlobusRequest,
+  GlobusResponse,
+  SmileAndPayRequest,
+  SmileAndPayResponse,
+  VerifySmile,
+  VerifySmileRes,
+  ClientRequest,
+  FinancialPerformanceResponse,
+  PlayerBalanceResponse,
+  OverallGamesRequest,
+  OverallGamesResponse,
 } from '../interfaces/wallet.pb';
 import { ClientGrpc } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
@@ -102,6 +121,34 @@ export class WalletService {
 
   public onModuleInit(): void {
     this.svc = this.client.getService<WalletServiceClient>(WALLET_SERVICE_NAME);
+  }
+
+  async OverallGames(
+    request: OverallGamesRequest,
+  ): Promise<OverallGamesResponse> {
+    return await firstValueFrom(this.svc.overallGames(request));
+  }
+
+  async OverallGamesOnline(
+    request: OverallGamesRequest,
+  ): Promise<OverallGamesResponse> {
+    return await firstValueFrom(this.svc.overallGamesOnline(request));
+  }
+
+  async OverallGamesRetail(
+    request: OverallGamesRequest,
+  ): Promise<OverallGamesResponse> {
+    return await firstValueFrom(this.svc.overallGamesRetail(request));
+  }
+
+  async FinancialPerformanceResponse(
+    request: ClientRequest,
+  ): Promise<FinancialPerformanceResponse> {
+    return await firstValueFrom(this.svc.financialPerformance(request));
+  }
+
+  async Balances(request: ClientRequest): Promise<PlayerBalanceResponse> {
+    return await firstValueFrom(this.svc.playerBalances(request));
   }
 
   async savePaymentMethod(
@@ -150,6 +197,18 @@ export class WalletService {
     return await firstValueFrom(this.svc.listDeposits(request));
   }
 
+  async UpdatePaymentMethod(
+    request: PaymentMethodRequest,
+  ): Promise<GetPaymentMethodResponse> {
+    return await firstValueFrom(this.svc.updatePaymentMethod(request));
+  }
+
+  async DeletePaymentMethod(
+    request: DeletePaymentMethodRequest,
+  ): Promise<DeletePaymentMethodResponse> {
+    return await firstValueFrom(this.svc.deletePaymentMethod(request));
+  }
+
   async updateWithdrawal(
     request: UpdateWithdrawalRequest,
   ): Promise<CommonResponseObj> {
@@ -177,6 +236,18 @@ export class WalletService {
     return await firstValueFrom(this.svc.opayCallback(data));
   }
 
+  async FidelityWebhook(
+    data: FidelityWebhookRequest,
+  ): Promise<FidelityResponse> {
+    console.log('fidelity');
+    return await firstValueFrom(this.svc.fidelityWebhook(data));
+  }
+
+  async CorapayWebhook(data: CorapayWebhookRequest): Promise<CorapayResponse> {
+    console.log('check555');
+    return await firstValueFrom(this.svc.corapayWebhook(data));
+  }
+
   async mtnmomoWebhook(data: MtnmomoRequest): Promise<WebhookResponse> {
     console.log('checkMtnMomo');
     return await firstValueFrom(this.svc.mtnmomoCallback(data));
@@ -185,6 +256,30 @@ export class WalletService {
   async handleW2aWebhook(data: TigoW2aRequest): Promise<TigoW2aResponse> {
     console.log('check555');
     return await firstValueFrom(this.svc.tigoW2A(data));
+  }
+
+  async handleProvidusWebhook(
+    data: ProvidusRequest,
+  ): Promise<ProvidusResponse> {
+    console.log('Providus-service');
+    return await firstValueFrom(this.svc.providusWebhook(data));
+  }
+
+  async handleGlobusWebhook(data: GlobusRequest): Promise<GlobusResponse> {
+    console.log('Globus-service');
+    return await firstValueFrom(this.svc.globusWebhook(data));
+  }
+
+  async handleSmileNPayWebhook(
+    data: SmileAndPayRequest,
+  ): Promise<SmileAndPayResponse> {
+    console.log('Globus-service');
+    return await firstValueFrom(this.svc.smileAndPayWebhook(data));
+  }
+
+  async handleSmileNPayVerify(data: VerifySmile): Promise<VerifySmileRes> {
+    console.log('Smile And Pay');
+    return await firstValueFrom(this.svc.verifySmileAndPay(data));
   }
 
   async pawapayCallback(data: PawapayRequest): Promise<PawapayResponse> {

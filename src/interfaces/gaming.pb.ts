@@ -718,7 +718,7 @@ export interface GamingServiceClient {
 
   handleQtechCallback(request: QtechCallbackRequest): Observable<CallbackResponse>;
 
-  handleSpribeCallback(request: SpribeCallbackRequest): Observable<CallbackResponse>;
+  handleSpribeCallback(request: CallbackGameDto): Observable<CallbackResponse>;
 
   handleSmatVirtualCallback(request: SmatVirtualCallbackRequest): Observable<CallbackResponse>;
 
@@ -849,7 +849,7 @@ export interface GamingServiceController {
   ): Promise<CallbackResponse> | Observable<CallbackResponse> | CallbackResponse;
 
   handleSpribeCallback(
-    request: SpribeCallbackRequest,
+    request: CallbackGameDto,
   ): Promise<CallbackResponse> | Observable<CallbackResponse> | CallbackResponse;
 
   handleSmatVirtualCallback(
