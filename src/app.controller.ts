@@ -25,6 +25,7 @@ import { SwaggerGetUserByUsernmae } from './identity/dto';
 import { OddsService } from './odds/odds.service';
 import { TigoWebhookRequest, WebhookResponse } from './wallet/dto';
 import {
+  FidelityWebhookRequest,
   GlobusResponse,
   OpayResponse,
   PawapayResponse,
