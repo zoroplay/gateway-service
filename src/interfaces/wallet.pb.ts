@@ -132,6 +132,7 @@ export interface ProvidusResponse {
 export interface FidelityWebhookRequest {
   transactionReference: string;
   clientId: number;
+  rawBody: { [key: string]: any } | undefined;
 }
 
 export interface FidelityResponse {
