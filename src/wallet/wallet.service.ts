@@ -149,9 +149,7 @@ export class WalletService {
     return await firstValueFrom(this.svc.overallGamesSport(request));
   }
 
-   async Statistics(
-    request: StatisticsRequest,
-  ): Promise<StatisticsResponse> {
+  async Statistics(request: StatisticsRequest): Promise<StatisticsResponse> {
     return await firstValueFrom(this.svc.statistics(request));
   }
 
@@ -300,6 +298,12 @@ export class WalletService {
     console.log('check44');
     return await firstValueFrom(this.svc.pawapayCallback(data));
   }
+
+  async pawapayPayout(data: CreatePawapayRequest): Promise<WithdrawResponse> {
+    console.log('PawaPay-Payout');
+    return await firstValueFrom(this.svc.pawapayPayout(data));
+  }
+
   async korapayWaveWebhook(
     data: KoraPayWebhookRequest,
   ): Promise<WebhookResponse> {

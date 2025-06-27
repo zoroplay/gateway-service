@@ -1132,5 +1132,43 @@ export class WalletController {
     });
   }
 
- 
+  @UseGuards(AuthGuard)
+  @Post('/pawapay/payout/:clientId')
+  @ApiOperation({
+    summary:
+      'handle deposit/payouts/refunds/cancel-payouts request for pawapay',
+    description: 'This endpoint to handle pawaypay requests',
+  })
+  @ApiParam({
+    name: 'clientId',
+    type: 'number',
+    description: 'Unique ID of the client',
+  })
+  @ApiParam({
+    name: 'action',
+    type: 'string',
+    description: 'deposit | payouts | refunds | cancel-payouts',
+  })
+  @ApiBody({ type: SwaggerCreatePawaPayRequest })
+  @ApiOkResponse({ type: SwaggerCommonResponseObj })
+  HandlePawaPayPayout(
+    @Body() body: CreatePawapayRequest,
+    @Param('clientId') clientId: number,
+    @Req() req: IAuthorizedRequest,
+    @Query() query: any,
+  ) {
+    const u = req.user.id;
+    const username  = req.user.username;
+
+    console.log('GATEWAY:::', u);
+    return this.walletService.pawapayPayout({
+      ...body,
+      userId: u,
+      source: query.source,
+      clientId,
+      action: body.action,
+      depositId: body.depositId ? body.depositId : null,
+      username,
+    });
+  }
 }
