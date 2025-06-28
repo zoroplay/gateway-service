@@ -72,6 +72,10 @@ export class AuthService {
     return firstValueFrom(this.svc.createRetailUser(data));
   }
 
+  public async updateRetailUser(data: UpdateUserRequest) {
+    return firstValueFrom(this.svc.updateRetailUser(data));
+  }
+
   public async validate(token: string): Promise<ValidateResponse> {
     return firstValueFrom(this.svc.validate({ token }));
   }
