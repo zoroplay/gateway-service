@@ -11,6 +11,7 @@ import {
   Query,
   Req,
   UseGuards,
+  Headers,
 } from '@nestjs/common';
 import {
   LoginRequest,
@@ -75,6 +76,39 @@ export class AuthController {
   @ApiOkResponse({ type: SwaggerCommonResponse })
   loginUser(@Body() data: LoginRequest) {
     return this.authService.doLogin(data);
+  }
+
+  @Get('/list-all-test-accounts')
+  @ApiOperation({
+    summary: 'List all test accounts',
+    description: 'This endpoint retrieves a list of all test accounts',
+  })
+  @ApiBody({ type: SwaggerHandleTransferRequest })
+  listTestAccounts(
+    @Query('page') page: number = 1,
+    @Query('limit') limit: number = 10,
+    @Headers('sbe-client-id') clientId: number = 4,
+  ) {
+    const data = {
+      page: page,
+      perPage: limit,
+      total: 0,
+      clientId: clientId,
+    };
+    return this.authService.listTestAccounts(data);
+  }
+
+  @Get('/toggle-account/:accountId')
+  @ApiOperation({
+    summary: 'Validate Test Account',
+    description: 'This endpoint validates a test account by its ID',
+  })
+  validateTestAccount(@Param() params) {
+    const { accountId } = params;
+    const data = {
+      accountId,
+    };
+    return this.authService.ToggleTestAccount(data);
   }
 
   @Post('/verify-username')

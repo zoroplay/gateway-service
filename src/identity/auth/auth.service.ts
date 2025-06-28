@@ -29,6 +29,10 @@ import {
   CreateLogRequest,
   CreateLogResponse,
   ValidateGroupCodeResponse,
+  ValidateTestResponse,
+  ValidateTestRequest,
+  ListTestAccountsRequest,
+  ListTestAccountsResponse,
 } from 'src/interfaces/identity.pb';
 
 @Injectable()
@@ -77,6 +81,18 @@ export class AuthService {
   }
   public async validateClient(token: string): Promise<ValidateClientResponse> {
     return firstValueFrom(this.svc.validateClient({ token }));
+  }
+
+  public async listTestAccounts(
+    data: ListTestAccountsRequest,
+  ): Promise<ListTestAccountsResponse> {
+    return firstValueFrom(this.svc.listTestAccount(data));
+  }
+
+  public async ToggleTestAccount(
+    data: ValidateTestRequest,
+  ): Promise<ValidateTestResponse> {
+    return firstValueFrom(this.svc.toggleAccount(data));
   }
 
   public async validateGroupCode(
