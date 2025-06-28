@@ -65,6 +65,10 @@ export class SwaggerSendOtpRequest {
   @ApiProperty({ description: 'Operator', example: 'VODACOM'})
   @IsOptional()
   operator: string;
+
+  @ApiProperty({ description: 'countryCode', example: 'ZW'})
+  @IsOptional()
+  countryCode?: string;
 }
 
 export class SwaggerVerifyOtpRequest {
