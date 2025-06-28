@@ -239,32 +239,9 @@ export class UsersController {
   })
   @ApiQuery({ name: 'clientId', description: 'SBE Client ID' })
   async getPlayerStatistics(@Query() payload: ClientIdRequest) {
-    return await firstValueFrom(this.svc.getPlayerStatistics(payload));
-  }
+    const betting = await firstValueFrom(this.svc.getPlayerStatistics(payload));
+    const wallet = await firstValueFrom(this.svc.getPlayerStatistics(payload));
 
-  // create a get type of user by type --> ("pending", "active", "inactive", "locked", "frozen")
-  @Get('/users')
-  @ApiOperation({
-    summary: 'Fetch Users',
-    description:
-      'This endpoint is used to get lists of all users types (pending, active, inactive, locked, frozen)',
-  })
-  @ApiQuery({ name: 'clientId', description: 'SBE Client ID' })
-  @ApiQuery({
-    name: 'type',
-    description: 'User type (pending, active, inactive, locked, frozen)',
-  })
-  @ApiOkResponse({ type: SwaggerCommonResponse })
-  getUsers(
-    @Query()
-    query: {
-      usertype?: string;
-      page?: number;
-      perpage?: number;
-      search?: string;
-    },
-  ) {
-    return this.svc.getUsers(query);
   }
 
   // allow admin user to update user status
