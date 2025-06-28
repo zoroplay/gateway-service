@@ -108,6 +108,8 @@ import {
   PlayerBalanceResponse,
   OverallGamesRequest,
   OverallGamesResponse,
+  StatisticsRequest,
+  StatisticsResponse,
 } from '../interfaces/wallet.pb';
 import { ClientGrpc } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
@@ -139,6 +141,16 @@ export class WalletService {
     request: OverallGamesRequest,
   ): Promise<OverallGamesResponse> {
     return await firstValueFrom(this.svc.overallGamesRetail(request));
+  }
+
+  async OverallGamesSport(
+    request: OverallGamesRequest,
+  ): Promise<OverallGamesResponse> {
+    return await firstValueFrom(this.svc.overallGamesSport(request));
+  }
+
+  async Statistics(request: StatisticsRequest): Promise<StatisticsResponse> {
+    return await firstValueFrom(this.svc.statistics(request));
   }
 
   async FinancialPerformanceResponse(
@@ -286,6 +298,12 @@ export class WalletService {
     console.log('check44');
     return await firstValueFrom(this.svc.pawapayCallback(data));
   }
+
+  async pawapayPayout(data: CreatePawapayRequest): Promise<WithdrawResponse> {
+    console.log('PawaPay-Payout');
+    return await firstValueFrom(this.svc.pawapayPayout(data));
+  }
+
   async korapayWaveWebhook(
     data: KoraPayWebhookRequest,
   ): Promise<WebhookResponse> {

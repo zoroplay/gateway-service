@@ -17,6 +17,7 @@ import { AppService } from 'src/app.service';
 import { RetailService } from '../retail/retail.service';
 import { FirebaseService } from 'src/common/services/firebaseUpload';
 import * as dotenv from 'dotenv';
+import { ContentManagementController } from './admin/content-management.controller';
 dotenv.config();
 console.log('URL::', process.env.IDENTITY_SERVICE_URL);
 @Module({
@@ -42,6 +43,7 @@ console.log('URL::', process.env.IDENTITY_SERVICE_URL);
     UsersController,
     RolesController,
     SettingsController,
+    ContentManagementController
   ],
   providers: [AppService, AuthService, RetailService, FirebaseService],
   exports: [AuthService, RetailService, FirebaseService],
