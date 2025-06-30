@@ -317,7 +317,7 @@ export class AppController {
             rawBody: webhookBody,
           });
           return provi;
-        } 
+        }
 
         break;
 
@@ -370,7 +370,7 @@ export class AppController {
         await this.walletService.pawapayCallback({
           clientId: param.clientId,
           depositId: webhookBody.depositId,
-          status: '',
+          status: webhookBody.status,
           rawBody: webhookBody,
         });
 
