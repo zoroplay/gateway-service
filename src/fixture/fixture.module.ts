@@ -6,9 +6,11 @@ import { FIXTURE_PACKAGE_NAME, protobufPackage } from 'src/interfaces/fixture.pb
 import 'dotenv/config';
 import { join } from 'path';
 import { AdminFixtureController } from './admin/admin-fixture.controller';
+import { IdentityModule } from 'src/identity/identity.module';
 
 @Module({
   imports: [
+    IdentityModule,
     ClientsModule.register([
       {
         name: protobufPackage,
