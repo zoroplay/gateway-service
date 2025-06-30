@@ -17,7 +17,6 @@ import {
   LoginRequest,
   LoginResponse,
   UpdateUserRequest,
-  UpdateUserResponse,
   ChangePasswordRequest,
   ResetPasswordRequest,
   GetSettingsRequest,
@@ -64,12 +63,16 @@ export class AuthService {
 
   public async updateUser(
     data: UpdateUserRequest,
-  ): Promise<UpdateUserResponse> {
+  ): Promise<CommonResponseObj> {
     return firstValueFrom(this.svc.updateUserDetails(data));
   }
 
   public async createUser(data: CreateUserRequest) {
     return firstValueFrom(this.svc.createRetailUser(data));
+  }
+
+  public async updateRetailUser(data: UpdateUserRequest) {
+    return firstValueFrom(this.svc.updateRetailUser(data));
   }
 
   public async validate(token: string): Promise<ValidateResponse> {
@@ -98,13 +101,13 @@ export class AuthService {
 
   public async changePassword(
     data: ChangePasswordRequest,
-  ): Promise<UpdateUserResponse> {
+  ): Promise<CommonResponseObj> {
     return firstValueFrom(this.svc.changePassword(data));
   }
 
   public async resetPassword(
     data: ResetPasswordRequest,
-  ): Promise<UpdateUserResponse> {
+  ): Promise<CommonResponseObj> {
     return firstValueFrom(this.svc.resetPassword(data));
   }
 

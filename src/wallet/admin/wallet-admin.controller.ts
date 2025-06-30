@@ -9,6 +9,7 @@ import {
   Put,
   Query,
   Req,
+  UseGuards,
 } from '@nestjs/common';
 import {
   ApiBody,
@@ -40,8 +41,10 @@ import {
 } from '../dto';
 
 import { WalletService } from '../wallet.service';
+import { AuthGuard } from 'src/identity/auth/auth.guard';
 
 @ApiTags('BackOffice APIs')
+@UseGuards(AuthGuard)
 @Controller('admin/wallet')
 export class WalletAdminController {
   constructor(private readonly walletService: WalletService) {}

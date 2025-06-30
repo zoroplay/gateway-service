@@ -31,11 +31,11 @@ export class CryptoService {
 
   compareKeys(key: string, signature: string) {
     // Get the UNIX timestamp for 2 seconds ago for start time
-    let start = dayjs().subtract(2, 'seconds').unix()//;
+    let start = dayjs().subtract(5, 'seconds').unix()//;
     // Get the current UNIX timestamp as a string
     const timestamp = dayjs().unix().toString();
     // Get the UNIX timestamp for 2 seconds ahead for end time
-    const end = dayjs().add(2, 'seconds').unix().toString();
+    const end = dayjs().add(5, 'seconds').unix().toString();
 
     console.log('timestamp is', timestamp);
 

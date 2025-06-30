@@ -8,6 +8,7 @@ import {
   Post,
   Put,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import {
   ApiBody,
@@ -48,8 +49,10 @@ import {
   SwaggerFetchReportResponse,
   SwaggerGetPaymentMethodResponse,
 } from 'src/wallet/dto';
+import { AuthGuard } from 'src/identity/auth/auth.guard';
 
 @ApiTags('BackOffice APIs')
+@UseGuards(AuthGuard)
 @Controller('admin/bonus')
 export class AdminBonusController {
   constructor(private readonly bonusService: BonusService) {}

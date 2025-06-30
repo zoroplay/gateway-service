@@ -296,19 +296,19 @@ export class GamingService implements OnModuleInit {
     return resp;
   }
 
-  async startGameLobby(request: StartGameDto) {
+  async startSmatGame(request: StartDto) {
     // //('start game', request);
     console.log('start-service', request);
-    const resp = await firstValueFrom(this.service.qtechLobby(request));
+    const resp = await firstValueFrom(this.service.startSmatGame(request));
     console.log('resp', resp);
 
     return resp;
   }
 
-  async startSmatGame(request: StartDto) {
+  async startGameLobby(request: StartGameDto) {
     // //('start game', request);
     console.log('start-service', request);
-    const resp = await firstValueFrom(this.service.startSmatGame(request));
+    const resp = await firstValueFrom(this.service.qtechLobby(request));
     console.log('resp', resp);
 
     return resp;

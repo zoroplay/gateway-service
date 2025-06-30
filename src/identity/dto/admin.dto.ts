@@ -8,7 +8,7 @@ export class SaveRoleRequest {
 
     @ApiProperty({ description: 'Role type/category', example: 'admin|agency|player' })
     @IsNotEmpty()
-    roleType: string;
+    type: string;
 
     @ApiProperty({ description: 'Role description', example: '' })
     description?: string;

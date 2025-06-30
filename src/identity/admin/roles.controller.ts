@@ -8,6 +8,7 @@ import {
   Req,
   Inject,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import { ApiBody, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import {
@@ -22,8 +23,10 @@ import { GetAllLogsDTO, GetUserLogsDTO } from '../dto/audit.dto';
 import { GetAllLogsRequest } from 'src/interfaces/identity.pb';
 import { IAuthorizedRequest } from 'src/interfaces/authorized-request.interface';
 import { UAParser } from 'ua-parser-js';
+import { AuthGuard } from '../auth/auth.guard';
 
 @ApiTags('BackOffice APIs')
+@UseGuards(AuthGuard)
 @Controller('admin')
 export class RolesController {
   private svc: IdentityServiceClient;
@@ -82,13 +85,14 @@ export class RolesController {
     return this.svc.removeRole(data);
   }
 
-  @Post('/permission')
+  @Post('/permissions')
   @ApiOperation({
     summary: 'create Permissions',
     description: 'This endpoint is used to create or update permissions',
   })
   @ApiOkResponse({ type: SwaggerCommonResponse })
   createPermission(@Body() body) {
+    body.permissionID = body.id || null;
     return this.svc.createPermission(body);
   }
 
@@ -118,7 +122,7 @@ export class RolesController {
     return this.svc.removePermission(data);
   }
 
-  @Post('/assign_permission')
+  @Post('/assign_permissions')
   @ApiOperation({
     summary: 'Assign Permissions to Role',
     description: 'This endpoint is used to assign permissions to a role',

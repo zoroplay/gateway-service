@@ -9,6 +9,7 @@ import {
   Put,
   Query,
   UploadedFile,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { ApiBody, ApiConsumes, ApiOkResponse, ApiQuery, ApiTags } from '@nestjs/swagger';
@@ -53,8 +54,10 @@ import {
 } from '../dto';
 import { GamingService } from '../gaming.service';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { AuthGuard } from 'src/identity/auth/auth.guard';
 
 @ApiTags('BackOffice APIs')
+@UseGuards(AuthGuard)
 @Controller('admin/games')
 export class GamingAdminController {
   constructor(private readonly gamingService: GamingService) {}

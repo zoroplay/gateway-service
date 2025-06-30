@@ -1,10 +1,12 @@
-import { Body, Controller, Get, Inject, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, Inject, Post, Query, UseGuards } from '@nestjs/common';
 import { ApiBody, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { ClientGrpc } from '@nestjs/microservices';
 import { NOTIFICATION_SERVICE_NAME, NotificationServiceClient, SaveSettingsRequest, protobufPackage } from 'src/interfaces/noti.pb';
 import { GettSmsSettingsRequest, GettSmsSettingsResponse, SaveSMSSettingsRequest, SaveSMSSettingsResponse } from '../dto';
+import { AuthGuard } from 'src/identity/auth/auth.guard';
 
 @ApiTags('BackOffice APIs')
+@UseGuards(AuthGuard)
 @Controller('admin')
 export class AdminController {
     private svc: NotificationServiceClient;

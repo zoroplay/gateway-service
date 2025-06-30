@@ -10,6 +10,7 @@ import {
   Param,
   Put,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { ApiBody, ApiOkResponse, ApiOperation, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
 import {
@@ -25,12 +26,10 @@ import {
 import { ClientGrpc } from '@nestjs/microservices';
 import { CreateBannerDto, CreateMenuDto, CreatePageDto, SaveRoleRequest } from '../dto/admin.dto';
 import { SwaggerCommonResponse } from '../dto';
-import { GetAllLogsDTO, GetUserLogsDTO } from '../dto/audit.dto';
-import { GetAllLogsRequest } from 'src/interfaces/identity.pb';
-import { IAuthorizedRequest } from 'src/interfaces/authorized-request.interface';
-import { UAParser } from 'ua-parser-js';
+import { AuthGuard } from '../auth/auth.guard';
 
 @ApiTags('BackOffice APIs')
+@UseGuards(AuthGuard)
 @Controller('admin/content-management')
 export class ContentManagementController {
   private svc: IdentityServiceClient;

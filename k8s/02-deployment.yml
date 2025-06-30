@@ -17,7 +17,7 @@ spec:
         - name: regcred
       containers:
         - name: sbe-gateway-container
-          image: "registry.gitlab.com/etech8583418/sbe-gateway-service:0.0.6"
+          image: "registry.gitlab.com/etech8583418/sbe-gateway-service:0.6.1"
           imagePullPolicy: IfNotPresent
           ports:
             - name: http
@@ -39,7 +39,11 @@ spec:
             - name: BONUS_SERVICE_URL
               value: "134.122.17.21:9006"
             - name: GAMING_SERVICE_URL
-              value: "134.122.17.21:9015"    
+              value: "134.122.17.21:9015"  
+            - name: FEEDS_SERVICE_GRPC_URI
+              value: "159.65.30.131:6011"    
+            - name: OPAY_1_COLLECTION_PUBLIC_KEY
+              value: "OPAYPUB16606770812800.30332296132111947"   
           resources:
             limits:
               cpu: "2000m"
