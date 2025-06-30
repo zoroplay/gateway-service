@@ -8,6 +8,7 @@ import {
   Post,
   Put,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import {
   ApiBody,
@@ -41,10 +42,12 @@ import {
   UpdateSportsMenuOrderRequest,
 } from 'src/interfaces/fixture.pb';
 import { SwaggerCommonResponse } from 'src/identity/dto';
+import { AuthGuard } from 'src/identity/auth/auth.guard';
 
 const logger = new Logger();
 
 @ApiTags('BackOffice APIs')
+@UseGuards(AuthGuard)
 @Controller('admin/sports')
 export class AdminFixtureController {
   constructor(private readonly fixtureService: FixtureService) {}

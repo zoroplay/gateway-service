@@ -12,6 +12,7 @@ import {
   Put,
   Query,
   UploadedFile,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import {
@@ -26,6 +27,7 @@ import {
   AddToSegmentRequest,
   ClientIdRequest,
   ClientRequest,
+  CreateUserRequest,
   DeleteItemRequest,
   FetchPlayerSegmentRequest,
   GrantBonusRequest,
@@ -33,6 +35,7 @@ import {
   IdentityServiceClient,
   ResetPasswordRequest,
   SaveSegmentRequest,
+  UpdateUserRequest,
   protobufPackage,
 } from 'src/interfaces/identity.pb';
 import { ClientGrpc } from '@nestjs/microservices';
@@ -42,7 +45,7 @@ import {
   SwaggerSaveClientRequest,
   SwaggerSaveSegmentRequest,
 } from '../dto/admin.dto';
-import { SwaggerChangePasswordRequest, SwaggerCommonResponse } from '../dto';
+import { SwaggerChangePasswordRequest, SwaggerCommonResponse, SwaggerUserDetailsRequest } from '../dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import {
   PATH_DOWNLOADED_FILE,
@@ -51,6 +54,7 @@ import {
 } from 'src/uploads';
 import * as Excel from 'exceljs';
 import { firstValueFrom } from 'rxjs';
+import { AuthGuard } from '../auth/auth.guard';
 
 const getCellValue = (row: Excel.Row, cellIndex: number) => {
   const cell = row.getCell(cellIndex);
@@ -59,6 +63,7 @@ const getCellValue = (row: Excel.Row, cellIndex: number) => {
 };
 
 @ApiTags('BackOffice APIs')
+@UseGuards(AuthGuard)
 @Controller('admin')
 export class UsersController {
   private svc: IdentityServiceClient;
@@ -93,6 +98,29 @@ export class UsersController {
     // return this.svc.getClients({});
   }
 
+  @Get('users')
+  @ApiQuery({ name: 'clientId', description: 'SBE Client ID' })
+  @ApiOperation({
+    summary: 'Fetch SBE Clients',
+    description: 'This endpoint is used to get lists  of all SBE clients',
+  })
+  @ApiOkResponse({ type: SwaggerCommonResponse })
+  getAdminUsers(@Query() query: FetchPlayerSegmentRequest) {
+    return this.svc.getAdminUsers(query);
+  }
+
+  @Post('users')
+  @ApiOperation({
+    summary: 'Fetch SBE Clients',
+    description: 'This endpoint is used to get lists  of all SBE clients',
+  })
+  @ApiBody({ type: SwaggerUserDetailsRequest })
+  @ApiOkResponse({ type: SwaggerCommonResponse })
+  createAdmin(@Body() body: CreateUserRequest) {
+    return this.svc.createAdminUser(body);
+  }
+
+
   @Put('/users/change-password')
   @ApiOperation({
     summary: 'Update User Password',
@@ -102,6 +130,28 @@ export class UsersController {
   @ApiOkResponse({ type: SwaggerCommonResponse })
   updatePassword(@Body() data: ResetPasswordRequest) {
     return this.svc.resetPassword(data);
+  }
+
+  @Put('/users/update')
+  @ApiOperation({
+    summary: 'Update User Details',
+    description: 'This endpoint lets you update user details',
+  })
+  @ApiBody({ type: SwaggerUserDetailsRequest })
+  @ApiOkResponse({ type: SwaggerCommonResponse })
+  updateDetails(@Body() data: UpdateUserRequest) {
+    return this.svc.updateDetails(data);
+  }
+
+  @Get('users/:userId/single')
+  @ApiParam({ name: 'userId', description: 'User ID' })
+  @ApiOperation({
+    summary: 'Fetch Admin User',
+    description: 'This endpoint is used to get a user object',
+  })
+  @ApiOkResponse({ type: SwaggerCommonResponse })
+  getUser(@Param('userId') userId: number) {
+    return this.svc.findUser({userId});
   }
 
   @Get('player-management/segments')

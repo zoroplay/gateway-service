@@ -8,6 +8,7 @@ import {
   Post,
   Query,
   Req,
+  UseGuards,
 } from '@nestjs/common';
 import {
   ApiBody,
@@ -55,8 +56,10 @@ import {
   SummaryRequest,
 } from 'src/interfaces/wallet.pb';
 import { WalletService } from 'src/wallet/wallet.service';
+import { AuthGuard } from 'src/identity/auth/auth.guard';
 
 @ApiTags('BackOffice APIs')
+@UseGuards(AuthGuard)
 @Controller('admin/retail')
 export class RetailAdminController {
   constructor(

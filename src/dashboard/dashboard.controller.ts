@@ -1,9 +1,11 @@
-import { Controller, Get, Param, Query } from '@nestjs/common';
+import { Controller, Get, Param, Query, UseGuards } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+import { AuthGuard } from 'src/identity/auth/auth.guard';
 import { OverallGamesRequest, StatisticsRequest } from 'src/interfaces/wallet.pb';
 import { WalletService } from 'src/wallet/wallet.service';
 
 @ApiTags('BackOffice APIs')
+@UseGuards(AuthGuard)
 @Controller('admin/dashboard')
 export class DashBoardAdminController {
   constructor(private readonly walletService: WalletService) {}
