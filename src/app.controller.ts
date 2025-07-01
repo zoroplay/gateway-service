@@ -25,6 +25,7 @@ import { SwaggerGetUserByUsernmae } from './identity/dto';
 import { OddsService } from './odds/odds.service';
 import { TigoWebhookRequest, WebhookResponse } from './wallet/dto';
 import {
+  FidelityWebhookRequest,
   GlobusResponse,
   OpayResponse,
   PawapayResponse,
@@ -36,6 +37,7 @@ import * as xml2js from 'xml2js';
 import { Response, Request } from 'express';
 import buildTigoW2AResponse from './wallet/dto/utils';
 import * as crypto from 'crypto';
+import { raw } from 'body-parser';
 
 @Controller()
 export class AppController {
@@ -105,6 +107,7 @@ export class AppController {
   }
 
   @ApiTags('Webhooks')
+  @HttpCode(200)
   @Post('webhook/:client/:provider')
   @ApiParam({ name: 'client', type: 'number', description: 'SBE Client ID' })
   @ApiParam({
@@ -138,14 +141,24 @@ export class AppController {
           event: body.eventType,
         });
         break;
-        // case 'flutterwave':
-        // this.walletService.flutterWaveWebhook({
-        //   clientId: param.client,
-        //   txRef: body.data.tx_ref,
-        //   event: body.event,
-        //   body: JSON.stringify(body),
-        //   flutterwaveKey: req.headers['x-flutterwave-signature'],
-        // });
+      case 'flutterwave':
+        this.walletService.flutterWaveWebhook({
+          clientId: param.client,
+          txRef: body.data.tx_ref,
+          event: body.event,
+          body: JSON.stringify(body),
+          flutterwaveKey: req.headers['x-flutterwave-signature'],
+        });
+        break;
+
+      case 'korapay':
+        this.walletService.flutterWaveWebhook({
+          clientId: param.client,
+          txRef: body.data.reference,
+          event: body.event,
+          body: JSON.stringify(body),
+          flutterwaveKey: req.headers['x-korapay-signature'] as string,
+        });
         break;
 
       default:
@@ -160,87 +173,9 @@ export class AppController {
   validateOdds(@Body() body) {
     return this.oddsService.GetOddsStatus(body);
   }
-  @ApiTags('Webhooks')
-  @Post('/webhook/:clientId/tigo/callback')
-  @ApiOperation({
-    summary: 'Handle Tigo Payment Webhook',
-    description: 'Receives payment notifications from Tigo and processes them',
-  })
-  @ApiBody({
-    type: TigoWebhookRequest,
-    description: 'The webhook payload sent by Tigo',
-  })
-  @ApiOkResponse({
-    type: WebhookResponse,
-    description: 'Response confirming webhook processing',
-  })
-  async handleTigoCallback(
-    @Body() webhookBody: any,
-    @Param() param,
-  ): Promise<WebhookResponse> {
-    console.log('TIGO-WEBHOOK');
-    console.log(`📩 Received Tigo Webhook: ${JSON.stringify(webhookBody)}`);
-
-    // ✅ Validate Webhook Data
-    if (!webhookBody || Object.keys(webhookBody).length === 0) {
-      console.error('❌ Received an empty webhook request');
-    }
-
-    if (!webhookBody.ReferenceID) {
-      console.error('❌ Missing ReferenceID in webhook data');
-    }
-
-    console.log('TIGO-WEBHOOK');
-
-    const isSuccess = webhookBody.Status === true;
-    const rawReferenceId = webhookBody.ReferenceID;
-    const amount = webhookBody.Amount || 0;
-
-    // ✅ Safely Remove 'KML' Prefix
-    const referenceId = rawReferenceId.startsWith('KML')
-      ? rawReferenceId.replace(/^KML/, '')
-      : rawReferenceId;
-
-    try {
-      if (isSuccess) {
-        console.log(
-          `✅ Payment Successful! Ref: ${referenceId}, Amount: ${amount}`,
-        );
-
-        // ✅ Call Wallet Service to Credit User
-        const response = await this.walletService.tigoWebhook({
-          clientId: param.clientId,
-          reference: referenceId,
-          event: 'payment_success',
-          body: JSON.stringify(webhookBody),
-          Status: isSuccess,
-        });
-
-        console.log(
-          `🎉 User credited successfully: ${JSON.stringify(response)}`,
-        );
-      } else {
-        console.error(`❌ Payment Failed: ${JSON.stringify(webhookBody)}`);
-      }
-
-      return {
-        ResponseCode: webhookBody.ResponseCode || 'BILLER-18-0000-S',
-        ResponseStatus: webhookBody.Status,
-        ResponseDescription: webhookBody.Description,
-        ReferenceID: webhookBody.ReferenceID,
-      };
-    } catch (error) {
-      console.error(`❌ Error processing webhook: ${error.message}`);
-      return {
-        ResponseCode: webhookBody.ResponseCode || 'BILLER-18-0000-S',
-        ResponseStatus: webhookBody.Status,
-        ResponseDescription: webhookBody.Description,
-        ReferenceID: webhookBody.ReferenceID,
-      };
-    }
-  }
 
   @ApiTags('Webhooks')
+  @HttpCode(200)
   @Post('/webhook/:clientId/tigo/notify')
   async handleW2aWebhook(
     @Req() req: Request,
@@ -271,6 +206,7 @@ export class AppController {
       customerReferenceId: command.CUSTOMERREFERENCEID,
       senderName: command.SENDERNAME,
       clientId: param.clientId,
+      rawBody: command,
     };
     console.log(payload);
 
@@ -312,98 +248,8 @@ export class AppController {
   }
 
   @ApiTags('Webhooks')
-  @Post('/webhook/:clientId/pawapay/callback')
-  async handlePawapayCallback(
-    @Body() webhookBody: any,
-    @Param() param,
-  ): Promise<PawapayResponse> {
-    console.log(`📩 Received Pawapay Webhook: ${JSON.stringify(webhookBody)}`);
-
-    // ✅ Validate Webhook Data
-    if (!webhookBody || Object.keys(webhookBody).length === 0) {
-      console.error('❌ Received an empty webhook request');
-      return { success: false, message: 'Empty webhook data' };
-    }
-
-    if (!webhookBody.depositId) {
-      console.error('❌ Missing DepositId in webhook data');
-      return {
-        success: false,
-        message: 'Invalid webhook data: Missing ReferenceID',
-      };
-    }
-
-    const isSuccess = webhookBody.status === 'COMPLETED';
-
-    try {
-      if (isSuccess) {
-        const response = await this.walletService.pawapayCallback({
-          clientId: param.clientId,
-          depositId: webhookBody.depositId,
-          status: '',
-        });
-        console.log(
-          `🎉 User credited successfully: ${JSON.stringify(response)}`,
-        );
-      } else {
-        console.error(`❌ Payment Failed: ${JSON.stringify(webhookBody)}`);
-      }
-
-      return { success: true, message: 'Webhook processed' };
-    } catch (error) {
-      console.error(`❌ Error processing webhook: ${error.message}`);
-      return { success: false, message: 'Internal server error' };
-    }
-  }
-
-  @ApiTags('Webhooks')
-  @Post('/webhook/:clientId/mtnmomo/callback')
-  async handleMtnmomoCallback(@Body() webhookBody: any, @Param() param) {
-    console.log(`📩 Received MTN MoMo Webhook: ${JSON.stringify(webhookBody)}`);
-
-    // ✅ Validate required fields
-    if (!webhookBody || Object.keys(webhookBody).length === 0) {
-      console.error('❌ Received an empty webhook request');
-      return { success: false };
-    }
-
-    const isSuccess = webhookBody.status === 'SUCCESSFUL';
-
-    if (!webhookBody.externalId) {
-      console.error('❌ Missing externalId in webhook data');
-      return {
-        success: false,
-      };
-    }
-
-    try {
-      if (isSuccess) {
-        const response = await this.walletService.mtnmomoWebhook({
-          amount: webhookBody.amount,
-          externalId: webhookBody.externalId,
-          status: webhookBody.status,
-          clientId: param.clientId,
-        });
-
-        console.log(
-          `🎉 User credited successfully: ${JSON.stringify(response)}`,
-        );
-      } else {
-        console.warn(
-          `⚠️ Payment Failed or Pending: ${JSON.stringify(webhookBody)}`,
-        );
-        // You might want to update transaction status to FAILED here too
-      }
-
-      return { success: true, message: 'Webhook processed' };
-    } catch (error) {
-      console.error(`❌ Error processing webhook: ${error.message}`, error);
-      return { success: false, message: 'Internal server error' };
-    }
-  }
-
-  @ApiTags('Webhooks')
   @Post('/webhook/checkout/:clientId/opay/callback')
+  @HttpCode(200)
   async handleOpayCallback(
     @Body() webhookBody: any,
     @Param() param,
@@ -412,14 +258,6 @@ export class AppController {
     const { payload, sha512 } = webhookBody;
 
     console.log('✅ Verified Webhook Payload:', payload);
-
-    if (!payload?.reference) {
-      return {
-        statusCode: 400,
-        success: false,
-        message: 'Missing reference ID in webhook payload.',
-      };
-    }
 
     const data = {
       clientId: param.clientId,
@@ -442,261 +280,151 @@ export class AppController {
   }
 
   @ApiTags('Webhooks')
-  @Post('/webhook/:clientId/coralpay/callback')
   @HttpCode(200)
-  async handleCorapayWebhook(
-    @Headers('authorization') authHeader: string,
-    @Body() callbackData: any,
+  @Post('/webhook/:clientId/:provider/callback')
+  async handleAllWebhook(
     @Param() param,
-  ): Promise<OpayResponse> {
-    console.log('✅ Verified Webhook Payload:', callbackData);
-    console.log('THE HEADERS', authHeader);
-
-    try {
-      const result = await this.walletService.CorapayWebhook({
-        clientId: param.clientId,
-        authHeader,
-        callbackData,
-      });
-
-      console.log(`🎉 User credited successfully: `);
-
-      return result;
-    } catch (error) {
-      console.error(`❌ Error processing webhook: ${error.message}`);
-      return {
-        statusCode: 500,
-        success: false,
-        message: 'Internal server error',
-      };
-    }
-  }
-
-  @ApiTags('Webhooks')
-  @Post('webhook/check-out/:clientId/flutterwave')
-  @ApiParam({ name: 'clientId', type: 'number', description: 'SBE Client ID' })
-  async handleFlutterwaveWebhook(
-    @Param() param,
-    @Body() body: any,
+    @Body() webhookBody: any,
     @Headers() headers,
   ) {
-    console.log('THE MAIN F-FUNC');
-    console.log('THE BODY', body);
-    console.log('THE HEADERS', headers);
+    console.log('🔥 Webhook HIT');
+    console.log('Params:', param);
+    console.log('Body:', webhookBody);
+    console.log('All headers:', headers);
+    switch (param.provider) {
+      case 'globus':
+        const authorization: string =
+          headers['clientid'] || headers['ClientId'] || headers['CLIENTID'];
+        console.log('AUTH::', authorization);
 
-    const signature = headers['x-flutterwave-signature'] as string;
-
-    console.log('THE SIGNATURE', signature);
-
-    // Option 2: Embed client ID in tx_ref or custom field
-    const txRef = body?.data?.tx_ref;
-
-    const client = param.clientId;
-
-    const result = await this.walletService.flutterWaveWebhook({
-      clientId: client,
-      txRef,
-      event: body.event,
-      body: JSON.stringify(body),
-      flutterwaveKey: signature,
-    });
-
-    return result;
-  }
-
-  @ApiTags('Webhooks')
-  @Post('webhook/checkout/:clientId/korapay')
-  @ApiParam({ name: 'clientId', type: 'number', description: 'SBE Client ID' })
-  async handleKorapayWebhook(
-    @Param() param,
-    @Body() body: any,
-    @Headers() headers,
-  ) {
-    console.log('THE-BODY:::', body);
-    console.log('HEADERS:::', headers);
-    const signature = headers['x-korapay-signature'] as string;
-
-    // Option 2: Embed client ID in tx_ref or custom field
-    const reference = body?.data?.reference;
-
-    const client = param.clientId;
-
-    const result = await this.walletService.korapayWaveWebhook({
-      clientId: client,
-      reference,
-      event: body.event,
-      body: JSON.stringify(body),
-      korapayKey: signature,
-    });
-
-    return result;
-  }
-
-  @ApiTags('Webhooks')
-  @Post('/webhook/:clientId/fidelity/callback')
-  async handleWebhook(@Body() webhookBody: any, @Param() param) {
-    try {
-      console.log(webhookBody);
-
-      const {
-        type,
-        status,
-        data: { transactionReference, statusOk },
-      } = webhookBody;
-
-      if (type === 'success' && statusOk === true && status === 201) {
-        const data = {
-          transactionReference,
+        await this.walletService.handleGlobusWebhook({
           clientId: param.clientId,
-        };
-        // Credit user's wallet
-        await this.walletService.FidelityWebhook(data);
+          callbackData: webhookBody,
+          headers: authorization,
+        });
+        break;
+      case 'providus':
+        const proAuthorization: string = headers['x-auth-signature'];
+        console.log('AUTH::', proAuthorization);
 
-        return { statusCode: 200, success: true, message: 'OK' };
-      }
-    } catch (error) {
-      return { statusCode: 400, success: true, message: 'OK' };
-    }
-  }
+        if (webhookBody !== undefined) {
+          const provi = await this.walletService.handleProvidusWebhook({
+            accountNumber: webhookBody.accountNumber,
+            clientId: param.clientId,
+            sessionId: webhookBody.sessionId,
+            headers: proAuthorization,
+            settlementId: webhookBody.settlementId,
+            rawBody: webhookBody,
+          });
+          return provi;
+        }
 
-  @ApiTags('Webhooks')
-  @HttpCode(200)
-  @Post('/webhook/:clientId/providus/callback')
-  async handleProvidusWebhook(
-    @Param() param,
-    @Body() webhookBody: any,
-    @Headers() headers,
-  ): Promise<ProvidusResponse> {
-    try {
-      console.log('🔥 Webhook HIT');
-      console.log('Headers:', headers);
-      console.log('Params:', param);
-      console.log('Body:', webhookBody);
+        break;
 
-      const authorization: string = headers['x-auth-signature'];
+      case 'fidelity':
+        await this.walletService.FidelityWebhook({
+          transactionReference: webhookBody.transactionReference,
+          clientId: param.clientId,
+          rawBody: webhookBody,
+        });
+        break;
+      case 'smileandpay':
+        const snpAuthorization: string = headers['x-auth-signature'];
+        console.log('AUTH::', snpAuthorization);
 
-      console.log('AUTH::', authorization);
+        await this.walletService.handleSmileNPayWebhook({
+          clientId: param.clientId,
+          callbackData: webhookBody,
+          //headers: '',
+        });
+        break;
 
-      if (
-        webhookBody.settlementId === undefined ||
-        webhookBody.settlementId === null ||
-        webhookBody.settlementId === ''
-      ) {
+      case 'coralpay':
+        const coralpayHeaders = headers['authorization'];
+        console.log('headers', coralpayHeaders);
+        console.log('AUTH::', coralpayHeaders);
+        await this.walletService.CorapayWebhook({
+          clientId: param.clientId,
+          authHeader: coralpayHeaders,
+          callbackData: webhookBody,
+        });
+        break;
+
+      case 'mtnmomo':
+        console.log('ME');
+        console.log(webhookBody.status);
+        if (webhookBody.status === 'SUCCESSFUL') {
+          const mtn = await this.walletService.mtnmomoWebhook({
+            amount: webhookBody.amount,
+            externalId: webhookBody.externalId,
+            status: webhookBody.status,
+            clientId: param.clientId,
+            rawBody: webhookBody,
+          });
+
+          return mtn;
+        }
+        break;
+
+      case 'pawapay':
+        await this.walletService.pawapayCallback({
+          clientId: param.clientId,
+          depositId: webhookBody.depositId,
+          status: webhookBody.status,
+          rawBody: webhookBody,
+        });
+
+        break;
+      case 'tigo':
+        const isSuccess = webhookBody.Status === true;
+        const rawReferenceId = webhookBody.ReferenceID;
+        const amount = webhookBody.Amount || 0;
+
+        // ✅ Safely Remove 'KML' Prefix
+        const referenceId = rawReferenceId.startsWith('KML')
+          ? rawReferenceId.replace(/^KML/, '')
+          : rawReferenceId;
+
+        if (isSuccess) {
+          console.log(
+            `✅ Payment Successful! Ref: ${referenceId}, Amount: ${amount}`,
+          );
+
+          await this.walletService.tigoWebhook({
+            clientId: param.clientId,
+            reference: referenceId,
+            event: 'payment_success',
+            body: JSON.stringify(webhookBody),
+            Status: isSuccess,
+            rawBody: webhookBody,
+          });
+
+          return {
+            ResponseCode: webhookBody.ResponseCode || 'BILLER-18-0000-S',
+            ResponseStatus: webhookBody.Status,
+            ResponseDescription: webhookBody.Description,
+            ReferenceID: webhookBody.ReferenceID,
+          };
+        } else {
+          return {
+            ResponseCode: webhookBody.ResponseCode || 'BILLER-18-0000-S',
+            ResponseStatus: webhookBody.Status,
+            ResponseDescription: webhookBody.Description,
+            ReferenceID: webhookBody.ReferenceID,
+          };
+        }
+
+      default:
         return {
-          requestSuccessful: true,
-          sessionId: webhookBody.sessionId,
-          responseMessage: 'rejected transaction',
-          responseCode: '02',
+          status: 400,
+          message: 'Unsupported payment provider',
+          success: true,
         };
-      }
-
-      if (
-        webhookBody.accountNumber === undefined ||
-        webhookBody.accountNumber === null ||
-        webhookBody.accountNumber === ''
-      ) {
-        return {
-          requestSuccessful: true,
-          sessionId: webhookBody.sessionId,
-          responseMessage: 'rejected transaction',
-          responseCode: '02',
-        };
-      }
-      const data = {
-        accountNumber: webhookBody.accountNumber,
-        clientId: param.clientId,
-        sessionId: webhookBody.sessionId,
-        headers: authorization,
-        settlementId: webhookBody.settlementId,
-      };
-
-      console.log('THE_DATA', data);
-
-      const result = await this.walletService.handleProvidusWebhook(data);
-      return result;
-    } catch (error) {
-      return {
-        requestSuccessful: true,
-        sessionId: webhookBody.sessionId,
-        responseMessage: 'system failure, retry',
-        responseCode: '03',
-      };
     }
-  }
-
-  @ApiTags('Webhooks')
-  @HttpCode(200)
-  @Post('/webhook/:clientId/globus/callback')
-  async handleGlobusWebhook(
-    @Param() param,
-    @Body() webhookBody: any,
-    @Headers() headers,
-  ): Promise<GlobusResponse> {
-    try {
-      console.log('🔥 Webhook HIT');
-      console.log('Params:', param);
-      console.log('Body:', webhookBody);
-      console.log('All headers:', headers);
-
-      const authorization: string =
-        headers['clientid'] || headers['ClientId'] || headers['CLIENTID'];
-
-      console.log('AUTH::', authorization);
-
-      const data = {
-        clientId: param.clientId,
-        callbackData: webhookBody,
-        headers: authorization,
-      };
-
-      console.log('THE_DATA', data);
-
-      const result = await this.walletService.handleGlobusWebhook(data);
-      return result;
-    } catch (error) {
-      return {
-        statusCode: 500,
-        success: true,
-        message: 'system failure, retry',
-      };
-    }
-  }
-
-  @ApiTags('Webhooks')
-  @HttpCode(200)
-  @Post('/webhook/:clientId/smileandpay/callback')
-  async handleSmileNPayWebhook(
-    @Param() param,
-    @Body() webhookBody: any,
-    @Headers() headers,
-  ): Promise<SmileAndPayResponse> {
-    try {
-      console.log('🔥 Webhook HIT');
-      console.log('Params:', param);
-      console.log('Body:', webhookBody);
-      console.log('All headers:', headers);
-
-      // const authorization: string =
-      //   headers['clientid'] || headers['ClientId'] || headers['CLIENTID'];
-
-      // console.log('AUTH::', authorization);
-
-      const data = {
-        clientId: param.clientId,
-        callbackData: webhookBody,
-        headers: '',
-      };
-
-      console.log('THE_DATA', data);
-
-      const result = await this.walletService.handleSmileNPayWebhook(data);
-      return result;
-    } catch (error) {
-      return {
-        statusCode: 500,
-        success: true,
-        message: 'system failure, retry',
-      };
-    }
+    return {
+      statusCode: 200,
+      success: true,
+      message: 'Transaction successfully verified and processed',
+    };
   }
 }

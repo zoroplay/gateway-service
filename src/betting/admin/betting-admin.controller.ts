@@ -8,6 +8,7 @@ import {
   Ip,
   Query,
   Put,
+  UseGuards,
 } from '@nestjs/common';
 import {
   ApiBody,
@@ -27,8 +28,10 @@ import {
   UserRiskSettingsRequest,
 } from 'src/interfaces/betting.pb';
 import { SwaggerCommonResponse, SwaggerSettingsRequest } from 'src/identity/dto';
+import { AuthGuard } from 'src/identity/auth/auth.guard';
 
 @ApiTags('BackOffice APIs')
+@UseGuards(AuthGuard)
 @Controller('admin/bets')
 export class BettingAdminController {
   constructor(private readonly bettingService: BettingService) {}

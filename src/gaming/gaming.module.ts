@@ -7,9 +7,11 @@ import { join } from 'path';
 import { VirtualController } from './virtual.controller';
 import { GamingAdminController } from './admin/gaming.admin.controller';
 import { FirebaseService } from 'src/common/services/firebaseUpload';
+import { IdentityModule } from 'src/identity/identity.module';
 
 @Module({
   imports: [
+    IdentityModule,
     ClientsModule.register([
       {
         name: protobufPackage,

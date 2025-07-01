@@ -7,6 +7,7 @@ import {
   Post,
   Put,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import {
   ApiBody,
@@ -39,8 +40,10 @@ import { SwaggerCommonResponse } from '../dto';
 import { SwaggerListTransactionResponse } from 'src/wallet/dto';
 import { WalletService } from 'src/wallet/wallet.service';
 import { firstValueFrom } from 'rxjs';
+import { AuthGuard } from '../auth/auth.guard';
 
 @ApiTags('BackOffice APIs')
+@UseGuards(AuthGuard)
 @Controller('admin/players')
 export class PlayersController {
   private svc: IdentityServiceClient;

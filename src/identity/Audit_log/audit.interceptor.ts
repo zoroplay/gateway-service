@@ -182,7 +182,7 @@ export class AuditLogInterceptor implements NestInterceptor {
                 (typeof user === 'object' &&
                   'username' in user &&
                   user.username) ||
-                response.username ||
+                response?.username ||
                 '',
               action,
               endpoint,

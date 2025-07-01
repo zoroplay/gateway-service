@@ -5,25 +5,21 @@ import {
   Inject,
   Param,
   Post,
-  Put,
   Query,
-  UploadedFile,
   UploadedFiles,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import {
-  GetRiskSettingRequest,
   GetSettingsRequest,
   IDENTITY_SERVICE_NAME,
   IdentityServiceClient,
   SettingsRequest,
-  UserRiskSettingsRequest,
   protobufPackage,
 } from 'src/interfaces/identity.pb';
 import { ClientGrpc } from '@nestjs/microservices';
 import {
   ApiBody,
-  ApiConsumes,
   ApiOkResponse,
   ApiOperation,
   ApiParam,
@@ -31,20 +27,18 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import {
-  SaveSettingsDto,
   SwaggerCommonResponse,
   SwaggerSettingsRequest,
 } from '../dto';
 import {
   FileFieldsInterceptor,
-  FileInterceptor,
-  FilesInterceptor,
 } from '@nestjs/platform-express';
 import { AppService } from 'src/app.service';
 import { FirebaseService } from 'src/common/services/firebaseUpload';
-import { PATH_DOWNLOADED_FILE } from 'src/uploads';
+import { AuthGuard } from '../auth/auth.guard';
 
 @ApiTags('BackOffice APIs')
+@UseGuards(AuthGuard)
 @Controller('admin/settings')
 export class SettingsController {
   private svc: IdentityServiceClient;
