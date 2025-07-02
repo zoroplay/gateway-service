@@ -12,6 +12,13 @@ import { Struct } from "./google/protobuf/struct.pb";
 
 export const protobufPackage = "identity";
 
+export interface BasicUser {
+  id: number;
+  username: string;
+  role: string;
+  clientId: number;
+}
+
 export interface ClientIdRequest {
   clientId: number;
 }
@@ -714,6 +721,19 @@ export interface CreateUserRequest {
   isTest?: boolean | undefined;
 }
 
+export interface CreateAgentRequest {
+  clientId: number;
+  username: string;
+  password: string;
+  email?: string | undefined;
+  roleId?: number | undefined;
+  firstName?: string | undefined;
+  lastName?: string | undefined;
+  phoneNumber?: string | undefined;
+  city?: string | undefined;
+  address?: string | undefined;
+}
+
 export interface UpdateUserRequest {
   clientId: number;
   userId: number;
@@ -1245,6 +1265,8 @@ export interface IdentityServiceClient {
 
   createAdminUser(request: CreateUserRequest): Observable<CommonResponseObj>;
 
+  createAgentUser(request: CreateAgentRequest): Observable<CommonResponseObj>;
+
   getAdminUsers(request: ClientIdRequest): Observable<CommonResponseArray>;
 
   changeUserTypeStatus(request: ChangeUserTypeStatusRequest): Observable<CommonResponseObj>;
@@ -1507,6 +1529,10 @@ export interface IdentityServiceController {
 
   createAdminUser(
     request: CreateUserRequest,
+  ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
+
+  createAgentUser(
+    request: CreateAgentRequest,
   ): Promise<CommonResponseObj> | Observable<CommonResponseObj> | CommonResponseObj;
 
   getAdminUsers(
@@ -1839,6 +1865,7 @@ export function IdentityServiceControllerMethods() {
       "createRetailUser",
       "updateRetailUser",
       "createAdminUser",
+      "createAgentUser",
       "getAdminUsers",
       "changeUserTypeStatus",
       "getClient",

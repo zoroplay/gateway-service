@@ -31,9 +31,12 @@ export class AuthGuard implements CanActivate {
 
     const token: string = bearer[1];
 
-    const { status, user }: ValidateResponse = await this.service.validate(
+    const res: ValidateResponse = await this.service.validate(
       token,
     );
+    console.log('validate response', res);
+    const {status, user} = res;
+
 
     req['user'] = user;
 
