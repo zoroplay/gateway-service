@@ -17,6 +17,7 @@ import {
 } from '@nestjs/swagger';
 import { FixtureService } from './fixture.service';
 import {
+  AddFavouriteResponse,
   SwaggerAllMarketsResponse,
   SwaggerAllSportResponse,
   SwaggerAllTournamentResponse,
@@ -53,6 +54,27 @@ export class FixtureController {
     // console.log(query)
     try {
       return this.fixtureService.GetSportsMenu(query);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  @Get(':clientId/top-bets')
+  @ApiOperation({
+    summary: 'Get top tournaments',
+    description: 'This endpoint fetches top tournaments',
+  })
+  @ApiParam({
+    name: 'clientId',
+    type: 'number',
+    description: 'SBE Client ID',
+  })
+  @ApiOkResponse({ type: AddFavouriteResponse})
+  getTopTournaments(@Param() params: any) {
+    try {
+      const id = parseInt(params.clientId);
+
+      return this.fixtureService.getTopTournament({clientID: id});
     } catch (error) {
       console.error(error);
     }
